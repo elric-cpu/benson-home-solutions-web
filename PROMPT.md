@@ -3,7 +3,22 @@
 > Recurring source document for Agent 14's CoT → Critique → CoV → Self-reflecting prompt loop.
 > Updated each iteration.
 
-## Iteration 1 — Project Kickoff (2026-02-26)
+## Iteration 2 — Timeline Correction & Decision Lock (2026-01-15)
+
+### ⚠️ CORRECTED TIMELINE
+- **Today:** January 15, 2026
+- **Launch:** February 26, 2026 (6 weeks)
+- **This is a hard deadline. Production built and deployed.**
+
+### Decisions Locked
+- [x] Launch date: **February 26, 2026** (corrected from April 9)
+- [x] Booking engine: **Cal.com** (confirmed)
+- [x] GBP URL: https://maps.app.goo.gl/ad4eywwWonPsSZXP9
+- [x] Facebook: https://www.facebook.com/profile.php?id=61565667928376
+- [x] Chatbot LLM budget: ~$50-150/mo — **acceptable**
+- [x] Stripe: **Phase 2**
+- [ ] Google Search Console access — still pending
+- [ ] SVG logo — PNG provided but says "Benson Enterprises" (needs resolution)
 
 ### Current State
 - Private GitHub repo created: `elric-cpu/benson-home-solutions-web`
@@ -13,27 +28,17 @@
 - All design tokens configured (Oxblood #4C0C14, Cream #FFFDF9, Charcoal #2D2D2D, Slate #4A4A4A)
 - Business constants centralized in `src/lib/constants.ts`
 
-### Sprint Timeline
-- **Kickoff:** February 26, 2026
-- **Launch:** April 9, 2026 (6 weeks)
-- **Phase 1:** Full UI/UX redesign, 30-35 pages, AI chatbot, booking engine, analytics
+### Sprint Timeline (REVISED)
+- **Week 1 (Jan 15–21):** Discovery & Architecture
+- **Weeks 2–3 (Jan 22–Feb 4):** Design & Content
+- **Weeks 3–5 (Feb 4–18):** Build Sprint
+- **Weeks 5–6 (Feb 18–25):** QA & Optimization
+- **Feb 26:** Launch Day
 
-### Week 1 Priorities
-1. SEO audit of legacy site (Agent 01)
-2. Schema architecture & JSON-LD templates (Agent 02)
-3. Keyword map v1 (Agent 04)
-4. Sanity CMS schema deployment (Agent 07)
-5. Wireframes started (Agent 06)
-6. Photography begins (Agent 11)
-
-### Open Decisions
-- [ ] April 9 deadline confirmation
-- [ ] Cal.com vs Calendly
-- [ ] GBP URL, Facebook page, Search Console access
-- [ ] SVG logo + project photos
-- [ ] Agent 10 voice interview scheduling
-- [ ] Chatbot LLM budget ceiling ($50-150/mo)
-- [ ] Stripe timing (Phase 1 or Phase 2)
+### Open Items
+- [ ] Logo: Provided PNG says "Benson Enterprises EST 2024" — need "Benson Home Solutions" version in SVG
+- [ ] Google Search Console access
+- [ ] Voice interview for copywriting voice capture
 
 ### Risks
 | ID | Risk | Impact | Mitigation |
@@ -43,6 +48,7 @@
 | R-03 | SEO ranking drop during migration | High | Full 301 map, sitemap resubmit |
 | R-04 | Copy sounds AI-generated | High | Agent 10 + Elric voice review |
 | R-05 | Chatbot hallucination | High | RAG-only, confidence threshold |
+| R-06 | 6-week timeline is aggressive | High | Strict Phase 1/Phase 2 scope split, daily progress tracking |
 
 ### Next Iteration Trigger
-Update this file when Week 1 deliverables are assessed (target: March 4, 2026).
+Update this file when Week 1 deliverables are assessed (target: January 21, 2026).
