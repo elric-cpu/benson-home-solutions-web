@@ -1,30 +1,57 @@
 @import 'tailwindcss';
 
 @theme {
+  /* ── Brand Colors ── */
   --color-oxblood: #4C0C14;
-  --color-cream: #FFFDF9;
-  --color-charcoal: #2D2D2D;
-  --color-slate: #4A4A4A;
   --color-oxblood-light: #6B1A24;
   --color-oxblood-dark: #3A090F;
+  --color-cream: #FFFDF9;
   --color-cream-dark: #F5F0E8;
+  --color-charcoal: #2D2D2D;
+  --color-slate: #4A4A4A;
+
+  /* ── Semantic Aliases ── */
   --color-primary: var(--color-oxblood);
+  --color-primary-hover: var(--color-oxblood-light);
+  --color-primary-active: var(--color-oxblood-dark);
   --color-accent: var(--color-cream);
+  --color-accent-hover: var(--color-cream-dark);
   --color-heading: var(--color-charcoal);
   --color-body: var(--color-slate);
   --color-background: var(--color-cream);
   --color-surface: #FFFFFF;
   --color-border: #E5E2DC;
   --color-muted: #8A8A8A;
-  --font-sans: 'Calibri', 'Carlito', system-ui, -apple-system, sans-serif;
+  --color-success: #15803D;
+  --color-warning: #B45309;
+  --color-error: #DC2626;
+  --color-info: #2563EB;
+
+  /* ── Typography — Source Sans 3 (web) ── */
+  --font-sans: 'Source Sans 3', 'Source Sans Pro', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* ── Spacing ── */
   --spacing-section: 5rem;
   --spacing-block: 2.5rem;
+
+  /* ── Border Radius ── */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
   --shadow-elevated: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-overlay: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+  /* ── Animations ── */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
 }
 
 @layer base {
@@ -33,19 +60,53 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
   body {
     font-family: var(--font-sans);
     color: var(--color-body);
     background-color: var(--color-background);
+    line-height: 1.6;
+    font-size: 1rem;
   }
+
   h1, h2, h3, h4, h5, h6 {
     color: var(--color-heading);
     font-weight: 700;
+    line-height: 1.2;
   }
+
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.5rem; }
+  h4 { font-size: 1.25rem; }
+
+  @media (min-width: 768px) {
+    h1 { font-size: 3.5rem; }
+    h2 { font-size: 2.5rem; }
+    h3 { font-size: 1.75rem; }
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    transition: color var(--duration-fast) ease;
+  }
+
+  a:hover {
+    color: var(--color-primary-hover);
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-oxblood);
     outline-offset: 2px;
   }
+
+  ::selection {
+    background-color: var(--color-oxblood);
+    color: var(--color-cream);
+  }
+
   .skip-nav {
     position: absolute;
     top: -100%;
@@ -55,19 +116,50 @@
     background: var(--color-oxblood);
     color: var(--color-cream);
     font-weight: 600;
+    border-radius: 0 0 var(--radius-md) 0;
   }
+
   .skip-nav:focus {
     top: 0;
   }
 }
 
 @layer components {
+  .container-page {
+    width: 100%;
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-page {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-page {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  .section-padding {
+    padding-top: var(--spacing-section);
+    padding-bottom: var(--spacing-section);
+  }
+
   .scribble-underline {
     text-decoration: underline;
     text-decoration-style: wavy;
     text-decoration-color: var(--color-oxblood);
     text-underline-offset: 4px;
   }
+
   .margin-note {
     font-style: italic;
     color: var(--color-muted);
@@ -76,4 +168,56 @@
     margin: 1rem 0;
     font-size: 0.875rem;
   }
+
+  .prose-benson {
+    line-height: 1.75;
+    color: var(--color-body);
+  }
+
+  .prose-benson h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose-benson h3 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose-benson p {
+    margin-bottom: 1.25rem;
+  }
+
+  .prose-benson ul, .prose-benson ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .prose-benson li {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn var(--duration-normal) var(--ease-out-expo) forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp var(--duration-slow) var(--ease-out-expo) forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(1rem); }
+  to { opacity: 1; transform: translateY(0); }
 }
