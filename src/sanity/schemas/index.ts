@@ -1,9 +1,22 @@
-/**
- * Sanity Schema Registry
- * Agent 07 (Full-Stack Dev) owns schema development.
- *
- * Phase 1 schemas (Week 1 deliverable):
- * - servicePage, geoLandingPage, homePage, aboutPage
- * - contactPage, faqPage, review, teamMember, siteSettings
- */
-export const schemaTypes: any[] = [];
+import { service } from './service';
+import { serviceArea } from './serviceArea';
+import { blogPost } from './blogPost';
+import { caseStudy } from './caseStudy';
+import { faq } from './faq';
+import { testimonial } from './testimonial';
+import { team } from './team';
+import { siteSettings } from './siteSettings';
+
+export const schemaTypes = [
+  // Content types
+  service,
+  serviceArea,
+  blogPost,
+  caseStudy,
+  faq,
+  testimonial,
+  team,
+
+  // Singleton
+  siteSettings,
+];
