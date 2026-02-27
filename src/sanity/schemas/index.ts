@@ -9,6 +9,7 @@ import { blogPost } from './blogPost';
 import { faqItem } from './faqItem';
 import { testimonial } from './testimonial';
 import { siteSettings } from './siteSettings';
+import { project } from './project';
 
 export const schemaTypes = [
   // Singletons
@@ -22,6 +23,7 @@ export const schemaTypes = [
   servicePage,
   areaPage,
   blogPost,
+  project,
   // Objects
   faqItem,
   testimonial,
