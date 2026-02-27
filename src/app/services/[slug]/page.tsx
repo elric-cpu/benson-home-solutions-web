@@ -44,10 +44,21 @@ const serviceQuery = `*[_type == "servicePage" && slug.current == $slug][0]{
 }`;
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<{ slug: { current: string } }[]>(
-    `*[_type == "servicePage" && defined(slug.current)]{ slug }`
-  );
-  return slugs.map((s) => ({ slug: s.slug.current }));
+  // FIXED: Defend against missing Project ID during initial Vercel setup
+  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === 'PLACEHOLDER') {
+    console.warn('Sanity Project ID not set. Skipping static generation for services.');
+    return [];
+  }
+
+  try {
+    const slugs = await client.fetch<{ slug: { current: string } }[]>(
+      `*[_type == "servicePage" && defined(slug.current)]{ slug }`
+    );
+    return slugs.map((s) => ({ slug: s.slug.current }));
+  } catch (error) {
+    console.error('Error fetching service slugs for static generation:', error);
+    return [];
+  }
 }
 
 export async function generateMetadata({
@@ -56,14 +67,19 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
-  if (!service) return {};
-  return {
-    title: service.title,
-    description:
-      service.metaDescription ||
-      `${service.title} — professional service from Benson Home Solutions. Licensed Oregon contractor CCB #258533.`,
-  };
+  
+  try {
+    const service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
+    if (!service) return {};
+    return {
+      title: service.title,
+      description:
+        service.metaDescription ||
+        `${service.title} — professional service from Benson Home Solutions. Licensed Oregon contractor CCB #258533.`,
+    };
+  } catch (error) {
+    return {};
+  }
 }
 
 export default async function ServicePage({
@@ -72,7 +88,14 @@ export default async function ServicePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
+  
+  let service: ServicePageData | null = null;
+  
+  try {
+    service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
+  } catch (error) {
+    console.error('Failed to load service data', error);
+  }
 
   if (!service) notFound();
 
