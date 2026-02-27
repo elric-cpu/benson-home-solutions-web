@@ -1,4 +1,7 @@
 import type { Metadata, Viewport } from 'next';
+import { sourceSans3 } from '@/lib/fonts';
+import { Header } from '@/components/layout';
+import { Footer } from '@/components/layout';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -48,14 +51,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={sourceSans3.variable}>
+      <body className="min-h-screen flex flex-col antialiased">
         <a href="#main-content" className="skip-nav">
           Skip to main content
         </a>
-        {/* TODO: Agent 06 — Header/Nav component */}
-        <main id="main-content">{children}</main>
-        {/* TODO: Agent 06 — Footer component */}
+        <Header />
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
