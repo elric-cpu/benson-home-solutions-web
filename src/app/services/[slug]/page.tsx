@@ -43,6 +43,15 @@ const serviceQuery = `*[_type == "servicePage" && slug.current == $slug][0]{
   relatedServices[]->{ _id, title, slug, heroImage }
 }`;
 
+// Helper to format slugs into readable titles if CMS data is missing
+function formatSlugToTitle(slug: string) {
+  return slug
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+    .replace('And', '&');
+}
+
 export async function generateStaticParams() {
   // FIXED: Defend against missing Project ID during initial Vercel setup
   if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === 'PLACEHOLDER') {
@@ -70,15 +79,19 @@ export async function generateMetadata({
   
   try {
     const service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
-    if (!service) return {};
+    
+    // Use Sanity data if available, otherwise generate a fallback title
+    const title = service?.title || formatSlugToTitle(slug);
+    
     return {
-      title: service.title,
+      title: title,
       description:
-        service.metaDescription ||
-        `${service.title} — professional service from Benson Home Solutions. Licensed Oregon contractor CCB #258533.`,
+        service?.metaDescription ||
+        `${title} services from Benson Home Solutions. Professional, licensed, bonded, and insured Oregon contractor serving the Mid-Willamette Valley. CCB #258533.`,
     };
   } catch (error) {
-    return {};
+    const fallbackTitle = formatSlugToTitle(slug);
+    return { title: fallbackTitle };
   }
 }
 
@@ -89,15 +102,26 @@ export default async function ServicePage({
 }) {
   const { slug } = await params;
   
-  let service: ServicePageData | null = null;
+  let fetchedService: ServicePageData | null = null;
   
   try {
-    service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
+    fetchedService = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
   } catch (error) {
     console.error('Failed to load service data', error);
   }
 
-  if (!service) notFound();
+  const fallbackTitle = formatSlugToTitle(slug);
+
+  // If we don't have the service in Sanity yet, generate a fallback structure
+  // so the page still renders beautifully and doesn't 404.
+  const service: ServicePageData = fetchedService || {
+    _id: `fallback-${slug}`,
+    title: fallbackTitle,
+    slug: { current: slug },
+    heroHeadline: `Professional ${fallbackTitle} Services`,
+    metaDescription: `Expert ${fallbackTitle.toLowerCase()} services by Benson Home Solutions. Licensed, bonded, and insured. We bring over a decade of experience to every project.`,
+    pricingNote: 'We provide transparent, upfront pricing. Contact us for a custom quote based on your specific property needs.',
+  };
 
   return (
     <>
@@ -119,15 +143,19 @@ export default async function ServicePage({
                 {service.metaDescription}
               </p>
             )}
-            {service.serviceArea && service.serviceArea.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {service.serviceArea.map((area) => (
+            
+            {/* Show fallback badge if CMS data is missing */}
+            <div className="mt-6 flex flex-wrap gap-2">
+              {service.serviceArea && service.serviceArea.length > 0 ? (
+                service.serviceArea.map((area) => (
                   <Badge key={area.slug.current} variant="secondary">
                     {area.title}
                   </Badge>
-                ))}
-              </div>
-            )}
+                ))
+              ) : (
+                <Badge variant="secondary">Mid-Willamette Valley & Harney County</Badge>
+              )}
+            </div>
           </div>
         </Container>
       </Section>
@@ -146,13 +174,31 @@ export default async function ServicePage({
       )}
 
       {/* Content */}
-      {service.content && service.content.length > 0 && (
-        <Section spacing="md">
-          <Container size="narrow">
+      <Section spacing="md">
+        <Container size="narrow">
+          {service.content && service.content.length > 0 ? (
             <PortableTextRenderer value={service.content} />
-          </Container>
-        </Section>
-      )}
+          ) : (
+            <div className="prose prose-lg text-slate max-w-none">
+              <h2 className="text-2xl md:text-3xl font-bold text-charcoal mt-10 mb-4">
+                Reliable {service.title} Solutions
+              </h2>
+              <p className="leading-relaxed mb-4">
+                When you need high-quality <strong>{service.title.toLowerCase()}</strong>, Benson Home Solutions delivers. We follow a strict methodology to ensure every detail is handled correctly the first time. As a fully licensed and insured contractor (CCB #258533), we provide board-ready documentation and guaranteed service levels.
+              </p>
+              <ul className="list-disc list-inside space-y-2 mb-8 ml-4">
+                <li>Prompt, professional communication</li>
+                <li>Upfront estimates with no hidden fees</li>
+                <li>High-quality materials and craftsmanship</li>
+                <li>Fully licensed, bonded, and insured</li>
+              </ul>
+              <div className="border-l-4 border-oxblood pl-4 italic my-6 bg-cream/50 py-4 pr-4 rounded-r-lg">
+                "We treat your property with the same care and precision we would our own. Our reputation is built on reliability and doing things the right way."
+              </div>
+            </div>
+          )}
+        </Container>
+      </Section>
 
       {/* Pricing Note */}
       {service.pricingNote && (
