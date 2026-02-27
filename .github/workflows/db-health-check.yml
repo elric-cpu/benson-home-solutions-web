@@ -51,7 +51,7 @@ jobs:
 
               // Test 3: Row counts
               for (const t of tables) {
-                const count = await sql(\`SELECT count(*) as n FROM \" + t.table_name + \"\`);
+                const count = await sql\`SELECT count(*) as n FROM \${t.table_name}\`;
                 console.log('  →', t.table_name + ':', count[0].n, 'rows');
               }
 

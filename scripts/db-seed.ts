@@ -30,7 +30,17 @@ async function seed() {
     WHERE table_schema = 'public'
     ORDER BY table_name
   `;
-  console.log('📊 Existing tables:', tables.map(t => t.table_name).join(', '));
+  const tableNames = tables.map(t => t.table_name);
+  console.log('📊 Existing tables:', tableNames.join(', '));
+
+  // Fail fast if required tables are missing
+  const required = ['contact_submissions', 'subscription_leads'];
+  const missing = required.filter(name => !tableNames.includes(name));
+  if (missing.length > 0) {
+    console.error('❌ Required tables missing:', missing.join(', '));
+    console.error('   Run `npx drizzle-kit push` first to create the schema.');
+    process.exit(1);
+  }
 
   // Count existing rows
   const contactCount = await sql`SELECT count(*) as n FROM contact_submissions`;
