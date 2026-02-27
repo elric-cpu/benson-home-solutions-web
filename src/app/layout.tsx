@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { sourceSans3 } from '@/lib/fonts';
 import { Header } from '@/components/layout';
 import { Footer } from '@/components/layout';
+import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -61,6 +62,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <GoogleAnalytics />
       </body>
     </html>
   );
