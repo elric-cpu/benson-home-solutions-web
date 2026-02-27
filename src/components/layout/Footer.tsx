@@ -45,13 +45,13 @@ export function Footer() {
                   href={`tel:${BUSINESS.phone}`}
                   className="block text-cream/80 hover:text-cream transition-colors"
                 >
-                  📞 {BUSINESS.phone}
+                  {BUSINESS.phone}
                 </a>
                 <a
                   href={`mailto:${BUSINESS.email}`}
                   className="block text-cream/80 hover:text-cream transition-colors"
                 >
-                  ✉️ {BUSINESS.email}
+                  {BUSINESS.email}
                 </a>
               </div>
             </div>

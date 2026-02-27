@@ -15,28 +15,24 @@ const services = [
     description:
       'Comprehensive home repair and maintenance for homeowners throughout the Mid-Willamette Valley.',
     href: '/services/residential-maintenance',
-    icon: '🏠',
   },
   {
     title: 'Commercial Services',
     description:
       'Reliable facility maintenance and repair for businesses, offices, and commercial properties.',
     href: '/services/commercial',
-    icon: '🏢',
   },
   {
     title: 'Church & Non-Profit',
     description:
       'Specialized maintenance programs for houses of worship and community organizations.',
     href: '/services/church-nonprofit',
-    icon: '⛪',
   },
   {
     title: 'Emergency Repairs',
     description:
       'Fast-response emergency repair service when you need it most. Available after hours.',
     href: '/emergency',
-    icon: '🚨',
   },
 ];
 
@@ -100,8 +96,7 @@ export default function HomePage() {
               <Link key={service.title} href={service.href} className="group">
                 <Card hover className="h-full">
                   <CardContent className="p-6">
-                    <span className="text-3xl">{service.icon}</span>
-                    <h3 className="mt-3 text-xl font-semibold text-charcoal group-hover:text-oxblood transition-colors">
+                    <h3 className="text-xl font-semibold text-charcoal group-hover:text-oxblood transition-colors">
                       {service.title}
                     </h3>
                     <p className="mt-2 text-slate leading-relaxed">
@@ -165,7 +160,7 @@ export default function HomePage() {
             className="text-center p-8 md:p-12 border-red-200 bg-red-50/50"
           >
             <h2 className="text-2xl md:text-3xl font-bold">
-              🚨 Need Emergency Repairs?
+              Need Emergency Repairs?
             </h2>
             <p className="mt-4 text-lg text-slate">
               We offer after-hours emergency repair service for urgent
