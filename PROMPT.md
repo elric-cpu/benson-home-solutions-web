@@ -3,7 +3,7 @@
 > Recurring source document for Agent 14's CoT → Critique → CoV → Self-reflecting prompt loop.
 > Updated each iteration. Notion mirror: [PROMPT.md] page in Operations Manual.
 
-## Iteration 5 — Phase 1 Kickoff (2026-02-26)
+## Iteration 5.1 — Logo Decision + GSC Analysis (2026-02-26)
 
 **Date:** February 26, 2026 · Sprint 0, Day 1
 **Author:** Agent 14 (Project Manager / Technical Lead)
@@ -18,7 +18,8 @@
 | Field | Value |
 |-------|-------|
 | **Industry** | Licensed residential & commercial general contracting — remodeling, emergency restoration, maintenance subscriptions, sitework, demolition. Oregon CCB #258533. |
-| **Company** | Benson Home Solutions · Owner: Elric Benson · Est. 2014 · 200+ projects · 4.9/5 rating |
+| **Company** | **Benson Home Solutions** (DBA) · Legal entity: **Benson Enterprises** · Owner: Elric Benson · Est. 2014 · 200+ projects · 4.9/5 rating |
+| **Website Logo** | Text: **"Benson Home Solutions"** (confirmed Feb 26, 2026). PNG available. SVG to be created during frontend dev. |
 | **Target Audience** | **Primary:** Mid-Willamette Valley homeowners (Salem, Keizer, Corvallis, Albany). **Secondary:** Commercial property managers, HOA boards, church/facility stewards. **Tertiary:** Harney County residents (Burns, Riley, Drewsey). |
 | **Tone & Voice** | Confident, direct, knowledgeable — like a contractor you trust. Written in Elric's voice. Zero AI filler. Specific beats vague. |
 | **Conversion Goal** | Every page drives toward a high-converting lead-capture moment — estimate request, phone call, chatbot conversation, or subscription signup. |
@@ -86,10 +87,10 @@
 | 08 — Backend Developer | Backend API architecture + Neon DB setup + 1build API verification | 🟡 Starting |
 | 09 — AI Engineer | RAG pipeline architecture + voice guide for chatbot | 🟡 Starting |
 | 10 — Copywriter | Homepage copy draft using voice profile | 🟡 Starting |
-| 11 — Photographer | Photography begins (⚠️ needs Elric's project list) | 🔴 Blocked |
+| 11 — Photographer | Photography deferred to end of project per Elric | ⚪ Deferred |
 | 12 — QA Specialist | QA test plan + automation framework setup | 🟡 Starting |
 | 13 — CRO Specialist | Analytics architecture + GA4 server-side plan | 🟡 Starting |
-| 14 — Project Manager | PR #1 merged, PROMPT.md → Iteration 5, Phase 1 kickoff | 🟢 Complete |
+| 14 — Project Manager | PR #1 merged, PROMPT.md → Iteration 5, Phase 1 kickoff, logo decision locked, GSC analysis complete | 🟢 Complete |
 
 ---
 
@@ -124,29 +125,80 @@
 
 ---
 
-## 7 · Open Items (Elric action required)
+## 7 · Decisions Log
 
-- [ ] **Share active project list** with Agent 11 for photography scheduling
-- [ ] **Provide "Benson Home Solutions" SVG logo** (current PNG says "Benson Enterprises")
-- [ ] **Grant Google Search Console access**
+| Decision | Date | Detail |
+|----------|------|--------|
+| **Logo text** | Feb 26, 2026 | **"Benson Home Solutions"** (DBA name) on website. Legal entity is Benson Enterprises. |
+| **Photos** | Feb 26, 2026 | Deferred to very end of project. Placeholder layouts until then. |
+| **SVG logo** | Feb 26, 2026 | Notion doesn't support SVG upload. PNG available now. SVG conversion during frontend dev. |
 
 ---
 
-## 8 · Risk Register
+## 8 · Google Search Console Analysis (Feb 26, 2026)
+
+**Domain:** portal.bensonhomesolutions.com (Hostinger)
+**Data range:** Dec 14, 2025 – Feb 23, 2026
+**Source:** Elric provided CSV exports from GSC
+
+### Index Coverage — 🚨 CRITICAL DECLINE
+
+| Metric | Dec 14 | Dec 23 | Jan 9 | Jan 23 | Feb 9 | Feb 23 | Trend |
+|--------|--------|--------|-------|--------|-------|--------|-------|
+| Indexed pages | 13 | 15 | 15 | 12 | 8 | 6 | 📉 Declining |
+| Not indexed | 7 | 28 | 7 | 10 | 12 | 17 | 📈 Increasing |
+
+### Critical Issues Identified
+
+| Issue | Pages Affected | Severity |
+|-------|---------------|----------|
+| **Excluded by `noindex` tag** | 12 | 🔴 Critical — primary cause of declining coverage |
+| Crawled but not indexed | 2 | 🟡 Medium |
+| Blocked by robots.txt | 1 | 🟡 Medium |
+| Page with redirect | 1 | ⚪ Low (if 301) |
+| Alternate page with canonical | 1 | ⚪ Normal |
+
+### Impressions
+- Total: ~450 over the period
+- Daily range: 0–39 (very low, consistent with a barely-indexed site)
+- Spikes on Jan 26 (39) and Feb 22 (26)
+
+### Root Cause Assessment
+The **12 pages with `noindex` meta tags** are the smoking gun. Google is systematically de-indexing the site because these tags explicitly tell Googlebot not to index those pages. This is likely a Hostinger template misconfiguration or an accidental setting.
+
+### Impact on New Site
+- The new Vercel-hosted site will have **full control over meta tags** via Sanity CMS + Next.js
+- All `noindex` tags will be removed (or used intentionally only on pages like thank-you pages)
+- A comprehensive 301 redirect map will preserve any existing equity
+- Agent 01 (Technical SEO) should include current `noindex` audit in the Sprint 0 technical SEO audit
+
+---
+
+## 9 · Open Items (Elric action required)
+
+- [x] ~~Provide logo text preference~~ → **"Benson Home Solutions"** confirmed
+- [x] ~~Grant Google Search Console access~~ → GSC CSV data provided directly
+- [x] ~~Share project photos~~ → Deferred to end of project
+- [ ] **Provide SVG logo file** via email or direct upload to GitHub repo (when ready for frontend dev)
+
+---
+
+## 10 · Risk Register
 
 | ID | Risk | Impact | Mitigation |
 |----|------|--------|------------|
-| R-01 | Photography assets delayed | Medium | Placeholder images ready; bridge with Facebook photos |
+| R-01 | Photography assets delayed | Low (deferred) | Photos deferred to end; placeholder images ready; bridge with stock/existing |
 | R-02 | Lighthouse score drop with Cal.com widget | Medium | Lazy-load via dynamic import; measure impact in CI |
 | R-03 | SEO ranking drop during migration | High | Full 301 redirect map, sitemap resubmit, monitor in GSC |
 | R-04 | Copy sounds AI-generated | High | Agent 10 writes in Elric's voice; Elric reviews all copy |
 | R-05 | Chatbot hallucination | High | RAG-only retrieval, confidence threshold, escalation to human |
 | R-06 | 1build API non-functional | Medium | Fallback: public datasets (HUD, county assessor) |
 | R-07 | Neon cold starts on serverless | Low | Connection pooling, keep-alive pings |
+| **R-08** | **Legacy site noindex tags eroding SEO equity** | **High** | **New site on Vercel removes all unintended noindex. Agent 01 auditing.** |
 
 ---
 
-## 9 · Monthly Cost Estimate
+## 11 · Monthly Cost Estimate
 
 ~**$87–121/month** (Vercel $20, Claude API ~$20–50, CallRail ~$45, Twilio ~$1)
 
@@ -160,7 +212,8 @@
 | 2 | 2026-01-15 | Timeline correction, partial decision lock |
 | 3 | 2026-02-26 | Full project resumption, 14-agent team, master plan v1.0 |
 | 4 | 2026-02-26 | Full repo sync — all Roundtable II decisions applied |
-| **5** | **2026-02-26** | **Phase 1 officially kicked off. PR #1 merged to main. All 14 agents have Sprint 0 assignments. Photography blocked pending Elric's project list.** |
+| 5 | 2026-02-26 | Phase 1 officially kicked off. PR #1 merged to main. All 14 agents have Sprint 0 assignments. |
+| **5.1** | **2026-02-26** | **Logo decision locked: "Benson Home Solutions". GSC analysis added (12 noindex pages causing index decline). Photos deferred to end. Open items updated.** |
 
 ---
 
