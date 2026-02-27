@@ -1,24 +1,8 @@
-export async function register() {
-  if (process.env.NEXT_RUNTIME === 'nodejs') {
-    if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-      const Sentry = await import('@sentry/nextjs');
-      Sentry.init({
-        dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-        environment: process.env.VERCEL_ENV || 'development',
-        tracesSampleRate:
-          process.env.VERCEL_ENV === 'production' ? 0.1 : 1.0,
-        debug: false,
-      });
-    }
-  }
+// Sentry removed — @sentry/nextjs peer dep incompatible with Next.js 16
+// TODO: Re-add Sentry in Sprint 2 when @sentry/nextjs ships Next 16 support
+// See: https://github.com/getsentry/sentry-javascript/issues/18006
 
-  if (process.env.NEXT_RUNTIME === 'edge') {
-    if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-      const Sentry = await import('@sentry/nextjs');
-      Sentry.init({
-        dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-        tracesSampleRate: 0.1,
-      });
-    }
-  }
+export async function register() {
+  // No-op until Sentry is re-integrated
+  // Original code dynamically imported @sentry/nextjs for nodejs + edge runtimes
 }
