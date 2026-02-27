@@ -29,7 +29,32 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // TODO: Agent 01 — populate full legacy URL redirect map
+      // === Sprint 0: Legacy URL redirect map (portal.bensonhomesolutions.com → new) ===
+      {
+        source: '/services',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/services/water-damage-restoration',
+        destination: '/services/water-damage',
+        permanent: true,
+      },
+      {
+        source: '/services/window-door-replacement',
+        destination: '/services/windows-doors',
+        permanent: true,
+      },
+      {
+        source: '/services/mold-mitigation',
+        destination: '/services/mold-remediation',
+        permanent: true,
+      },
+      {
+        source: '/maintenance',
+        destination: '/services/maintenance-subscriptions',
+        permanent: true,
+      },
     ];
   },
 };
