@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const response = NextResponse.next();
   if (request.headers.get('host')?.includes('staging.')) {
     response.headers.set('X-Robots-Tag', 'noindex, nofollow');
