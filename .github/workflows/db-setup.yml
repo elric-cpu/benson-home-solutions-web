@@ -1,0 +1,72 @@
+name: "DB Setup — Drizzle Push to Neon"
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Database action to perform"
+        required: true
+        type: choice
+        options:
+          - push
+          - generate
+          - migrate
+        default: push
+      confirm:
+        description: "Type 'yes' to confirm (safety check)"
+        required: true
+        type: string
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  db-setup:
+    name: "Drizzle $ github.event.inputs.action "
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'yes'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: $ env.NODE_VERSION 
+          cache: npm
+
+      - run: npm ci
+
+      - name: "Run drizzle-kit $ github.event.inputs.action "
+        run: npx drizzle-kit $ github.event.inputs.action 
+        env:
+          DATABASE_URL: $ secrets.DATABASE_URL 
+          DATABASE_URL_UNPOOLED: $ secrets.DATABASE_URL_UNPOOLED 
+
+      - name: Verify tables exist
+        run: |
+          node -e "
+            const { neon } = require('@neondatabase/serverless');
+            const sql = neon(process.env.DATABASE_URL);
+            (async () => {
+              const tables = await sql\`
+                SELECT table_name FROM information_schema.tables
+                WHERE table_schema = 'public'
+                ORDER BY table_name
+              \`;
+              console.log('\n✅ Tables in database:');
+              tables.forEach(t => console.log('  •', t.table_name));
+              const required = ['contact_submissions', 'subscription_leads'];
+              const found = tables.map(t => t.table_name);
+              const missing = required.filter(r => !found.includes(r));
+              if (missing.length > 0) {
+                console.error('\n❌ Missing tables:', missing.join(', '));
+                process.exit(1);
+              }
+              console.log('\n✅ All required tables present.');
+            })().catch((err) => {
+              console.error('\n❌ Table verification failed:', err.message);
+              process.exit(1);
+            });
+          "
+        env:
+          DATABASE_URL: $ secrets.DATABASE_URL 

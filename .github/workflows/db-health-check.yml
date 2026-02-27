@@ -1,0 +1,76 @@
+name: "DB Health Check — Neon Connection Validator"
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run daily at 6 AM PST (2 PM UTC) to catch cold-start issues
+    - cron: '0 14 * * *'
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  health-check:
+    name: Validate Neon Connection
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: $ env.NODE_VERSION 
+          cache: npm
+
+      - run: npm ci
+
+      - name: Check database connection
+        run: |
+          node -e "
+            const { neon } = require('@neondatabase/serverless');
+            const sql = neon(process.env.DATABASE_URL);
+            (async () => {
+              const start = Date.now();
+              // Test 1: Basic connection
+              const version = await sql\`SELECT version()\`;
+              const connMs = Date.now() - start;
+              console.log('✅ Connected in', connMs, 'ms');
+              console.log('   Postgres:', version[0].version.split(' ').slice(0,2).join(' '));
+
+              // Test 2: Table existence
+              const tables = await sql\`
+                SELECT table_name, 
+                       (SELECT count(*) FROM information_schema.columns c 
+                        WHERE c.table_name = t.table_name AND c.table_schema = 'public') as col_count
+                FROM information_schema.tables t
+                WHERE t.table_schema = 'public'
+                ORDER BY t.table_name
+              \`;
+              console.log('\n📊 Tables:');
+              tables.forEach(t => console.log('  •', t.table_name, '(' + t.col_count + ' columns)'));
+
+              // Test 3: Row counts
+              for (const t of tables) {
+                const count = await sql\`SELECT count(*) as n FROM \${t.table_name}\`;
+                console.log('  →', t.table_name + ':', count[0].n, 'rows');
+              }
+
+              // Test 4: Pooled vs unpooled
+              if (process.env.DATABASE_URL_UNPOOLED) {
+                const sqlDirect = neon(process.env.DATABASE_URL_UNPOOLED);
+                const directStart = Date.now();
+                await sqlDirect\`SELECT 1\`;
+                console.log('\n✅ Direct (unpooled) connection:', Date.now() - directStart, 'ms');
+              } else {
+                console.log('\n⚠️  DATABASE_URL_UNPOOLED not set — skipping direct connection test');
+              }
+
+              console.log('\n🎯 All health checks passed.');
+            })().catch(err => {
+              console.error('\n❌ Health check failed:', err.message);
+              process.exit(1);
+            });
+          "
+        env:
+          DATABASE_URL: $ secrets.DATABASE_URL 
+          DATABASE_URL_UNPOOLED: $ secrets.DATABASE_URL_UNPOOLED 
