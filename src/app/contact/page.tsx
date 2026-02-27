@@ -94,7 +94,7 @@ export default function ContactPage() {
             <div className="lg:col-span-2">
               {status === 'success' ? (
                 <Card variant="outlined" className="p-8 text-center border-green-200 bg-green-50/50">
-                  <div className="text-4xl mb-4">\u2705</div>
+                  <div className="text-4xl mb-4">✅</div>
                   <h2 className="text-2xl font-bold text-charcoal">
                     Message Sent!
                   </h2>
@@ -276,7 +276,7 @@ export default function ContactPage() {
 
               <Card variant="outlined" className="p-6 border-oxblood/20 bg-cream">
                 <h3 className="text-lg font-semibold text-charcoal mb-2">
-                  \u{1F6A8} Emergency?
+                  🚨 Emergency?
                 </h3>
                 <p className="text-sm text-slate mb-4">
                   For urgent repairs, call our after-hours emergency line

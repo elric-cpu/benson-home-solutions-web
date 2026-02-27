@@ -15,28 +15,28 @@ const services = [
     description:
       'Comprehensive home repair and maintenance for homeowners throughout the Mid-Willamette Valley.',
     href: '/services/residential-maintenance',
-    icon: '\u{1F3E0}',
+    icon: '🏠',
   },
   {
     title: 'Commercial Services',
     description:
       'Reliable facility maintenance and repair for businesses, offices, and commercial properties.',
     href: '/services/commercial',
-    icon: '\u{1F3E2}',
+    icon: '🏢',
   },
   {
     title: 'Church & Non-Profit',
     description:
       'Specialized maintenance programs for houses of worship and community organizations.',
     href: '/services/church-nonprofit',
-    icon: '\u{26EA}',
+    icon: '⛪',
   },
   {
     title: 'Emergency Repairs',
     description:
       'Fast-response emergency repair service when you need it most. Available after hours.',
     href: '/emergency',
-    icon: '\u{1F6A8}',
+    icon: '🚨',
   },
 ];
 
@@ -165,7 +165,7 @@ export default function HomePage() {
             className="text-center p-8 md:p-12 border-red-200 bg-red-50/50"
           >
             <h2 className="text-2xl md:text-3xl font-bold">
-              \u{1F6A8} Need Emergency Repairs?
+              🚨 Need Emergency Repairs?
             </h2>
             <p className="mt-4 text-lg text-slate">
               We offer after-hours emergency repair service for urgent

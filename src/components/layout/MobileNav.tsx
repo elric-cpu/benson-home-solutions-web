@@ -32,7 +32,7 @@ export function MobileNav({ isOpen, onClose, navigation }: MobileNavProps) {
               href={`tel:${BUSINESS.phone}`}
               className="block px-3 py-2 text-base font-semibold text-oxblood"
             >
-              \u{1F4DE} {BUSINESS.phone}
+              📞 {BUSINESS.phone}
             </a>
             <Link
               href="/contact"
