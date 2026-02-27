@@ -3,6 +3,6 @@ import { client } from './client';
 
 const builder = createImageUrlBuilder(client);
 
-export function urlFor(source: any) {
+export function urlForImage(source: any) {
   return builder.image(source);
 }
