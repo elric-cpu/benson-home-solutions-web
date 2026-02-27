@@ -58,11 +58,11 @@ export default async function EmergencyPage() {
     <>
       {/* Urgent Hero Section */}
       <Section className="bg-red-900 text-white py-16 md:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20" /> {/* Dark overlay for contrast */}
+        <div className="absolute inset-0 bg-black/20" />
         <Container className="relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-100/10 border border-red-100/20 text-red-50 mb-6 font-semibold tracking-wide uppercase text-sm">
-              <span className="animate-pulse">🔴</span> Immediate Dispatch
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse" /> Immediate Dispatch
             </div>
             <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
               {page.heroHeadline}
@@ -70,7 +70,7 @@ export default async function EmergencyPage() {
             <p className="text-xl md:text-2xl text-red-50 mb-10 leading-relaxed">
               {page.heroSubtext}
             </p>
-            
+
             <div className="flex flex-col items-center gap-4">
               <a href={`tel:${emergencyPhone}`} className="w-full sm:w-auto">
                 <Button variant="emergency" size="lg" className="w-full text-xl h-16 px-8 shadow-xl shadow-red-950/50 border-2 border-red-400">
@@ -78,8 +78,8 @@ export default async function EmergencyPage() {
                 </Button>
               </a>
               {page.responseTimeSLA && (
-                <p className="text-red-100 font-medium mt-2 flex items-center gap-2">
-                  ⏱️ {page.responseTimeSLA}
+                <p className="text-red-100 font-medium mt-2">
+                  {page.responseTimeSLA}
                 </p>
               )}
             </div>
@@ -103,7 +103,6 @@ export default async function EmergencyPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               <Card variant="elevated" className="border-t-4 border-t-oxblood">
                 <CardContent className="pt-8">
-                  <div className="text-4xl mb-4">🌊</div>
                   <h3 className="text-xl font-bold text-charcoal mb-2">Water Damage Mitigation</h3>
                   <p className="text-slate leading-relaxed">Rapid dry-out, extraction, and mold prevention. We stop the spread of water damage immediately.</p>
                 </CardContent>
@@ -111,7 +110,6 @@ export default async function EmergencyPage() {
 
               <Card variant="elevated" className="border-t-4 border-t-oxblood">
                 <CardContent className="pt-8">
-                  <div className="text-4xl mb-4">🚪</div>
                   <h3 className="text-xl font-bold text-charcoal mb-2">Emergency Board-Ups</h3>
                   <p className="text-slate leading-relaxed">Secure your property after a fire, break-in, or storm. Temporary fencing, roof tarping, and window boarding.</p>
                 </CardContent>
@@ -119,7 +117,6 @@ export default async function EmergencyPage() {
 
               <Card variant="elevated" className="border-t-4 border-t-oxblood">
                 <CardContent className="pt-8">
-                  <div className="text-4xl mb-4">⚡</div>
                   <h3 className="text-xl font-bold text-charcoal mb-2">Storm Damage Repair</h3>
                   <p className="text-slate leading-relaxed">Fallen tree removal, structural bracing, and weatherproofing to protect your home from further exposure.</p>
                 </CardContent>
