@@ -3,13 +3,10 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
-  // --- Temporary: bypass TS & ESLint errors for Sprint 0 scaffolds ---
+  // --- Temporary: bypass TS errors for Sprint 0 scaffolds ---
   // Re-enable once scaffold pages have real implementations.
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 
   images: {
