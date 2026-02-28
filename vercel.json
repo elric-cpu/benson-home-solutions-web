@@ -1,5 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm install --force",
+  "installCommand": "node -v && npm install --force && echo '--- installed deps ---' && npm ls --depth=0 2>&1 | tail -40 || true",
   "framework": "nextjs"
 }
