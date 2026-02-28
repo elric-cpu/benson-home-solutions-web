@@ -11,28 +11,28 @@ import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 
 const services = [
   {
-    title: 'Residential Maintenance',
+    title: 'Maintenance Programs',
     description:
-      'Comprehensive home repair and maintenance for homeowners throughout the Mid-Willamette Valley.',
-    href: '/services/residential-maintenance',
+      'Preventive maintenance subscriptions for residential, commercial, and church properties. We catch problems before they become emergencies.',
+    href: '/services/maintenance-subscriptions',
   },
   {
-    title: 'Commercial Services',
+    title: 'Water Damage Restoration',
     description:
-      'Reliable facility maintenance and repair for businesses, offices, and commercial properties.',
-    href: '/services/commercial',
+      'Rapid dry-out, mitigation, and full rebuild. Insurance-aligned documentation from day one. Available 24/7.',
+    href: '/services/water-damage',
   },
   {
-    title: 'Church & Non-Profit',
+    title: 'Emergency Response',
     description:
-      'Specialized maintenance programs for houses of worship and community organizations.',
-    href: '/services/church-nonprofit',
-  },
-  {
-    title: 'Emergency Repairs',
-    description:
-      'Fast-response emergency repair service when you need it most. Available after hours.',
+      'Board-ups, storm damage, water intrusion — on-site within 60 minutes in the Mid-Willamette Valley.',
     href: '/emergency',
+  },
+  {
+    title: 'Remodeling & Restoration',
+    description:
+      'Kitchen and bathroom remodels, structural repairs, and full property restoration. Licensed and insured.',
+    href: '/services/kitchen-remodeling',
   },
 ];
 
@@ -59,13 +59,14 @@ export default function HomePage() {
               Serving Albany, Lebanon & the Mid-Willamette Valley
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-oxblood leading-tight">
-              Professional Handyman &<br className="hidden sm:inline" />
-              Home Maintenance Services
+              Professional Maintenance,<br className="hidden sm:inline" />
+              Restoration & Mitigation
             </h1>
             <p className="mt-6 text-lg md:text-xl text-slate leading-relaxed max-w-2xl">
-              From routine maintenance to emergency repairs, Benson Home
-              Solutions keeps your property in peak condition. Licensed, bonded,
-              and insured&nbsp;&mdash; serving Oregon with pride.
+              From preventive maintenance programs to emergency water damage
+              restoration, Benson Home Solutions protects your property
+              investment. Licensed, bonded, and insured&nbsp;&mdash; serving
+              Oregon with precision and care.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Link href="/contact">
@@ -87,8 +88,8 @@ export default function HomePage() {
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-3xl md:text-4xl font-bold">What We Do</h2>
             <p className="mt-4 text-lg text-slate">
-              Comprehensive property maintenance and repair services tailored to
-              your needs.
+              Comprehensive property maintenance, restoration, and mitigation
+              services tailored to your needs.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -128,6 +129,41 @@ export default function HomePage() {
         </Container>
       </Section>
 
+      {/* Why Benson */}
+      <Section spacing="md">
+        <Container size="narrow">
+          <div className="prose prose-lg text-slate max-w-none">
+            <h2 className="text-3xl font-bold text-charcoal text-center mb-8">Why Property Owners Trust Us</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 not-prose">
+              <div className="text-center">
+                <div className="text-4xl mb-3">🔧</div>
+                <h3 className="text-lg font-bold text-charcoal mb-2">Preventive Approach</h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  We don&apos;t just fix problems — we prevent them. Our maintenance
+                  programs catch issues early, saving you thousands in emergency repairs.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl mb-3">📋</div>
+                <h3 className="text-lg font-bold text-charcoal mb-2">Insurance-Ready Docs</h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  Every restoration project comes with board-ready documentation
+                  and photos. We make the insurance process smooth from day one.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl mb-3">⚡</div>
+                <h3 className="text-lg font-bold text-charcoal mb-2">Rapid Response</h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  Water doesn&apos;t wait and neither do we. Our emergency team
+                  is on-site within 60 minutes in the Mid-Willamette Valley.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
       {/* Areas We Serve */}
       <Section variant="cream" spacing="md">
         <Container>
@@ -160,12 +196,11 @@ export default function HomePage() {
             className="text-center p-8 md:p-12 border-red-200 bg-red-50/50"
           >
             <h2 className="text-2xl md:text-3xl font-bold">
-              Need Emergency Repairs?
+              Need Emergency Restoration?
             </h2>
             <p className="mt-4 text-lg text-slate">
-              We offer after-hours emergency repair service for urgent
-              situations. Don&apos;t wait&nbsp;&mdash; call our emergency line
-              now.
+              Water damage, storm damage, or emergency board-ups — we respond
+              24/7. Don&apos;t wait&nbsp;&mdash; call our emergency line now.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
               <a href={`tel:${BUSINESS.afterhoursPhone}`}>
@@ -188,7 +223,7 @@ export default function HomePage() {
         <Container size="narrow">
           <div className="text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-cream">
-              Ready to Get Started?
+              Ready to Protect Your Property?
             </h2>
             <p className="mt-4 text-lg text-cream/80">
               Contact us today for a free, no-obligation quote. We&apos;ll
@@ -204,6 +239,41 @@ export default function HomePage() {
           </div>
         </Container>
       </Section>
+
+      {/* JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'HomeAndConstructionBusiness',
+            name: BUSINESS.name,
+            telephone: BUSINESS.phone,
+            email: BUSINESS.email,
+            url: BUSINESS.url,
+            description: 'Licensed Oregon contractor providing professional property maintenance, water damage restoration, and emergency mitigation services in the Mid-Willamette Valley and Harney County.',
+            priceRange: '$$',
+            areaServed: [
+              { '@type': 'City', name: 'Albany', containedInPlace: { '@type': 'State', name: 'Oregon' } },
+              { '@type': 'City', name: 'Lebanon', containedInPlace: { '@type': 'State', name: 'Oregon' } },
+              { '@type': 'City', name: 'Salem', containedInPlace: { '@type': 'State', name: 'Oregon' } },
+              { '@type': 'City', name: 'Corvallis', containedInPlace: { '@type': 'State', name: 'Oregon' } },
+              { '@type': 'City', name: 'Sweet Home', containedInPlace: { '@type': 'State', name: 'Oregon' } },
+            ],
+            hasOfferCatalog: {
+              '@type': 'OfferCatalog',
+              name: 'Services',
+              itemListElement: [
+                { '@type': 'OfferCatalog', name: 'Property Maintenance Programs' },
+                { '@type': 'OfferCatalog', name: 'Water Damage Restoration' },
+                { '@type': 'OfferCatalog', name: 'Emergency Mitigation' },
+                { '@type': 'OfferCatalog', name: 'Remodeling & Restoration' },
+              ],
+            },
+            sameAs: [BUSINESS.facebook, BUSINESS.gbp],
+          }),
+        }}
+      />
     </>
   );
 }
