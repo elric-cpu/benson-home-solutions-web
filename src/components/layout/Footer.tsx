@@ -1,132 +1,109 @@
-import Link from 'next/link';
-import { Container } from '@/components/ui';
-import { BUSINESS } from '@/lib/constants';
+'use client';
 
-const footerNav = {
+import Link from 'next/link';
+
+const footerLinks = {
   services: [
-    { name: 'Residential Maintenance', href: '/services/residential-maintenance' },
-    { name: 'Commercial Services', href: '/services/commercial' },
-    { name: 'Emergency Repairs', href: '/emergency' },
-    { name: 'Church & Non-Profit', href: '/services/church-nonprofit' },
+    { name: 'Maintenance Programs', href: '/services/maintenance' },
+    { name: 'Water Damage Restoration', href: '/services/water-damage' },
+    { name: 'Emergency Response', href: '/emergency' },
+    { name: 'Remodeling & Restoration', href: '/services/remodeling' },
     { name: 'All Services', href: '/services' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
     { name: 'Our Methodology', href: '/methodology' },
-    { name: 'Projects', href: '/projects' },
-    { name: 'Blog', href: '/blog' },
+    { name: 'Service Areas', href: '/areas/albany' },
     { name: 'Contact', href: '/contact' },
   ],
-  resources: [
-    { name: 'FAQ', href: '/faq' },
-    { name: 'Maintenance Tools', href: '/tools' },
-    { name: 'Areas We Serve', href: '/areas' },
-    { name: 'Emergency Service', href: '/emergency' },
+  areas: [
+    { name: 'Albany', href: '/areas/albany' },
+    { name: 'Salem & Keizer', href: '/areas/salem' },
+    { name: 'Lebanon & Sweet Home', href: '/areas/lebanon' },
+    { name: 'Corvallis & Philomath', href: '/areas/corvallis' },
   ],
 };
 
-export function Footer() {
+export default function Footer() {
   return (
-    <footer className="bg-charcoal text-cream/90">
-      <Container>
-        <div className="py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Brand column */}
-            <div className="lg:col-span-1">
-              <Link href="/" className="text-xl font-bold text-cream">
-                {BUSINESS.name}
-              </Link>
-              <p className="mt-3 text-sm text-cream/70 leading-relaxed">
-                Professional handyman and maintenance services for the
-                Mid-Willamette Valley. Licensed, bonded, and insured.
-              </p>
-              <div className="mt-4 space-y-2 text-sm">
-                <a
-                  href={`tel:${BUSINESS.phone}`}
-                  className="block text-cream/80 hover:text-cream transition-colors"
-                >
-                  {BUSINESS.phone}
-                </a>
-                <a
-                  href={`mailto:${BUSINESS.email}`}
-                  className="block text-cream/80 hover:text-cream transition-colors"
-                >
-                  {BUSINESS.email}
-                </a>
-              </div>
-            </div>
-
-            {/* Services */}
-            <div>
-              <h3 className="text-sm font-semibold text-cream uppercase tracking-wider">
-                Services
-              </h3>
-              <ul className="mt-3 space-y-2">
-                {footerNav.services.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-cream/70 hover:text-cream transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div>
-              <h3 className="text-sm font-semibold text-cream uppercase tracking-wider">
-                Company
-              </h3>
-              <ul className="mt-3 space-y-2">
-                {footerNav.company.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-cream/70 hover:text-cream transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Resources */}
-            <div>
-              <h3 className="text-sm font-semibold text-cream uppercase tracking-wider">
-                Resources
-              </h3>
-              <ul className="mt-3 space-y-2">
-                {footerNav.resources.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-cream/70 hover:text-cream transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Brand */}
+          <div>
+            <h3 className="text-white text-lg font-bold mb-4">Benson Home Solutions</h3>
+            <p className="text-sm leading-relaxed mb-4">
+              Professional maintenance, restoration &amp; mitigation services for the Mid-Willamette Valley. Licensed, bonded, and insured.
+            </p>
+            <p className="text-sm">CCB #258533</p>
           </div>
 
-          {/* Bottom bar */}
-          <div className="mt-12 pt-8 border-t border-cream/10 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-sm text-cream/50">
-              &copy; {new Date().getFullYear()} {BUSINESS.name}. All rights
-              reserved.
-            </div>
-            <div className="text-sm text-cream/50">
-              {BUSINESS.license} &middot; Licensed &middot; Bonded &middot;
-              Insured
-            </div>
+          {/* Services */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Services</h4>
+            <ul className="space-y-2">
+              {footerLinks.services.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-sm hover:text-white transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Company</h4>
+            <ul className="space-y-2">
+              {footerLinks.company.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-sm hover:text-white transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact & Areas */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Contact</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href="tel:+15413215115" className="hover:text-white transition-colors">
+                  (541) 321-5115
+                </a>
+              </li>
+              <li>
+                <a href="tel:+15414130480" className="hover:text-white transition-colors">
+                  Emergency: (541) 413-0480
+                </a>
+              </li>
+              <li>
+                <a href="mailto:office@bensonhomesolutions.com" className="hover:text-white transition-colors">
+                  office@bensonhomesolutions.com
+                </a>
+              </li>
+            </ul>
+            <h4 className="text-white font-semibold mt-6 mb-2">Service Areas</h4>
+            <ul className="space-y-1">
+              {footerLinks.areas.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-sm hover:text-white transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-      </Container>
+
+        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-sm">&copy; {new Date().getFullYear()} Benson Home Solutions. All rights reserved.</p>
+          <p className="text-xs text-gray-500">Serving Albany, Salem, Lebanon, Corvallis &amp; the Mid-Willamette Valley</p>
+        </div>
+      </div>
     </footer>
   );
 }

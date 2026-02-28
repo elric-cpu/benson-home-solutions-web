@@ -2,35 +2,35 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Albany OR Maintenance & Restoration | Benson Home Solutions',
-  description: 'Benson Home Solutions serves Albany, Millersburg, and North Albany with professional maintenance, restoration, and mitigation services. CCB #258533. Call (541) 321-5115.',
+  title: 'Lebanon & Sweet Home OR Maintenance & Restoration | Benson Home Solutions',
+  description: 'Professional maintenance, restoration, and mitigation services for Lebanon and Sweet Home, Oregon. CCB #258533. Call (541) 321-5115.',
 };
 
-export default function AlbanyAreaPage() {
+export default function LebanonAreaPage() {
   return (
     <main className="min-h-screen">
       <section className="bg-blue-900 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Serving Albany, Oregon</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">Serving Lebanon &amp; Sweet Home, Oregon</h1>
           <p className="text-xl text-blue-100 leading-relaxed">
-            Benson Home Solutions is based in the Albany area. We know the local building stock, the weather patterns, and the maintenance challenges that come with living in the Mid-Willamette Valley.
+            From the South Santiam corridor to the foothills of the Cascades, Benson Home Solutions provides reliable maintenance, restoration, and emergency services for Lebanon and Sweet Home properties.
           </p>
         </div>
       </section>
 
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Why Albany Properties Need Proactive Maintenance</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Local Knowledge Matters</h2>
           <div className="prose prose-lg text-gray-700 space-y-4">
             <p>
-              Albany&apos;s climate — wet winters, occasional ice storms, and hot dry summers — puts constant stress on roofs, gutters, foundations, and exterior envelopes. Homes built in the 1950s–1980s (which make up a large portion of Albany&apos;s housing stock) are particularly vulnerable to deferred maintenance issues like failing flashing, aging sealants, and undersized drainage systems.
+              Lebanon and Sweet Home sit in the transition zone between the valley floor and the Cascade foothills. That means higher rainfall totals, steeper terrain, and properties surrounded by trees — all of which increase risk for water intrusion, drainage problems, and storm damage.
             </p>
             <p>
-              We work with homeowners across Albany, North Albany, and Millersburg to build maintenance programs that account for these local realities. Whether you have a historic home downtown or a newer build off Knox Butte, we tailor our approach to your property&apos;s specific needs.
+              Many properties in this area are on well water and septic systems, adding another layer of maintenance responsibility. Our programs account for these rural and semi-rural property realities that generic maintenance checklists miss.
             </p>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Services Available in Albany</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Services Available</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
               { name: 'Preventive Maintenance Programs', href: '/services/maintenance' },
@@ -38,7 +38,7 @@ export default function AlbanyAreaPage() {
               { name: 'Emergency Response (24/7)', href: '/emergency' },
               { name: 'Remodeling & Renovation', href: '/services/remodeling' },
               { name: 'Property Assessments', href: '/contact' },
-              { name: 'Commercial & Church Maintenance', href: '/services/commercial' },
+              { name: 'Church Maintenance Programs', href: '/services/commercial' },
             ].map((s) => (
               <Link
                 key={s.name}
@@ -51,19 +51,9 @@ export default function AlbanyAreaPage() {
             ))}
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Neighborhoods We Serve</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Communities We Serve</h2>
           <div className="grid sm:grid-cols-3 gap-3">
-            {[
-              'Downtown Albany',
-              'North Albany',
-              'South Albany',
-              'Millersburg',
-              'Knox Butte area',
-              'Waverly / Eastside',
-              'Takena / West Albany',
-              'Oak Grove',
-              'Draperville',
-            ].map((n) => (
+            {['Lebanon', 'Sweet Home', 'Scio', 'Crabtree', 'Lacomb', 'Waterloo', 'Sodaville', 'Brownsville'].map((n) => (
               <div key={n} className="text-gray-700 flex items-center gap-2">
                 <span className="text-green-600">📍</span> {n}
               </div>
@@ -74,10 +64,8 @@ export default function AlbanyAreaPage() {
 
       <section className="bg-blue-900 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Albany Property Owner?</h2>
-          <p className="text-blue-100 text-lg mb-8">
-            Schedule a free property assessment and find out what your home or building needs.
-          </p>
+          <h2 className="text-3xl font-bold mb-4">Lebanon or Sweet Home Property Owner?</h2>
+          <p className="text-blue-100 text-lg mb-8">We understand your local maintenance challenges. Let&apos;s talk about protecting your property.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/contact" className="inline-block bg-white text-blue-900 font-semibold px-8 py-3 rounded-lg hover:bg-blue-50 transition-colors">
               Schedule Assessment
