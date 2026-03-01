@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { anthropic } from '@ai-sdk/anthropic';
-import { openai } from '@ai-sdk/openai';
+import { openai, createOpenAI } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { SERVICE_CATALOG } from '@/lib/agreement-engine';
 
@@ -42,10 +42,26 @@ Respond in valid JSON only. Format: { "recommendations": [...] }
       applicable_to: s.applicable_to,
     }));
 
-    // Choose provider (Prefer Anthropic)
-    const model = ANTHROPIC_API_KEY 
-      ? anthropic('claude-3-5-sonnet-20240620')
-      : openai('gpt-4o');
+    // Choose provider (Prefer Anthropic, fallback to OpenAI or OpenRouter)
+    let model;
+    if (ANTHROPIC_API_KEY) {
+      model = anthropic('claude-3-5-sonnet-20240620');
+    } else if (OPENAI_API_KEY) {
+      if (OPENAI_API_KEY.startsWith('sk-or-')) {
+        // Configure for OpenRouter
+        const openrouter = createOpenAI({
+          apiKey: OPENAI_API_KEY,
+          baseURL: 'https://openrouter.ai/api/v1',
+        });
+        model = openrouter('openai/gpt-4o');
+      } else {
+        model = openai('gpt-4o');
+      }
+    }
+
+    if (!model) {
+      throw new Error('No valid AI model configuration found');
+    }
 
     const { text } = await generateText({
       model,

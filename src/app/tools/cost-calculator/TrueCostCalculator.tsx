@@ -342,6 +342,8 @@ export function TrueCostCalculator() {
       }
     };
 
+    const isOregon = data?.state === 'OR';
+
     return (
       <Section variant="cream" className="min-h-[600px] flex items-center text-center">
         <Container size="narrow">
@@ -351,20 +353,39 @@ export function TrueCostCalculator() {
             We&apos;ve sent your detailed breakdown and maintenance schedule to your inbox.
           </p>
           <div className="bg-white p-8 rounded-2xl shadow-elevated border border-slate/10 max-w-md mx-auto text-left mb-8">
-            <Badge variant="secondary" className="mb-2">Benson Service Area Match</Badge>
-            <h3 className="text-xl font-bold text-oxblood mb-2">Exclusive Mid-Willamette Access</h3>
-            <p className="text-sm text-slate mb-6 leading-relaxed">
-              Your property in <strong>{address?.formatted}</strong> qualifies for 
-              our 24/7 Priority Protection program.
-            </p>
-            <div className="space-y-4">
-              <a href="/contact" className="block">
-                <Button size="lg" className="w-full">Book Initial Assessment</Button>
-              </a>
-              <Button variant="outline" size="lg" className="w-full" onClick={handleShare}>
-                Share Your Result
-              </Button>
-            </div>
+            {isOregon ? (
+              <>
+                <Badge variant="secondary" className="mb-2">Benson Service Area Match</Badge>
+                <h3 className="text-xl font-bold text-oxblood mb-2">Exclusive Mid-Willamette Access</h3>
+                <p className="text-sm text-slate mb-6 leading-relaxed">
+                  Your property in <strong>{address?.formatted}</strong> qualifies for 
+                  our 24/7 Priority Protection program.
+                </p>
+                <div className="space-y-4">
+                  <a href="/contact" className="block">
+                    <Button size="lg" className="w-full">Book Initial Assessment</Button>
+                  </a>
+                  <Button variant="outline" size="lg" className="w-full" onClick={handleShare}>
+                    Share Your Result
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <Badge variant="secondary" className="mb-2">Outside Current Service Area</Badge>
+                <h3 className="text-xl font-bold text-charcoal mb-2">Expanding Soon</h3>
+                <p className="text-sm text-slate mb-6 leading-relaxed">
+                  We don&apos;t currently service <strong>{data?.state}</strong>, but we are expanding. 
+                  Bookmark this page and we&apos;ll notify you when we launch in your area.
+                </p>
+                <div className="space-y-4">
+                  <Button variant="outline" size="lg" className="w-full" onClick={handleShare}>
+                    Share Your Result
+                  </Button>
+                </div>
+              </>
+            )}
+            
             <div className="mt-6 flex flex-wrap gap-4 justify-center grayscale opacity-50">
               <span className="text-[10px] font-black uppercase tracking-tighter">IICRC Certified</span>
               <span className="text-[10px] font-black uppercase tracking-tighter">Oregon CCB #258533</span>
