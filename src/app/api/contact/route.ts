@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit, FORM_RATE_LIMIT } from '@/lib/rate-limit';
 
 interface ContactPayload {
-  name: string;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
   email: string;
   phone?: string;
   service?: string;
@@ -15,15 +17,14 @@ function validateEmail(email: string): boolean {
 
 function getClientIp(request: NextRequest): string {
   return (
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     request.headers.get('x-real-ip') ||
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     'unknown'
   );
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // --- Rate limiting ---
     const ip = getClientIp(request);
     const rateLimitResult = checkRateLimit(`contact:${ip}`, FORM_RATE_LIMIT);
 
@@ -45,8 +46,10 @@ export async function POST(request: NextRequest) {
 
     const body: ContactPayload = await request.json();
 
-    // --- Validation ---
-    if (!body.name || !body.name.trim()) {
+    // Resolve name from possible input formats (support both separate names and combined field)
+    const resolvedName = body.name || [body.firstName, body.lastName].filter(Boolean).join(' ');
+
+    if (!resolvedName || resolvedName.trim().length === 0) {
       return NextResponse.json(
         { error: 'Name is required.' },
         { status: 400 }
@@ -66,7 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     const lead = {
-      name: body.name.trim(),
+      name: resolvedName.trim(),
       email: body.email.trim().toLowerCase(),
       phone: body.phone?.trim() || null,
       service: body.service || null,
@@ -75,8 +78,6 @@ export async function POST(request: NextRequest) {
       source: 'website-contact-form' as const,
     };
 
-    // --- Persist to Neon DB (if configured) ---
-    let persisted = false;
     if (process.env.DATABASE_URL) {
       try {
         const { getDb } = await import('@/lib/db');
@@ -90,14 +91,11 @@ export async function POST(request: NextRequest) {
           message: lead.message,
           source: lead.source,
         });
-        persisted = true;
       } catch (dbError) {
         console.error('[Contact] DB persist failed:', dbError);
-        // Continue — don't lose the lead just because DB is down
       }
     }
 
-    // --- Send email notifications (if Resend configured) ---
     if (process.env.RESEND_API_KEY) {
       try {
         const { sendContactNotification, sendContactConfirmation } =
@@ -111,17 +109,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Always log to console as a fallback
-    console.log(
-      '[Contact Form]',
-      JSON.stringify({ ...lead, persisted }, null, 2)
-    );
-
     return NextResponse.json(
       {
         success: true,
-        message:
-          'Thank you! We received your message and will respond within one business day.',
+        message: 'Thank you! We received your message and will respond within one business day.',
       },
       {
         status: 200,
@@ -131,7 +122,8 @@ export async function POST(request: NextRequest) {
         },
       }
     );
-  } catch {
+  } catch (error) {
+    console.error('[Contact] Unexpected error:', error);
     return NextResponse.json(
       { error: 'Invalid request. Please try again.' },
       { status: 400 }
