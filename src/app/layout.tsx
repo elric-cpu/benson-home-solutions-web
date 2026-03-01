@@ -8,24 +8,34 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL('https://bensonhomesolutions.com'),
   title: {
-    default: 'Benson Home Solutions | Licensed Oregon Contractor CCB #258533',
+    default: 'Oregon Contractor CCB #258533 | Benson Home Solutions',
     template: '%s | Benson Home Solutions',
   },
   description:
-    'Licensed, bonded, and insured Oregon contractor serving the Mid-Willamette Valley and Harney County. Home maintenance, emergency restoration, remodeling, and commercial construction. CCB #258533.',
+    'Licensed Oregon General Contractor (CCB #258533) specializing in property maintenance subscriptions, emergency water damage restoration, and commercial facility management in the Mid-Willamette Valley.',
   keywords: [
-    'Oregon contractor',
-    'home maintenance Salem Oregon',
-    'water damage restoration',
-    'emergency restoration Oregon',
-    'licensed contractor CCB 258533',
+    'Oregon General Contractor',
+    'Property Maintenance Subscriptions',
+    'Water Damage Restoration Albany OR',
+    'Emergency Mitigation Services',
+    'Commercial Facility Management',
     'Benson Home Solutions',
   ],
-  authors: [{ name: 'Benson Home Solutions' }],
+  authors: [{ name: 'Benson Home Solutions', url: 'https://bensonhomesolutions.com' }],
+  creator: 'Benson Home Solutions',
+  publisher: 'Benson Home Solutions',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
     siteName: 'Benson Home Solutions',
+    title: 'Oregon Contractor CCB #258533 | Benson Home Solutions',
+    description: 'Licensed Oregon General Contractor specializing in maintenance subscriptions and emergency restoration.',
+    url: 'https://bensonhomesolutions.com',
   },
   robots: {
     index: true,
@@ -37,6 +47,9 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  other: {
+    'date-modified': new Date().toISOString(),
   },
 };
 

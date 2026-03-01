@@ -3,6 +3,7 @@ import { aboutPage } from './aboutPage';
 import { contactPage } from './contactPage';
 import { emergencyPage } from './emergencyPage';
 import { methodologyPage } from './methodologyPage';
+import { methodologyDetail } from './methodologyDetail';
 import { servicePage } from './servicePage';
 import { areaPage } from './areaPage';
 import { blogPost } from './blogPost';
@@ -20,6 +21,7 @@ export const schemaTypes = [
   methodologyPage,
   siteSettings,
   // Documents
+  methodologyDetail,
   servicePage,
   areaPage,
   blogPost,

@@ -1,19 +1,21 @@
 import type { Metadata } from 'next';
+import { TrueCostCalculator } from './TrueCostCalculator';
 
 export const metadata: Metadata = {
-  title: 'True Cost Calculator',
+  title: 'True Cost of Homeownership Calculator',
   description:
-    'Calculate the true cost of your home improvement project. Powered by local data and 1build pricing. Benson Home Solutions.',
+    'Calculate the true annual cost of owning your home beyond the mortgage. Get a realistic breakdown of taxes, insurance, maintenance, and energy costs.',
+  openGraph: {
+    title: 'True Cost of Homeownership Calculator | Benson Home Solutions',
+    description: 'Find out the hidden costs of your home beyond the mortgage.',
+    type: 'website',
+  },
 };
 
 export default function CostCalculatorPage() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-section sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold text-heading md:text-5xl">True Cost Calculator</h1>
-      <p className="mt-4 max-w-2xl text-lg text-body">
-        Get a realistic cost estimate for your project using local pricing data.
-      </p>
-      <p className="margin-note mt-6">Scaffold — interactive tool coming Sprint 3.</p>
-    </section>
+    <main className="min-h-screen">
+      <TrueCostCalculator />
+    </main>
   );
 }

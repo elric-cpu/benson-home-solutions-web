@@ -6,8 +6,9 @@ import {
   Container,
   Section,
   Badge,
+  RichHero,
 } from '@/components/ui';
-import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
+import { BUSINESS, SERVICE_AREAS, HERO_ASSETS } from '@/lib/constants';
 
 const services = [
   {
@@ -48,39 +49,33 @@ const allAreas = [
   ...SERVICE_AREAS.harneyCounty,
 ];
 
+import { LocalBusinessJsonLd } from '@/components/seo/json-ld';
+
 export default function HomePage() {
   return (
     <>
+      <LocalBusinessJsonLd />
       {/* Hero Section */}
-      <Section variant="cream" spacing="lg">
-        <Container>
-          <div className="max-w-3xl">
-            <Badge variant="secondary" className="mb-4">
-              Serving Albany, Lebanon & the Mid-Willamette Valley
-            </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-oxblood leading-tight">
-              Professional Maintenance,<br className="hidden sm:inline" />
-              Restoration & Mitigation
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-slate leading-relaxed max-w-2xl">
-              From preventive maintenance programs to emergency water damage
-              restoration, Benson Home Solutions protects your property
-              investment. Licensed, bonded, and insured&nbsp;&mdash; serving
-              Oregon with precision and care.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Link href="/contact">
-                <Button size="lg">Get a Free Quote</Button>
-              </Link>
-              <a href={`tel:${BUSINESS.phone}`}>
-                <Button variant="outline" size="lg">
-                  Call {BUSINESS.phone}
-                </Button>
-              </a>
-            </div>
-          </div>
-        </Container>
-      </Section>
+      <RichHero
+        title={
+          <>
+            Professional Maintenance,<br className="hidden sm:inline" />
+            Restoration & Mitigation
+          </>
+        }
+        description="From preventive maintenance programs to emergency water damage restoration, Benson Home Solutions protects your property investment. Licensed, bonded, and insured—serving Oregon with precision and care."
+        backgroundImage={HERO_ASSETS.homepage}
+        badge="Serving Albany, Lebanon & the Mid-Willamette Valley"
+      >
+        <Link href="/tools/cost-calculator">
+          <Button size="lg" variant="secondary">Calculate True Home Cost</Button>
+        </Link>
+        <Link href="/contact">
+          <Button variant="outline" size="lg" className="bg-white/10 text-cream border-cream/20 hover:bg-cream hover:text-oxblood">
+            Request a Quote
+          </Button>
+        </Link>
+      </RichHero>
 
       {/* Services Section */}
       <Section spacing="lg">
@@ -239,41 +234,6 @@ export default function HomePage() {
           </div>
         </Container>
       </Section>
-
-      {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'HomeAndConstructionBusiness',
-            name: BUSINESS.name,
-            telephone: BUSINESS.phone,
-            email: BUSINESS.email,
-            url: BUSINESS.url,
-            description: 'Licensed Oregon contractor providing professional property maintenance, water damage restoration, and emergency mitigation services in the Mid-Willamette Valley and Harney County.',
-            priceRange: '$$',
-            areaServed: [
-              { '@type': 'City', name: 'Albany', containedInPlace: { '@type': 'State', name: 'Oregon' } },
-              { '@type': 'City', name: 'Lebanon', containedInPlace: { '@type': 'State', name: 'Oregon' } },
-              { '@type': 'City', name: 'Salem', containedInPlace: { '@type': 'State', name: 'Oregon' } },
-              { '@type': 'City', name: 'Corvallis', containedInPlace: { '@type': 'State', name: 'Oregon' } },
-              { '@type': 'City', name: 'Sweet Home', containedInPlace: { '@type': 'State', name: 'Oregon' } },
-            ],
-            hasOfferCatalog: {
-              '@type': 'OfferCatalog',
-              name: 'Services',
-              itemListElement: [
-                { '@type': 'OfferCatalog', name: 'Property Maintenance Programs' },
-                { '@type': 'OfferCatalog', name: 'Water Damage Restoration' },
-                { '@type': 'OfferCatalog', name: 'Emergency Mitigation' },
-                { '@type': 'OfferCatalog', name: 'Remodeling & Restoration' },
-              ],
-            },
-            sameAs: [BUSINESS.facebook, BUSINESS.gbp],
-          }),
-        }}
-      />
     </>
   );
 }

@@ -8,10 +8,9 @@ import { MobileNav } from './MobileNav';
 
 const navigation = [
   { name: 'Services', href: '/services' },
+  { name: 'Tools', href: '/tools/cost-calculator' },
   { name: 'About', href: '/about' },
   { name: 'Areas We Serve', href: '/areas' },
-  { name: 'Projects', href: '/projects' },
-  { name: 'Blog', href: '/blog' },
   { name: 'Contact', href: '/contact' },
 ];
 
