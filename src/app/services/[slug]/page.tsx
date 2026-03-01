@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { client } from '@/sanity/lib/client';
@@ -21,7 +20,12 @@ interface ServicePageData {
   ctaLink?: string;
   pricingNote?: string;
   faqItems?: { _id: string; question: string; answer: string }[];
-  relatedServices?: { _id: string; title: string; slug: { current: string }; heroImage?: any }[];
+  relatedServices?: {
+    _id: string;
+    title: string;
+    slug: { current: string };
+    heroImage?: any;
+  }[];
 }
 
 const serviceQuery = `*[_type == "servicePage" && slug.current == $slug][0]{
@@ -53,9 +57,10 @@ function formatSlugToTitle(slug: string) {
 }
 
 export async function generateStaticParams() {
-  // FIXED: Defend against missing Project ID during initial Vercel setup
-  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === 'PLACEHOLDER') {
-    console.warn('Sanity Project ID not set. Skipping static generation for services.');
+  if (
+    !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === 'PLACEHOLDER'
+  ) {
     return [];
   }
 
@@ -65,7 +70,7 @@ export async function generateStaticParams() {
     );
     return slugs.map((s) => ({ slug: s.slug.current }));
   } catch (error) {
-    console.error('Error fetching service slugs for static generation:', error);
+    console.error('Error fetching service slugs:', error);
     return [];
   }
 }
@@ -76,20 +81,20 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  
+
   try {
-    const service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
-    
-    // Use Sanity data if available, otherwise generate a fallback title
+    const service = await client.fetch<ServicePageData | null>(serviceQuery, {
+      slug,
+    });
     const title = service?.title || formatSlugToTitle(slug);
-    
+
     return {
       title: title,
       description:
         service?.metaDescription ||
         `${title} services from Benson Home Solutions. Professional, licensed, bonded, and insured Oregon contractor serving the Mid-Willamette Valley. CCB #258533.`,
     };
-  } catch (error) {
+  } catch {
     const fallbackTitle = formatSlugToTitle(slug);
     return { title: fallbackTitle };
   }
@@ -101,26 +106,27 @@ export default async function ServicePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  
+
   let fetchedService: ServicePageData | null = null;
-  
+
   try {
-    fetchedService = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
-  } catch (error) {
-    console.error('Failed to load service data', error);
+    fetchedService = await client.fetch<ServicePageData | null>(serviceQuery, {
+      slug,
+    });
+  } catch {
+    // Fail silently, fallback data will be used
   }
 
   const fallbackTitle = formatSlugToTitle(slug);
 
-  // If we don't have the service in Sanity yet, generate a fallback structure
-  // so the page still renders beautifully and doesn't 404.
   const service: ServicePageData = fetchedService || {
     _id: `fallback-${slug}`,
     title: fallbackTitle,
     slug: { current: slug },
     heroHeadline: `Professional ${fallbackTitle} Services`,
     metaDescription: `Expert ${fallbackTitle.toLowerCase()} services by Benson Home Solutions. Licensed, bonded, and insured. We bring over a decade of experience to every project.`,
-    pricingNote: 'We provide transparent, upfront pricing. Contact us for a custom quote based on your specific property needs.',
+    pricingNote:
+      'We provide transparent, upfront pricing. Contact us for a custom quote based on your specific property needs.',
   };
 
   return (
@@ -130,7 +136,7 @@ export default async function ServicePage({
         <Container>
           <div className="max-w-3xl">
             <Link
-              href="/services"
+              href="/"
               className="text-sm font-medium text-oxblood hover:text-oxblood/80 transition-colors mb-4 inline-block"
             >
               &larr; All Services
@@ -143,8 +149,7 @@ export default async function ServicePage({
                 {service.metaDescription}
               </p>
             )}
-            
-            {/* Show fallback badge if CMS data is missing */}
+
             <div className="mt-6 flex flex-wrap gap-2">
               {service.serviceArea && service.serviceArea.length > 0 ? (
                 service.serviceArea.map((area) => (
@@ -153,7 +158,9 @@ export default async function ServicePage({
                   </Badge>
                 ))
               ) : (
-                <Badge variant="secondary">Mid-Willamette Valley & Harney County</Badge>
+                <Badge variant="secondary">
+                  Mid-Willamette Valley & Harney County
+                </Badge>
               )}
             </div>
           </div>
@@ -184,7 +191,12 @@ export default async function ServicePage({
                 Reliable {service.title} Solutions
               </h2>
               <p className="leading-relaxed mb-4">
-                When you need high-quality <strong>{service.title.toLowerCase()}</strong>, Benson Home Solutions delivers. We follow a strict methodology to ensure every detail is handled correctly the first time. As a fully licensed and insured contractor (CCB #258533), we provide board-ready documentation and guaranteed service levels.
+                When you need high-quality{' '}
+                <strong>{service.title.toLowerCase()}</strong>, Benson Home
+                Solutions delivers. We follow a strict methodology to ensure
+                every detail is handled correctly the first time. As a fully
+                licensed and insured contractor (CCB #258533), we provide
+                board-ready documentation and guaranteed service levels.
               </p>
               <ul className="list-disc list-inside space-y-2 mb-8 ml-4">
                 <li>Prompt, professional communication</li>
@@ -193,7 +205,9 @@ export default async function ServicePage({
                 <li>Fully licensed, bonded, and insured</li>
               </ul>
               <div className="border-l-4 border-oxblood pl-4 italic my-6 bg-cream/50 py-4 pr-4 rounded-r-lg">
-                "We treat your property with the same care and precision we would our own. Our reputation is built on reliability and doing things the right way."
+                &quot;We treat your property with the same care and precision we
+                would our own. Our reputation is built on reliability and doing
+                things the right way.&quot;
               </div>
             </div>
           )}
@@ -208,9 +222,7 @@ export default async function ServicePage({
               <h3 className="text-lg font-semibold text-charcoal mb-2">
                 Pricing
               </h3>
-              <p className="text-slate leading-relaxed">
-                {service.pricingNote}
-              </p>
+              <p className="text-slate leading-relaxed">{service.pricingNote}</p>
             </div>
           </Container>
         </Section>

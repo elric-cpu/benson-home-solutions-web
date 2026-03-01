@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit, FORM_RATE_LIMIT } from '@/lib/rate-limit';
+import { db } from '@/lib/db';
+import { contactSubmissions, clients } from '@/lib/db/schema';
+import { syncLeadToHubSpot } from '@/lib/crm/hubspot';
 
 interface ContactPayload {
   firstName?: string;
@@ -29,43 +32,20 @@ export async function POST(request: NextRequest) {
     const rateLimitResult = checkRateLimit(`contact:${ip}`, FORM_RATE_LIMIT);
 
     if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { error: 'Too many submissions. Please try again in a few minutes.' },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': String(
-              Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000)
-            ),
-            'X-RateLimit-Limit': String(rateLimitResult.limit),
-            'X-RateLimit-Remaining': '0',
-          },
-        }
-      );
+      return NextResponse.json({ error: 'Too many submissions. Please try again in a few minutes.' }, { status: 429 });
     }
 
     const body: ContactPayload = await request.json();
-
-    // Resolve name from possible input formats (support both separate names and combined field)
     const resolvedName = body.name || [body.firstName, body.lastName].filter(Boolean).join(' ');
 
     if (!resolvedName || resolvedName.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Name is required.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Name is required.' }, { status: 400 });
     }
     if (!body.email || !validateEmail(body.email)) {
-      return NextResponse.json(
-        { error: 'A valid email address is required.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'A valid email address is required.' }, { status: 400 });
     }
     if (!body.message || body.message.trim().length < 10) {
-      return NextResponse.json(
-        { error: 'Message must be at least 10 characters.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Message must be at least 10 characters.' }, { status: 400 });
     }
 
     const lead = {
@@ -78,55 +58,73 @@ export async function POST(request: NextRequest) {
       source: 'website-contact-form' as const,
     };
 
-    if (process.env.DATABASE_URL) {
-      try {
-        const { getDb } = await import('@/lib/db');
-        const { contactSubmissions } = await import('@/lib/db/schema');
-        const db = getDb();
-        await db.insert(contactSubmissions).values({
+    // 1. CRM Sync (Background - non-blocking)
+    syncLeadToHubSpot({
+      email: lead.email,
+      firstName: body.firstName || resolvedName.split(' ')[0],
+      lastName: body.lastName || resolvedName.split(' ').slice(1).join(' '),
+      phone: lead.phone || undefined,
+      message: lead.message,
+      source: 'web',
+      serviceInterest: lead.service || undefined,
+    }).catch(err => console.error('[HubSpot Sync Error]', err));
+
+    // 2. Database Persistence
+    try {
+      await db
+        .insert(clients)
+        .values({
           name: lead.name,
           email: lead.email,
           phone: lead.phone,
-          service: lead.service,
-          message: lead.message,
-          source: lead.source,
+          sourceChannel: 'contact-form',
+        })
+        .onConflictDoUpdate({
+          target: clients.email,
+          set: { 
+            name: lead.name,
+            phone: lead.phone,
+            updatedAt: new Date() 
+          },
         });
-      } catch (dbError) {
-        console.error('[Contact] DB persist failed:', dbError);
-      }
+
+      await db.insert(contactSubmissions).values({
+        name: lead.name,
+        email: lead.email,
+        phone: lead.phone,
+        service: lead.service,
+        message: lead.message,
+        source: lead.source,
+      });
+    } catch (dbError) {
+      console.error('[Contact] DB persist failed:', dbError);
     }
 
+    // 3. Email Notifications
     if (process.env.RESEND_API_KEY) {
       try {
         const { sendContactNotification, sendContactConfirmation } =
           await import('@/lib/email/resend');
+        
         await Promise.allSettled([
           sendContactNotification(lead),
-          sendContactConfirmation({ name: lead.name, email: lead.email }),
+          sendContactConfirmation({ 
+            name: lead.name, 
+            email: lead.email,
+            service: lead.service 
+          }),
         ]);
       } catch (emailError) {
-        console.error('[Contact] Email send failed:', emailError);
+        console.error('[Contact] Email trigger failed:', emailError);
       }
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: 'Thank you! We received your message and will respond within one business day.',
-      },
-      {
-        status: 200,
-        headers: {
-          'X-RateLimit-Limit': String(rateLimitResult.limit),
-          'X-RateLimit-Remaining': String(rateLimitResult.remaining),
-        },
-      }
-    );
+    return NextResponse.json({
+      success: true,
+      message: 'Thank you! We received your message and will respond within one business day.',
+    });
   } catch (error) {
     console.error('[Contact] Unexpected error:', error);
-    return NextResponse.json(
-      { error: 'Invalid request. Please try again.' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Invalid request. Please try again.' }, { status: 400 });
   }
 }

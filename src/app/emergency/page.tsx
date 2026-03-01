@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import { client } from '@/sanity/lib/client';
-import { Button, Container, Section, Card, CardContent } from '@/components/ui';
+import { Button, Container, Section, Card, CardContent, RichHero } from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
-import { BUSINESS } from '@/lib/constants';
+import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
 
 interface EmergencyPageData {
   title?: string;
@@ -56,36 +56,23 @@ export default async function EmergencyPage() {
 
   return (
     <>
-      {/* Urgent Hero Section */}
-      <Section className="bg-red-900 text-white py-16 md:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20" />
-        <Container className="relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-100/10 border border-red-100/20 text-red-50 mb-6 font-semibold tracking-wide uppercase text-sm">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse" /> Immediate Dispatch
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-              {page.heroHeadline}
-            </h1>
-            <p className="text-xl md:text-2xl text-red-50 mb-10 leading-relaxed">
-              {page.heroSubtext}
-            </p>
-
-            <div className="flex flex-col items-center gap-4">
-              <a href={`tel:${emergencyPhone}`} className="w-full sm:w-auto">
-                <Button variant="emergency" size="lg" className="w-full text-xl h-16 px-8 shadow-xl shadow-red-950/50 border-2 border-red-400">
-                  Call Now: {emergencyPhone}
-                </Button>
-              </a>
-              {page.responseTimeSLA && (
-                <p className="text-red-100 font-medium mt-2">
-                  {page.responseTimeSLA}
-                </p>
-              )}
-            </div>
-          </div>
-        </Container>
-      </Section>
+      {/* Rich Hero Section */}
+      <RichHero
+        title={page.heroHeadline!}
+        description={page.heroSubtext}
+        backgroundImage={HERO_ASSETS.emergency}
+        badge="Immediate Dispatch Available"
+        overlayOpacity={80}
+      >
+        <a href={`tel:${emergencyPhone}`} className="w-full sm:w-auto">
+          <Button variant="emergency" size="lg" className="w-full text-xl h-16 px-8 shadow-xl shadow-red-950/50 border-2 border-red-400">
+            Call Now: {emergencyPhone}
+          </Button>
+        </a>
+        <div className="w-full text-cream/60 text-sm font-bold uppercase tracking-widest mt-4">
+          {page.responseTimeSLA}
+        </div>
+      </RichHero>
 
       {/* Services Breakdown */}
       <Section spacing="md" variant="cream">
@@ -144,7 +131,7 @@ export default async function EmergencyPage() {
               <div className="bg-surface border border-border p-6 rounded-xl shadow-sm mt-8">
                 <h3 className="text-xl font-bold text-charcoal mb-2">Licensed, Bonded, & Insured</h3>
                 <p className="mb-0">
-                  You need a contractor you can trust when things go wrong. Benson Home Solutions operates under Oregon CCB #{BUSINESS.license.replace('CCB #', '')}. We are fully insured for liability and workers' compensation.
+                  You need a contractor you can trust when things go wrong. Benson Home Solutions operates under Oregon CCB #{BUSINESS.license.replace('CCB #', '')}. We are fully insured for liability and workers&apos; compensation.
                 </p>
               </div>
             </div>

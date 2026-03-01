@@ -1,166 +1,91 @@
 import type { Metadata } from 'next';
+import { Section, Container, Card, CardContent, Badge } from '@/components/ui';
+import { HubSpotForm } from '@/components/content/HubSpotForm';
+import { BUSINESS, HUBSPOT } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'Contact Benson Home Solutions | (541) 321-5115',
-  description: 'Contact Benson Home Solutions for maintenance, restoration, and mitigation services in the Mid-Willamette Valley. Call (541) 321-5115 or reach our emergency line 24/7.',
+  title: 'Contact Us | Request a Quote',
+  description: `Contact Benson Home Solutions for professional maintenance, restoration, and mitigation services in the Mid-Willamette Valley. Call ${BUSINESS.phone} or our 24/7 emergency line.`,
 };
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero */}
-      <section className="bg-blue-900 text-white py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h1>
-          <p className="text-xl text-blue-100">
-            Ready to protect your property? Reach out for a free assessment, ask a question, or report an emergency.
-          </p>
-        </div>
-      </section>
+    <>
+      {/* Hero Section */}
+      <Section variant="cream" spacing="lg">
+        <Container>
+          <div className="max-w-3xl">
+            <Badge variant="secondary" className="mb-4">
+              Get in Touch
+            </Badge>
+            <h1 className="text-4xl md:text-5xl font-bold text-oxblood leading-tight">
+              Ready to Protect Your Property?
+            </h1>
+            <p className="mt-6 text-lg md:text-xl text-slate leading-relaxed">
+              Whether you need a preventive maintenance program, emergency
+              water damage restoration, or a free property assessment, our
+              licensed team is here to help.
+            </p>
+          </div>
+        </Container>
+      </Section>
 
-      {/* Emergency Banner */}
-      <section className="bg-red-600 text-white py-4">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="font-semibold">
-            🚨 Active Emergency? Call now:{' '}
-            <a href="tel:+15414130480" className="underline font-bold">
-              (541) 413-0480
-            </a>{' '}
-            — Available 24/7
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
-              <form className="space-y-4">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                      First Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                      Last Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-1">
-                    What do you need help with?
-                  </label>
-                  <select
-                    id="service"
-                    name="service"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">Select a service...</option>
-                    <option value="maintenance">Maintenance Program</option>
-                    <option value="water-damage">Water Damage Restoration</option>
-                    <option value="emergency">Emergency Response</option>
-                    <option value="remodeling">Remodeling &amp; Restoration</option>
-                    <option value="inspection">Property Assessment</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={5}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Tell us about your property and what you need..."
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Send Message
-                </button>
-                <p className="text-sm text-gray-500">
-                  We typically respond within 1 business day. For emergencies, please call directly.
-                </p>
-              </form>
-            </div>
-
+      {/* Main Contact Section */}
+      <Section spacing="lg">
+        <Container>
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Contact Info */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h2>
-                <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-charcoal mb-6">
+                  Contact Information
+                </h2>
+                <div className="space-y-6">
                   <div className="flex items-start gap-4">
-                    <span className="text-2xl">📞</span>
+                    <div className="w-12 h-12 rounded-full bg-cream flex items-center justify-center text-oxblood text-xl shrink-0">
+                      📞
+                    </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Office Phone</h3>
-                      <a href="tel:+15413215115" className="text-blue-600 hover:underline text-lg">
-                        (541) 321-5115
+                      <h3 className="font-bold text-charcoal">Office Phone</h3>
+                      <a
+                        href={`tel:${BUSINESS.phone}`}
+                        className="text-lg text-oxblood hover:underline font-semibold"
+                      >
+                        {BUSINESS.phone}
                       </a>
-                      <p className="text-gray-500 text-sm">Mon–Fri, 8am–5pm</p>
+                      <p className="text-sm text-slate">Mon–Fri, 8am–5pm</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <span className="text-2xl">🚨</span>
+
+                  <div className="flex items-start gap-4 p-4 rounded-xl bg-red-50 border border-red-100">
+                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600 text-xl shrink-0">
+                      🚨
+                    </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Emergency Line</h3>
-                      <a href="tel:+15414130480" className="text-red-600 hover:underline text-lg font-semibold">
-                        (541) 413-0480
+                      <h3 className="font-bold text-red-900">Emergency Line</h3>
+                      <a
+                        href={`tel:${BUSINESS.afterhoursPhone}`}
+                        className="text-lg text-red-600 hover:underline font-bold"
+                      >
+                        {BUSINESS.afterhoursPhone}
                       </a>
-                      <p className="text-gray-500 text-sm">24/7 — Active water damage, storm damage, emergencies</p>
+                      <p className="text-sm text-red-800">
+                        24/7 — Active water damage or emergencies
+                      </p>
                     </div>
                   </div>
+
                   <div className="flex items-start gap-4">
-                    <span className="text-2xl">✉️</span>
+                    <div className="w-12 h-12 rounded-full bg-cream flex items-center justify-center text-oxblood text-xl shrink-0">
+                      ✉️
+                    </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Email</h3>
-                      <a href="mailto:office@bensonhomesolutions.com" className="text-blue-600 hover:underline">
-                        office@bensonhomesolutions.com
+                      <h3 className="font-bold text-charcoal">Email Address</h3>
+                      <a
+                        href={`mailto:${BUSINESS.email}`}
+                        className="text-lg text-oxblood hover:underline"
+                      >
+                        {BUSINESS.email}
                       </a>
                     </div>
                   </div>
@@ -168,50 +93,78 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Service Area</h3>
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <p className="text-gray-700 mb-4">
-                    We serve the entire Mid-Willamette Valley, including:
-                  </p>
-                  <div className="grid grid-cols-2 gap-2 text-gray-600">
-                    {[
-                      'Albany',
-                      'Salem & Keizer',
-                      'Lebanon',
-                      'Sweet Home',
-                      'Corvallis',
-                      'Philomath',
-                      'Jefferson',
-                      'Scio',
-                      'Stayton',
-                      'Dallas',
-                    ].map((city) => (
-                      <span key={city} className="flex items-center gap-1">
-                        <span className="text-green-600 text-sm">📍</span> {city}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Credentials</h3>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-gray-700">
-                    <strong>CCB #258533</strong> — Licensed, bonded, and insured by the Oregon Construction Contractors Board.
-                  </p>
-                </div>
+                <h2 className="text-2xl font-bold text-charcoal mb-6">
+                  Credentials
+                </h2>
+                <Card variant="outlined" className="bg-surface">
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <span className="text-oxblood font-bold text-xl">✓</span>
+                        <p className="text-slate font-medium">
+                          <strong>Oregon CCB #{BUSINESS.license.replace('CCB #', '')}</strong> — Licensed, Bonded, & Insured
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-oxblood font-bold text-xl">✓</span>
+                        <p className="text-slate font-medium">
+                          IICRC Certified Water Damage Restoration
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-oxblood font-bold text-xl">✓</span>
+                        <p className="text-slate font-medium">
+                          EPA Lead-Safe Certified Firm
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
+
+            {/* Form */}
+            <div className="bg-white rounded-2xl shadow-elevated p-6 md:p-8 border border-slate/10">
+              <h2 className="text-2xl font-bold text-charcoal mb-2">
+                Send Us a Message
+              </h2>
+              <p className="text-slate mb-8">
+                Fill out the form below and we&apos;ll get back to you within one
+                business day.
+              </p>
+              <HubSpotForm 
+                portalId={HUBSPOT.portalId}
+                formId={HUBSPOT.contactFormId}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* JSON-LD */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML=541
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'ContactPage',
+            name: `Contact ${BUSINESS.name}`,
+            description: `Contact information and request form for ${BUSINESS.name} in the Mid-Willamette Valley.`,
+            url: `${BUSINESS.url}/contact`,
+            mainEntity: {
+              '@type': 'HomeAndConstructionBusiness',
+              name: BUSINESS.name,
+              telephone: BUSINESS.phone,
+              email: BUSINESS.email,
+              address: {
+                '@type': 'PostalAddress',
+                addressRegion: 'OR',
+                addressCountry: 'US',
+              },
+            },
+          }),
+        }}
       />
-    </main>
+    </>
   );
 }

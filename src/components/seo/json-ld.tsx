@@ -30,6 +30,7 @@ export function LocalBusinessJsonLd() {
         url: BUSINESS.url,
         telephone: BUSINESS.phone,
         email: BUSINESS.email,
+        priceRange: '$$',
         founder: {
           '@type': 'Person',
           name: BUSINESS.owner,
@@ -57,7 +58,67 @@ export function LocalBusinessJsonLd() {
             name: 'Oregon Construction Contractors Board',
           },
         },
+        openingHoursSpecification: [
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            opens: '08:00',
+            closes: '17:00',
+          },
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Saturday', 'Sunday'],
+            opens: '00:00',
+            closes: '00:00',
+            description: 'Emergency Services Available 24/7',
+          },
+        ],
         sameAs: [BUSINESS.gbp, BUSINESS.facebook],
+        dateModified: new Date().toISOString(),
+      }}
+    />
+  );
+}
+
+/** Article schema — used for Methodology Hub and blog posts to signal E-E-A-T. */
+export function ArticleJsonLd({
+  headline,
+  description,
+  datePublished,
+  dateModified,
+  authorName = BUSINESS.owner,
+  imageUrl,
+}: {
+  headline: string;
+  description: string;
+  datePublished: string;
+  dateModified: string;
+  authorName?: string;
+  imageUrl?: string;
+}) {
+  return (
+    <JsonLdScript
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline,
+        description,
+        image: imageUrl ? [imageUrl] : undefined,
+        datePublished,
+        dateModified,
+        author: {
+          '@type': 'Person',
+          name: authorName,
+          url: BUSINESS.url,
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: BUSINESS.name,
+          logo: {
+            '@type': 'ImageObject',
+            url: `${BUSINESS.url}/logo.png`, // Ensure this asset exists
+          },
+        },
       }}
     />
   );

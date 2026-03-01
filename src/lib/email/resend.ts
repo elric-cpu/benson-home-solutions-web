@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { BUSINESS } from '@/lib/constants';
+import { getContactWelcomeEmail } from './templates';
 
 let _resend: Resend | null = null;
 
@@ -68,39 +69,26 @@ export async function sendContactNotification(data: ContactNotificationData) {
 }
 
 /**
- * Sends a confirmation email to the person who submitted the contact form.
+ * Sends a high-authority confirmation email to the person who submitted the contact form.
  */
 export async function sendContactConfirmation(data: {
   name: string;
   email: string;
+  service?: string | null;
 }) {
   const resend = getResend();
 
   const { error } = await resend.emails.send({
-    from: `${BUSINESS.name} <noreply@bensonhomesolutions.com>`,
+    from: `${BUSINESS.name} <office@bensonhomesolutions.com>`,
     to: [data.email],
-    subject: `We received your message — ${BUSINESS.name}`,
-    html: `
-      <div style="font-family: 'Source Sans 3', Arial, sans-serif; max-width: 600px;">
-        <h2 style="color: #4C0C14;">Thanks for reaching out, ${data.name}!</h2>
-        <p>We received your message and will get back to you within <strong>one business day</strong>.</p>
-        <p>If this is urgent, call us directly:</p>
-        <ul>
-          <li><strong>Main:</strong> <a href="tel:${BUSINESS.phone}">${BUSINESS.phone}</a></li>
-          <li><strong>After hours:</strong> <a href="tel:${BUSINESS.afterhoursPhone}">${BUSINESS.afterhoursPhone}</a></li>
-        </ul>
-        <p style="margin-top: 24px;">— The ${BUSINESS.name} Team</p>
-        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
-        <p style="font-size: 12px; color: #4A4A4A;">
-          ${BUSINESS.name} · Oregon ${BUSINESS.license}<br/>
-          <a href="${BUSINESS.url}">${BUSINESS.url}</a>
-        </p>
-      </div>
-    `,
+    subject: `Inquiry Received: ${data.service || 'Benson Home Solutions'}`,
+    html: getContactWelcomeEmail({
+      name: data.name,
+      service: data.service,
+    }),
   });
 
   if (error) {
     console.error('[Resend] Failed to send confirmation email:', error);
-    // Don't throw — confirmation is non-critical
   }
 }
