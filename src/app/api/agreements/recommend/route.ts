@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { anthropic } from '@ai-sdk/anthropic';
+import { openai } from '@ai-sdk/openai';
+import { generateText } from 'ai';
 import { SERVICE_CATALOG } from '@/lib/agreement-engine';
 
 export async function POST(request: NextRequest) {
+  const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-  if (!OPENAI_API_KEY) {
+  if (!ANTHROPIC_API_KEY && !OPENAI_API_KEY) {
     return NextResponse.json(
-      { error: 'OpenAI API key not configured' },
+      { error: 'AI provider (Anthropic/OpenAI) not configured' },
       { status: 500 }
     );
   }
@@ -28,7 +32,7 @@ Do NOT generate prices. Prices are calculated separately.
 Do NOT hallucinate services not in the catalog.
 Do NOT recommend services that don't apply to this building type.
 
-Respond in valid JSON only.
+Respond in valid JSON only. Format: { "recommendations": [...] }
 `;
 
     const catalogSummary = SERVICE_CATALOG.map((s) => ({
@@ -38,27 +42,24 @@ Respond in valid JSON only.
       applicable_to: s.applicable_to,
     }));
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          {
-            role: 'user',
-            content: JSON.stringify({ property, service_catalog: catalogSummary }),
-          },
-        ],
-        response_format: { type: 'json_object' },
-      }),
+    // Choose provider (Prefer Anthropic)
+    const model = ANTHROPIC_API_KEY 
+      ? anthropic('claude-3-5-sonnet-20240620')
+      : openai('gpt-4o');
+
+    const { text } = await generateText({
+      model,
+      system: systemPrompt,
+      prompt: JSON.stringify({ property, service_catalog: catalogSummary }),
     });
 
-    const aiResult = await response.json();
-    const recommendations = JSON.parse(aiResult.choices[0].message.content).recommendations;
+    // Extract JSON from potential markdown blocks
+    const jsonString = text.includes('```') 
+      ? text.split('```json')[1]?.split('```')[0]?.trim() || text.split('```')[1]?.split('```')[0]?.trim() || text
+      : text;
+
+    const data = JSON.parse(jsonString || '{}');
+    const recommendations = data.recommendations || [];
 
     interface Recommendation {
       service_id: string;

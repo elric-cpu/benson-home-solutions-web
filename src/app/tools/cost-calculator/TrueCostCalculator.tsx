@@ -170,7 +170,7 @@ export function TrueCostCalculator() {
   if (step === 'result' && data) {
     const monthlyTotal = Math.floor(animatedTotal / 12);
     const perDay = (animatedTotal / 365).toFixed(2);
-    const tripsToHawaii = Math.floor(animatedTotal / 1200);
+    const tripsToHawaii = Math.floor(animatedTotal / 600);
 
     return (
       <>
@@ -237,12 +237,37 @@ export function TrueCostCalculator() {
                     <h3 className="text-xl font-bold text-red-900 flex items-center gap-2 mb-4">
                       ⚠️ Deferred Maintenance Alert
                     </h3>
-                    <p className="text-red-800 leading-relaxed">
+                    <p className="text-red-800 leading-relaxed mb-8">
                       Skipping routine maintenance on a home like yours in <strong>{data.city}</strong> costs an average 
                       of <strong>${data.costs.deferred_maintenance_risk.toLocaleString()} extra</strong> in emergency 
                       repairs within 3–5 years.
                     </p>
-                    <div className="mt-6 flex items-center gap-4">
+                    
+                    {/* Cost Escalation Curve */}
+                    <div className="relative h-32 w-full bg-white/50 rounded-xl border border-red-100 p-4 mb-6">
+                      <div className="absolute bottom-4 left-4 text-[10px] font-bold text-slate/40 uppercase">Year 1: Routine</div>
+                      <div className="absolute bottom-4 right-4 text-[10px] font-bold text-red-600 uppercase text-right">Year 5: Emergency</div>
+                      <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+                        <path 
+                          d="M 0 80 Q 50 75 100 20" 
+                          fill="none" 
+                          stroke="url(#grad-red)" 
+                          strokeWidth="4" 
+                          strokeLinecap="round"
+                          className="drop-shadow-md"
+                        />
+                        <circle cx="0" cy="80" r="4" fill="#4C0C14" />
+                        <circle cx="100" cy="20" r="4" fill="#ef4444" className="animate-ping" />
+                        <defs>
+                          <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#4C0C14" />
+                            <stop offset="100%" stopColor="#ef4444" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    </div>
+
+                    <div className="flex items-center gap-4">
                       <div className="flex-1 h-2 bg-red-200 rounded-full overflow-hidden">
                         <div className="h-full bg-red-500 w-1/4 animate-pulse" />
                       </div>
@@ -264,12 +289,20 @@ export function TrueCostCalculator() {
                           Unlock the final 20% &mdash; your custom maintenance schedule.
                         </p>
                       </div>
-                      <p className="text-cream/70 text-sm leading-relaxed mb-8">
-                        Get your personalized Home Cost Report including a custom maintenance schedule, 
-                        energy savings tips, and appliance replacement timeline.
-                      </p>
                       
                       <form className="space-y-4" onSubmit={handleLeadSubmit}>
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold uppercase tracking-widest text-cream/50">Property Type</label>
+                          <select 
+                            name="propertyType" 
+                            required
+                            className="w-full bg-white/10 border border-white/10 rounded-lg h-12 px-4 focus:outline-none focus:ring-2 focus:ring-oxblood/50 text-cream appearance-none"
+                          >
+                            <option value="residential" className="text-charcoal">Residential Home</option>
+                            <option value="commercial" className="text-charcoal">Commercial Facility</option>
+                            <option value="church" className="text-charcoal">Church or Community</option>
+                          </select>
+                        </div>
                         <div className="space-y-2">
                           <label className="text-xs font-bold uppercase tracking-widest text-cream/50">Email Address</label>
                           <input 
@@ -299,6 +332,16 @@ export function TrueCostCalculator() {
   }
 
   if (step === 'lead-gen') {
+    const handleShare = () => {
+      if (navigator.share) {
+        navigator.share({
+          title: 'True Cost of Homeownership',
+          text: `I just calculated that my home costs $${animatedTotal.toLocaleString()} per year beyond the mortgage! Check your address:`,
+          url: window.location.href,
+        }).catch(console.error);
+      }
+    };
+
     return (
       <Section variant="cream" className="min-h-[600px] flex items-center text-center">
         <Container size="narrow">
@@ -307,16 +350,21 @@ export function TrueCostCalculator() {
           <p className="text-lg text-slate mb-8 max-w-md mx-auto">
             We&apos;ve sent your detailed breakdown and maintenance schedule to your inbox.
           </p>
-          <div className="bg-white p-8 rounded-2xl shadow-elevated border border-slate/10 max-w-md mx-auto text-left">
+          <div className="bg-white p-8 rounded-2xl shadow-elevated border border-slate/10 max-w-md mx-auto text-left mb-8">
             <Badge variant="secondary" className="mb-2">Benson Service Area Match</Badge>
             <h3 className="text-xl font-bold text-oxblood mb-2">Exclusive Mid-Willamette Access</h3>
             <p className="text-sm text-slate mb-6 leading-relaxed">
               Your property in <strong>{address?.formatted}</strong> qualifies for 
               our 24/7 Priority Protection program.
             </p>
-            <a href="/contact">
-              <Button size="lg" className="w-full">Book Initial Assessment</Button>
-            </a>
+            <div className="space-y-4">
+              <a href="/contact" className="block">
+                <Button size="lg" className="w-full">Book Initial Assessment</Button>
+              </a>
+              <Button variant="outline" size="lg" className="w-full" onClick={handleShare}>
+                Share Your Result
+              </Button>
+            </div>
             <div className="mt-6 flex flex-wrap gap-4 justify-center grayscale opacity-50">
               <span className="text-[10px] font-black uppercase tracking-tighter">IICRC Certified</span>
               <span className="text-[10px] font-black uppercase tracking-tighter">Oregon CCB #258533</span>
