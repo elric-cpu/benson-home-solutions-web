@@ -9,9 +9,15 @@ import { HERO_ASSETS } from '@/lib/constants';
 
 type Step = 'input' | 'processing' | 'result' | 'lead-gen';
 
+interface AddressSuggestion {
+  formatted: string;
+  postcode: string;
+  city?: string;
+}
+
 export function TrueCostCalculator() {
   const [step, setStep] = useState<Step>('input');
-  const [address, setAddress] = useState<any>(null);
+  const [address, setAddress] = useState<AddressSuggestion | null>(null);
   const [data, setData] = useState<ZipData | null>(null);
   const [progressStep, setProgressStep] = useState(0);
   const [animatedTotal, setAnimatedTotal] = useState(0);
@@ -24,7 +30,7 @@ export function TrueCostCalculator() {
     'Projecting maintenance risk based on building age...',
   ];
 
-  const handleAddressSelect = (suggestion: any) => {
+  const handleAddressSelect = (suggestion: AddressSuggestion) => {
     setAddress(suggestion);
     const zipData = MOCK_ZIP_DATA[suggestion.postcode] || DEFAULT_BENCHMARK;
     setData({ ...zipData, city: suggestion.city || zipData.city });
@@ -44,10 +50,10 @@ export function TrueCostCalculator() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          address: address.formatted,
+          address: address?.formatted,
           annualTotal: animatedTotal,
           monthlyTotal: Math.floor(animatedTotal / 12),
-          isServiceArea: !!MOCK_ZIP_DATA[address.postcode],
+          isServiceArea: !!MOCK_ZIP_DATA[address?.postcode || ''],
           addressHash: null,
         }),
       });
@@ -64,9 +70,10 @@ export function TrueCostCalculator() {
 
   useEffect(() => {
     if (step === 'processing') {
+      const messagesCount = PROGRESS_MESSAGES.length;
       const interval = setInterval(() => {
         setProgressStep((prev) => {
-          if (prev >= PROGRESS_MESSAGES.length - 1) {
+          if (prev >= messagesCount - 1) {
             clearInterval(interval);
             setTimeout(() => setStep('result'), 800);
             return prev;
@@ -76,7 +83,7 @@ export function TrueCostCalculator() {
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [step]);
+  }, [step, PROGRESS_MESSAGES.length]);
 
   useEffect(() => {
     if (step === 'result' && data) {

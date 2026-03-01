@@ -13,7 +13,7 @@ interface MethodologyDetailData {
   metaDescription?: string;
   heroHeadline?: string;
   category: string;
-  content?: any[];
+  content?: Record<string, unknown>[];
   dataSources?: { name: string; url: string; description: string }[];
   faqs?: { _id: string; question: string; answer: string }[];
   datePublished?: string;

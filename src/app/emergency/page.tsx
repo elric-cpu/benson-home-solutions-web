@@ -11,9 +11,9 @@ interface EmergencyPageData {
   afterHoursPhone?: string;
   heroHeadline?: string;
   heroSubtext?: string;
-  emergencyServices?: any[];
+  emergencyServices?: Record<string, unknown>[];
   responseTimeSLA?: string;
-  content?: any[];
+  content?: Record<string, unknown>[];
 }
 
 const emergencyQuery = `*[_type == "emergencyPage"][0]`;
