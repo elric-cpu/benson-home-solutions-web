@@ -25,6 +25,14 @@ export function ContactForm() {
     setMessage('');
 
     const formData = new FormData(event.currentTarget);
+    
+    // Honeypot check
+    if (formData.get('website')) {
+      console.warn('Honeypot submission detected.');
+      setStatus('success'); // Pretend success to bots
+      return;
+    }
+
     const data = Object.fromEntries(formData.entries());
 
     try {
@@ -65,6 +73,16 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Honeypot */}
+      <div className="hidden" aria-hidden="true">
+        <input 
+          type="text" 
+          name="website" 
+          tabIndex={-1} 
+          autoComplete="off" 
+        />
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name *</Label>

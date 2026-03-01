@@ -1,19 +1,80 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Section, Container, Badge, Button, Card, CardContent } from '@/components/ui';
+import { BUSINESS } from '@/lib/constants';
+import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
 
 export const metadata: Metadata = {
-  title: 'Maintenance Subscriptions',
+  title: 'Maintenance Subscriptions | Proactive Property Oversight',
   description:
-    'Home, commercial, and church maintenance subscription programs. Defined SLAs, board-ready documentation, and preventive care plans. Benson Home Solutions.',
+    'Systematic preventive maintenance for homes, commercial buildings, and churches in Oregon. Stop the cycle of reactive repairs. Licensed CCB #258533.',
 };
 
 export default function MaintenanceSubscriptionsPage() {
+  const breadcrumbs = [
+    { name: 'Home', url: BUSINESS.url },
+    { name: 'Services', url: `${BUSINESS.url}/services` },
+    { name: 'Maintenance Subscriptions', url: `${BUSINESS.url}/services/maintenance-subscriptions` },
+  ];
+
   return (
-    <section className="mx-auto max-w-7xl px-4 py-section sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold text-heading md:text-5xl">Maintenance Subscriptions</h1>
-      <p className="mt-4 max-w-2xl text-lg text-body">
-        Proactive maintenance programs for homes, commercial properties, and churches — with defined SLAs and board-ready documentation.
-      </p>
-      <p className="margin-note mt-6">Scaffold — full content coming Sprint 2.</p>
-    </section>
+    <main className="min-h-screen">
+      <BreadcrumbJsonLd items={breadcrumbs} />
+      <ServiceJsonLd 
+        name="Maintenance Subscriptions"
+        description="Systematic preventive maintenance and professional oversight programs for Oregon property owners."
+        url={`${BUSINESS.url}/services/maintenance-subscriptions`}
+      />
+
+      <Section variant="cream" spacing="lg">
+        <Container>
+          <div className="max-w-3xl">
+            <Badge variant="secondary" className="mb-4">Systematic Oversight</Badge>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-oxblood leading-tight">
+              Proactive Property Defense
+            </h1>
+            <p className="mt-6 text-xl text-slate leading-relaxed">
+              Reactive repairs are the most expensive way to own property. We provide the systematic oversight required to identify building envelope risks before they become five-figure restoration claims.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <Link href="/tools/maintenance-configurator">
+                <Button size="lg">Configure Your Plan</Button>
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      <Section spacing="lg">
+        <Container>
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+              <CardContent className="pt-8">
+                <h3 className="text-xl font-bold text-charcoal mb-3">Forensic Inspections</h3>
+                <p className="text-slate leading-relaxed text-sm">
+                  Scheduled reviews of your roof, gutters, seals, and foundations. We find the failure points before the rain does.
+                </p>
+              </CardContent>
+            </Card>
+            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+              <CardContent className="pt-8">
+                <h3 className="text-xl font-bold text-charcoal mb-3">Board-Ready Logs</h3>
+                <p className="text-slate leading-relaxed text-sm">
+                  Every visit generates a forensic photo log and status report. You always have the documentation needed for insurance or resale.
+                </p>
+              </CardContent>
+            </Card>
+            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+              <CardContent className="pt-8">
+                <h3 className="text-xl font-bold text-charcoal mb-3">Priority Response</h3>
+                <p className="text-slate leading-relaxed text-sm">
+                  Subscription members receive 24/7 priority access to our emergency crews. If something breaks, you&apos;re at the front of the line.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      </Section>
+    </main>
   );
 }
