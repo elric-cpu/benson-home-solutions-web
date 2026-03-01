@@ -22,7 +22,7 @@ env:
 
 jobs:
   db-setup:
-    name: "Drizzle $ github.event.inputs.action "
+    name: "Drizzle ${{ github.event.inputs.action }}"
     runs-on: ubuntu-latest
     if: github.event.inputs.confirm == 'yes'
     environment: production
@@ -31,16 +31,16 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: $ env.NODE_VERSION 
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
       - run: npm ci
 
-      - name: "Run drizzle-kit $ github.event.inputs.action "
-        run: npx drizzle-kit $ github.event.inputs.action 
+      - name: "Run drizzle-kit ${{ github.event.inputs.action }}"
+        run: npx drizzle-kit ${{ github.event.inputs.action }}
         env:
-          DATABASE_URL: $ secrets.DATABASE_URL 
-          DATABASE_URL_UNPOOLED: $ secrets.DATABASE_URL_UNPOOLED 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
 
       - name: Verify tables exist
         run: |
@@ -69,4 +69,4 @@ jobs:
             });
           "
         env:
-          DATABASE_URL: $ secrets.DATABASE_URL 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
