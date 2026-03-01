@@ -9,8 +9,37 @@ import {
   RichHero,
 } from '@/components/ui';
 import { BUSINESS, SERVICE_AREAS, HERO_ASSETS } from '@/lib/constants';
+import { client } from '@/sanity/lib/client';
+import { LocalBusinessJsonLd } from '@/components/seo/json-ld';
 
-const services = [
+interface HomePageData {
+  title?: string;
+  heroHeadline?: string;
+  heroDescription?: string;
+  services?: {
+    title: string;
+    description: string;
+    slug: { current: string };
+  }[];
+  trustSignals?: {
+    label: string;
+    detail: string;
+  }[];
+}
+
+const homeQuery = `*[_type == "homePage"][0]{
+  title,
+  heroHeadline,
+  heroDescription,
+  "services": *[_type == "servicePage"][0..3]{
+    title,
+    "description": metaDescription,
+    slug
+  },
+  trustSignals
+}`;
+
+const FALLBACK_SERVICES = [
   {
     title: 'Maintenance Programs',
     description:
@@ -37,35 +66,46 @@ const services = [
   },
 ];
 
-const trustSignals = [
-  { label: 'Licensed & Bonded', detail: BUSINESS.license },
-  { label: 'Fully Insured', detail: 'Liability & Workers\u2019 Comp' },
-  { label: 'Locally Owned', detail: BUSINESS.experience + ' Experience' },
-  { label: BUSINESS.rating + ' Rating', detail: BUSINESS.projects + ' Projects Completed' },
-];
+export default async function HomePage() {
+  let page: HomePageData | null = null;
+  try {
+    page = await client.fetch<HomePageData | null>(homeQuery);
+  } catch (error) {
+    console.error('Failed to load homepage data', error);
+  }
 
-const allAreas = [
-  ...SERVICE_AREAS.midWillametteValley,
-  ...SERVICE_AREAS.harneyCounty,
-];
+  const allAreas = [
+    ...SERVICE_AREAS.midWillametteValley,
+    ...SERVICE_AREAS.harneyCounty,
+  ];
 
-import { LocalBusinessJsonLd } from '@/components/seo/json-ld';
+  const services = page?.services?.map(s => ({
+    title: s.title,
+    description: s.description,
+    href: `/services/${s.slug.current}`
+  })) || FALLBACK_SERVICES;
 
-export default function HomePage() {
+  const trustSignals = page?.trustSignals || [
+    { label: 'Licensed & Bonded', detail: BUSINESS.license },
+    { label: 'Fully Insured', detail: 'Liability & Workers\u2019 Comp' },
+    { label: 'Locally Owned', detail: BUSINESS.experience + ' Experience' },
+    { label: BUSINESS.rating + ' Rating', detail: BUSINESS.projects + ' Projects Completed' },
+  ];
+
   return (
     <>
       <LocalBusinessJsonLd />
       {/* Hero Section */}
       <RichHero
-        title={
+        title={page?.heroHeadline || (
           <>
-            Professional Maintenance,<br className="hidden sm:inline" />
-            Restoration & Mitigation
+            Property Protection<br className="hidden sm:inline" />
+            Built on Reliability
           </>
-        }
-        description="From preventive maintenance programs to emergency water damage restoration, Benson Home Solutions protects your property investment. Licensed, bonded, and insured—serving Oregon with precision and care."
+        )}
+        description={page?.heroDescription || "We don’t just fix damage; we prevent it. From local maintenance programs to 24/7 emergency restoration, Benson Home Solutions provides the professional oversight your property deserves. Licensed, bonded, and ready to work."}
         backgroundImage={HERO_ASSETS.homepage}
-        badge="Serving Albany, Lebanon & the Mid-Willamette Valley"
+        badge="Mid-Willamette Valley | CCB #258533"
       >
         <Link href="/tools/cost-calculator">
           <Button size="lg" variant="secondary">Calculate True Home Cost</Button>
@@ -128,30 +168,27 @@ export default function HomePage() {
       <Section spacing="md">
         <Container size="narrow">
           <div className="prose prose-lg text-slate max-w-none">
-            <h2 className="text-3xl font-bold text-charcoal text-center mb-8">Why Property Owners Trust Us</h2>
+            <h2 className="text-3xl font-bold text-charcoal text-center mb-8">The Benson Standard</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 not-prose">
               <div className="text-center">
-                <div className="text-4xl mb-3">🔧</div>
-                <h3 className="text-lg font-bold text-charcoal mb-2">Preventive Approach</h3>
+                <div className="text-4xl mb-3">🛠️</div>
+                <h3 className="text-lg font-bold text-charcoal mb-2">Proactive Oversight</h3>
                 <p className="text-slate text-sm leading-relaxed">
-                  We don&apos;t just fix problems — we prevent them. Our maintenance
-                  programs catch issues early, saving you thousands in emergency repairs.
+                  Most damage is preventable. Our maintenance programs identify risks like failing seals or blocked drainage before they turn into $10,000 insurance claims.
                 </p>
               </div>
               <div className="text-center">
-                <div className="text-4xl mb-3">📋</div>
-                <h3 className="text-lg font-bold text-charcoal mb-2">Insurance-Ready Docs</h3>
+                <div className="text-4xl mb-3">📄</div>
+                <h3 className="text-lg font-bold text-charcoal mb-2">Board-Ready Records</h3>
                 <p className="text-slate text-sm leading-relaxed">
-                  Every restoration project comes with board-ready documentation
-                  and photos. We make the insurance process smooth from day one.
+                  We provide full photo documentation and moisture mapping for every job. Whether it’s for an adjuster or a facility board, our records stand up to scrutiny.
                 </p>
               </div>
               <div className="text-center">
-                <div className="text-4xl mb-3">⚡</div>
-                <h3 className="text-lg font-bold text-charcoal mb-2">Rapid Response</h3>
+                <div className="text-4xl mb-3">🚒</div>
+                <h3 className="text-lg font-bold text-charcoal mb-2">60-Minute Response</h3>
                 <p className="text-slate text-sm leading-relaxed">
-                  Water doesn&apos;t wait and neither do we. Our emergency team
-                  is on-site within 60 minutes in the Mid-Willamette Valley.
+                  When a pipe bursts, every minute counts. Our emergency crews are mobilized and on-site within an hour in the Mid-Willamette Valley, 24/7.
                 </p>
               </div>
             </div>

@@ -117,14 +117,14 @@ export default async function MethodologyPage() {
         <Container>
           <div className="max-w-3xl">
             <Badge variant="secondary" className="mb-4">
-              Our Methodology
+              Professional Oversight
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-oxblood leading-tight">
-              {page?.title || 'Prevention is Better Than Restoration'}
+              {page?.title || 'Preemptive Property Protection'}
             </h1>
             <p className="mt-6 text-lg md:text-xl text-slate leading-relaxed">
-              Most property damage is preventable. Our approach combines a 
-              5-phase service framework with rigorous data modeling to protect your investment.
+              Most property damage isn’t accidental—it’s the result of deferred maintenance. Our methodology combines a 
+              5-phase service framework with forensic data modeling to harden your building against predictable risks.
             </p>
           </div>
         </Container>
@@ -135,16 +135,14 @@ export default async function MethodologyPage() {
         <Container size="narrow">
           <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 md:p-12">
             <h2 className="text-2xl font-bold text-amber-900 mb-6">
-              The Problem We Solve
+              The Trade Reality
             </h2>
             <p className="text-amber-800 text-lg leading-relaxed mb-6">
-              The average property owner spends 1–4% of their property&apos;s
-              value annually on maintenance — often reactively, after damage
-              has already occurred.
+              The industry average for property maintenance is 1–4% of property value annually. Most owners spend this reactively—paying for emergency repairs after the building envelope has already failed.
             </p>
             <div className="border-l-4 border-amber-500 pl-6 italic text-amber-900 text-xl font-medium">
-              &quot;A $5 tube of caulk applied in September prevents a $15,000
-              water damage claim in January.&quot;
+              &quot;A $10 seal inspection in September stops a $15,000
+              restoration claim in January.&quot;
             </div>
           </div>
         </Container>

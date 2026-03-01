@@ -1,7 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Button, Container, Section, Card, CardContent, Badge } from '@/components/ui';
+import {
+  Button,
+  Container,
+  Section,
+  Card,
+  CardContent,
+  Badge,
+} from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
+import {
+  BreadcrumbJsonLd,
+  ServiceJsonLd,
+  FAQPageJsonLd,
+} from '@/components/seo/json-ld';
 
 export const metadata: Metadata = {
   title: 'Water Damage Restoration | 24/7 Emergency Response',
@@ -84,8 +96,25 @@ const faqItems = [
 ];
 
 export default function WaterDamagePage() {
+  const breadcrumbs = [
+    { name: 'Home', url: BUSINESS.url },
+    { name: 'Services', url: `${BUSINESS.url}/services` },
+    {
+      name: 'Water Damage Restoration',
+      url: `${BUSINESS.url}/services/water-damage`,
+    },
+  ];
+
   return (
     <>
+      <BreadcrumbJsonLd items={breadcrumbs} />
+      <ServiceJsonLd
+        name="Water Damage Restoration"
+        description="Professional water damage restoration including emergency extraction, structural drying, mold prevention, and complete rebuild."
+        url={`${BUSINESS.url}/services/water-damage`}
+      />
+      <FAQPageJsonLd questions={faqItems} />
+
       {/* Hero */}
       <Section variant="cream" spacing="lg">
         <Container>
@@ -103,10 +132,7 @@ export default function WaterDamagePage() {
               Water Damage Restoration
             </h1>
             <p className="mt-6 text-lg md:text-xl text-slate leading-relaxed max-w-2xl">
-              When water invades your property, every hour counts. Benson Home
-              Solutions provides rapid extraction, professional dry-out, mold
-              prevention, and complete structural rebuild — with insurance-ready
-              documentation from the first moment on-site.
+              When water invades your property, structural integrity is on the clock. Benson Home Solutions provides forensic extraction, professional dry-out, and complete reconstruction—with the board-ready documentation required for insurance alignment from hour one.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <a href={`tel:${BUSINESS.afterhoursPhone}`}>
@@ -313,62 +339,6 @@ export default function WaterDamagePage() {
           </div>
         </Container>
       </Section>
-
-      {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Service',
-            name: 'Water Damage Restoration',
-            provider: {
-              '@type': 'HomeAndConstructionBusiness',
-              name: BUSINESS.name,
-              telephone: BUSINESS.phone,
-              url: BUSINESS.url,
-            },
-            description:
-              'Professional water damage restoration including emergency extraction, structural drying, mold prevention, insurance documentation, and complete rebuild.',
-            areaServed: [
-              { '@type': 'City', name: 'Albany' },
-              { '@type': 'City', name: 'Lebanon' },
-              { '@type': 'City', name: 'Salem' },
-              { '@type': 'City', name: 'Corvallis' },
-              { '@type': 'City', name: 'Sweet Home' },
-            ],
-            hasOfferCatalog: {
-              '@type': 'OfferCatalog',
-              name: 'Water Damage Services',
-              itemListElement: [
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Emergency Water Extraction' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Structural Drying' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Mold Remediation' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Full Structural Rebuild' } },
-              ],
-            },
-          }),
-        }}
-      />
-
-      {/* FAQ Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'FAQPage',
-            mainEntity: faqItems.map((faq) => ({
-              '@type': 'Question',
-              name: faq.question,
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: faq.answer,
-              },
-            })),
-          }),
-        }}
-      />
     </>
   );
 }

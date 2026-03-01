@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Container } from '@/components/ui';
+import { Container, Section } from '@/components/ui';
 import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 
 const footerLinks = {
@@ -135,11 +135,4 @@ export function Footer() {
   );
 }
 
-// Internal Section component for Footer to avoid circular deps or extra imports if needed
-function Section({ children, className }: { children: React.ReactNode, className?: string }) {
-  return (
-    <section className={className}>
-      {children}
-    </section>
-  );
-}
+// Internal Section component removed in favor of shared UI component
