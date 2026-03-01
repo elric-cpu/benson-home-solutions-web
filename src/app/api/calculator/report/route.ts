@@ -7,8 +7,6 @@ import { getCalculatorReportEmail } from '@/lib/email/templates';
 import { checkRateLimit, FORM_RATE_LIMIT } from '@/lib/rate-limit';
 import { syncLeadToHubSpot } from '@/lib/crm/hubspot';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for') || 'anonymous';
   const { success } = checkRateLimit(ip, FORM_RATE_LIMIT);
@@ -24,6 +22,14 @@ export async function POST(request: NextRequest) {
     if (!email || !address) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
+
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.warn('RESEND_API_KEY is missing. Skipping email send.');
+      return NextResponse.json({ success: true, message: 'Simulated success (no API key)' });
+    }
+
+    const resend = new Resend(apiKey);
 
     // 1. CRM Sync (Background)
     syncLeadToHubSpot({
