@@ -42,6 +42,13 @@ async function getAgreementData(id: string) {
   }
 }
 
+interface Service {
+  service_id: string;
+  frequency: string;
+  price: number;
+  reasoning: string;
+}
+
 export default async function AgreementPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const data = await getAgreementData(id);
@@ -51,7 +58,7 @@ export default async function AgreementPage({ params }: { params: Promise<{ id: 
   }
 
   const { agreement, client, property, versions } = data;
-  const services = agreement.services as any[];
+  const services = agreement.services as Service[];
   const latestVersion = versions[0];
 
   return (
@@ -113,7 +120,7 @@ export default async function AgreementPage({ params }: { params: Promise<{ id: 
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate/10">
-                    {services.map((s: any) => {
+                    {services.map((s) => {
                       const catalogItem = SERVICE_CATALOG.find(i => i.id === s.service_id);
                       return (
                         <tr key={s.service_id}>

@@ -22,6 +22,26 @@ interface Props {
   className?: string;
 }
 
+interface GeoapifyFeature {
+  properties: {
+    formatted: string;
+    place_id: string;
+    address_line1: string;
+    address_line2: string;
+    city: string;
+    state: string;
+    postcode: string;
+    county: string;
+  };
+  geometry: {
+    coordinates: [number, number];
+  };
+}
+
+interface GeoapifyResponse {
+  features: GeoapifyFeature[];
+}
+
 export function AddressAutocomplete({ onSelect, placeholder, className }: Props) {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -55,9 +75,9 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
             query
           )}&apiKey=${API_KEY}&filter=countrycode:us&limit=5`
         );
-        const data = await response.json();
+        const data = (await response.json()) as GeoapifyResponse;
         setSuggestions(
-          data.features?.map((f: any) => ({
+          data.features?.map((f) => ({
             formatted: f.properties.formatted,
             place_id: f.properties.place_id,
             address_line1: f.properties.address_line1,

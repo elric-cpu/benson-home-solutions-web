@@ -12,9 +12,14 @@ interface ServicePageData {
   title: string;
   slug: { current: string };
   metaDescription?: string;
-  heroImage?: any;
+  heroImage?: {
+    asset: {
+      _ref: string;
+      _type: 'reference';
+    };
+  };
   heroHeadline?: string;
-  content?: any[];
+  content?: Record<string, unknown>[];
   serviceArea?: { title: string; slug: { current: string } }[];
   ctaText?: string;
   ctaLink?: string;
@@ -24,7 +29,12 @@ interface ServicePageData {
     _id: string;
     title: string;
     slug: { current: string };
-    heroImage?: any;
+    heroImage?: {
+      asset: {
+        _ref: string;
+        _type: 'reference';
+      };
+    };
   }[];
 }
 

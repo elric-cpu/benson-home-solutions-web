@@ -29,7 +29,7 @@ interface AreaPageData {
   county?: string;
   metaDescription?: string;
   heroImage?: SanityImage;
-  localContent?: any[];
+  localContent?: Record<string, unknown>[];
   servicesOffered?: {
     _id: string;
     title: string;

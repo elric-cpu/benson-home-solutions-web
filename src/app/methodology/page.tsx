@@ -9,10 +9,10 @@ import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
 interface MethodologyPageData {
   title?: string;
   metaDescription?: string;
-  introContent?: any[];
-  processSteps?: any[];
-  certifications?: any[];
-  qualityStandards?: any[];
+  introContent?: Record<string, unknown>[];
+  processSteps?: Record<string, unknown>[];
+  certifications?: Record<string, unknown>[];
+  qualityStandards?: Record<string, unknown>[];
 }
 
 const methodologyQuery = `*[_type == "methodologyPage"][0]`;

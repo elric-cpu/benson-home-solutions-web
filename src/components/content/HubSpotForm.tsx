@@ -10,6 +10,22 @@ interface HubSpotFormProps {
   className?: string;
 }
 
+declare global {
+  interface Window {
+    hbspt?: {
+      forms: {
+        create: (config: {
+          region: string;
+          portalId: string;
+          formId: string;
+          target: string;
+          onFormSubmitted?: () => void;
+        }) => void;
+      };
+    };
+  }
+}
+
 export function HubSpotForm({
   region = 'na1',
   portalId,
@@ -26,8 +42,8 @@ export function HubSpotForm({
     script.defer = true;
 
     script.onload = () => {
-      if ((window as any).hbspt) {
-        (window as any).hbspt.forms.create({
+      if (window.hbspt) {
+        window.hbspt.forms.create({
           region,
           portalId,
           formId,

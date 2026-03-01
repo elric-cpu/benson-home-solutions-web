@@ -60,8 +60,15 @@ Respond in valid JSON only.
     const aiResult = await response.json();
     const recommendations = JSON.parse(aiResult.choices[0].message.content).recommendations;
 
+    interface Recommendation {
+      service_id: string;
+      priority: string;
+      reasoning: string;
+      frequency: string;
+    }
+
     // Filter out invalid service IDs
-    const validRecommendations = recommendations.filter((r: any) =>
+    const validRecommendations = (recommendations as Recommendation[]).filter((r) =>
       SERVICE_CATALOG.some((s) => s.id === r.service_id)
     );
 
