@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: $ env.NODE_VERSION 
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
       - run: npm ci
@@ -72,5 +72,5 @@ jobs:
             });
           "
         env:
-          DATABASE_URL: $ secrets.DATABASE_URL 
-          DATABASE_URL_UNPOOLED: $ secrets.DATABASE_URL_UNPOOLED 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
