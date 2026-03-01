@@ -5,7 +5,7 @@ import { eq, desc } from 'drizzle-orm';
 import { createSignatureRequest } from '@/lib/agreements/signatures';
 
 export async function POST(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;

@@ -31,7 +31,7 @@ export function MaintenanceConfigurator() {
     sqft: 2400,
     age: 42,
     floodZone: 'AE',
-    buildingType: 'residential' as const,
+    buildingType: 'residential' as 'residential' | 'commercial' | 'church',
     address: '123 Main St, Albany, OR 97321'
   }), []);
 

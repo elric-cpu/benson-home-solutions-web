@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 import { Section, Container, Button, Card, CardContent, Badge, RichHero } from '@/components/ui';
 import { MOCK_ZIP_DATA, DEFAULT_BENCHMARK, type ZipData } from '@/lib/calculator-data';
-import { HUBSPOT, HERO_ASSETS } from '@/lib/constants';
+import { HERO_ASSETS } from '@/lib/constants';
 
 type Step = 'input' | 'processing' | 'result' | 'lead-gen';
 

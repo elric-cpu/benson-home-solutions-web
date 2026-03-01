@@ -2,28 +2,14 @@ import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from './schema';
 
-let _db: ReturnType<typeof initDb> | null = null;
+const connectionString = process.env.DATABASE_URL;
 
-function initDb() {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    throw new Error(
-      'DATABASE_URL is not set. Provision a Neon database and add the pooled connection string.'
-    );
-  }
-  const sql = neon(databaseUrl);
-  return drizzle(sql, { schema });
+if (!connectionString) {
+  console.warn('⚠️  DATABASE_URL is not set. Database functionality will fail at runtime.');
 }
 
-/**
- * Lazily-initialized Drizzle client backed by Neon serverless.
- * Throws if DATABASE_URL is missing — callers should gate on env check.
- */
-export function getDb() {
-  if (!_db) {
-    _db = initDb();
-  }
-  return _db;
-}
+const sql = neon(connectionString || 'postgres://placeholder:placeholder@placeholder.neondatabase.serverless.org/placeholder');
 
-export type Database = ReturnType<typeof initDb>;
+export const db = drizzle(sql, { schema });
+
+export * from 'drizzle-orm';

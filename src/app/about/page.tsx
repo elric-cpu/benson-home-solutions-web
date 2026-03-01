@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { client } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
-import { Section, Container, Badge, Card, CardContent, RichHero } from '@/components/ui';
+import { Section, Container, Card, CardContent, RichHero } from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
 import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
 
