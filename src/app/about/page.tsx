@@ -9,22 +9,22 @@ import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
 interface AboutPageData {
   title?: string;
   metaDescription?: string;
-  ownerBio?: any[];
+  ownerBio?: Record<string, unknown>[];
   ownerPhoto?: {
     asset: {
       _ref: string;
       _type: 'reference';
     };
   };
-  companyHistory?: any[];
-  credentials?: any[];
+  companyHistory?: Record<string, unknown>[];
+  credentials?: Record<string, unknown>[];
   teamPhotos?: {
     asset: {
       _ref: string;
       _type: 'reference';
     };
   }[];
-  values?: any[];
+  values?: Record<string, unknown>[];
 }
 
 const aboutQuery = `*[_type == "aboutPage"][0]`;

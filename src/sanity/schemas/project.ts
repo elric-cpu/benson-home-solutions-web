@@ -51,7 +51,7 @@ export const project = defineType({
               name: 'alt',
               title: 'Alt Text',
               type: 'string',
-              validation: (r: any) => r.required(),
+              validation: (Rule) => Rule.required(),
             },
             {
               name: 'caption',
