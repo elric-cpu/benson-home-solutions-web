@@ -111,6 +111,8 @@ export async function generateMetadata({
   }
 }
 
+import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+
 export default async function AreaPage({
   params,
 }: {
@@ -128,8 +130,15 @@ export default async function AreaPage({
   const city = area?.city || formatSlugToCity(slug);
   const county = area?.county || (slug === 'burns' ? 'Harney' : 'Linn');
 
+  const breadcrumbs = [
+    { name: 'Home', url: BUSINESS.url },
+    { name: 'Service Areas', url: `${BUSINESS.url}/#service-areas` },
+    { name: city, url: `${BUSINESS.url}/areas/${slug}` },
+  ];
+
   return (
     <>
+      <BreadcrumbJsonLd items={breadcrumbs} />
       {/* Hero */}
       <Section variant="cream" spacing="lg">
         <Container>

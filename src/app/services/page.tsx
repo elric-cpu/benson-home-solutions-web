@@ -51,9 +51,18 @@ const services = [
   },
 ];
 
+import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+import { BUSINESS } from '@/lib/constants';
+
 export default function ServicesPage() {
+  const breadcrumbs = [
+    { name: 'Home', url: BUSINESS.url },
+    { name: 'Services', url: `${BUSINESS.url}/services` },
+  ];
+
   return (
     <main className="min-h-screen">
+      <BreadcrumbJsonLd items={breadcrumbs} />
       {/* Hero */}
       <section className="bg-blue-900 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
