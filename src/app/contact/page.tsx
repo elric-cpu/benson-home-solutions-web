@@ -8,9 +8,17 @@ export const metadata: Metadata = {
   description: `Contact Benson Home Solutions for professional maintenance, restoration, and mitigation services in the Mid-Willamette Valley. Call ${BUSINESS.phone} or our 24/7 emergency line.`,
 };
 
+import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+
 export default function ContactPage() {
+  const breadcrumbs = [
+    { name: 'Home', url: BUSINESS.url },
+    { name: 'Contact', url: `${BUSINESS.url}/contact` },
+  ];
+
   return (
     <>
+      <BreadcrumbJsonLd items={breadcrumbs} />
       {/* Hero Section */}
       <Section variant="cream" spacing="lg">
         <Container>

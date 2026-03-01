@@ -35,6 +35,8 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+
 export default async function EmergencyPage() {
   let fetchedPage: EmergencyPageData | null = null;
 
@@ -54,8 +56,14 @@ export default async function EmergencyPage() {
 
   const emergencyPhone = page.emergencyPhone || BUSINESS.afterhoursPhone;
 
+  const breadcrumbs = [
+    { name: 'Home', url: BUSINESS.url },
+    { name: 'Emergency', url: `${BUSINESS.url}/emergency` },
+  ];
+
   return (
     <>
+      <BreadcrumbJsonLd items={breadcrumbs} />
       {/* Rich Hero Section */}
       <RichHero
         title={page.heroHeadline!}

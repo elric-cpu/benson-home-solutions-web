@@ -46,6 +46,8 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+import { BreadcrumbJsonLd, LocalBusinessJsonLd } from '@/components/seo/json-ld';
+
 export default async function AboutPage() {
   let page: AboutPageData | null = null;
   try {
@@ -54,9 +56,16 @@ export default async function AboutPage() {
     console.error('Failed to load about page data', error);
   }
 
+  const breadcrumbs = [
+    { name: 'Home', url: BUSINESS.url },
+    { name: 'About', url: `${BUSINESS.url}/about` },
+  ];
+
   return (
     <>
-      {/* Rich Hero Section */}
+      <BreadcrumbJsonLd items={breadcrumbs} />
+      <LocalBusinessJsonLd />
+      {/* Rich Hero */}
       <RichHero
         title={page?.title || `Protecting Properties Since 2014`}
         description="We protect the places where people live, work, and gather. Our team specializes in preventive maintenance, damage restoration, and emergency mitigation across the Mid-Willamette Valley."

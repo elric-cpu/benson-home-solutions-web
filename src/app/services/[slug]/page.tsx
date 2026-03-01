@@ -110,6 +110,12 @@ export async function generateMetadata({
   }
 }
 
+import {
+  ServiceJsonLd,
+  BreadcrumbJsonLd,
+  FAQPageJsonLd,
+} from '@/components/seo/json-ld';
+
 export default async function ServicePage({
   params,
 }: {
@@ -139,8 +145,33 @@ export default async function ServicePage({
       'We provide transparent, upfront pricing. Contact us for a custom quote based on your specific property needs.',
   };
 
+  const breadcrumbs = [
+    { name: 'Home', url: BUSINESS.url },
+    { name: 'Services', url: `${BUSINESS.url}/services` },
+    { name: service.title, url: `${BUSINESS.url}/services/${slug}` },
+  ];
+
+  const faqData =
+    service.faqItems?.map((f) => ({
+      question: f.question,
+      answer: f.answer,
+    })) || [];
+
   return (
     <>
+      <BreadcrumbJsonLd items={breadcrumbs} />
+      <ServiceJsonLd
+        name={service.title}
+        description={service.metaDescription || ''}
+        url={`${BUSINESS.url}/services/${slug}`}
+        image={
+          service.heroImage
+            ? urlForImage(service.heroImage).width(1200).url()
+            : undefined
+        }
+      />
+      {faqData.length > 0 && <FAQPageJsonLd questions={faqData} />}
+
       {/* Hero */}
       <Section variant="cream" spacing="lg">
         <Container>
@@ -193,6 +224,31 @@ export default async function ServicePage({
       {/* Content */}
       <Section spacing="md">
         <Container size="narrow">
+          {/* AEO/GEO Summary Block - Targeted for AI Retrieval */}
+          <div className="mb-12 p-8 bg-slate-50 border-l-4 border-oxblood rounded-r-2xl shadow-sm not-prose">
+            <h2 className="text-xl font-black text-charcoal uppercase tracking-widest mb-6">
+              {service.title} at a Glance
+            </h2>
+            <dl className="grid sm:grid-cols-2 gap-6">
+              <div>
+                <dt className="text-xs font-bold text-oxblood uppercase tracking-tighter mb-1">Provider</dt>
+                <dd className="text-charcoal font-semibold">Benson Home Solutions</dd>
+              </div>
+              <div>
+                <dt className="text-xs font-bold text-oxblood uppercase tracking-tighter mb-1">License</dt>
+                <dd className="text-charcoal font-semibold">Oregon CCB #258533</dd>
+              </div>
+              <div>
+                <dt className="text-xs font-bold text-oxblood uppercase tracking-tighter mb-1">Service Area</dt>
+                <dd className="text-charcoal font-semibold">Mid-Willamette Valley & Harney County</dd>
+              </div>
+              <div>
+                <dt className="text-xs font-bold text-oxblood uppercase tracking-tighter mb-1">Emergency Availability</dt>
+                <dd className="text-charcoal font-semibold">24/7 Rapid Response</dd>
+              </div>
+            </dl>
+          </div>
+
           {service.content && service.content.length > 0 ? (
             <PortableTextRenderer value={service.content} />
           ) : (

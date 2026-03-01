@@ -8,8 +8,8 @@
  * Safe to run multiple times — uses upsert-like patterns.
  */
 
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import * as schema from '../src/lib/db/schema';
 
 async function seed() {
@@ -19,13 +19,13 @@ async function seed() {
     process.exit(1);
   }
 
-  const sql = neon(databaseUrl);
-  const db = drizzle(sql, { schema });
+  const queryClient = postgres(databaseUrl);
+  const db = drizzle(queryClient, { schema });
 
   console.log('🌱 Starting database seed...\n');
 
   // Verify tables exist
-  const tables = await sql`
+  const tables = await queryClient`
     SELECT table_name FROM information_schema.tables
     WHERE table_schema = 'public'
     ORDER BY table_name
@@ -43,8 +43,8 @@ async function seed() {
   }
 
   // Count existing rows
-  const contactCount = await sql`SELECT count(*) as n FROM contact_submissions`;
-  const leadCount = await sql`SELECT count(*) as n FROM subscription_leads`;
+  const contactCount = await queryClient`SELECT count(*) as n FROM contact_submissions`;
+  const leadCount = await queryClient`SELECT count(*) as n FROM subscription_leads`;
   console.log(`   contact_submissions: ${contactCount[0].n} rows`);
   console.log(`   subscription_leads: ${leadCount[0].n} rows`);
 
