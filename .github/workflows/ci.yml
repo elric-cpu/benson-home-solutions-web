@@ -21,9 +21,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: $ env.NODE_VERSION 
-          cache: npm
-      - run: npm ci
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install dependencies
+        run: npm install
+        
       # TODO: Sprint 2 — remove soft-fail once scaffold pages have real types
       - name: TypeScript check (soft-fail)
         run: npx tsc --noEmit || echo "::warning::TypeScript check failed — soft-fail enabled for Sprint 1 scaffolds"
@@ -42,9 +44,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: $ env.NODE_VERSION 
-          cache: npm
-      - run: npm ci
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm install
       - run: npm run build
       - uses: actions/upload-artifact@v4
         with:
@@ -60,9 +61,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: $ env.NODE_VERSION 
-          cache: npm
-      - run: npm ci
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm install
       - run: npx playwright install --with-deps chromium
       - uses: actions/download-artifact@v4
         with:
@@ -84,9 +84,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: $ env.NODE_VERSION 
-          cache: npm
-      - run: npm ci
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm install
       - uses: actions/download-artifact@v4
         with:
           name: nextjs-build
