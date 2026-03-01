@@ -226,31 +226,24 @@ export default async function MethodologyDetailPage({
                     <>
                       <h2>Technical Overview</h2>
                       <p>
-                        Our estimation engine relies on high-fidelity public data sets to ensure that homeowners receive
-                        the most accurate possible projections for their specific location and building type.
+                        Our models replace generic national benchmarks with forensic precision. We integrate high-fidelity public datasets to ensure that Oregon property owners receive projections tailored to their specific climate zone and local building code standards.
                       </p>
                       <p>
-                        For <strong>{title}</strong>, we integrate multiple federal and regional data points to create a 
-                        multi-variable model that accounts for local tax assessments, regional insurance premiums, 
-                        and climate-specific maintenance requirements.
+                        For <strong>{title}</strong>, we process multi-variable inputs—including census-tract tax assessments, regional FEMA flood risk multipliers, and DOE building performance curves—to create a localized financial and operational profile for your property.
                       </p>
                       
                       <div className="bg-amber-50 p-8 rounded-2xl border border-amber-100 not-prose my-10 shadow-sm">
                         <h3 className="text-xl font-bold text-amber-900 mb-4 flex items-center gap-2">
-                          <span className="text-2xl">💡</span> Why This Data Matters
+                          <span className="text-2xl">👷</span> The Local Advantage
                         </h3>
-                        <p className="text-amber-800 mb-0 leading-relaxed">
-                          Standardized national averages often fail to capture the nuances of the Mid-Willamette Valley
-                          and Harney County. By using census-tract level data, we provide a localized view that 
-                          outperforms generic calculators by over 40% in accuracy.
+                        <p className="text-amber-800 mb-0 leading-relaxed font-medium">
+                          Standardized calculators often miss the nuances of the Mid-Willamette Valley and Harney County—from our heavy seasonal rainfall to unique tax assessment cycles. By using census-tract level data, our methodology provides a 40% increase in accuracy over national generic tools.
                         </p>
                       </div>
 
-                      <h3>Data Processing Methodology</h3>
+                      <h3>High-Fidelity Data Pipeline</h3>
                       <p>
-                        We process raw datasets through a normalization pipeline that adjusts for inflation (CPI-U),
-                        regional labor cost multipliers, and material price indices. This ensures our &quot;True Cost&quot;
-                        estimates reflect current market realities, not outdated surveys.
+                        Every dataset is normalized through a proprietary pipeline that accounts for current Consumer Price Index (CPI-U) adjustments, regional labor labor multipliers, and building material indices. This ensures your &quot;True Cost&quot; profile reflects current trade realities, not outdated statistics.
                       </p>
                     </>
                   )}

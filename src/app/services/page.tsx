@@ -1,58 +1,60 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Section, Container, Card, CardContent, Badge, Button } from '@/components/ui';
+import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+import { BUSINESS } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'Services | Benson Home Solutions — Maintenance, Restoration & Mitigation',
-  description: 'Explore our full range of maintenance, restoration, and mitigation services for residential and commercial properties in the Mid-Willamette Valley.',
+  title: {
+    absolute: 'Professional Maintenance & Restoration Services | Benson Home Solutions',
+  },
+  description: 'Explore our full range of professional maintenance, restoration, and mitigation services for residential and commercial properties in the Mid-Willamette Valley.',
 };
 
 const services = [
   {
-    title: 'Maintenance Programs',
-    href: '/services/maintenance',
-    desc: 'Scheduled preventive maintenance that catches small issues before they become expensive emergencies. Customized plans for homes, commercial buildings, and churches.',
+    title: 'Maintenance Subscriptions',
+    href: '/services/maintenance-subscriptions',
+    desc: 'Systematic preventive maintenance that identifies building envelope risks before they become emergencies. Tailored for homes, commercial facilities, and churches.',
     icon: '🛡️',
-    features: ['Seasonal inspections', 'Gutter & drainage maintenance', 'Exterior envelope checks', 'HVAC basics', 'Photo documentation'],
+    features: ['Seasonal inspections', 'Gutter & drainage audits', 'Envelope integrity checks', 'HVAC monitoring', 'Forensic photo logs'],
   },
   {
     title: 'Water Damage Restoration',
     href: '/services/water-damage',
-    desc: 'Fast-response water extraction, structural drying, and complete restoration. We handle everything from burst pipes to storm flooding — plus insurance documentation.',
+    desc: 'Rapid-response extraction, structural drying, and high-fidelity reconstruction. We provide the forensic documentation required for insurance alignment from day one.',
     icon: '💧',
-    features: ['Emergency water extraction', 'Structural drying', 'Mold prevention', 'Reconstruction', 'Insurance documentation'],
+    features: ['Emergency extraction', 'Structural dry-out', 'IICRC-standard mitigation', 'Full structural rebuild', 'Moisture mapping'],
   },
   {
     title: 'Emergency Response',
     href: '/emergency',
-    desc: 'When disaster strikes, call our 24/7 emergency line. We mobilize fast to stop active damage, secure your property, and begin restoration immediately.',
+    desc: 'Available 24/7 for active water intrusion, storm damage, and board-ups. On-site within 60 minutes in the Mid-Willamette Valley to stabilize your property.',
     icon: '🚨',
-    features: ['24/7 availability', 'Rapid mobilization', 'Storm damage response', 'Board-up & tarping', 'Temporary repairs'],
+    features: ['24/7 direct access', '60-minute mobilization', 'Storm securement', 'Emergency board-up', 'Immediate stabilization'],
   },
   {
-    title: 'Remodeling & Restoration',
+    title: 'Remodeling & Reconstruction',
     href: '/services/remodeling',
-    desc: 'From post-damage reconstruction to planned renovations, we deliver quality craftsmanship. Kitchens, bathrooms, structural repairs, and full-property renovations.',
+    desc: 'From high-end kitchen and bathroom remodels to post-damage reconstruction. We provide the trade precision required for a seamless structural finish.',
     icon: '🔨',
-    features: ['Kitchen & bathroom remodels', 'Post-damage reconstruction', 'Structural repairs', 'Accessibility modifications', 'Energy efficiency upgrades'],
+    features: ['Kitchen & bath precision', 'Structural reconstruction', 'ADA modifications', 'Building envelope repairs', 'Energy upgrades'],
   },
   {
-    title: 'Commercial & Church Maintenance',
+    title: 'Commercial & Church Care',
     href: '/services/commercial',
-    desc: 'Specialized maintenance programs for commercial buildings and houses of worship. We understand the unique needs of institutional properties — from steeple repairs to parking lot drainage.',
+    desc: 'Specialized oversight for institutional properties. We understand the unique requirements of high-occupancy facilities—from steeple repair to parking lot integrity.',
     icon: '🏢',
-    features: ['Commercial property maintenance', 'Church & worship facility care', 'Multi-unit residential', 'SLA-based service agreements', 'Budget forecasting'],
+    features: ['Institutional maintenance', 'Church facility stewardship', 'Facility board reporting', 'SLA-based service', 'Budget forecasting'],
   },
   {
     title: 'Property Assessments',
     href: '/contact',
-    desc: 'Not sure where to start? Our comprehensive property assessment documents current conditions, identifies risks, and prioritizes maintenance needs by urgency and cost.',
+    desc: 'Not sure where to start? Our forensic assessment documents current conditions, identifies deferred maintenance risks, and provides a prioritized repair schedule.',
     icon: '📋',
-    features: ['Full property walkthrough', 'Photo documentation', 'Prioritized action plan', 'Cost estimates', 'Maintenance schedule recommendation'],
+    features: ['Full site walkthrough', 'Risk identification', 'Prioritized repair plan', 'Accurate cost estimating', 'Board-ready reporting'],
   },
 ];
-
-import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
-import { BUSINESS } from '@/lib/constants';
 
 export default function ServicesPage() {
   const breadcrumbs = [
@@ -63,90 +65,83 @@ export default function ServicesPage() {
   return (
     <main className="min-h-screen">
       <BreadcrumbJsonLd items={breadcrumbs} />
+      
       {/* Hero */}
-      <section className="bg-blue-900 text-white py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Our Services</h1>
-          <p className="text-xl text-blue-100 leading-relaxed">
-            Comprehensive maintenance, restoration, and mitigation services for residential and commercial properties across the Mid-Willamette Valley.
-          </p>
-        </div>
-      </section>
+      <Section variant="cream" spacing="lg">
+        <Container>
+          <div className="max-w-3xl">
+            <Badge variant="secondary" className="mb-4">Trade Services</Badge>
+            <h1 className="text-4xl md:text-5xl font-bold text-oxblood leading-tight">
+              Expert Oversight for Every Property
+            </h1>
+            <p className="mt-6 text-xl text-slate leading-relaxed">
+              Benson Home Solutions provides the professional trade oversight required to maintain building integrity and recover from property damage.
+            </p>
+          </div>
+        </Container>
+      </Section>
 
       {/* Services Grid */}
-      <section className="py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8">
+      <Section spacing="lg">
+        <Container>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service) => (
               <Link
                 key={service.title}
                 href={service.href}
-                className="group bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-blue-300 transition-all"
+                className="group flex flex-col h-full"
               >
-                <span className="text-3xl mb-4 block">{service.icon}</span>
-                <h2 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                  {service.title}
-                </h2>
-                <p className="text-gray-600 mb-4 leading-relaxed">{service.desc}</p>
-                <ul className="space-y-1">
-                  {service.features.map((feature) => (
-                    <li key={feature} className="text-sm text-gray-500 flex items-center gap-2">
-                      <span className="text-blue-600">✓</span> {feature}
-                    </li>
-                  ))}
-                </ul>
+                <Card hover className="flex-1 flex flex-col border-slate/10">
+                  <CardContent className="p-8 flex-1 flex flex-col">
+                    <span className="text-4xl mb-6 block">{service.icon}</span>
+                    <h2 className="text-2xl font-bold text-charcoal mb-4 group-hover:text-oxblood transition-colors">
+                      {service.title}
+                    </h2>
+                    <p className="text-slate mb-8 leading-relaxed flex-1">{service.desc}</p>
+                    <ul className="space-y-3 mb-8">
+                      {service.features.map((feature) => (
+                        <li key={feature} className="text-sm text-slate/70 flex items-center gap-2">
+                          <span className="text-oxblood font-bold">✓</span> {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="text-oxblood font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+                      View Service Details
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </div>
+                  </CardContent>
+                </Card>
               </Link>
             ))}
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* CTA */}
-      <section className="bg-gray-50 py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Not Sure What You Need?</h2>
-          <p className="text-gray-600 text-lg mb-8">
-            Start with a free property assessment. We&apos;ll document conditions, identify risks, and recommend next steps — no obligation.
+      <Section variant="charcoal" spacing="lg">
+        <Container size="narrow" className="text-center">
+          <h2 className="text-3xl font-bold text-cream mb-6">Need a Forensic Assessment?</h2>
+          <p className="text-cream/70 text-lg mb-10 leading-relaxed">
+            We provide comprehensive site walkthroughs to identify risks and prioritize your maintenance budget. Stop the cycle of reactive repairs today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Schedule Assessment
+            <Link href="/contact">
+              <Button variant="secondary" size="lg">
+                Schedule Assessment
+              </Button>
             </Link>
-            <a
-              href="tel:+15413215115"
-              className="inline-block border-2 border-blue-600 text-blue-600 font-semibold px-8 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition-colors"
-            >
-              Call (541) 321-5115
+            <a href={`tel:${BUSINESS.phone}`}>
+              <Button
+                variant="outline"
+                size="lg"
+                className="bg-white/5 text-cream border-white/10 hover:bg-white/10"
+              >
+                Call {BUSINESS.phone}
+              </Button>
             </a>
           </div>
-        </div>
-      </section>
-
-      {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'CollectionPage',
-            name: 'Services — Benson Home Solutions',
-            description: 'Maintenance, restoration, and mitigation services for the Mid-Willamette Valley.',
-            url: 'https://bensonhomesolutions.com/services',
-            mainEntity: {
-              '@type': 'ItemList',
-              itemListElement: services.map((s, i) => ({
-                '@type': 'ListItem',
-                position: i + 1,
-                name: s.title,
-                url: `https://bensonhomesolutions.com${s.href}`,
-              })),
-            },
-          }),
-        }}
-      />
+        </Container>
+      </Section>
     </main>
   );
 }

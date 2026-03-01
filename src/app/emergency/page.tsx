@@ -48,9 +48,9 @@ export default async function EmergencyPage() {
 
   // Fallback data structure for when CMS is empty
   const page: EmergencyPageData = fetchedPage || {
-    heroHeadline: '24/7 Emergency Response',
-    heroSubtext: 'When disaster strikes, Benson Home Solutions is ready. We provide immediate mitigation to protect your property from further damage.',
-    responseTimeSLA: 'On-site within 60 minutes in the Mid-Willamette Valley',
+    heroHeadline: '24/7 Emergency Stabilization',
+    heroSubtext: 'When disaster hits, Benson Home Solutions is on-site to stabilize your property and stop the cycle of damage. We provide rapid mitigation and the forensic documentation required for your insurance claim.',
+    responseTimeSLA: '60-Minute Mobilization in the Mid-Willamette Valley',
     emergencyPhone: BUSINESS.afterhoursPhone,
   };
 
@@ -69,7 +69,7 @@ export default async function EmergencyPage() {
         title={page.heroHeadline!}
         description={page.heroSubtext}
         backgroundImage={HERO_ASSETS.emergency}
-        badge="Immediate Dispatch Available"
+        badge="Direct Dispatch | 24/7"
         overlayOpacity={80}
       >
         <a href={`tel:${emergencyPhone}`} className="w-full sm:w-auto">
@@ -86,8 +86,8 @@ export default async function EmergencyPage() {
       <Section spacing="md" variant="cream">
         <Container>
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl font-bold text-charcoal">Emergency Services We Provide</h2>
-            <p className="text-slate mt-4 text-lg">We stop the damage, secure the premises, and document everything for your insurance claim.</p>
+            <h2 className="text-3xl font-bold text-charcoal">Rapid Mitigation Services</h2>
+            <p className="text-slate mt-4 text-lg">We stabilize the building envelope, secure the premises, and provide the paper trail your insurance carrier requires.</p>
           </div>
 
           {page.emergencyServices && page.emergencyServices.length > 0 ? (
@@ -98,22 +98,22 @@ export default async function EmergencyPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               <Card variant="elevated" className="border-t-4 border-t-oxblood">
                 <CardContent className="pt-8">
-                  <h3 className="text-xl font-bold text-charcoal mb-2">Water Damage Mitigation</h3>
-                  <p className="text-slate leading-relaxed">Rapid dry-out, extraction, and mold prevention. We stop the spread of water damage immediately.</p>
+                  <h3 className="text-xl font-bold text-charcoal mb-2">Water Mitigation</h3>
+                  <p className="text-slate leading-relaxed">Forensic extraction, structural dry-out, and immediate moisture mapping. We stop the spread of water before it destroys structural integrity.</p>
                 </CardContent>
               </Card>
 
               <Card variant="elevated" className="border-t-4 border-t-oxblood">
                 <CardContent className="pt-8">
-                  <h3 className="text-xl font-bold text-charcoal mb-2">Emergency Board-Ups</h3>
-                  <p className="text-slate leading-relaxed">Secure your property after a fire, break-in, or storm. Temporary fencing, roof tarping, and window boarding.</p>
+                  <h3 className="text-xl font-bold text-charcoal mb-2">Security Board-Ups</h3>
+                  <p className="text-slate leading-relaxed">Immediate securement after fire, storms, or impact. We provide structural bracing, roof tarping, and window boarding to prevent secondary loss.</p>
                 </CardContent>
               </Card>
 
               <Card variant="elevated" className="border-t-4 border-t-oxblood">
                 <CardContent className="pt-8">
-                  <h3 className="text-xl font-bold text-charcoal mb-2">Storm Damage Repair</h3>
-                  <p className="text-slate leading-relaxed">Fallen tree removal, structural bracing, and weatherproofing to protect your home from further exposure.</p>
+                  <h3 className="text-xl font-bold text-charcoal mb-2">Storm Securement</h3>
+                  <p className="text-slate leading-relaxed">Fallen tree removal and envelope stabilization. We harden your property against the elements to prevent weather exposure during repairs.</p>
                 </CardContent>
               </Card>
             </div>
@@ -128,12 +128,12 @@ export default async function EmergencyPage() {
             <PortableTextRenderer value={page.content} />
           ) : (
             <div className="prose prose-lg text-slate max-w-none">
-              <h2 className="text-2xl font-bold text-charcoal mb-4">Our Emergency Process</h2>
+              <h2 className="text-2xl font-bold text-charcoal mb-4">Our Response Framework</h2>
               <ol className="list-decimal list-inside space-y-4 mb-8">
-                <li><strong>Immediate Response:</strong> Call our 24/7 line and speak directly with our emergency dispatch.</li>
-                <li><strong>On-Site Assessment:</strong> Our licensed crew arrives swiftly to assess the danger and stop further damage.</li>
-                <li><strong>Securing & Mitigation:</strong> We perform emergency board-ups, water extraction, and structural bracing.</li>
-                <li><strong>Insurance Documentation:</strong> We provide detailed, board-ready documentation and photos for your insurance carrier to ensure a smooth claim process.</li>
+                <li><strong>Direct Dispatch:</strong> Call our line and speak with a trade professional, not a call center.</li>
+                <li><strong>On-Site Stabilization:</strong> Our licensed crew arrives within 60 minutes to secure the premises and stop active damage.</li>
+                <li><strong>Forensic Assessment:</strong> We document the loss with high-fidelity photos and moisture readings before mitigation begins.</li>
+                <li><strong>Insurance Alignment:</strong> We provide board-ready records and itemized scopes to ensure your carrier has the data they need from hour one.</li>
               </ol>
 
               <div className="bg-surface border border-border p-6 rounded-xl shadow-sm mt-8">

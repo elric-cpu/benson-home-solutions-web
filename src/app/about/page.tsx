@@ -68,9 +68,9 @@ export default async function AboutPage() {
       {/* Rich Hero */}
       <RichHero
         title={page?.title || `Protecting Properties Since 2014`}
-        description="We protect the places where people live, work, and gather. Our team specializes in preventive maintenance, damage restoration, and emergency mitigation across the Mid-Willamette Valley."
+        description="We provide the expert oversight required to protect Oregon’s properties from the ground up. Our team specializes in preemptive maintenance and high-fidelity restoration across the Mid-Willamette Valley."
         backgroundImage={HERO_ASSETS.about}
-        badge="Our Story"
+        badge="Our Mission"
         overlayOpacity={65}
       />
 
@@ -80,26 +80,17 @@ export default async function AboutPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
               <h2 className="text-3xl font-bold text-charcoal mb-6">
-                Our History
+                Our Foundation
               </h2>
               {page?.companyHistory ? (
                 <PortableTextRenderer value={page.companyHistory} />
               ) : (
                 <div className="prose prose-lg text-slate">
                   <p>
-                    {BUSINESS.name} was founded on a simple observation: most
-                    property damage is preventable. Leaking roofs, failing
-                    gutters, deferred maintenance on HVAC systems — these small
-                    neglected items become five-figure insurance claims. We
-                    built a company around stopping that cycle.
+                    {BUSINESS.name} was built on a simple trade reality: most property damage is entirely preventable. We saw homeowners and property managers stuck in a cycle of reactive repairs—waiting for a leak to become a flood before taking action. We built this company to stop that cycle.
                   </p>
                   <p>
-                    Based in the Mid-Willamette Valley, we serve homeowners,
-                    property managers, commercial building operators, and
-                    churches across Albany, Salem, Lebanon, Corvallis, and
-                    surrounding communities. Our approach combines scheduled
-                    preventive maintenance with rapid-response restoration when
-                    the unexpected happens.
+                    Based in Albany, we provide the professional oversight needed to identify risks before they turn into five-figure insurance claims. From residential maintenance to complex commercial restoration, our work is defined by precision, high-fidelity documentation, and a direct, contractor-led approach.
                   </p>
                 </div>
               )}
@@ -138,28 +129,27 @@ export default async function AboutPage() {
         <Container>
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-3xl font-bold text-charcoal">
-              What We Stand For
+              Our Principles
             </h2>
             <p className="mt-4 text-slate text-lg">
-              Our principles guide every inspection, every repair, and every
-              emergency response.
+              We operate on a standard of technical precision and accountability.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                title: 'Prevention Over Reaction',
-                desc: 'We believe the best restoration job is the one that never has to happen. Our maintenance programs catch small issues before they become emergencies.',
+                title: 'Preemptive Defense',
+                desc: 'The most cost-effective restoration is the one that never happens. We focus on hardening the building envelope to stop damage before it starts.',
                 icon: '🛡️',
               },
               {
-                title: 'Documentation & Transparency',
-                desc: 'Every inspection and repair is documented with photos and reports. You always know exactly what was done and why.',
+                title: 'Forensic Documentation',
+                desc: 'Every visit is logged with high-fidelity photo records and moisture mapping. We provide the paper trail required for board reviews and insurance claims.',
                 icon: '📋',
               },
               {
-                title: 'Rapid Response',
-                desc: 'When emergencies happen, response time matters. Our after-hours emergency line connects you to a real person who can mobilize within hours.',
+                title: 'Direct Response',
+                desc: 'When an emergency hits, you don’t need a call center. Our line connects you to trade professionals who can mobilize and stabilize your property fast.',
                 icon: '⚡',
               },
             ].map((value) => (
