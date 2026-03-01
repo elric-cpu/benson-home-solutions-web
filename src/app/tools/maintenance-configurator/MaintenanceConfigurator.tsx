@@ -130,9 +130,9 @@ export function MaintenanceConfigurator() {
     <>
       <RichHero
         title="Tailored Maintenance Plan"
-        description={`${property.address} • ${property.sqft} sqft • Built 1984 • Zone ${property.floodZone}`}
+        description={`Professional Oversight for ${property.address} • ${property.sqft} sqft • Built 1984 • Zone ${property.floodZone}`}
         backgroundImage={HERO_ASSETS.configurator}
-        badge="AI-Powered Recommendation"
+        badge="Technical Recommendation"
         overlayOpacity={70}
       >
         <Link href="/tools/cost-calculator">
@@ -192,10 +192,10 @@ export function MaintenanceConfigurator() {
                   <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.45l8.27 14.1H3.73L12 5.45zM11 16h2v2h-2v-2zm0-7h2v5h-2V9z"/></svg>
                 </div>
                 <CardContent className="p-8">
-                  <h3 className="text-xl font-bold mb-6">Plan Summary</h3>
+                  <h3 className="text-xl font-bold mb-6 text-cream">Systematic Oversight</h3>
                   <div className="space-y-4 mb-8">
                     <div className="flex justify-between text-cream/70 text-sm">
-                      <span>Annual Investment</span>
+                      <span>Annual Operational Cost</span>
                       <span>${totalAnnual.toLocaleString()}</span>
                     </div>
                     <div className="border-t border-white/10 pt-4 flex justify-between items-end">
@@ -211,26 +211,34 @@ export function MaintenanceConfigurator() {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="w-full"
+                      className="w-full font-bold"
                       onClick={finalizeAgreement}
                       loading={isFinalizing}
                     >
-                      Generate Agreement
+                      Initialize Agreement
                     </Button>
-                    <p className="text-[10px] text-center text-cream/40 leading-relaxed">
-                      Includes 24/7 priority emergency response, photo-documented inspections, and board-ready reports.
+                    <p className="text-[10px] text-center text-cream/40 leading-relaxed uppercase tracking-widest font-bold">
+                      24/7 Priority Access • Forensic Photo Logs • Board-Ready Reports
                     </p>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="mt-6 border-slate/10 shadow-sm">
+              <Card className="mt-6 border-slate/10 shadow-sm bg-slate-50">
                 <CardContent className="p-6">
-                  <h4 className="font-bold text-charcoal mb-2">Benson Guarantee</h4>
-                  <p className="text-xs text-slate leading-relaxed">
-                    We don&apos;t just catch problems; we prevent them. Every service is backed by our professional 
-                    craftsmanship and CCB #258533 certification.
-                  </p>
+                  <h4 className="font-bold text-charcoal mb-4 uppercase tracking-widest text-[10px]">What is Professional Oversight?</h4>
+                  <ul className="space-y-3">
+                    {[
+                      'Harden the building envelope against rain & ice.',
+                      'Identify deferred maintenance before loss occurs.',
+                      'Maintain a forensic paper trail for insurance.',
+                      'Direct access to trade professionals, no call centers.'
+                    ].map(f => (
+                      <li key={f} className="text-xs text-slate flex gap-2">
+                        <span className="text-oxblood">✓</span> {f}
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             </div>
