@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { sourceSans3 } from '@/lib/fonts';
 import { Header } from '@/components/layout';
 import { Footer } from '@/components/layout';
+import { MobileActionBar } from '@/components/layout/MobileActionBar';
 import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import './globals.css';
 
@@ -78,6 +79,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <MobileActionBar />
         <GoogleAnalytics />
       </body>
     </html>
