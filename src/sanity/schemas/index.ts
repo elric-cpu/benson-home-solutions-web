@@ -11,6 +11,7 @@ import { faqItem } from './faqItem';
 import { testimonial } from './testimonial';
 import { siteSettings } from './siteSettings';
 import { project } from './project';
+import { resource } from './resource';
 
 export const schemaTypes = [
   // Singletons
@@ -29,4 +30,5 @@ export const schemaTypes = [
   // Objects
   faqItem,
   testimonial,
+  resource,
 ];

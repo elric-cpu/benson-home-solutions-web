@@ -1,13 +1,17 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { client } from '@/sanity/lib/client';
-import { Section, Container, Badge, Card, CardContent } from '@/components/ui';
+import { Section, Container, Card, CardContent, RichHero, ResourcesSection } from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
-import { BUSINESS } from '@/lib/constants';
+import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
 import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
 
 interface MethodologyPageData {
   title?: string;
+  heroHeadline?: string;
+  heroSubtext?: string;
+  heroVideo?: string;
+  resources?: any[];
   metaDescription?: string;
   introContent?: Record<string, unknown>[];
   processSteps?: Record<string, unknown>[];
@@ -113,22 +117,13 @@ export default async function MethodologyPage() {
       <BreadcrumbJsonLd items={breadcrumbs} />
       
       {/* Hero */}
-      <Section variant="cream" spacing="lg">
-        <Container>
-          <div className="max-w-3xl">
-            <Badge variant="secondary" className="mb-4">
-              Professional Oversight
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-oxblood leading-tight">
-              {page?.title || 'Preemptive Property Protection'}
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-slate leading-relaxed">
-              Most property damage isn’t accidental—it’s the result of deferred maintenance. Our methodology combines a 
-              5-phase service framework with forensic data modeling to harden your building against predictable risks.
-            </p>
-          </div>
-        </Container>
-      </Section>
+      <RichHero
+        title={page?.heroHeadline || page?.title || 'Preemptive Property Protection'}
+        description={page?.heroSubtext || "Most property damage isn’t accidental—it’s the result of deferred maintenance. Our methodology combines a 5-phase service framework with forensic data modeling to harden your building against predictable risks."}
+        backgroundImage={HERO_ASSETS.maintenance}
+        videoBackground={page?.heroVideo}
+        badge="Professional Oversight"
+      />
 
       {/* The Problem Section */}
       <Section spacing="md">
@@ -222,6 +217,9 @@ export default async function MethodologyPage() {
           </div>
         </Container>
       </Section>
+
+      {/* Authoritative Resources */}
+      {page?.resources && <ResourcesSection resources={page.resources} />}
 
       {/* JSON-LD */}
       <script

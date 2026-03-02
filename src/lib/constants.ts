@@ -24,14 +24,19 @@ export const HUBSPOT = {
 } as const;
 
 export const HERO_ASSETS = {
-  homepage: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=2000',
-  emergency: 'https://images.unsplash.com/photo-1516912481808-3406841bd33c?auto=format&fit=crop&q=80&w=2000',
+  homepage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2000',
+  emergency: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?auto=format&fit=crop&q=80&w=2000',
   waterDamage: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&q=80&w=2000',
   maintenance: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=2000',
   remodeling: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=2000',
   calculator: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000',
   configurator: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000',
   about: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2000',
+} as const;
+
+export const HERO_VIDEOS = {
+  homepage: 'https://assets.mixkit.co/videos/preview/mixkit-architect-working-on-a-blueprint-4244-large.mp4', // Cinematic technical work
+  emergency: 'https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-a-window-at-night-4401-large.mp4', // Subtle emergency mood
 } as const;
 
 export const SERVICE_AREAS = {

@@ -3,6 +3,7 @@ import { checkRateLimit, FORM_RATE_LIMIT } from '@/lib/rate-limit';
 import { db } from '@/lib/db';
 import { contactSubmissions, clients } from '@/lib/db/schema';
 import { syncLeadToHubSpot } from '@/lib/crm/hubspot';
+import { trackServerContactSubmit } from '@/lib/analytics/ga4-server';
 
 interface ContactPayload {
   firstName?: string;
@@ -69,7 +70,12 @@ export async function POST(request: NextRequest) {
       serviceInterest: lead.service || undefined,
     }).catch(err => console.error('[HubSpot Sync Error]', err));
 
-    // 2. Database Persistence
+    // 2. GA4 Server-side Tracking (Background - non-blocking)
+    trackServerContactSubmit(ip, lead.service || undefined).catch(err =>
+      console.error('[GA4 Sync Error]', err)
+    );
+
+    // 3. Database Persistence
     try {
       await db
         .insert(clients)

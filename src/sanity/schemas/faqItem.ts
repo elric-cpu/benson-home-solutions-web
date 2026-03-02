@@ -15,6 +15,8 @@ export const faqItem = defineType({
       { title: 'Restoration', value: 'restoration' },
       { title: 'Remodeling', value: 'remodeling' },
     ] } }),
+    defineField({ name: 'isActualCustomerQuestion', title: 'Actual Customer Question', type: 'boolean', initialValue: false }),
+    defineField({ name: 'source', title: 'Question Source', type: 'string', description: 'e.g., Email, Phone, In-person' }),
     defineField({ name: 'relatedServices', title: 'Related Services', type: 'array', of: [{ type: 'reference', to: [{ type: 'servicePage' }] }] }),
   ],
   preview: {

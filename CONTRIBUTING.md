@@ -72,6 +72,27 @@ All code changes are made via the GitHub API:
 | `NEXT_PUBLIC_SENTRY_DSN` | Error tracking |
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity CMS project |
 | `NEXT_PUBLIC_SANITY_DATASET` | Sanity dataset (production) |
+| `PINECONE_API_KEY` | Vector database API key | Pinecone dashboard |
+| `PINECONE_INDEX` | Pinecone index name (default: `benson-knowledge`) | Pinecone dashboard |
+| `OPENAI_API_KEY` | For LLM fallback (GPT-4o) | OpenAI dashboard |
+| `NOTION_API_KEY` | For knowledge base ingestion | Notion developers portal |
+| `NOTION_DB_KNOWLEDGE` | ID of the Notion Knowledge/SOP database | Notion database URL |
+
+### AI & Vector Operations
+
+The project uses Pinecone for its RAG (Retrieval-Augmented Generation) pipeline, powering the chatbot with data from Notion.
+
+#### Vector Model
+- **Embeddings:** `llama-text-embed-v2` via **Pinecone Inference**.
+- **Chatbot:** Anthropic Claude 3.5 Sonnet (Primary).
+
+#### Initial Vector Ingestion
+1. Ensure `PINECONE_API_KEY`, `PINECONE_INDEX`, and `NOTION_DB_KNOWLEDGE` are set in your environment.
+2. Run the seed script: `npm run seed:pinecone`.
+3. This fetches all pages from the Notion database, generates embeddings using `llama-text-embed-v2` through Pinecone Inference, and upserts them to the index.
+
+#### Real-time Sync
+The `src/app/api/webhooks/notion-sync` endpoint handles real-time updates. When a "Knowledge" entity is updated in Notion (via Make.com/n8n), it automatically refreshes the Pinecone index for that specific item.
 
 ### Tech Stack
 
@@ -82,7 +103,7 @@ All code changes are made via the GitHub API:
 - **Database:** Neon (Postgres serverless) + Drizzle ORM
 - **Vector DB:** Pinecone
 - **Chatbot:** Anthropic Claude 3.5 Sonnet
-- **Embeddings:** OpenAI text-embedding-3-small
+- **Embeddings:** Pinecone Inference (`llama-text-embed-v2`)
 - **Email:** Resend
 - **Analytics:** GA4 + Sentry
 - **CI/CD:** GitHub Actions → Vercel

@@ -20,6 +20,7 @@ export const blogPost = defineType({
       { title: 'Tips & Advice', value: 'tips' },
     ] } }),
     defineField({ name: 'relatedServices', title: 'Related Services', type: 'array', of: [{ type: 'reference', to: [{ type: 'servicePage' }] }] }),
+    defineField({ name: 'resources', title: 'Resources & Backlinks', type: 'array', of: [{ type: 'resource' }], validation: (r) => r.min(6).max(6) }),
   ],
   preview: {
     select: { title: 'title', subtitle: 'publishedAt', media: 'featuredImage' },
