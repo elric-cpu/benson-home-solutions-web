@@ -12,6 +12,9 @@ export const BUSINESS = {
   url: 'https://bensonhomesolutions.com',
   gbp: 'https://maps.app.goo.gl/ad4eywwWonPsSZXP9',
   facebook: 'https://www.facebook.com/profile.php?id=61565667928376',
+  ccb: 'https://search.ccb.state.or.us/search/search_results.aspx?license_number=258533',
+  bbb: 'https://www.bbb.org/us/or/albany/profile/general-contractor/benson-home-solutions-1296-100012345', // Placeholder pattern
+  yelp: 'https://www.yelp.com/biz/benson-home-solutions-albany', // Placeholder pattern
 } as const;
 
 export const HUBSPOT = {

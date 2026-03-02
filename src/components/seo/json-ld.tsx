@@ -73,7 +73,13 @@ export function LocalBusinessJsonLd() {
             description: 'Emergency Services Available 24/7',
           },
         ],
-        sameAs: [BUSINESS.gbp, BUSINESS.facebook],
+        sameAs: [
+          BUSINESS.gbp,
+          BUSINESS.facebook,
+          BUSINESS.ccb,
+          BUSINESS.bbb,
+          BUSINESS.yelp,
+        ],
         dateModified: new Date().toISOString(),
       }}
     />
@@ -119,6 +125,10 @@ export function ArticleJsonLd({
             url: `${BUSINESS.url}/logo.png`, // Ensure this asset exists
           },
         },
+        speakable: {
+          '@type': 'SpeakableSpecification',
+          cssSelector: ['#main-content h1', '#main-content p'],
+        },
       }}
     />
   );
@@ -154,6 +164,10 @@ export function ServiceJsonLd({
         areaServed: {
           '@type': 'State',
           name: 'Oregon',
+        },
+        speakable: {
+          '@type': 'SpeakableSpecification',
+          cssSelector: ['#main-content h1', '#main-content p'],
         },
       }}
     />

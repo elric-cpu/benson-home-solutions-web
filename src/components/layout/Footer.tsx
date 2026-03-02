@@ -17,7 +17,7 @@ const footerLinks = {
     { name: 'Our Methodology', href: '/methodology' },
     { name: 'Contact Us', href: '/contact' },
   ],
-  areas: SERVICE_AREAS.midWillametteValley.slice(0, 4).map(city => ({
+  areas: SERVICE_AREAS.midWillametteValley.map(city => ({
     name: city,
     href: `/areas/${city.toLowerCase().replace(' ', '-')}`
   }))
