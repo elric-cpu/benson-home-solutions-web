@@ -8,6 +8,7 @@ interface RichHeroProps {
   title: string | React.ReactNode;
   description?: string | React.ReactNode;
   backgroundImage: string;
+  imageAlt?: string;
   children?: React.ReactNode;
   badge?: string;
   className?: string;
@@ -18,6 +19,7 @@ export function RichHero({
   title,
   description,
   backgroundImage,
+  imageAlt = '',
   children,
   badge,
   className,
@@ -34,7 +36,7 @@ export function RichHero({
       <div className="absolute inset-0 z-0">
         <Image
           src={backgroundImage}
-          alt=""
+          alt={imageAlt}
           fill
           priority
           className="object-cover transition-transform duration-10000 hover:scale-110"

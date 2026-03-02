@@ -49,7 +49,7 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const API_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY || 'FREE_KEY';
+  const API_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -67,6 +67,11 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
       return;
     }
 
+    if (!API_KEY || API_KEY === 'FREE_KEY') {
+      console.warn('[AddressAutocomplete] Geoapify API key is missing. Autocomplete is disabled.');
+      return;
+    }
+
     const fetchSuggestions = async () => {
       setLoading(true);
       try {
@@ -75,6 +80,11 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
             query
           )}&apiKey=${API_KEY}&filter=countrycode:us&limit=5`
         );
+        
+        if (!response.ok) {
+          throw new Error(`Geoapify error: ${response.status}`);
+        }
+
         const data = (await response.json()) as GeoapifyResponse;
         setSuggestions(
           data.features?.map((f) => ({

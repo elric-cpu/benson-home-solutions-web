@@ -63,8 +63,18 @@ export function HubSpotForm({
   }, [region, portalId, formId, onFormSubmitted]);
 
   return (
-    <div className={className}>
-      <div id={`hs-form-${formId}`} ref={formRef} />
+    <div className={cn('relative min-h-[300px] bg-slate-50/50 rounded-2xl border border-slate-100 overflow-hidden', className)}>
+      <div 
+        id={`hs-form-${formId}`} 
+        ref={formRef} 
+        className="relative z-10"
+      />
+      {/* Skeleton Pulse */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+        <div className="w-full h-full bg-gradient-to-r from-transparent via-slate-200 to-transparent -translate-x-full animate-shimmer" />
+      </div>
     </div>
   );
 }
+
+import { cn } from '@/lib/utils';

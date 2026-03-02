@@ -51,6 +51,9 @@ export const metadata: Metadata = {
   other: {
     'date-modified': new Date().toISOString(),
   },
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export const viewport: Viewport = {
