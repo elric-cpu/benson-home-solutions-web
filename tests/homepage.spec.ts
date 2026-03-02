@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 test.describe('Homepage', () => {
   test('renders the homepage', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('h1')).toContainText('Benson Home Solutions');
+    await expect(page.locator('h1')).toContainText('Property Protection');
   });
 
   test('has correct title', async ({ page }) => {

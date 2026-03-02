@@ -1,10 +1,11 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { client } from '@/sanity/lib/client';
-import { Section, Container, Card, CardContent, Button } from '@/components/ui';
+import { Section, Container, Card, CardContent, Button, RichHero, ResourcesSection, Badge } from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
 import { ArticleJsonLd, FAQPageJsonLd, BreadcrumbJsonLd } from '@/components/seo/json-ld';
-import { BUSINESS } from '@/lib/constants';
+import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
+import { urlForImage } from '@/sanity/lib/image';
 
 interface MethodologyDetailData {
   _id: string;
@@ -12,10 +13,19 @@ interface MethodologyDetailData {
   slug: { current: string };
   metaDescription?: string;
   heroHeadline?: string;
+  heroImage?: any;
+  heroVideo?: string;
+  resources?: any[];
   category: string;
   content?: Record<string, unknown>[];
   dataSources?: { name: string; url: string; description: string }[];
-  faqs?: { _id: string; question: string; answer: string }[];
+  faqs?: { 
+    _id: string; 
+    question: string; 
+    answer: any;
+    isActualCustomerQuestion?: boolean;
+    source?: string;
+  }[];
   datePublished?: string;
   dateModified?: string;
 }
@@ -26,13 +36,16 @@ const detailQuery = `*[_type == "methodologyDetail" && slug.current == $slug][0]
   slug,
   metaDescription,
   heroHeadline,
+  heroImage,
+  heroVideo,
+  resources,
   category,
   content[]{
     ...,
     _type == "image" => { ..., asset-> }
   },
   dataSources,
-  faqs[]->{ _id, question, answer },
+  faqs[]->{ _id, question, answer, isActualCustomerQuestion, source },
   "datePublished": _createdAt,
   "dateModified": _updatedAt
 }`;
@@ -184,36 +197,22 @@ export default async function MethodologyDetailPage({
       {faqData.length > 0 && <FAQPageJsonLd questions={faqData} />}
 
       <article>
-        <Section variant="cream" spacing="lg">
-          <Container>
-            <div className="max-w-4xl">
-              <nav className="mb-6" aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-sm text-slate/70 uppercase tracking-widest font-bold">
-                  <li><Link href="/methodology" className="hover:text-oxblood transition-colors">Methodology</Link></li>
-                  <li><span className="text-slate/30">/</span></li>
-                  <li className="text-oxblood">{title}</li>
-                </ol>
-              </nav>
-              
-              <header>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-charcoal leading-tight mb-6">
-                  {heroHeadline}
-                </h1>
-                <p className="text-xl md:text-2xl text-slate leading-relaxed max-w-2xl">
-                  {description}
-                </p>
-                <div className="mt-8 flex items-center text-sm text-slate/60 border-t border-slate/10 pt-4">
-                  <span className="font-semibold text-oxblood mr-2">Last Updated:</span>
-                  <time dateTime={dateModified}>
-                    {new Date(dateModified).toLocaleDateString('en-US', { 
-                      year: 'numeric', month: 'long', day: 'numeric' 
-                    })}
-                  </time>
-                </div>
-              </header>
-            </div>
-          </Container>
-        </Section>
+        <RichHero
+          title={heroHeadline}
+          description={description}
+          backgroundImage={detail?.heroImage ? urlForImage(detail.heroImage).width(1600).url() : HERO_ASSETS.maintenance}
+          videoBackground={detail?.heroVideo}
+          badge={`Methodology: ${title}`}
+        >
+          <Link href="/tools/cost-calculator">
+            <Button variant="secondary" size="lg">Run Calculator</Button>
+          </Link>
+          <Link href="/methodology">
+            <Button variant="outline" size="lg" className="bg-white/10 text-cream border-cream/20 hover:bg-cream hover:text-oxblood">
+              All Methodologies
+            </Button>
+          </Link>
+        </RichHero>
 
         <Section spacing="md">
           <Container>
@@ -257,13 +256,20 @@ export default async function MethodologyDetailPage({
                       {detail.faqs.map((faq) => (
                         <details key={faq._id} className="group bg-white rounded-xl border border-slate/10 open:shadow-md transition-shadow duration-200">
                           <summary className="flex items-center justify-between p-6 cursor-pointer list-none text-lg font-bold text-charcoal select-none group-hover:text-oxblood transition-colors">
-                            {faq.question}
+                            <div className="flex items-center gap-3">
+                              {faq.question}
+                              {faq.isActualCustomerQuestion && (
+                                <Badge variant="secondary" className="text-[10px] uppercase font-bold bg-oxblood/5 text-oxblood border-oxblood/10">
+                                  Actual Question
+                                </Badge>
+                              )}
+                            </div>
                             <span className="ml-4 text-oxblood transition-transform duration-300 group-open:rotate-180">
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                             </span>
                           </summary>
                           <div className="px-6 pb-6 text-slate leading-relaxed border-t border-slate/5 pt-4 mt-2">
-                            {faq.answer}
+                            <PortableTextRenderer value={faq.answer} />
                           </div>
                         </details>
                       ))}
@@ -320,6 +326,9 @@ export default async function MethodologyDetailPage({
             </div>
           </Container>
         </Section>
+
+        {/* Authoritative Resources */}
+        {detail?.resources && <ResourcesSection resources={detail.resources} />}
       </article>
     </>
   );

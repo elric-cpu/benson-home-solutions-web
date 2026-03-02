@@ -13,6 +13,8 @@ export const areaPage = defineType({
     defineField({ name: 'state', title: 'State', type: 'string', initialValue: 'Oregon' }),
     defineField({ name: 'serviceRadius', title: 'Service Radius (miles)', type: 'number' }),
     defineField({ name: 'heroImage', title: 'Hero Image', type: 'image', options: { hotspot: true } }),
+    defineField({ name: 'heroVideo', title: 'Hero Video URL', type: 'url', description: 'Enter a direct MP4 link for the hero background video' }),
+    defineField({ name: 'resources', title: 'Resources & Backlinks', type: 'array', of: [{ type: 'resource' }], validation: (r) => r.min(6).max(6) }),
     defineField({ name: 'localContent', title: 'Local Content', type: 'array', of: [{ type: 'block' }, { type: 'image', options: { hotspot: true } }] }),
     defineField({ name: 'servicesOffered', title: 'Services Offered', type: 'array', of: [{ type: 'reference', to: [{ type: 'servicePage' }] }] }),
     defineField({ name: 'testimonials', title: 'Local Testimonials', type: 'array', of: [{ type: 'reference', to: [{ type: 'testimonial' }] }] }),

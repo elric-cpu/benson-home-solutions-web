@@ -1,25 +1,18 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { client } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
 import {
   Button,
   Container,
   Section,
-  Badge,
   Card,
   CardContent,
+  RichHero,
+  ResourcesSection,
 } from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
-import { BUSINESS } from '@/lib/constants';
-
-interface SanityImage {
-  asset: {
-    _ref: string;
-    _type: 'reference';
-  };
-}
+import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
 
 interface AreaPageData {
   _id: string;
@@ -28,7 +21,9 @@ interface AreaPageData {
   city: string;
   county?: string;
   metaDescription?: string;
-  heroImage?: SanityImage;
+  heroImage?: any;
+  heroVideo?: string;
+  resources?: any[];
   localContent?: Record<string, unknown>[];
   servicesOffered?: {
     _id: string;
@@ -54,6 +49,8 @@ const areaQuery = `*[_type == "areaPage" && slug.current == $slug][0]{
   county,
   metaDescription,
   heroImage,
+  heroVideo,
+  resources,
   localContent[]{
     ...,
     _type == "image" => { ..., asset-> }
@@ -140,46 +137,22 @@ export default async function AreaPage({
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
       {/* Hero */}
-      <Section variant="cream" spacing="lg">
-        <Container>
-          <div className="max-w-3xl">
-            <Badge variant="secondary" className="mb-4">
-              Service Area: {city}, Oregon
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-oxblood leading-tight">
-              Professional Property Care in {city}
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-slate leading-relaxed">
-              Benson Home Solutions provides comprehensive maintenance,
-              restoration, and emergency mitigation services to homeowners and
-              businesses throughout {city} and {county} County.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Link href="/contact">
-                <Button size="lg">Get a Free {city} Estimate</Button>
-              </Link>
-              <a href={`tel:${BUSINESS.phone}`}>
-                <Button variant="outline" size="lg">
-                  Call {BUSINESS.phone}
-                </Button>
-              </a>
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      {/* Hero Image */}
-      {area?.heroImage && (
-        <div className="relative w-full h-64 md:h-96">
-          <Image
-            src={urlForImage(area.heroImage).width(1600).height(600).url()}
-            alt={`Serving the ${city} area`}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-      )}
+      <RichHero
+        title={`Professional Property Care in ${city}`}
+        description={area?.metaDescription || `Benson Home Solutions provides comprehensive maintenance, restoration, and emergency mitigation services to homeowners and businesses throughout ${city} and ${county} County.`}
+        backgroundImage={area?.heroImage ? urlForImage(area.heroImage).width(1600).url() : HERO_ASSETS.maintenance}
+        videoBackground={area?.heroVideo}
+        badge={`Service Area: ${city}, Oregon`}
+      >
+        <Link href="/contact">
+          <Button size="lg" variant="secondary">Get a Free {city} Estimate</Button>
+        </Link>
+        <a href={`tel:${BUSINESS.phone}`}>
+          <Button variant="outline" size="lg" className="bg-white/10 text-cream border-cream/20 hover:bg-cream hover:text-oxblood">
+            Call {BUSINESS.phone}
+          </Button>
+        </a>
+      </RichHero>
 
       {/* Local Content */}
       <Section spacing="md">
@@ -331,6 +304,9 @@ export default async function AreaPage({
           </Container>
         </Section>
       )}
+
+      {/* Authoritative Resources */}
+      {area?.resources && <ResourcesSection resources={area.resources} />}
 
       {/* JSON-LD */}
       <script

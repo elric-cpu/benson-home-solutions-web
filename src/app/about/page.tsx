@@ -2,28 +2,22 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { client } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
-import { Section, Container, Card, CardContent, RichHero } from '@/components/ui';
+import { Section, Container, Card, CardContent, RichHero, ResourcesSection } from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
 import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
 
 interface AboutPageData {
   title?: string;
+  heroHeadline?: string;
+  heroSubtext?: string;
+  heroVideo?: string;
+  resources?: any[];
   metaDescription?: string;
   ownerBio?: Record<string, unknown>[];
-  ownerPhoto?: {
-    asset: {
-      _ref: string;
-      _type: 'reference';
-    };
-  };
+  ownerPhoto?: any;
   companyHistory?: Record<string, unknown>[];
   credentials?: Record<string, unknown>[];
-  teamPhotos?: {
-    asset: {
-      _ref: string;
-      _type: 'reference';
-    };
-  }[];
+  teamPhotos?: any[];
   values?: Record<string, unknown>[];
 }
 
@@ -67,11 +61,13 @@ export default async function AboutPage() {
       <LocalBusinessJsonLd />
       {/* Rich Hero */}
       <RichHero
-        title={page?.title || `Protecting Properties Since 2014`}
-        description="We provide the expert oversight required to protect Oregon’s properties from the ground up. Our team specializes in preemptive maintenance and high-fidelity restoration across the Mid-Willamette Valley."
+        title={page?.heroHeadline || page?.title || `Protecting Properties Since 2014`}
+        description={page?.heroSubtext || "We provide the expert oversight required to protect Oregon’s properties from the ground up. Our team specializes in preemptive maintenance and high-fidelity restoration across the Mid-Willamette Valley."}
         backgroundImage={HERO_ASSETS.about}
+        videoBackground={page?.heroVideo}
+        imageAlt="Benson Home Solutions office planning"
         badge="Our Mission"
-        overlayOpacity={65}
+        overlayOpacity={70}
       />
 
       {/* History & Bio */}
@@ -216,6 +212,9 @@ export default async function AboutPage() {
           </div>
         </Container>
       </Section>
+
+      {/* Authoritative Resources */}
+      {page?.resources && <ResourcesSection resources={page.resources} />}
 
       {/* JSON-LD */}
       <script

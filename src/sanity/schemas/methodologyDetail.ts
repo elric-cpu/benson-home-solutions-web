@@ -31,6 +31,25 @@ export const methodologyDetail = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'heroImage',
+      title: 'Hero Background Image',
+      type: 'image',
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: 'heroVideo',
+      title: 'Hero Video URL',
+      type: 'url',
+      description: 'Enter a direct MP4 link for the hero background video',
+    }),
+    defineField({
+      name: 'resources',
+      title: 'Resources & Backlinks',
+      type: 'array',
+      of: [{ type: 'resource' }],
+      validation: (Rule) => Rule.min(6).max(6),
+    }),
+    defineField({
       name: 'category',
       title: 'Category',
       type: 'string',

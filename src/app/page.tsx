@@ -7,8 +7,9 @@ import {
   Section,
   Badge,
   RichHero,
+  ResourcesSection,
 } from '@/components/ui';
-import { BUSINESS, SERVICE_AREAS, HERO_ASSETS } from '@/lib/constants';
+import { BUSINESS, SERVICE_AREAS, HERO_ASSETS, HERO_VIDEOS } from '@/lib/constants';
 import { client } from '@/sanity/lib/client';
 import { LocalBusinessJsonLd } from '@/components/seo/json-ld';
 
@@ -16,6 +17,8 @@ interface HomePageData {
   title?: string;
   heroHeadline?: string;
   heroDescription?: string;
+  heroVideo?: string;
+  resources?: any[];
   services?: {
     title: string;
     description: string;
@@ -31,6 +34,8 @@ const homeQuery = `*[_type == "homePage"][0]{
   title,
   heroHeadline,
   heroDescription,
+  heroVideo,
+  resources,
   "services": *[_type == "servicePage"][0..3]{
     title,
     "description": metaDescription,
@@ -105,6 +110,7 @@ export default async function HomePage() {
         )}
         description={page?.heroDescription || "We don’t just fix damage; we prevent it. From local maintenance programs to 24/7 emergency restoration, Benson Home Solutions provides the professional oversight your property deserves. Licensed, bonded, and ready to work."}
         backgroundImage={HERO_ASSETS.homepage}
+        videoBackground={page?.heroVideo || HERO_VIDEOS.homepage}
         badge="Mid-Willamette Valley | CCB #258533"
       >
         <Link href="/tools/cost-calculator">
@@ -219,6 +225,9 @@ export default async function HomePage() {
           </div>
         </Container>
       </Section>
+
+      {/* Authoritative Resources */}
+      {page?.resources && <ResourcesSection resources={page.resources} />}
 
       {/* Emergency CTA */}
       <Section variant="default" spacing="md">

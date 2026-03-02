@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import { client } from '@/sanity/lib/client';
-import { Button, Container, Section, Card, CardContent, RichHero } from '@/components/ui';
+import { Button, Container, Section, Card, CardContent, RichHero, ResourcesSection } from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
-import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
+import { BUSINESS, HERO_ASSETS, HERO_VIDEOS } from '@/lib/constants';
 
 interface EmergencyPageData {
   title?: string;
@@ -11,6 +11,8 @@ interface EmergencyPageData {
   afterHoursPhone?: string;
   heroHeadline?: string;
   heroSubtext?: string;
+  heroVideo?: string;
+  resources?: any[];
   emergencyServices?: Record<string, unknown>[];
   responseTimeSLA?: string;
   content?: Record<string, unknown>[];
@@ -69,6 +71,7 @@ export default async function EmergencyPage() {
         title={page.heroHeadline!}
         description={page.heroSubtext}
         backgroundImage={HERO_ASSETS.emergency}
+        videoBackground={page.heroVideo || HERO_VIDEOS.emergency}
         badge="Direct Dispatch | 24/7"
         overlayOpacity={80}
       >
@@ -146,6 +149,9 @@ export default async function EmergencyPage() {
           )}
         </Container>
       </Section>
+
+      {/* Authoritative Resources */}
+      {page.resources && <ResourcesSection resources={page.resources} />}
     </>
   );
 }

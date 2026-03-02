@@ -3,38 +3,36 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { client } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
-import { Button, Container, Section, Badge } from '@/components/ui';
+import { Button, Container, Section, Badge, RichHero, ResourcesSection } from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
-import { BUSINESS } from '@/lib/constants';
+import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
 
 interface ServicePageData {
   _id: string;
   title: string;
   slug: { current: string };
   metaDescription?: string;
-  heroImage?: {
-    asset: {
-      _ref: string;
-      _type: 'reference';
-    };
-  };
+  heroImage?: any;
+  heroVideo?: string;
+  resources?: any[];
   heroHeadline?: string;
   content?: Record<string, unknown>[];
   serviceArea?: { title: string; slug: { current: string } }[];
   ctaText?: string;
   ctaLink?: string;
   pricingNote?: string;
-  faqItems?: { _id: string; question: string; answer: string }[];
+  faqItems?: { 
+    _id: string; 
+    question: string; 
+    answer: any; 
+    isActualCustomerQuestion?: boolean;
+    source?: string;
+  }[];
   relatedServices?: {
     _id: string;
     title: string;
     slug: { current: string };
-    heroImage?: {
-      asset: {
-        _ref: string;
-        _type: 'reference';
-      };
-    };
+    heroImage?: any;
   }[];
 }
 
@@ -44,16 +42,18 @@ const serviceQuery = `*[_type == "servicePage" && slug.current == $slug][0]{
   slug,
   metaDescription,
   heroImage,
+  heroVideo,
   heroHeadline,
   content[]{
     ...,
     _type == "image" => { ..., asset-> }
   },
   serviceArea[]->{ title, slug },
+  resources,
   ctaText,
   ctaLink,
   pricingNote,
-  faqItems[]->{ _id, question, answer },
+  faqItems[]->{ _id, question, answer, isActualCustomerQuestion, source },
   relatedServices[]->{ _id, title, slug, heroImage }
 }`;
 
@@ -173,53 +173,24 @@ export default async function ServicePage({
       {faqData.length > 0 && <FAQPageJsonLd questions={faqData} />}
 
       {/* Hero */}
-      <Section variant="cream" spacing="lg">
-        <Container>
-          <div className="max-w-3xl">
-            <Link
-              href="/"
-              className="text-sm font-medium text-oxblood hover:text-oxblood/80 transition-colors mb-4 inline-block"
-            >
-              &larr; All Services
-            </Link>
-            <h1 className="text-4xl md:text-5xl font-bold text-oxblood leading-tight">
-              {service.heroHeadline || service.title}
-            </h1>
-            {service.metaDescription && (
-              <p className="mt-4 text-lg text-slate leading-relaxed">
-                {service.metaDescription}
-              </p>
-            )}
-
-            <div className="mt-6 flex flex-wrap gap-2">
-              {service.serviceArea && service.serviceArea.length > 0 ? (
-                service.serviceArea.map((area) => (
-                  <Badge key={area.slug.current} variant="secondary">
-                    {area.title}
-                  </Badge>
-                ))
-              ) : (
-                <Badge variant="secondary">
-                  Mid-Willamette Valley & Harney County
-                </Badge>
-              )}
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      {/* Hero Image */}
-      {service.heroImage && (
-        <div className="relative w-full h-64 md:h-96">
-          <Image
-            src={urlForImage(service.heroImage).width(1600).height(600).url()}
-            alt={service.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-      )}
+      <RichHero
+        title={service.heroHeadline || service.title}
+        description={service.metaDescription}
+        backgroundImage={service.heroImage ? urlForImage(service.heroImage).width(1600).url() : HERO_ASSETS.maintenance}
+        videoBackground={service.heroVideo}
+        badge={service.title}
+      >
+        <Link href={service.ctaLink || '/contact'}>
+          <Button variant="secondary" size="lg">
+            {service.ctaText || 'Get a Free Estimate'}
+          </Button>
+        </Link>
+        <a href={`tel:${BUSINESS.phone}`}>
+          <Button variant="outline" size="lg" className="bg-white/10 text-cream border-cream/20 hover:bg-cream hover:text-oxblood">
+            Call {BUSINESS.phone}
+          </Button>
+        </a>
+      </RichHero>
 
       {/* Content */}
       <Section spacing="md">
@@ -298,24 +269,34 @@ export default async function ServicePage({
       {service.faqItems && service.faqItems.length > 0 && (
         <Section spacing="md">
           <Container size="narrow">
-            <h2 className="text-2xl md:text-3xl font-bold mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-charcoal">
               Frequently Asked Questions
             </h2>
             <div className="space-y-6">
               {service.faqItems.map((faq) => (
-                <div key={faq._id}>
-                  <h3 className="text-lg font-semibold text-charcoal">
-                    {faq.question}
-                  </h3>
-                  <p className="mt-2 text-slate leading-relaxed">
-                    {faq.answer}
-                  </p>
+                <div key={faq._id} className="border-b border-oxblood/10 pb-6 last:border-0">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="text-lg font-bold text-charcoal">
+                      {faq.question}
+                    </h3>
+                    {faq.isActualCustomerQuestion && (
+                      <Badge variant="secondary" className="text-[10px] uppercase font-bold bg-oxblood/5 text-oxblood border-oxblood/10">
+                        Actual Customer Question
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="text-slate leading-relaxed">
+                    <PortableTextRenderer value={faq.answer} />
+                  </div>
                 </div>
               ))}
             </div>
           </Container>
         </Section>
       )}
+
+      {/* Authoritative Resources */}
+      {service.resources && <ResourcesSection resources={service.resources} />}
 
       {/* CTA */}
       <Section variant="oxblood" spacing="md">

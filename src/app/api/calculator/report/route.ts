@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm';
 import { getCalculatorReportEmail } from '@/lib/email/templates';
 import { checkRateLimit, FORM_RATE_LIMIT } from '@/lib/rate-limit';
 import { syncLeadToHubSpot } from '@/lib/crm/hubspot';
+import { trackServerCalculatorUse } from '@/lib/analytics/ga4-server';
 
 export async function POST(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for') || 'anonymous';
@@ -40,7 +41,12 @@ export async function POST(request: NextRequest) {
       message: `Calculator result: $${annualTotal.toLocaleString()}/yr`,
     }).catch(err => console.error('[HubSpot Sync Error]', err));
 
-    // 2. Database: Create or Update Client
+    // 2. GA4 Server-side Tracking
+    trackServerCalculatorUse(ip, 'cost-calculator').catch(err =>
+      console.error('[GA4 Sync Error]', err)
+    );
+
+    // 3. Database: Create or Update Client
     const [client] = await db
       .insert(clients)
       .values({

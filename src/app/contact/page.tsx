@@ -1,16 +1,46 @@
 import type { Metadata } from 'next';
-import { Section, Container, Card, CardContent, Badge } from '@/components/ui';
+import { Section, Container, Card, CardContent, RichHero, ResourcesSection } from '@/components/ui';
 import { HubSpotForm } from '@/components/content/HubSpotForm';
-import { BUSINESS, HUBSPOT } from '@/lib/constants';
+import { BUSINESS, HUBSPOT, HERO_ASSETS } from '@/lib/constants';
+import { client } from '@/sanity/lib/client';
 
-export const metadata: Metadata = {
-  title: 'Contact Us | Request a Quote',
-  description: `Contact Benson Home Solutions for professional maintenance, restoration, and mitigation services in the Mid-Willamette Valley. Call ${BUSINESS.phone} or our 24/7 emergency line.`,
-};
+interface ContactPageData {
+  title?: string;
+  heroHeadline?: string;
+  heroSubtext?: string;
+  heroVideo?: string;
+  resources?: any[];
+  metaDescription?: string;
+  formHeadline?: string;
+  formDescription?: string;
+}
+
+const contactQuery = `*[_type == "contactPage"][0]`;
+
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const page = await client.fetch<ContactPageData | null>(contactQuery);
+    return {
+      title: page?.title || 'Contact Us | Request a Quote',
+      description:
+        page?.metaDescription ||
+        `Contact Benson Home Solutions for professional maintenance, restoration, and mitigation services in the Mid-Willamette Valley. Call ${BUSINESS.phone} or our 24/7 emergency line.`,
+    };
+  } catch {
+    return { title: 'Contact Us | Request a Quote' };
+  }
+}
 
 import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  let page: ContactPageData | null = null;
+  try {
+    page = await client.fetch<ContactPageData | null>(contactQuery);
+  } catch (error) {
+    console.error('Failed to load contact page data', error);
+  }
+
   const breadcrumbs = [
     { name: 'Home', url: BUSINESS.url },
     { name: 'Contact', url: `${BUSINESS.url}/contact` },
@@ -20,23 +50,13 @@ export default function ContactPage() {
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
       {/* Hero Section */}
-      <Section variant="cream" spacing="lg">
-        <Container>
-          <div className="max-w-3xl">
-            <Badge variant="secondary" className="mb-4">
-              Get in Touch
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-oxblood leading-tight">
-              Ready to Protect Your Property?
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-slate leading-relaxed">
-              Whether you need a preventive maintenance program, emergency
-              water damage restoration, or a free property assessment, our
-              licensed team is here to help.
-            </p>
-          </div>
-        </Container>
-      </Section>
+      <RichHero
+        title={page?.heroHeadline || "Ready to Protect Your Property?"}
+        description={page?.heroSubtext || "Whether you need a preventive maintenance program, emergency water damage restoration, or a free property assessment, our licensed team is here to help."}
+        backgroundImage={HERO_ASSETS.about}
+        videoBackground={page?.heroVideo}
+        badge="Get in Touch"
+      />
 
       {/* Main Contact Section */}
       <Section spacing="lg">
@@ -134,11 +154,10 @@ export default function ContactPage() {
             {/* Form */}
             <div className="bg-white rounded-2xl shadow-elevated p-6 md:p-8 border border-slate/10">
               <h2 className="text-2xl font-bold text-charcoal mb-2">
-                Send Us a Message
+                {page?.formHeadline || "Send Us a Message"}
               </h2>
               <p className="text-slate mb-8">
-                Fill out the form below and we&apos;ll get back to you within one
-                business day.
+                {page?.formDescription || "Fill out the form below and we'll get back to you within one business day."}
               </p>
               <HubSpotForm 
                 portalId={HUBSPOT.portalId}
@@ -148,6 +167,9 @@ export default function ContactPage() {
           </div>
         </Container>
       </Section>
+
+      {/* Authoritative Resources */}
+      {page?.resources && <ResourcesSection resources={page.resources} />}
 
       {/* JSON-LD */}
       <script

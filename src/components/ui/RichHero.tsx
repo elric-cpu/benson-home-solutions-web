@@ -8,6 +8,7 @@ interface RichHeroProps {
   title: string | React.ReactNode;
   description?: string | React.ReactNode;
   backgroundImage: string;
+  videoBackground?: string;
   imageAlt?: string;
   children?: React.ReactNode;
   badge?: string;
@@ -19,6 +20,7 @@ export function RichHero({
   title,
   description,
   backgroundImage,
+  videoBackground,
   imageAlt = '',
   children,
   badge,
@@ -28,24 +30,39 @@ export function RichHero({
   return (
     <section
       className={cn(
-        'relative min-h-[60vh] flex items-center overflow-hidden bg-oxblood py-20 md:py-32',
+        'relative min-h-[70vh] flex items-center overflow-hidden bg-oxblood py-20 md:py-32',
         className
       )}
     >
-      {/* Background Image with Parallax-like scaling */}
+      {/* Background Layer */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src={backgroundImage}
-          alt={imageAlt}
-          fill
-          priority
-          className="object-cover transition-transform duration-10000 hover:scale-110"
-        />
+        {videoBackground ? (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={backgroundImage}
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src={videoBackground} type="video/mp4" />
+          </video>
+        ) : (
+          <Image
+            src={backgroundImage}
+            alt={imageAlt}
+            fill
+            priority
+            className="object-cover transition-transform duration-10000 hover:scale-110"
+          />
+        )}
+        
         {/* Dynamic Branding Overlay */}
         <div 
-          className="absolute inset-0 bg-gradient-to-r from-oxblood via-oxblood/80 to-transparent" 
+          className="absolute inset-0 bg-gradient-to-r from-oxblood via-oxblood/90 to-transparent" 
           style={{ opacity: overlayOpacity / 100 }}
         />
+        <div className="absolute inset-0 bg-black/20" />
       </div>
 
       <Container className="relative z-10">
