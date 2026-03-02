@@ -75,34 +75,89 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
     const fetchSuggestions = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
-            query
-          )}&apiKey=${API_KEY}&filter=countrycode:us&limit=5`
-        );
-        
-        if (!response.ok) {
-          throw new Error(`Geoapify error: ${response.status}`);
+        if (API_KEY && API_KEY !== 'FREE_KEY') {
+          // Primary: Geoapify
+          const response = await fetch(
+            `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
+              query
+            )}&apiKey=${API_KEY}&filter=countrycode:us&limit=5`
+          );
+          
+          if (response.ok) {
+            const data = (await response.json()) as GeoapifyResponse;
+            setSuggestions(
+              data.features?.map((f) => ({
+                formatted: f.properties.formatted,
+                place_id: f.properties.place_id,
+                address_line1: f.properties.address_line1,
+                address_line2: f.properties.address_line2,
+                city: f.properties.city,
+                state: f.properties.state,
+                postcode: f.properties.postcode,
+                county: f.properties.county,
+                lat: f.geometry.coordinates[1],
+                lon: f.geometry.coordinates[0],
+              })) || []
+            );
+            setIsOpen(true);
+            return;
+          }
         }
 
-        const data = (await response.json()) as GeoapifyResponse;
-        setSuggestions(
-          data.features?.map((f) => ({
-            formatted: f.properties.formatted,
-            place_id: f.properties.place_id,
-            address_line1: f.properties.address_line1,
-            address_line2: f.properties.address_line2,
-            city: f.properties.city,
-            state: f.properties.state,
-            postcode: f.properties.postcode,
-            county: f.properties.county,
-            lat: f.geometry.coordinates[1],
-            lon: f.geometry.coordinates[0],
-          })) || []
+        // Fallback: Nominatim (OpenStreetMap) - No key required
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            query
+          )}&addressdetails=1&limit=5&countrycodes=us`
         );
-        setIsOpen(true);
+
+        if (!response.ok) throw new Error('Geocoding service unavailable');
+
+        const data = await response.json();
+        const osmSuggestions = data.map((item: any) => ({
+          formatted: item.display_name,
+          place_id: `osm-${item.place_id}`,
+          address_line1: item.address.road || item.display_name.split(',')[0],
+          address_line2: item.address.city || item.address.town || '',
+          city: item.address.city || item.address.town || '',
+          state: item.address.state || '',
+          postcode: item.address.postcode || '',
+          county: item.address.county || '',
+          lat: parseFloat(item.lat),
+          lon: parseFloat(item.lon),
+        }));
+
+        if (osmSuggestions.length > 0) {
+          setSuggestions(osmSuggestions);
+          setIsOpen(true);
+          return;
+        }
+
+        // Tertiary Fallback: US Census Geocoder (Direct Search)
+        // Only trigger if string is long (likely a full address attempt)
+        if (query.length > 10) {
+          const censusUrl = `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${encodeURIComponent(query)}&benchmark=Public_AR_Current&format=json`;
+          const cRes = await fetch(censusUrl);
+          const cData = await cRes.json();
+
+          if (cData.result?.addressMatches?.[0]) {
+            setSuggestions(cData.result.addressMatches.map((m: any, i: number) => ({
+              formatted: m.matchedAddress,
+              place_id: `census-${i}`,
+              address_line1: m.addressComponents.number + ' ' + m.addressComponents.streetName,
+              address_line2: m.addressComponents.city + ', ' + m.addressComponents.state,
+              city: m.addressComponents.city,
+              state: m.addressComponents.state,
+              postcode: m.addressComponents.zip,
+              county: m.addressComponents.county,
+              lat: m.coordinates.y,
+              lon: m.coordinates.x,
+            })));
+            setIsOpen(true);
+          }
+        }
       } catch (error) {
-        console.error('Geoapify error:', error);
+        console.error('Geocoding error:', error);
       } finally {
         setLoading(false);
       }

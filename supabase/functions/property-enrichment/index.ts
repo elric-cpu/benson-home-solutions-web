@@ -41,21 +41,59 @@ serve(async (req) => {
       })
     }
 
-    // 2. Geocoding (Geoapify)
-    const geoResponse = await fetch(
-      `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(address)}&apiKey=${GEOAPIFY_API_KEY}`
-    )
-    const geoData = await geoResponse.json()
-    const feature = geoData.features?.[0]
+    // 2. Geocoding Cascade (Geoapify -> Census -> partial success)
+    let geocodeResult = null
+    let geocodeSource = 'none'
 
-    if (!feature) {
-      return new Response(JSON.stringify({ error: 'Address not found' }), {
+    try {
+      if (GEOAPIFY_API_KEY) {
+        const res = await fetch(
+          `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(address)}&apiKey=${GEOAPIFY_API_KEY}`
+        )
+        const data = await res.json()
+        if (data.features?.[0]) {
+          geocodeResult = data.features[0]
+          geocodeSource = 'Geoapify'
+        }
+      }
+
+      if (!geocodeResult) {
+        // Fallback: US Census Geocoder (Direct search)
+        // Note: Census Geocoder expects more complete addresses, but we try one-line search
+        const censusUrl = `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${encodeURIComponent(address)}&benchmark=Public_AR_Current&format=json`
+        const res = await fetch(censusUrl)
+        const data = await res.json()
+        
+        if (data.result?.addressMatches?.[0]) {
+          const match = data.result.addressMatches[0]
+          geocodeResult = {
+            properties: {
+              formatted: match.matchedAddress,
+              city: match.addressComponents.city,
+              state: match.addressComponents.state,
+              postcode: match.addressComponents.zip,
+              county: match.addressComponents.county,
+              rank: { confidence: 0.8 } // Census matches are generally high quality
+            },
+            geometry: {
+              coordinates: [match.coordinates.x, match.coordinates.y]
+            }
+          }
+          geocodeSource = 'US Census'
+        }
+      }
+    } catch (err) {
+      console.error('[Geocode Cascade] Failed:', err)
+    }
+
+    if (!geocodeResult) {
+      return new Response(JSON.stringify({ error: 'Address could not be geocoded by any provider' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
 
-    const { properties: p, geometry } = feature
+    const { properties: p, geometry } = geocodeResult
     const lat = geometry.coordinates[1]
     const lon = geometry.coordinates[0]
 
@@ -82,7 +120,7 @@ serve(async (req) => {
       data_completeness: 80, // PostGIS flood zone and CSVs next phase
       enriched_at: new Date().toISOString(),
       data_sources: {
-        geocode: { source: 'Geoapify', confidence: p.rank?.confidence },
+        geocode: { source: geocodeSource, confidence: p.rank?.confidence },
         disaster: { source: 'OpenFEMA' },
         housing: { source: 'HUD' },
       },
