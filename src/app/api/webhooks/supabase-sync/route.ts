@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { 
   syncClientToNotion, 
   syncPropertyToNotion, 
-  syncAgreementToNotion 
+  syncAgreementToNotion,
+  syncServiceLogToNotion 
 } from '@/lib/notion/sync';
 
 export async function POST(request: NextRequest) {
@@ -32,6 +33,9 @@ export async function POST(request: NextRequest) {
         break;
       case 'agreements':
         await syncAgreementToNotion(record.id);
+        break;
+      case 'service_log':
+        await syncServiceLogToNotion(record.id);
         break;
       default:
         console.warn(`[Webhook] Unhandled table: ${table}`);

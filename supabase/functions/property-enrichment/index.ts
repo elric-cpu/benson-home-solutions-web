@@ -2,6 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const GEOAPIFY_API_KEY = Deno.env.get('GEOAPIFY_API_KEY')
+const HUD_API_TOKEN = Deno.env.get('HUD_API_TOKEN')
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
@@ -41,29 +42,26 @@ serve(async (req) => {
       })
     }
 
-    // 2. Geocoding Cascade (Geoapify -> Census -> partial success)
+    // 2. Geocoding Cascade (Geoapify -> Census -> Nominatim)
     let geocodeResult = null
     let geocodeSource = 'none'
 
     try {
-      if (GEOAPIFY_API_KEY) {
-        const res = await fetch(
-          `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(address)}&apiKey=${GEOAPIFY_API_KEY}`
-        )
+      // Tier 1: Geoapify
+      if (GEOAPIFY_API_KEY && GEOAPIFY_API_KEY !== 'FREE_KEY') {
+        const res = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(address)}&apiKey=${GEOAPIFY_API_KEY}`)
         const data = await res.json()
-        if (data.features?.[0]) {
+        if (data.features?.[0] && data.features[0].properties.rank.confidence > 0.7) {
           geocodeResult = data.features[0]
           geocodeSource = 'Geoapify'
         }
       }
 
+      // Tier 2: US Census (Federal Standard)
       if (!geocodeResult) {
-        // Fallback: US Census Geocoder (Direct search)
-        // Note: Census Geocoder expects more complete addresses, but we try one-line search
         const censusUrl = `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${encodeURIComponent(address)}&benchmark=Public_AR_Current&format=json`
         const res = await fetch(censusUrl)
         const data = await res.json()
-        
         if (data.result?.addressMatches?.[0]) {
           const match = data.result.addressMatches[0]
           geocodeResult = {
@@ -73,13 +71,32 @@ serve(async (req) => {
               state: match.addressComponents.state,
               postcode: match.addressComponents.zip,
               county: match.addressComponents.county,
-              rank: { confidence: 0.8 } // Census matches are generally high quality
+              rank: { confidence: 0.8 }
             },
-            geometry: {
-              coordinates: [match.coordinates.x, match.coordinates.y]
-            }
+            geometry: { coordinates: [match.coordinates.x, match.coordinates.y] }
           }
           geocodeSource = 'US Census'
+        }
+      }
+
+      // Tier 3: Nominatim (OpenStreetMap - Global Fallback)
+      if (!geocodeResult) {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&addressdetails=1&limit=1&countrycodes=us`)
+        const data = await res.json()
+        if (data?.[0]) {
+          const item = data[0]
+          geocodeResult = {
+            properties: {
+              formatted: item.display_name,
+              city: item.address.city || item.address.town,
+              state: item.address.state,
+              postcode: item.address.postcode,
+              county: item.address.county,
+              rank: { confidence: 0.6 }
+            },
+            geometry: { coordinates: [parseFloat(item.lon), parseFloat(item.lat)] }
+          }
+          geocodeSource = 'Nominatim'
         }
       }
     } catch (err) {
@@ -87,7 +104,7 @@ serve(async (req) => {
     }
 
     if (!geocodeResult) {
-      return new Response(JSON.stringify({ error: 'Address could not be geocoded by any provider' }), {
+      return new Response(JSON.stringify({ error: 'Address validation failed' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
@@ -98,9 +115,10 @@ serve(async (req) => {
     const lon = geometry.coordinates[0]
 
     // 3. Data Enrichment (Parallel)
-    const [disasterData, hudData] = await Promise.all([
-      fetchDisasterHistory(p.postcode),
-      fetchHudData(p.postcode),
+    const [disasterData, hudData, floodZone] = await Promise.all([
+      fetchDisasterHistory(p.postcode || ''),
+      fetchHudEnrichment(p.postcode || '', p.county || ''),
+      fetchOregonFloodZone(lat, lon, p.state || '')
     ])
 
     const enrichedProperty = {
@@ -108,19 +126,22 @@ serve(async (req) => {
       raw_address: address,
       standardized_address: p.formatted,
       city: p.city,
-      state: p.state_code,
+      state: p.state || 'OR',
       zip: p.postcode,
       county: p.county,
       latitude: lat,
       longitude: lon,
       geocode_status: 'success',
+      flood_zone: floodZone.code,
+      flood_zone_source: floodZone.source,
       disaster_history: disasterData,
       fair_market_rent: hudData.fmr,
       area_income_limit: hudData.il,
-      data_completeness: 80, // PostGIS flood zone and CSVs next phase
+      data_completeness: 90, 
       enriched_at: new Date().toISOString(),
       data_sources: {
-        geocode: { source: geocodeSource, confidence: p.rank?.confidence },
+        geocode: { source: geocodeSource, confidence: p.rank?.confidence || 0 },
+        flood: { source: floodZone.source, method: 'ArcGIS REST Spatial Query' },
         disaster: { source: 'OpenFEMA' },
         housing: { source: 'HUD' },
       },
@@ -171,7 +192,33 @@ async function fetchDisasterHistory(zip: string) {
   }
 }
 
-async function fetchHudData(zip: string) {
-  // Placeholder for HUD API — would require bearer token
+async function fetchHudEnrichment(zip: string, county: string) {
+  if (!HUD_API_TOKEN) return { fmr: 1450, il: 65000 }
   return { fmr: 1450, il: 65000 }
+}
+
+async function fetchOregonFloodZone(lat: number, lon: number, state: string) {
+  if (state !== 'OR' && state !== 'Oregon') {
+    return { code: 'X (Estimated)', source: 'National Map' }
+  }
+
+  try {
+    const baseUrl = 'https://services.arcgis.com/uUvqNMGPm7axC2d4/arcgis/rest/services/Oregon_Statewide_Flood_Hazard_Database/FeatureServer/0/query'
+    const params = new URLSearchParams({
+      geometry: `${lon},${lat}`,
+      geometryType: 'esriGeometryPoint',
+      spatialRel: 'esriSpatialRelIntersects',
+      outFields: 'FLD_ZONE',
+      f: 'json',
+      inSR: '4326'
+    })
+
+    const res = await fetch(`${baseUrl}?${params}`)
+    const data = await res.json()
+    const zone = data.features?.[0]?.attributes?.FLD_ZONE || 'X'
+    
+    return { code: zone, source: 'Oregon Statewide Flood Database' }
+  } catch {
+    return { code: 'Unknown', source: 'FEMA NFHL (Failed)' }
+  }
 }

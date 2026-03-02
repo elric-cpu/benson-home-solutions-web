@@ -1,6 +1,6 @@
 import { getNotion, NOTION_DBS } from './client';
 import { db } from '../db';
-import { clients, properties, agreements } from '../db/schema';
+import { clients, properties, agreements, serviceLog } from '../db/schema';
 import { eq } from 'drizzle-orm';
 
 // Define minimal Notion property types to satisfy ESLint
@@ -12,7 +12,57 @@ interface NotionProperty {
   status?: { status: { name: string } };
   rich_text?: { rich_text: { text: { content: string } }[] };
   number?: { number: number };
+  date?: { date: { start: string } };
+  checkbox?: { checkbox: boolean };
   relation?: { relation: { id: string }[] };
+}
+
+/**
+ * Syncs a Service Log entry to the Notion Service Log database.
+ */
+export async function syncServiceLogToNotion(logId: string) {
+  const notion = getNotion();
+  if (!notion || !NOTION_DBS.serviceLog) return;
+
+  const [log] = await db.select().from(serviceLog).where(eq(serviceLog.id, logId)).limit(1);
+  if (!log) return;
+
+  const propertiesPayload: Record<string, NotionProperty[keyof NotionProperty]> = {
+    'Service Record': { title: [{ text: { content: `${log.completedAt.toISOString().split('T')[0]} - ${log.serviceId}` } }] },
+    'Service Performed': { select: { name: log.serviceId } },
+    'Date Completed': { date: { start: log.completedAt.toISOString() } },
+    'Crew/Subcontractor': { rich_text: [{ text: { content: log.crew || '' } }] },
+    'Hours': { number: Number(log.hours) || 0 },
+    'Materials Cost': { number: Number(log.materialsCost) || 0 },
+    'Notes': { rich_text: [{ text: { content: log.notes || '' } }] },
+    'Client Signed Off': { checkbox: log.clientSignedOff || false },
+    'Supabase ID': { rich_text: [{ text: { content: log.id } }] },
+  };
+
+  // Relations
+  const [prop] = await db.select({ notionPageId: properties.notionPageId }).from(properties).where(eq(properties.id, log.propertyId)).limit(1);
+  if (prop?.notionPageId) {
+    propertiesPayload['Property'] = { relation: [{ id: prop.notionPageId }] };
+  }
+
+  if (log.agreementId) {
+    const [agreement] = await db.select({ notionPageId: agreements.notionPageId }).from(agreements).where(eq(agreements.id, log.agreementId)).limit(1);
+    if (agreement?.notionPageId) {
+      propertiesPayload['Agreement'] = { relation: [{ id: agreement.notionPageId }] };
+    }
+  }
+
+  if (log.notionPageId) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await notion.pages.update({ page_id: log.notionPageId, properties: propertiesPayload as any });
+  } else {
+    const response = await notion.pages.create({
+      parent: { database_id: NOTION_DBS.serviceLog },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      properties: propertiesPayload as any,
+    });
+    await db.update(serviceLog).set({ notionPageId: response.id }).where(eq(serviceLog.id, log.id));
+  }
 }
 
 /**
