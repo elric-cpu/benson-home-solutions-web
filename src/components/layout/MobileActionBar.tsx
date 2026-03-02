@@ -24,7 +24,11 @@ export function MobileActionBar() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-slate/10 shadow-up md:hidden z-50 animate-in slide-in-from-bottom duration-300">
+    <div 
+      className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-slate/10 shadow-up md:hidden z-50 animate-in slide-in-from-bottom duration-300"
+      role="complementary"
+      aria-label="Quick Actions"
+    >
       <div className="flex gap-3">
         <a href={`tel:${BUSINESS.phone}`} className="flex-1">
           <Button className="w-full font-bold shadow-md" size="lg">
