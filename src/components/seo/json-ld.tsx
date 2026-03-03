@@ -219,3 +219,37 @@ export function FAQPageJsonLd({
     />
   );
 }
+
+/** AboutPage schema — used on the about page. */
+export function AboutPageJsonLd({
+  name,
+  description,
+  url,
+  ownerName = BUSINESS.owner,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  ownerName?: string;
+}) {
+  return (
+    <JsonLdScript
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'AboutPage',
+        name,
+        description,
+        url,
+        mainEntity: {
+          '@type': 'Person',
+          name: ownerName,
+          jobTitle: 'Founder',
+          worksFor: {
+            '@type': 'HomeAndConstructionBusiness',
+            name: BUSINESS.name,
+          },
+        },
+      }}
+    />
+  );
+}
