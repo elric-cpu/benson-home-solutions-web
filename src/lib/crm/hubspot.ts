@@ -1,6 +1,8 @@
+/* eslint-disable no-console */
 /**
  * HubSpot CRM Integration Utility
  * Uses HubSpot Contacts API v3 with Private App Access Token.
+ * @see https://developers.hubspot.com/docs/api/crm/contacts
  */
 
 export interface HubSpotLeadData {
@@ -11,6 +13,7 @@ export interface HubSpotLeadData {
   message?: string;
   source?: 'web' | 'sms' | 'qr' | 'tablet' | 'cost-calculator';
   propertyAddress?: string;
+  propertyType?: 'residential' | 'commercial' | 'church_community';
   serviceInterest?: string;
   isServiceArea?: boolean;
 }
@@ -18,12 +21,15 @@ export interface HubSpotLeadData {
 /**
  * Syncs a lead to HubSpot CRM.
  * Implementation uses the Contacts API (Create/Update by email).
+ * 
+ * @param data - The lead data to sync
+ * @returns The HubSpot API response or null on failure
  */
 export async function syncLeadToHubSpot(data: HubSpotLeadData) {
   const accessToken = process.env.HUBSPOT_ACCESS_TOKEN;
 
   if (!accessToken) {
-    console.warn('[HubSpot] Missing HUBSPOT_ACCESS_TOKEN. Skipping sync.');
+    console.warn('[CRM:HubSpot] Missing HUBSPOT_ACCESS_TOKEN. Sync skipped.');
     return null;
   }
 
@@ -36,44 +42,53 @@ export async function syncLeadToHubSpot(data: HubSpotLeadData) {
     message: data.message,
     capture_source: data.source || 'web',
     property_address: data.propertyAddress,
+    property_type: data.propertyType,
     interest_level: data.serviceInterest,
     service_area_match: data.isServiceArea,
   };
 
   // Clean undefined values
   const cleanProperties = Object.fromEntries(
-    Object.entries(properties).filter(([_, v]) => v !== undefined)
+    Object.entries(properties).filter(([_, v]) => v !== undefined),
   );
 
   try {
-    const response = await fetch('https://api.hubapi.com/crm/v3/objects/contacts/upsert', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+    const response = await fetch(
+      'https://api.hubapi.com/crm/v3/objects/contacts/upsert',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          idProperty: 'email',
+          objectWriteTraceId: `bhs-${Date.now()}`,
+          inputs: [
+            {
+              id: data.email,
+              properties: cleanProperties,
+            },
+          ],
+        }),
       },
-      body: JSON.stringify({
-        idProperty: 'email',
-        objectWriteTraceId: `bhs-${Date.now()}`,
-        inputs: [
-          {
-            id: data.email,
-            properties: cleanProperties,
-          },
-        ],
-      }),
-    });
+    );
 
     const result = await response.json();
 
     if (!response.ok) {
-      console.error('[HubSpot] Sync failed:', result);
+      console.error('[CRM:HubSpot] Sync failed:', {
+        status: response.status,
+        result,
+        email: data.email,
+      });
       return null;
     }
 
+    console.info(`[CRM:HubSpot] Successfully synced lead: ${data.email}`);
     return result;
   } catch (error) {
-    console.error('[HubSpot] Unexpected sync error:', error);
+    console.error('[CRM:HubSpot] Unexpected sync error:', error);
     return null;
   }
 }

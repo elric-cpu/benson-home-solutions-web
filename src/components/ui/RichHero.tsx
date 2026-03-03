@@ -30,8 +30,8 @@ export function RichHero({
   return (
     <section
       className={cn(
-        'relative min-h-[70vh] flex items-center overflow-hidden bg-oxblood py-20 md:py-32',
-        className
+        'bg-oxblood relative flex min-h-[70vh] items-center overflow-hidden py-20 md:py-32',
+        className,
       )}
     >
       {/* Background Layer */}
@@ -43,7 +43,7 @@ export function RichHero({
             loop
             playsInline
             poster={backgroundImage}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
           >
             <source src={videoBackground} type="video/mp4" />
           </video>
@@ -56,10 +56,10 @@ export function RichHero({
             className="object-cover transition-transform duration-10000 hover:scale-110"
           />
         )}
-        
+
         {/* Dynamic Branding Overlay */}
-        <div 
-          className="absolute inset-0 bg-gradient-to-r from-oxblood via-oxblood/90 to-transparent" 
+        <div
+          className="from-oxblood via-oxblood/90 absolute inset-0 bg-gradient-to-r to-transparent"
           style={{ opacity: overlayOpacity / 100 }}
         />
         <div className="absolute inset-0 bg-black/20" />
@@ -68,20 +68,20 @@ export function RichHero({
       <Container className="relative z-10">
         <div className="max-w-3xl">
           {badge && (
-            <div className="inline-block px-3 py-1 rounded-full bg-cream/10 border border-cream/20 text-cream text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-sm animate-fade-in">
+            <div className="bg-cream/10 border-cream/20 text-cream animate-fade-in mb-6 inline-block rounded-full border px-3 py-1 text-xs font-bold tracking-widest uppercase backdrop-blur-sm">
               {badge}
             </div>
           )}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-cream leading-[1.1] tracking-tight drop-shadow-sm">
+          <h1 className="text-cream text-4xl leading-[1.1] font-black tracking-tight drop-shadow-sm md:text-6xl lg:text-7xl">
             {title}
           </h1>
           {description && (
-            <div className="mt-6 text-lg md:text-xl text-cream/80 leading-relaxed max-w-2xl drop-shadow-sm">
+            <div className="text-cream/80 mt-6 max-w-2xl text-lg leading-relaxed drop-shadow-sm md:text-xl">
               {description}
             </div>
           )}
           {children && (
-            <div className="mt-10 flex flex-wrap gap-4 animate-slide-up">
+            <div className="animate-slide-up mt-10 flex flex-wrap gap-4">
               {children}
             </div>
           )}
@@ -89,7 +89,7 @@ export function RichHero({
       </Container>
 
       {/* Bottom Accent */}
-      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-cream/10 to-transparent pointer-events-none" />
+      <div className="from-cream/10 pointer-events-none absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t to-transparent" />
     </section>
   );
 }

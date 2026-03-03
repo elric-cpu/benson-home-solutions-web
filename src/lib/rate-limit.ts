@@ -41,10 +41,13 @@ interface RateLimitResult {
 
 /**
  * Check rate limit for a given identifier (usually IP address).
+ * @param identifier - Unique ID for the requester (IP address)
+ * @param config - Rate limit threshold and window
+ * @returns Rate limit result with success status and remaining counts
  */
 export function checkRateLimit(
   identifier: string,
-  config: RateLimitConfig
+  config: RateLimitConfig,
 ): RateLimitResult {
   cleanup();
 
@@ -90,4 +93,10 @@ export const API_RATE_LIMIT: RateLimitConfig = {
 export const FORM_RATE_LIMIT: RateLimitConfig = {
   limit: 3,
   windowSeconds: 300,
+};
+
+/** Chatbot rate limit: 10 requests per 2 minutes */
+export const CHAT_RATE_LIMIT: RateLimitConfig = {
+  limit: 10,
+  windowSeconds: 120,
 };

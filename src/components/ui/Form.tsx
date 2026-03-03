@@ -9,14 +9,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          'flex h-12 w-full rounded-lg border border-slate/20 bg-white px-4 py-2 text-base ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oxblood/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200',
-          className
+          'border-slate/20 placeholder:text-slate/50 focus-visible:ring-oxblood/50 flex h-12 w-full rounded-lg border bg-white px-4 py-2 text-base ring-offset-white transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+          className,
         )}
         ref={ref}
         {...props}
       />
     );
-  }
+  },
 );
 Input.displayName = 'Input';
 
@@ -27,14 +27,14 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <textarea
         className={cn(
-          'flex min-h-[120px] w-full rounded-lg border border-slate/20 bg-white px-4 py-3 text-base ring-offset-white placeholder:text-slate/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oxblood/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200',
-          className
+          'border-slate/20 placeholder:text-slate/50 focus-visible:ring-oxblood/50 flex min-h-[120px] w-full rounded-lg border bg-white px-4 py-3 text-base ring-offset-white transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+          className,
         )}
         ref={ref}
         {...props}
       />
     );
-  }
+  },
 );
 Textarea.displayName = 'Textarea';
 
@@ -46,13 +46,13 @@ const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
       <label
         ref={ref}
         className={cn(
-          'text-sm font-semibold text-charcoal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-          className
+          'text-charcoal text-sm leading-none font-semibold peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 Label.displayName = 'Label';
 
@@ -61,18 +61,18 @@ export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement>;
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, children, ...props }, ref) => {
     return (
-      <div className="relative group">
+      <div className="group relative">
         <select
           className={cn(
-            'flex h-12 w-full appearance-none rounded-lg border border-slate/20 bg-white px-4 py-2 text-base ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oxblood/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 pr-10',
-            className
+            'border-slate/20 focus-visible:ring-oxblood/50 flex h-12 w-full appearance-none rounded-lg border bg-white px-4 py-2 pr-10 text-base ring-offset-white transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+            className,
           )}
           ref={ref}
           {...props}
         >
           {children}
         </select>
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate/50 group-focus-within:text-oxblood transition-colors">
+        <div className="text-slate/50 group-focus-within:text-oxblood pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 transition-colors">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -89,7 +89,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 Select.displayName = 'Select';
 

@@ -20,7 +20,10 @@ export async function POST(request: NextRequest) {
     const { entity, id, action, data } = await request.json();
 
     if (!entity || !id || !action) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 },
+      );
     }
 
     console.log(`[Notion Sync] Updating ${entity} ${id} (Action: ${action})`);
@@ -31,7 +34,9 @@ export async function POST(request: NextRequest) {
           console.log(`[Notion Sync] Deleting Pinecone vectors for ID: ${id}`);
           await deleteRecord(id);
         } else {
-          console.log(`[Notion Sync] Upserting Pinecone vectors for Knowledge item: ${data?.title}`);
+          console.log(
+            `[Notion Sync] Upserting Pinecone vectors for Knowledge item: ${data?.title}`,
+          );
           await upsertRecord({
             id, // Notion Page ID
             text: `Title: ${data?.title}\n\nContent: ${data?.content}`,
@@ -44,7 +49,8 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'client':
-        await db.update(clients)
+        await db
+          .update(clients)
           .set({
             name: data.name,
             phone: data.phone,
@@ -54,7 +60,8 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'property':
-        await db.update(properties)
+        await db
+          .update(properties)
           .set({
             agreementStatus: data.status,
             updatedAt: new Date(),
@@ -63,7 +70,8 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'agreement':
-        await db.update(agreements)
+        await db
+          .update(agreements)
           .set({
             status: data.status,
             monthlyPrice: data.monthlyPrice?.toString(),
@@ -80,6 +88,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('[Notion Sync Error]', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

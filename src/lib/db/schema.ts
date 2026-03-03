@@ -73,7 +73,9 @@ export const properties = pgTable('properties', {
  */
 export const agreements = pgTable('agreements', {
   id: uuid('id').defaultRandom().primaryKey(),
-  agreementNumber: varchar('agreement_number', { length: 100 }).unique().notNull(),
+  agreementNumber: varchar('agreement_number', { length: 100 })
+    .unique()
+    .notNull(),
   clientId: uuid('client_id')
     .references(() => clients.id)
     .notNull(),
@@ -107,7 +109,9 @@ export const agreementVersions = pgTable('agreement_versions', {
     .notNull(),
   versionNumber: integer('version_number').notNull(),
   documentProvider: varchar('document_provider', { length: 50 }).notNull(), // 'pandadoc', 'docusign'
-  documentProviderId: varchar('document_provider_id', { length: 255 }).notNull(),
+  documentProviderId: varchar('document_provider_id', {
+    length: 255,
+  }).notNull(),
   documentUrl: text('document_url'),
   status: varchar('status', { length: 50 }).default('draft'),
   changesSummary: text('changes_summary'),

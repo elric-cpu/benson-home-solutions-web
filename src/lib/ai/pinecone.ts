@@ -6,7 +6,9 @@ export const getPineconeClient = () => {
   if (!_pinecone) {
     const apiKey = process.env.PINECONE_API_KEY;
     if (!apiKey) {
-      throw new Error('PINECONE_API_KEY is not defined in environment variables.');
+      throw new Error(
+        'PINECONE_API_KEY is not defined in environment variables.',
+      );
     }
     _pinecone = new Pinecone({
       apiKey: apiKey,

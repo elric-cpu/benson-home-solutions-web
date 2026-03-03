@@ -17,11 +17,11 @@ test.describe('Smoke Tests', () => {
       .analyze();
     // Log violations for debugging but only fail on critical/serious
     const critical = results.violations.filter(
-      (v) => v.impact === 'critical' || v.impact === 'serious'
+      (v) => v.impact === 'critical' || v.impact === 'serious',
     );
     expect(
       critical,
-      `Found ${critical.length} critical/serious a11y violations: ${critical.map((v) => v.id).join(', ')}`
+      `Found ${critical.length} critical/serious a11y violations: ${critical.map((v) => v.id).join(', ')}`,
     ).toHaveLength(0);
   });
 

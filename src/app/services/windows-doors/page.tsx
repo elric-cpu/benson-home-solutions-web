@@ -1,6 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Section, Container, Badge, Button, Card, CardContent } from '@/components/ui';
+import {
+  Section,
+  Container,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+} from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
 import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
 
@@ -20,7 +27,7 @@ export default function WindowsDoorsPage() {
   return (
     <main className="min-h-screen">
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <ServiceJsonLd 
+      <ServiceJsonLd
         name="Window & Door Services"
         description="High-fidelity window and door installation focused on building envelope security and energy performance."
         url={`${BUSINESS.url}/services/windows-doors`}
@@ -29,14 +36,19 @@ export default function WindowsDoorsPage() {
       <Section variant="cream" spacing="lg">
         <Container>
           <div className="max-w-3xl">
-            <Badge variant="secondary" className="mb-4">Envelope Security</Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-oxblood leading-tight">
+            <Badge variant="secondary" className="mb-4">
+              Envelope Security
+            </Badge>
+            <h1 className="text-oxblood text-4xl leading-tight font-bold md:text-5xl lg:text-6xl">
               Window & Door Precision
             </h1>
-            <p className="mt-6 text-xl text-slate leading-relaxed">
-              Windows and doors are the most common points of failure in a building envelope. We provide the expert oversight needed to ensure every install is forensically sealed and structurally sound.
+            <p className="text-slate mt-6 text-xl leading-relaxed">
+              Windows and doors are the most common points of failure in a
+              building envelope. We provide the expert oversight needed to
+              ensure every install is forensically sealed and structurally
+              sound.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link href="/contact">
                 <Button size="lg">Request Estimate</Button>
               </Link>
@@ -47,28 +59,40 @@ export default function WindowsDoorsPage() {
 
       <Section spacing="lg">
         <Container>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+          <div className="grid gap-8 md:grid-cols-3">
+            <Card variant="elevated" className="border-t-oxblood border-t-4">
               <CardContent className="pt-8">
-                <h3 className="text-xl font-bold text-charcoal mb-3">Structural Install</h3>
-                <p className="text-slate leading-relaxed text-sm">
-                  We don&apos;t just swap units. We inspect for rot, stabilize the rough opening, and ensure the new unit is plumb, level, and square.
+                <h3 className="text-charcoal mb-3 text-xl font-bold">
+                  Structural Install
+                </h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  We don&apos;t just swap units. We inspect for rot, stabilize
+                  the rough opening, and ensure the new unit is plumb, level,
+                  and square.
                 </p>
               </CardContent>
             </Card>
-            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+            <Card variant="elevated" className="border-t-oxblood border-t-4">
               <CardContent className="pt-8">
-                <h3 className="text-xl font-bold text-charcoal mb-3">Forensic Flashing</h3>
-                <p className="text-slate leading-relaxed text-sm">
-                  The Valley&apos;s rain requires absolute sealant precision. We follow trade-standard flashing protocols to stop water intrusion before it starts.
+                <h3 className="text-charcoal mb-3 text-xl font-bold">
+                  Forensic Flashing
+                </h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  The Valley&apos;s rain requires absolute sealant precision. We
+                  follow trade-standard flashing protocols to stop water
+                  intrusion before it starts.
                 </p>
               </CardContent>
             </Card>
-            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+            <Card variant="elevated" className="border-t-oxblood border-t-4">
               <CardContent className="pt-8">
-                <h3 className="text-xl font-bold text-charcoal mb-3">Security & Access</h3>
-                <p className="text-slate leading-relaxed text-sm">
-                  High-performance hardware and sound installation. We secure your property against the elements and intrusion with trade precision.
+                <h3 className="text-charcoal mb-3 text-xl font-bold">
+                  Security & Access
+                </h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  High-performance hardware and sound installation. We secure
+                  your property against the elements and intrusion with trade
+                  precision.
                 </p>
               </CardContent>
             </Card>

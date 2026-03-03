@@ -50,15 +50,16 @@ export function getCalculatorReportEmail(data: {
 
             <p style="margin-top: 30px;">This estimate includes property taxes, insurance, maintenance reserves, and energy consumption specific to your location.</p>
             
-            ${data.isServiceArea 
-              ? `
+            ${
+              data.isServiceArea
+                ? `
                 <div style="background: #fdf2f2; border: 1px solid #fee2e2; padding: 20px; border-radius: 12px; margin-top: 30px;">
                   <h3 style="color: #991b1b; margin-top: 0;">Benson Service Area Match</h3>
                   <p style="color: #b91c1c; font-size: 14px;">Great news: This property is within our direct service area. You qualify for a <strong>Free Maintenance Assessment</strong> ($250 value).</p>
                   <a href="${BUSINESS.url}/contact" class="button">Claim Your Free Assessment</a>
                 </div>
               `
-              : `
+                : `
                 <p style="font-size: 14px; color: #64748b;">We don't currently offer direct service in your area, but you can use this report to negotiate better rates with local vendors.</p>
               `
             }

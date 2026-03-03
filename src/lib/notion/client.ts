@@ -19,5 +19,6 @@ export const NOTION_DBS = {
   clients: process.env.NOTION_DB_CLIENTS || '',
   agreements: process.env.NOTION_DB_AGREEMENTS || '',
   serviceLog: process.env.NOTION_DB_SERVICE_LOG || '',
-  knowledge: process.env.NOTION_DB_KNOWLEDGE || '310265d247898091b645d3cde2a8e051',
+  knowledge:
+    process.env.NOTION_DB_KNOWLEDGE || '310265d247898091b645d3cde2a8e051',
 };

@@ -15,26 +15,33 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant = 'primary', size = 'md', loading, children, ...props },
-    ref
+    {
+      className,
+      variant = 'primary',
+      size = 'md',
+      loading,
+      children,
+      ...props
+    },
+    ref,
   ) => {
     return (
       <button
         ref={ref}
         disabled={loading || props.disabled}
         className={cn(
-          'inline-flex items-center justify-center rounded-lg font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oxblood/50 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
+          'focus-visible:ring-oxblood/50 inline-flex items-center justify-center rounded-lg font-semibold transition-all focus-visible:ring-2 focus-visible:outline-none active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
           {
             'bg-oxblood text-cream hover:bg-oxblood/90 shadow-sm':
               variant === 'primary',
-            'bg-cream text-oxblood border border-oxblood/20 hover:bg-oxblood/5':
+            'bg-cream text-oxblood border-oxblood/20 hover:bg-oxblood/5 border':
               variant === 'secondary',
-            'border-2 border-oxblood text-oxblood bg-transparent hover:bg-oxblood hover:text-cream':
+            'border-oxblood text-oxblood hover:bg-oxblood hover:text-cream border-2 bg-transparent':
               variant === 'outline',
             'text-oxblood hover:bg-oxblood/10': variant === 'ghost',
-            'bg-red-700 text-white hover:bg-red-800 shadow-md shadow-red-900/20':
+            'bg-red-700 text-white shadow-md shadow-red-900/20 hover:bg-red-800':
               variant === 'emergency',
-            'text-oxblood underline-offset-4 hover:underline p-0 h-auto':
+            'text-oxblood h-auto p-0 underline-offset-4 hover:underline':
               variant === 'link',
           },
           {
@@ -43,13 +50,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             'h-12 px-8 text-lg': size === 'lg',
             'h-10 w-10 p-0': size === 'icon',
           },
-          className
+          className,
         )}
         {...props}
       >
         {loading && (
           <svg
-            className="animate-spin -ml-1 mr-3 h-5 w-5 text-current"
+            className="mr-3 -ml-1 h-5 w-5 animate-spin text-current"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -72,7 +79,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 Button.displayName = 'Button';
 

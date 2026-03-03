@@ -6,29 +6,33 @@ const MODEL = 'llama-text-embed-v2';
  * Generate a single embedding for the given text.
  * Uses Pinecone's llama-text-embed-v2 model.
  */
-export async function getEmbedding(text: string, inputType: 'passage' | 'query' = 'passage') {
+export async function getEmbedding(
+  text: string,
+  inputType: 'passage' | 'query' = 'passage',
+) {
   const pinecone = getPineconeClient();
   try {
-    // Pinecone SDK 7.x Inference API
-    const embeddings = await pinecone.inference.embed({
-      model: MODEL,
-      inputs: [text],
-      parameters: { inputType, truncate: 'END' }
+    // Pinecone SDK 5.x Inference API requires (model, inputs, parameters)
+    const embeddings = await pinecone.inference.embed(MODEL, [text], {
+      inputType,
+      truncate: 'END',
     });
-    
+
     if (!embeddings.data || embeddings.data.length === 0) {
       throw new Error('No embedding data returned from Pinecone');
     }
-    
-    // Cast to any to bypass strict Sparse vs Dense union check
-    const firstResult = embeddings.data[0] as any;
-    if (!firstResult.values) {
-      throw new Error('Embedding values missing from response');
+
+    const firstResult = embeddings.data[0];
+    if (firstResult.vectorType !== 'dense' || !('values' in firstResult)) {
+      throw new Error('Dense embedding values missing from response');
     }
-    
-    return firstResult.values as number[];
+
+    return (firstResult as { values: number[] }).values;
   } catch (error) {
-    console.error(`[Pinecone Inference Error] Failed to generate embedding:`, error);
+    console.error(
+      `[Pinecone Inference Error] Failed to generate embedding:`,
+      error,
+    );
     throw error;
   }
 }
@@ -39,19 +43,26 @@ export async function getEmbedding(text: string, inputType: 'passage' | 'query' 
 export async function getEmbeddings(texts: string[]) {
   const pinecone = getPineconeClient();
   try {
-    const embeddings = await pinecone.inference.embed({
-      model: MODEL,
-      inputs: texts,
-      parameters: { inputType: 'passage', truncate: 'END' }
+    const embeddings = await pinecone.inference.embed(MODEL, texts, {
+      inputType: 'passage',
+      truncate: 'END',
     });
-    
+
     if (!embeddings.data) {
       throw new Error('No embedding data returned from Pinecone');
     }
-    
-    return embeddings.data.map(d => (d as any).values as number[]);
+
+    return embeddings.data.map((d) => {
+      if (d.vectorType === 'dense' && 'values' in d) {
+        return (d as { values: number[] }).values;
+      }
+      throw new Error('Non-dense embedding encountered');
+    });
   } catch (error) {
-    console.error(`[Pinecone Inference Error] Failed to generate multiple embeddings:`, error);
+    console.error(
+      `[Pinecone Inference Error] Failed to generate multiple embeddings:`,
+      error,
+    );
     throw error;
   }
 }

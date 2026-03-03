@@ -23,6 +23,8 @@ test.describe('Homepage', () => {
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
       .analyze();
-    expect(results.violations.filter((v) => v.impact === 'critical')).toEqual([]);
+    expect(results.violations.filter((v) => v.impact === 'critical')).toEqual(
+      [],
+    );
   });
 });

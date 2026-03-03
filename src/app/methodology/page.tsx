@@ -1,17 +1,32 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { client } from '@/sanity/lib/client';
-import { Section, Container, Card, CardContent, RichHero, ResourcesSection } from '@/components/ui';
+import {
+  Section,
+  Container,
+  Card,
+  CardContent,
+  RichHero,
+  ResourcesSection,
+} from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
 import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
 import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+
+interface Resource {
+  title: string;
+  url: string;
+  description?: string;
+  isBacklink?: boolean;
+  authority?: string;
+}
 
 interface MethodologyPageData {
   title?: string;
   heroHeadline?: string;
   heroSubtext?: string;
   heroVideo?: string;
-  resources?: any[];
+  resources?: Resource[];
   metaDescription?: string;
   introContent?: Record<string, unknown>[];
   processSteps?: Record<string, unknown>[];
@@ -23,7 +38,8 @@ const methodologyQuery = `*[_type == "methodologyPage"][0]`;
 
 export const metadata: Metadata = {
   title: 'Our Methodology | Systematic Property Protection',
-  description: 'Learn about our 5-phase preventive maintenance methodology and the 7-point data model behind our True Cost of Homeownership calculator.',
+  description:
+    'Learn about our 5-phase preventive maintenance methodology and the 7-point data model behind our True Cost of Homeownership calculator.',
 };
 
 const servicePhases = [
@@ -115,11 +131,16 @@ export default async function MethodologyPage() {
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
-      
+
       {/* Hero */}
       <RichHero
-        title={page?.heroHeadline || page?.title || 'Preemptive Property Protection'}
-        description={page?.heroSubtext || "Most property damage isn’t accidental—it’s the result of deferred maintenance. Our methodology combines a 5-phase service framework with forensic data modeling to harden your building against predictable risks."}
+        title={
+          page?.heroHeadline || page?.title || 'Preemptive Property Protection'
+        }
+        description={
+          page?.heroSubtext ||
+          'Most property damage isn’t accidental—it’s the result of deferred maintenance. Our methodology combines a 5-phase service framework with forensic data modeling to harden your building against predictable risks.'
+        }
         backgroundImage={HERO_ASSETS.maintenance}
         videoBackground={page?.heroVideo}
         badge="Professional Oversight"
@@ -128,14 +149,16 @@ export default async function MethodologyPage() {
       {/* The Problem Section */}
       <Section spacing="md">
         <Container size="narrow">
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 md:p-12">
-            <h2 className="text-2xl font-bold text-amber-900 mb-6">
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-8 md:p-12">
+            <h2 className="mb-6 text-2xl font-bold text-amber-900">
               The Trade Reality
             </h2>
-            <p className="text-amber-800 text-lg leading-relaxed mb-6">
-              The industry average for property maintenance is 1–4% of property value annually. Most owners spend this reactively—paying for emergency repairs after the building envelope has already failed.
+            <p className="mb-6 text-lg leading-relaxed text-amber-800">
+              The industry average for property maintenance is 1–4% of property
+              value annually. Most owners spend this reactively—paying for
+              emergency repairs after the building envelope has already failed.
             </p>
-            <div className="border-l-4 border-amber-500 pl-6 italic text-amber-900 text-xl font-medium">
+            <div className="border-l-4 border-amber-500 pl-6 text-xl font-medium text-amber-900 italic">
               &quot;A $10 seal inspection in September stops a $15,000
               restoration claim in January.&quot;
             </div>
@@ -146,27 +169,30 @@ export default async function MethodologyPage() {
       {/* 5 Phases (Service Methodology) */}
       <Section spacing="lg">
         <Container>
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold text-charcoal">
+          <div className="mx-auto mb-16 max-w-2xl text-center">
+            <h2 className="text-charcoal text-3xl font-bold">
               The 5-Phase Service Framework
             </h2>
-            <p className="mt-4 text-slate text-lg">
+            <p className="text-slate mt-4 text-lg">
               How we engage with every property to ensure long-term stability.
             </p>
           </div>
 
-          <div className="space-y-12 max-w-4xl mx-auto">
+          <div className="mx-auto max-w-4xl space-y-12">
             {page?.processSteps ? (
               <PortableTextRenderer value={page.processSteps} />
             ) : (
               servicePhases.map((phase) => (
-                <div key={phase.number} className="relative pl-16 md:pl-24 group block">
-                  <div className="absolute left-0 top-0 text-4xl md:text-6xl font-black text-oxblood/10 select-none">
+                <div
+                  key={phase.number}
+                  className="group relative block pl-16 md:pl-24"
+                >
+                  <div className="text-oxblood/10 absolute top-0 left-0 text-4xl font-black select-none md:text-6xl">
                     {phase.number}
                   </div>
-                  <div className="flex items-center justify-between border-b border-slate/5 pb-8">
+                  <div className="border-slate/5 flex items-center justify-between border-b pb-8">
                     <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-charcoal mb-3">
+                      <h3 className="text-charcoal mb-3 text-2xl font-bold">
                         {phase.title}
                       </h3>
                       <p className="text-slate text-lg leading-relaxed">
@@ -184,31 +210,51 @@ export default async function MethodologyPage() {
       {/* Data Models (Calculator Methodology) */}
       <Section variant="charcoal" spacing="lg">
         <Container>
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold text-cream">
+          <div className="mx-auto mb-16 max-w-2xl text-center">
+            <h2 className="text-cream text-3xl font-bold">
               The Data Behind Our Models
             </h2>
-            <p className="mt-4 text-cream/80 text-lg">
-              Our &quot;True Cost of Homeownership&quot; calculator isn&apos;t a guess. It&apos;s built on 
-              federal datasets and rigorous engineering models. Explore the methodology below.
+            <p className="text-cream/80 mt-4 text-lg">
+              Our &quot;True Cost of Homeownership&quot; calculator isn&apos;t a
+              guess. It&apos;s built on federal datasets and rigorous
+              engineering models. Explore the methodology below.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {dataModels.map((model) => (
-              <Link key={model.slug} href={`/methodology/${model.slug}`} className="group h-full">
-                <Card className="bg-white/5 border-white/10 hover:bg-white/10 transition-colors h-full">
+              <Link
+                key={model.slug}
+                href={`/methodology/${model.slug}`}
+                className="group h-full"
+              >
+                <Card className="h-full border-white/10 bg-white/5 transition-colors hover:bg-white/10">
                   <CardContent className="p-6">
-                    <div className="text-4xl mb-4 grayscale group-hover:grayscale-0 transition-all">{model.icon}</div>
-                    <h3 className="text-xl font-bold text-cream mb-2 group-hover:text-amber-400 transition-colors">
+                    <div className="mb-4 text-4xl grayscale transition-all group-hover:grayscale-0">
+                      {model.icon}
+                    </div>
+                    <h3 className="text-cream mb-2 text-xl font-bold transition-colors group-hover:text-amber-400">
                       {model.title}
                     </h3>
                     <p className="text-cream/60 text-sm leading-relaxed">
                       {model.desc}
                     </p>
-                    <div className="mt-4 text-xs font-bold text-cream/40 uppercase tracking-widest group-hover:text-cream transition-colors flex items-center gap-2">
-                      Read Methodology 
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    <div className="text-cream/40 group-hover:text-cream mt-4 flex items-center gap-2 text-xs font-bold tracking-widest uppercase transition-colors">
+                      Read Methodology
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
                     </div>
                   </CardContent>
                 </Card>
@@ -229,7 +275,8 @@ export default async function MethodologyPage() {
             '@context': 'https://schema.org',
             '@type': 'WebPage',
             name: 'Methodology & Data Models - Benson Home Solutions',
-            description: 'Overview of Benson Home Solutions service phases and data modeling methodologies.',
+            description:
+              'Overview of Benson Home Solutions service phases and data modeling methodologies.',
             url: `${BUSINESS.url}/methodology`,
           }),
         }}

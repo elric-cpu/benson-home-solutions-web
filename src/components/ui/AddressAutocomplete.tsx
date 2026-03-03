@@ -42,24 +42,87 @@ interface GeoapifyResponse {
   features: GeoapifyFeature[];
 }
 
-export function AddressAutocomplete({ onSelect, placeholder, className }: Props) {
+interface OsmSuggestion {
+  display_name: string;
+  place_id: number;
+  lat: string;
+  lon: string;
+  address: {
+    road?: string;
+    city?: string;
+    town?: string;
+    state?: string;
+    postcode?: string;
+    county?: string;
+  };
+}
+
+interface CensusSuggestion {
+  matchedAddress: string;
+  addressComponents: {
+    number: string;
+    streetName: string;
+    city: string;
+    state: string;
+    zip: string;
+    county: string;
+  };
+  coordinates: {
+    x: number;
+    y: number;
+  };
+}
+
+export function AddressAutocomplete({
+  onSelect,
+  placeholder,
+  className,
+}: Props) {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const API_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isOpen || suggestions.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : 0));
+    } else if (e.key === 'Enter' && selectedIndex >= 0) {
+      e.preventDefault();
+      const s = suggestions[selectedIndex];
+      setQuery(s.formatted);
+      setIsOpen(false);
+      onSelect(s);
+    } else if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    setSelectedIndex(-1);
+  }, [suggestions]);
 
   useEffect(() => {
     if (query.length < 3) {
@@ -68,7 +131,9 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
     }
 
     if (!API_KEY || API_KEY === 'FREE_KEY') {
-      console.warn('[AddressAutocomplete] Geoapify API key is missing. Autocomplete is disabled.');
+      console.warn(
+        '[AddressAutocomplete] Geoapify API key is missing. Autocomplete is disabled.',
+      );
       return;
     }
 
@@ -79,10 +144,10 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
           // Primary: Geoapify
           const response = await fetch(
             `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
-              query
-            )}&apiKey=${API_KEY}&filter=countrycode:us&limit=5`
+              query,
+            )}&apiKey=${API_KEY}&filter=countrycode:us&limit=5`,
           );
-          
+
           if (response.ok) {
             const data = (await response.json()) as GeoapifyResponse;
             setSuggestions(
@@ -97,7 +162,7 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
                 county: f.properties.county,
                 lat: f.geometry.coordinates[1],
                 lon: f.geometry.coordinates[0],
-              })) || []
+              })) || [],
             );
             setIsOpen(true);
             return;
@@ -107,14 +172,14 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
         // Fallback: Nominatim (OpenStreetMap) - No key required
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-            query
-          )}&addressdetails=1&limit=5&countrycodes=us`
+            query,
+          )}&addressdetails=1&limit=5&countrycodes=us`,
         );
 
         if (!response.ok) throw new Error('Geocoding service unavailable');
 
-        const data = await response.json();
-        const osmSuggestions = data.map((item: any) => ({
+        const data = (await response.json()) as OsmSuggestion[];
+        const osmSuggestions = data.map((item: OsmSuggestion) => ({
           formatted: item.display_name,
           place_id: `osm-${item.place_id}`,
           address_line1: item.address.road || item.display_name.split(',')[0],
@@ -141,18 +206,26 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
           const cData = await cRes.json();
 
           if (cData.result?.addressMatches?.[0]) {
-            setSuggestions(cData.result.addressMatches.map((m: any, i: number) => ({
-              formatted: m.matchedAddress,
-              place_id: `census-${i}`,
-              address_line1: m.addressComponents.number + ' ' + m.addressComponents.streetName,
-              address_line2: m.addressComponents.city + ', ' + m.addressComponents.state,
-              city: m.addressComponents.city,
-              state: m.addressComponents.state,
-              postcode: m.addressComponents.zip,
-              county: m.addressComponents.county,
-              lat: m.coordinates.y,
-              lon: m.coordinates.x,
-            })));
+            setSuggestions(
+              cData.result.addressMatches.map(
+                (m: CensusSuggestion, i: number) => ({
+                  formatted: m.matchedAddress,
+                  place_id: `census-${i}`,
+                  address_line1:
+                    m.addressComponents.number +
+                    ' ' +
+                    m.addressComponents.streetName,
+                  address_line2:
+                    m.addressComponents.city + ', ' + m.addressComponents.state,
+                  city: m.addressComponents.city,
+                  state: m.addressComponents.state,
+                  postcode: m.addressComponents.zip,
+                  county: m.addressComponents.county,
+                  lat: m.coordinates.y,
+                  lon: m.coordinates.x,
+                }),
+              ),
+            );
             setIsOpen(true);
           }
         }
@@ -173,31 +246,49 @@ export function AddressAutocomplete({ onSelect, placeholder, className }: Props)
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => query.length >= 3 && setIsOpen(true)}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder || 'Enter your US address...'}
-        className="h-14 text-lg pr-10"
+        className="h-14 pr-10 text-lg"
+        aria-autocomplete="list"
+        aria-expanded={isOpen}
+        role="combobox"
       />
       {loading && (
-        <div className="absolute right-4 top-1/2 -translate-y-1/2">
-          <div className="w-5 h-5 border-2 border-oxblood/20 border-t-oxblood rounded-full animate-spin" />
+        <div className="absolute top-1/2 right-4 -translate-y-1/2">
+          <div className="border-oxblood/20 border-t-oxblood h-5 w-5 animate-spin rounded-full border-2" />
         </div>
       )}
       {isOpen && suggestions.length > 0 && (
-        <ul className="absolute z-50 w-full mt-1 bg-white border border-slate/10 rounded-xl shadow-elevated overflow-hidden">
-          {suggestions.map((s) => (
+        <ul
+          className="border-slate/10 shadow-elevated absolute z-50 mt-1 w-full overflow-hidden rounded-xl border bg-white"
+          role="listbox"
+        >
+          {suggestions.map((s, i) => (
             <li
               key={s.place_id}
+              role="option"
+              aria-selected={i === selectedIndex}
               onClick={() => {
                 setQuery(s.formatted);
                 setIsOpen(false);
                 onSelect(s);
               }}
-              className="px-4 py-3 hover:bg-cream cursor-pointer text-slate border-b border-slate/5 last:border-0 transition-colors"
+              className={`hover:bg-cream text-slate border-slate/5 cursor-pointer border-b px-4 py-3 transition-colors last:border-0 ${i === selectedIndex ? 'bg-cream' : ''}`}
             >
-              <div className="font-semibold text-charcoal">{s.address_line1}</div>
-              <div className="text-sm opacity-70">{s.address_line2 || s.formatted.split(',').slice(1).join(',')}</div>
+              <div className="text-charcoal font-semibold">
+                {s.address_line1}
+              </div>
+              <div className="text-sm opacity-70">
+                {s.address_line2 || s.formatted.split(',').slice(1).join(',')}
+              </div>
             </li>
           ))}
         </ul>
+      )}
+      {isOpen && query.length >= 3 && suggestions.length === 0 && !loading && (
+        <div className="border-slate/10 shadow-elevated absolute z-50 mt-1 w-full rounded-xl border bg-white p-4 text-center text-sm text-slate">
+          No US addresses found matching &quot;{query}&quot;
+        </div>
       )}
     </div>
   );

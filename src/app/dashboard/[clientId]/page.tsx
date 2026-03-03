@@ -13,14 +13,22 @@ export const metadata: Metadata = {
 
 async function getClient(id: string) {
   try {
-    const result = await db.select().from(clients).where(eq(clients.id, id)).limit(1);
+    const result = await db
+      .select()
+      .from(clients)
+      .where(eq(clients.id, id))
+      .limit(1);
     return result[0] || null;
   } catch {
     return null;
   }
 }
 
-export default async function ClientDashboardPage({ params }: { params: Promise<{ clientId: string }> }) {
+export default async function ClientDashboardPage({
+  params,
+}: {
+  params: Promise<{ clientId: string }>;
+}) {
   const { clientId } = await params;
   const client = await getClient(clientId);
 
@@ -29,18 +37,24 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
   }
 
   // Dashboard ID from Metabase (placeholder)
-  const DASHBOARD_ID = 1; 
+  const DASHBOARD_ID = 1;
   const embedUrl = getMetabaseEmbedUrl(DASHBOARD_ID, clientId);
 
   return (
-    <main className="min-h-screen bg-surface">
+    <main className="bg-surface min-h-screen">
       <Section variant="cream" className="pb-8">
         <Container>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
             <div>
-              <Badge variant="secondary" className="mb-2">Client Portal</Badge>
-              <h1 className="text-3xl font-bold text-charcoal">Welcome, {client.name}</h1>
-              <p className="text-slate">Real-time property insights and maintenance health.</p>
+              <Badge variant="secondary" className="mb-2">
+                Client Portal
+              </Badge>
+              <h1 className="text-charcoal text-3xl font-bold">
+                Welcome, {client.name}
+              </h1>
+              <p className="text-slate">
+                Real-time property insights and maintenance health.
+              </p>
             </div>
           </div>
         </Container>
@@ -49,7 +63,7 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
       <Section spacing="sm">
         <Container>
           {embedUrl ? (
-            <div className="bg-white rounded-2xl shadow-elevated border border-slate/10 overflow-hidden min-h-[800px]">
+            <div className="shadow-elevated border-slate/10 min-h-[800px] overflow-hidden rounded-2xl border bg-white">
               <iframe
                 src={embedUrl}
                 width="100%"
@@ -59,8 +73,10 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
               />
             </div>
           ) : (
-            <div className="p-12 text-center bg-white rounded-2xl border border-dashed border-slate/20">
-              <p className="text-slate">Dashboard integration is currently being configured.</p>
+            <div className="border-slate/20 rounded-2xl border border-dashed bg-white p-12 text-center">
+              <p className="text-slate">
+                Dashboard integration is currently being configured.
+              </p>
             </div>
           )}
         </Container>

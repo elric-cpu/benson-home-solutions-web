@@ -1,6 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Section, Container, Badge, Button, Card, CardContent } from '@/components/ui';
+import {
+  Section,
+  Container,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+} from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
 import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
 
@@ -14,13 +21,16 @@ export default function MoldRemediationPage() {
   const breadcrumbs = [
     { name: 'Home', url: BUSINESS.url },
     { name: 'Services', url: `${BUSINESS.url}/services` },
-    { name: 'Mold Remediation', url: `${BUSINESS.url}/services/mold-remediation` },
+    {
+      name: 'Mold Remediation',
+      url: `${BUSINESS.url}/services/mold-remediation`,
+    },
   ];
 
   return (
     <main className="min-h-screen">
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <ServiceJsonLd 
+      <ServiceJsonLd
         name="Mold Remediation"
         description="Permanent air quality stabilization and mold mitigation following IICRC S520 standards."
         url={`${BUSINESS.url}/services/mold-remediation`}
@@ -29,14 +39,18 @@ export default function MoldRemediationPage() {
       <Section variant="cream" spacing="lg">
         <Container>
           <div className="max-w-3xl">
-            <Badge variant="secondary" className="mb-4">Air Quality Stabilization</Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-oxblood leading-tight">
+            <Badge variant="secondary" className="mb-4">
+              Air Quality Stabilization
+            </Badge>
+            <h1 className="text-oxblood text-4xl leading-tight font-bold md:text-5xl lg:text-6xl">
               Certified Mold Remediation
             </h1>
-            <p className="mt-6 text-xl text-slate leading-relaxed">
-              Mold is a symptom of a building envelope failure. We provide the forensic oversight needed to not only remove the mold but to identify and stop the source of moisture permanently.
+            <p className="text-slate mt-6 text-xl leading-relaxed">
+              Mold is a symptom of a building envelope failure. We provide the
+              forensic oversight needed to not only remove the mold but to
+              identify and stop the source of moisture permanently.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link href="/contact">
                 <Button size="lg">Request Assessment</Button>
               </Link>
@@ -47,28 +61,40 @@ export default function MoldRemediationPage() {
 
       <Section spacing="lg">
         <Container>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+          <div className="grid gap-8 md:grid-cols-3">
+            <Card variant="elevated" className="border-t-oxblood border-t-4">
               <CardContent className="pt-8">
-                <h3 className="text-xl font-bold text-charcoal mb-3">IICRC Standard Care</h3>
-                <p className="text-slate leading-relaxed text-sm">
-                  We follow strict S520 protocols for containment and removal. We protect your building and your occupants from cross-contamination.
+                <h3 className="text-charcoal mb-3 text-xl font-bold">
+                  IICRC Standard Care
+                </h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  We follow strict S520 protocols for containment and removal.
+                  We protect your building and your occupants from
+                  cross-contamination.
                 </p>
               </CardContent>
             </Card>
-            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+            <Card variant="elevated" className="border-t-oxblood border-t-4">
               <CardContent className="pt-8">
-                <h3 className="text-xl font-bold text-charcoal mb-3">Moisture Identification</h3>
-                <p className="text-slate leading-relaxed text-sm">
-                  Using high-fidelity moisture mapping, we find where the water is entering and why. Remediation is useless without stopping the source.
+                <h3 className="text-charcoal mb-3 text-xl font-bold">
+                  Moisture Identification
+                </h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  Using high-fidelity moisture mapping, we find where the water
+                  is entering and why. Remediation is useless without stopping
+                  the source.
                 </p>
               </CardContent>
             </Card>
-            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+            <Card variant="elevated" className="border-t-oxblood border-t-4">
               <CardContent className="pt-8">
-                <h3 className="text-xl font-bold text-charcoal mb-3">Permanent Stabilization</h3>
-                <p className="text-slate leading-relaxed text-sm">
-                  Post-remediation cleaning and structural stabilization. We provide the documentation needed to prove your air quality is safe.
+                <h3 className="text-charcoal mb-3 text-xl font-bold">
+                  Permanent Stabilization
+                </h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  Post-remediation cleaning and structural stabilization. We
+                  provide the documentation needed to prove your air quality is
+                  safe.
                 </p>
               </CardContent>
             </Card>

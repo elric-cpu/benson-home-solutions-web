@@ -1,12 +1,20 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Section, Container, Card, CardContent, Badge, Button } from '@/components/ui';
+import {
+  Section,
+  Container,
+  Card,
+  CardContent,
+  Badge,
+  Button,
+} from '@/components/ui';
 import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
 import { BUSINESS } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Property Intelligence Tools | Benson Home Solutions',
-  description: 'Free tools for homeowners, property managers, and facility boards to analyze ownership costs and maintenance requirements.',
+  description:
+    'Free tools for homeowners, property managers, and facility boards to analyze ownership costs and maintenance requirements.',
 };
 
 const tools = [
@@ -42,17 +50,20 @@ export default function ToolsPage() {
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
-      
+
       {/* Hero */}
       <Section variant="cream" spacing="lg">
         <Container>
           <div className="max-w-3xl">
-            <Badge variant="secondary" className="mb-4">Property Intelligence</Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-oxblood leading-tight">
+            <Badge variant="secondary" className="mb-4">
+              Property Intelligence
+            </Badge>
+            <h1 className="text-oxblood text-4xl leading-tight font-bold md:text-5xl">
               Data-Driven Property Oversight
             </h1>
-            <p className="mt-6 text-xl text-slate leading-relaxed">
-              We provide the tools required to identify risks, forecast budgets, and protect the building envelope from predictable failures.
+            <p className="text-slate mt-6 text-xl leading-relaxed">
+              We provide the tools required to identify risks, forecast budgets,
+              and protect the building envelope from predictable failures.
             </p>
           </div>
         </Container>
@@ -61,24 +72,42 @@ export default function ToolsPage() {
       {/* Tools Grid */}
       <Section spacing="lg">
         <Container>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {tools.map((tool) => (
               <Link key={tool.title} href={tool.href} className="group">
-                <Card hover className="h-full border-slate/10">
+                <Card hover className="border-slate/10 h-full">
                   <CardContent className="p-8">
-                    <div className="flex justify-between items-start mb-6">
+                    <div className="mb-6 flex items-start justify-between">
                       <span className="text-4xl">{tool.icon}</span>
-                      <Badge variant="secondary" className="text-[10px] uppercase tracking-tighter opacity-50">{tool.badge}</Badge>
+                      <Badge
+                        variant="secondary"
+                        className="text-[10px] tracking-tighter uppercase opacity-50"
+                      >
+                        {tool.badge}
+                      </Badge>
                     </div>
-                    <h2 className="text-2xl font-bold text-charcoal mb-4 group-hover:text-oxblood transition-colors">
+                    <h2 className="text-charcoal group-hover:text-oxblood mb-4 text-2xl font-bold transition-colors">
                       {tool.title}
                     </h2>
                     <p className="text-slate mb-8 leading-relaxed">
                       {tool.desc}
                     </p>
-                    <div className="text-oxblood font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+                    <div className="text-oxblood flex items-center gap-2 text-xs font-bold tracking-widest uppercase">
                       Launch Tool
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
                     </div>
                   </CardContent>
                 </Card>
@@ -91,9 +120,12 @@ export default function ToolsPage() {
       {/* CTA */}
       <Section variant="oxblood" spacing="md">
         <Container size="narrow" className="text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-cream mb-6">Need Professional Oversight?</h2>
-          <p className="text-cream/70 text-lg mb-8">
-            Our tools provide high-fidelity estimates, but nothing replaces a physical site assessment by a licensed trade professional.
+          <h2 className="text-cream mb-6 text-2xl font-bold md:text-3xl">
+            Need Professional Oversight?
+          </h2>
+          <p className="text-cream/70 mb-8 text-lg">
+            Our tools provide high-fidelity estimates, but nothing replaces a
+            physical site assessment by a licensed trade professional.
           </p>
           <Link href="/contact">
             <Button variant="secondary" size="lg">
