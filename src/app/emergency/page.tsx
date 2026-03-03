@@ -10,7 +10,7 @@ import {
   ResourcesSection,
 } from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
-import { BUSINESS, HERO_ASSETS, HERO_VIDEOS } from '@/lib/constants';
+import { BUSINESS, HERO_ASSETS, HERO_VIDEOS, SERVICE_AREAS } from '@/lib/constants';
 
 interface Resource {
   title: string;
@@ -53,7 +53,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+import { BreadcrumbJsonLd, LocalBusinessJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
 
 export default async function EmergencyPage() {
   let fetchedPage: EmergencyPageData | null = null;
@@ -80,9 +80,17 @@ export default async function EmergencyPage() {
     { name: 'Emergency', url: `${BUSINESS.url}/emergency` },
   ];
 
+  const serviceAreasString = [...SERVICE_AREAS.midWillametteValley, ...SERVICE_AREAS.harneyCounty].join(', ');
+
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
+      <LocalBusinessJsonLd />
+      <ServiceJsonLd
+        name="Emergency Services"
+        description={`Rapid emergency response for water damage, storm damage, and board-ups in ${serviceAreasString}.`}
+        url={`${BUSINESS.url}/emergency`}
+      />
       {/* Rich Hero Section */}
       <RichHero
         title={page.heroHeadline!}
@@ -92,15 +100,24 @@ export default async function EmergencyPage() {
         badge="Direct Dispatch | 24/7"
         overlayOpacity={80}
       >
-        <a href={`tel:${emergencyPhone}`} className="w-full sm:w-auto">
-          <Button
-            variant="emergency"
-            size="lg"
-            className="h-16 w-full border-2 border-red-400 px-8 text-xl shadow-xl shadow-red-950/50"
-          >
-            Call Now: {emergencyPhone}
-          </Button>
-        </a>
+        <div className="mt-6 flex flex-col justify-center gap-4 sm:flex-row">
+          <a href={`tel:${emergencyPhone}`} className="w-full sm:w-auto">
+            <Button
+              variant="emergency"
+              size="lg"
+              className="h-16 w-full border-2 border-red-400 px-8 text-xl shadow-xl shadow-red-950/50"
+            >
+              Call Now: {emergencyPhone}
+            </Button>
+          </a>
+          {/* Emergency SMS CTA (future Twilio integration) */}
+          <a href="sms:+15413215115" className="w-full sm:w-auto">
+            <Button variant="outline" size="lg" className="h-16 w-full px-8 text-xl">
+              Emergency SMS
+            </Button>
+          </a>
+          {/* Auto-open chatbot placeholder (future AI integration) */}
+        </div>
         <div className="text-cream/60 mt-4 w-full text-sm font-bold tracking-widest uppercase">
           {page.responseTimeSLA}
         </div>
