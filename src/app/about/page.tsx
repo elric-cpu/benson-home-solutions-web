@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { client } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
 import {
@@ -9,6 +10,7 @@ import {
   CardContent,
   RichHero,
   ResourcesSection,
+  Button,
 } from '@/components/ui';
 import { PortableTextRenderer } from '@/components/content/PortableText';
 import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
@@ -70,6 +72,7 @@ export async function generateMetadata(): Promise<Metadata> {
 import {
   BreadcrumbJsonLd,
   LocalBusinessJsonLd,
+  AboutPageJsonLd,
 } from '@/components/seo/json-ld';
 
 export default async function AboutPage() {
@@ -261,27 +264,34 @@ export default async function AboutPage() {
       {/* Authoritative Resources */}
       {page?.resources && <ResourcesSection resources={page.resources} />}
 
+      {/* Final CTA */}
+      <Section variant="charcoal" spacing="lg">
+        <Container size="narrow">
+          <div className="text-center">
+            <h2 className="text-cream text-3xl font-bold md:text-4xl">
+              Ready to Discuss Your Project?
+            </h2>
+            <p className="text-cream/80 mt-4 text-lg">
+              Contact us today for a free, no-obligation consultation. Let's
+              build something great together.
+            </p>
+            <div className="mt-8">
+              <Link href="/contact">
+                <Button variant="secondary" size="lg">
+                  Schedule a Call
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
       {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'AboutPage',
-            name: `About ${BUSINESS.name}`,
-            description: `Learn about the history, values, and credentials of ${BUSINESS.name}.`,
-            url: `${BUSINESS.url}/about`,
-            mainEntity: {
-              '@type': 'Person',
-              name: BUSINESS.owner,
-              jobTitle: 'Founder',
-              worksFor: {
-                '@type': 'HomeAndConstructionBusiness',
-                name: BUSINESS.name,
-              },
-            },
-          }),
-        }}
+      <AboutPageJsonLd
+        name={`About ${BUSINESS.name}`}
+        description={`Learn about the history, values, and credentials of ${BUSINESS.name}.`}
+        url={`${BUSINESS.url}/about`}
+        ownerName={BUSINESS.owner}
       />
     </>
   );
