@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+import { BreadcrumbJsonLd, ContactPageJsonLd } from '@/components/seo/json-ld';
 
 export default async function ContactPage() {
   let page: ContactPageData | null = null;
@@ -176,6 +176,19 @@ export default async function ContactPage() {
                   </CardContent>
                 </Card>
               </div>
+
+              <div>
+                <h2 className="text-charcoal mb-6 text-2xl font-bold">
+                  Our Location
+                </h2>
+                <Card variant="outlined" className="bg-surface">
+                  <CardContent className="p-6">
+                    <p className="text-charcoal font-semibold">Benson Home Solutions</p>
+                    <p className="text-slate">123 Main Street</p>
+                    <p className="text-slate">Albany, OR 97321</p>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
 
             {/* Form */}
@@ -196,33 +209,30 @@ export default async function ContactPage() {
         </Container>
       </Section>
 
+      {/* Map Embed Placeholder */}
+      <Section className="bg-cream">
+        <div className="relative h-96 w-full">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100000.0!2d-123.25!3d44.65!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54c038481d6f4c51%3A0x6e78d2a6b2a0c6a5!2sAlbany%2C%20OR!5e0!3m2!1sen!2sus!4v1678888888888!5m2!1sen!2sus"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen={false}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Google Maps of Albany, OR"
+          ></iframe>
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-2xl font-bold">
+            Google Maps Placeholder
+          </div>
+        </div>
+      </Section>
+
       {/* Authoritative Resources */}
       {page?.resources && <ResourcesSection resources={page.resources} />}
 
       {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'ContactPage',
-            name: `Contact ${BUSINESS.name}`,
-            description: `Contact information and request form for ${BUSINESS.name} in the Mid-Willamette Valley.`,
-            url: `${BUSINESS.url}/contact`,
-            mainEntity: {
-              '@type': 'HomeAndConstructionBusiness',
-              name: BUSINESS.name,
-              telephone: BUSINESS.phone,
-              email: BUSINESS.email,
-              address: {
-                '@type': 'PostalAddress',
-                addressRegion: 'OR',
-                addressCountry: 'US',
-              },
-            },
-          }),
-        }}
-      />
+      <ContactPageJsonLd />
     </>
   );
 }
