@@ -9,7 +9,11 @@ import {
   CardContent,
 } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
-import { BreadcrumbJsonLd, ServiceJsonLd, FAQPageJsonLd } from '@/components/seo/json-ld';
+import {
+  BreadcrumbJsonLd,
+  ServiceJsonLd,
+  FAQPageJsonLd,
+} from '@/components/seo/json-ld';
 
 export const metadata: Metadata = {
   title: 'Kitchen Remodeling & Reconstruction | Benson Home Solutions',

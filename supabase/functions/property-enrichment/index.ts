@@ -71,9 +71,12 @@ serve(async (req) => {
         if (data.result?.addressMatches?.[0]) {
           const match = data.result.addressMatches[0];
           // Extract FIPS from geographies (State code + County code)
-          const countyGeog = data.result.addressMatches[0].geographies?.Counties?.[0];
-          const fips = countyGeog ? `${countyGeog.STATE}${countyGeog.COUNTY}` : null;
-          
+          const countyGeog =
+            data.result.addressMatches[0].geographies?.Counties?.[0];
+          const fips = countyGeog
+            ? `${countyGeog.STATE}${countyGeog.COUNTY}`
+            : null;
+
           geocodeResult = {
             properties: {
               formatted: match.matchedAddress,

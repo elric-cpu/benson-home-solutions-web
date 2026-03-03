@@ -34,7 +34,9 @@ test.describe('About Page', () => {
     ).toBeVisible();
 
     // Expect the "Schedule a Call" button to be visible and have the correct href
-    const scheduleCallButton = page.getByRole('link', { name: 'Schedule a Call' });
+    const scheduleCallButton = page.getByRole('link', {
+      name: 'Schedule a Call',
+    });
     await expect(scheduleCallButton).toBeVisible();
     await expect(scheduleCallButton).toHaveAttribute('href', '/contact');
   });

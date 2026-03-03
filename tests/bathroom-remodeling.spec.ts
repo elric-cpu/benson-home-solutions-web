@@ -11,11 +11,15 @@ test.describe('Bathroom Remodeling Page', () => {
 
     // Expect the main headline to be visible
     await expect(
-      page.getByRole('heading', { name: 'High-Fidelity Bathroom Reconstruction' }),
+      page.getByRole('heading', {
+        name: 'High-Fidelity Bathroom Reconstruction',
+      }),
     ).toBeVisible();
 
     // Expect the cost range to be visible
-    await expect(page.getByText('Typical projects: $15,000 - $30,000')).toBeVisible();
+    await expect(
+      page.getByText('Typical projects: $15,000 - $30,000'),
+    ).toBeVisible();
 
     // Expect the "Request Assessment" button to be visible and have the correct href
     const assessmentButton = page.getByRole('link', {

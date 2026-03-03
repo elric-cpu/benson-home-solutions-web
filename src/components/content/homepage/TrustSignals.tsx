@@ -19,9 +19,7 @@ export function TrustSignals({ signals }: TrustSignalsProps) {
               <div className="text-cream text-lg font-semibold">
                 {signal.label}
               </div>
-              <div className="text-cream/70 mt-1 text-sm">
-                {signal.detail}
-              </div>
+              <div className="text-cream/70 mt-1 text-sm">{signal.detail}</div>
             </div>
           ))}
         </div>

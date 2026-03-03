@@ -15,7 +15,9 @@ test.describe('Kitchen Remodeling Page', () => {
     ).toBeVisible();
 
     // Expect the cost range to be visible
-    await expect(page.getByText('Typical projects: $25,000 - $45,000')).toBeVisible();
+    await expect(
+      page.getByText('Typical projects: $25,000 - $45,000'),
+    ).toBeVisible();
 
     // Expect the "Request Design Consultation" button to be visible and have the correct href
     const consultationButton = page.getByRole('link', {
@@ -35,7 +37,9 @@ test.describe('Kitchen Remodeling Page', () => {
     ).toBeVisible();
 
     // Expect the final CTA button "Start Your Project" to be visible and have the correct href
-    const finalCtaButton = page.getByRole('link', { name: 'Start Your Project' });
+    const finalCtaButton = page.getByRole('link', {
+      name: 'Start Your Project',
+    });
     await expect(finalCtaButton).toBeVisible();
     await expect(finalCtaButton).toHaveAttribute('href', '/contact');
   });

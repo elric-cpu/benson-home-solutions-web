@@ -8,13 +8,13 @@ export const metadata = {
 
 export default function EmbedPage() {
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="bg-cream min-h-screen">
       <TrueCostCalculator isEmbed={true} />
-      <div className="bg-cream border-slate/10 border-t px-4 py-3 text-center text-[10px] text-slate/50">
+      <div className="bg-cream border-slate/10 text-slate/50 border-t px-4 py-3 text-center text-[10px]">
         Powered by{' '}
-        <a 
-          href="https://bensonhomesolutions.com" 
-          target="_blank" 
+        <a
+          href="https://bensonhomesolutions.com"
+          target="_blank"
           rel="noopener"
           className="hover:text-oxblood font-bold underline transition-colors"
         >

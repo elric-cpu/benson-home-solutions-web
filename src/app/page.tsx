@@ -1,7 +1,4 @@
-import {
-  BUSINESS,
-  SERVICE_AREAS,
-} from '@/lib/constants';
+import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 import { client } from '@/sanity/lib/client';
 import { LocalBusinessJsonLd } from '@/components/seo/json-ld';
 import { Container, Section, Button, Card } from '@/components/ui';
@@ -111,11 +108,11 @@ export default async function HomePage() {
   return (
     <>
       <LocalBusinessJsonLd />
-      
-      <HeroSection 
-        headline={page?.heroHeadline} 
-        description={page?.heroDescription} 
-        video={page?.heroVideo} 
+
+      <HeroSection
+        headline={page?.heroHeadline}
+        description={page?.heroDescription}
+        video={page?.heroVideo}
       />
 
       <ServicesGrid services={services} />

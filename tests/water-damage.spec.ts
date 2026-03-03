@@ -19,7 +19,10 @@ test.describe('Water Damage Page', () => {
       name: /Emergency: \(\d{3}\) \d{3}-\d{4}/,
     });
     await expect(heroCallButton).toBeVisible();
-    await expect(heroCallButton).toHaveAttribute('href', /tel:\(\d{3}\) \d{3}-\d{4}/);
+    await expect(heroCallButton).toHaveAttribute(
+      'href',
+      /tel:\(\d{3}\) \d{3}-\d{4}/,
+    );
 
     // Expect the urgency banner to be visible
     await expect(
@@ -51,6 +54,9 @@ test.describe('Water Damage Page', () => {
       name: /Call 24\/7: \(\d{3}\) \d{3}-\d{4}/,
     });
     await expect(finalCallButton).toBeVisible();
-    await expect(finalCallButton).toHaveAttribute('href', /tel:\(\d{3}\) \d{3}-\d{4}/);
+    await expect(finalCallButton).toHaveAttribute(
+      'href',
+      /tel:\(\d{3}\) \d{3}-\d{4}/,
+    );
   });
 });

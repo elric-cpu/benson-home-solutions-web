@@ -1,8 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import {
+  Section,
+  Container,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+} from '@/components/ui';
+import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
+import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Remodeling & Restoration | Benson Home Solutions',
+  title: 'Remodeling & Reconstruction | Benson Home Solutions',
   description:
     'Professional remodeling and restoration services for the Mid-Willamette Valley. Post-damage reconstruction, kitchen and bathroom remodels, and structural repairs. CCB #258533.',
 };
@@ -18,6 +29,7 @@ const serviceTypes = [
       'Cabinet and fixture installation',
       'Insurance claim documentation',
     ],
+    icon: '🏗️',
   },
   {
     title: 'Kitchen Remodeling',
@@ -29,6 +41,8 @@ const serviceTypes = [
       'Plumbing and fixture upgrades',
       'Flooring and backsplash',
     ],
+    icon: '🍳',
+    href: '/services/kitchen-remodeling',
   },
   {
     title: 'Bathroom Remodeling',
@@ -40,6 +54,8 @@ const serviceTypes = [
       'Ventilation improvements',
       'Accessibility modifications',
     ],
+    icon: '🚿',
+    href: '/services/bathroom-remodeling',
   },
   {
     title: 'Structural Repairs',
@@ -51,61 +67,116 @@ const serviceTypes = [
       'Crawlspace repair',
       'Seismic retrofitting',
     ],
+    icon: '🧱',
   },
 ];
 
 export default function RemodelingPage() {
+  const breadcrumbs = [
+    { name: 'Home', url: BUSINESS.url },
+    { name: 'Services', url: `${BUSINESS.url}/services` },
+    { name: 'Remodeling', url: `${BUSINESS.url}/services/remodeling` },
+  ];
+
   return (
     <main className="min-h-screen">
-      <section className="bg-blue-900 py-20 text-white">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h1 className="mb-6 text-4xl font-bold md:text-5xl">
-            Remodeling &amp; Restoration
-          </h1>
-          <p className="text-xl leading-relaxed text-blue-100">
-            From post-damage reconstruction to planned renovations, we deliver
-            quality craftsmanship with the documentation and communication you
-            deserve.
-          </p>
-        </div>
-      </section>
+      <BreadcrumbJsonLd items={breadcrumbs} />
+      <ServiceJsonLd
+        name="Remodeling & Reconstruction"
+        description="Professional remodeling and post-damage restoration services in the Mid-Willamette Valley."
+        url={`${BUSINESS.url}/services/remodeling`}
+      />
 
-      <section className="py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="mb-10 text-3xl font-bold text-gray-900">What We Do</h2>
-          <div className="space-y-10">
+      {/* Hero */}
+      <Section variant="cream" spacing="lg">
+        <Container>
+          <div className="max-w-3xl">
+            <Badge variant="secondary" className="mb-4">
+              Structural Excellence
+            </Badge>
+            <h1 className="text-oxblood text-4xl leading-tight font-bold md:text-5xl lg:text-6xl">
+              Remodeling & Reconstruction
+            </h1>
+            <p className="text-slate mt-6 text-xl leading-relaxed">
+              From post-damage reconstruction to planned renovations, we deliver
+              quality craftsmanship with the documentation and communication you
+              deserve. We focus on structural integrity and trade-standard
+              finishes.
+            </p>
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <Link href="/contact">
+                <Button size="lg">Request a Proposal</Button>
+              </Link>
+              <a href={`tel:${BUSINESS.phone}`}>
+                <Button variant="outline" size="lg">
+                  Call {BUSINESS.phone}
+                </Button>
+              </a>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Services List */}
+      <Section spacing="lg">
+        <Container>
+          <div className="mb-12">
+            <h2 className="text-charcoal text-3xl font-bold md:text-4xl">
+              Specialized Reconstruction
+            </h2>
+            <p className="text-slate mt-4 text-lg">
+              We handle the complex structural work that many remodeling
+              contractors avoid.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {serviceTypes.map((service) => (
-              <div
-                key={service.title}
-                className="rounded-lg border border-gray-200 bg-white p-6"
-              >
-                <h3 className="mb-2 text-xl font-bold text-gray-900">
-                  {service.title}
-                </h3>
-                <p className="mb-4 text-gray-600">{service.desc}</p>
-                <ul className="grid gap-2 sm:grid-cols-2">
-                  {service.items.map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-center gap-2 text-sm text-gray-700"
-                    >
-                      <span className="text-blue-600">\u2713</span> {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Card key={service.title} variant="elevated" className="group">
+                <CardContent className="p-8">
+                  <div className="mb-4 text-4xl">{service.icon}</div>
+                  <h3 className="text-charcoal mb-3 text-xl font-bold transition-colors group-hover:text-oxblood">
+                    {service.title}
+                  </h3>
+                  <p className="text-slate mb-6 leading-relaxed">
+                    {service.desc}
+                  </p>
+                  <ul className="mb-8 grid gap-2 sm:grid-cols-1">
+                    {service.items.map((item) => (
+                      <li
+                        key={item}
+                        className="text-slate flex items-center gap-2 text-sm"
+                      >
+                        <span className="text-oxblood font-bold">✓</span> {item}
+                      </li>
+                    ))}
+                  </ul>
+                  {service.href ? (
+                    <Link href={service.href}>
+                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                        View Service Details
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link href="/contact">
+                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                        Inquire About This Service
+                      </Button>
+                    </Link>
+                  )}
+                </CardContent>
+              </Card>
             ))}
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* Process */}
-      <section className="bg-gray-50 py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="mb-8 text-3xl font-bold text-gray-900">
+      <Section variant="cream" spacing="lg">
+        <Container size="narrow">
+          <h2 className="text-charcoal mb-12 text-center text-3xl font-bold md:text-4xl">
             Our Remodeling Process
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-10">
             {[
               {
                 step: '1',
@@ -133,45 +204,48 @@ export default function RemodelingPage() {
                 desc: 'We walk the completed project with you, address any punch-list items, and ensure your satisfaction.',
               },
             ].map((s) => (
-              <div key={s.step} className="flex items-start gap-4">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
+              <div key={s.step} className="flex gap-6">
+                <div className="bg-oxblood text-cream flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold">
                   {s.step}
-                </span>
+                </div>
                 <div>
-                  <h3 className="font-bold text-gray-900">{s.title}</h3>
-                  <p className="text-gray-600">{s.desc}</p>
+                  <h3 className="text-charcoal text-lg font-bold">{s.title}</h3>
+                  <p className="text-slate leading-relaxed">{s.desc}</p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      <section className="bg-blue-900 py-16 text-white">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="mb-4 text-3xl font-bold">
+      {/* CTA Section */}
+      <Section variant="oxblood" spacing="lg">
+        <Container size="narrow" className="text-center">
+          <h2 className="text-cream text-3xl font-bold md:text-4xl">
             Ready to Start Your Project?
           </h2>
-          <p className="mb-8 text-lg text-blue-100">
+          <p className="text-cream/80 mt-6 text-lg">
             Tell us about your remodeling or restoration needs. We will provide
             a detailed proposal with no obligation.
           </p>
-          <div className="flex flex-col justify-center gap-4 sm:flex-row">
-            <Link
-              href="/contact"
-              className="inline-block rounded-lg bg-white px-8 py-3 font-semibold text-blue-900 transition-colors hover:bg-blue-50"
-            >
-              Request a Proposal
+          <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+            <Link href="/contact">
+              <Button variant="secondary" size="lg">
+                Request a Proposal
+              </Button>
             </Link>
-            <a
-              href="tel:+15413215115"
-              className="inline-block rounded-lg border-2 border-white px-8 py-3 font-semibold text-white transition-colors hover:bg-white hover:text-blue-900"
-            >
-              Call (541) 321-5115
+            <a href={`tel:${BUSINESS.phone}`}>
+              <Button
+                variant="outline"
+                size="lg"
+                className="text-cream border-white/20 hover:bg-cream hover:text-oxblood bg-white/5"
+              >
+                Call {BUSINESS.phone}
+              </Button>
             </a>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
     </main>
   );
 }

@@ -10,7 +10,10 @@ interface Props {
 
 export function MethodologyFormula({ formula, variables, example }: Props) {
   return (
-    <Card variant="outlined" className="bg-slate/5 border-slate/10 my-8 overflow-hidden shadow-sm">
+    <Card
+      variant="outlined"
+      className="bg-slate/5 border-slate/10 my-8 overflow-hidden shadow-sm"
+    >
       <div className="bg-oxblood/5 border-slate/10 border-b px-6 py-3">
         <h4 className="text-oxblood flex items-center gap-2 text-xs font-bold tracking-widest uppercase">
           <svg
@@ -32,16 +35,20 @@ export function MethodologyFormula({ formula, variables, example }: Props) {
         </h4>
       </div>
       <CardContent className="p-8">
-        <div className="mb-8 font-mono text-xl font-bold text-charcoal md:text-2xl">
+        <div className="text-charcoal mb-8 font-mono text-xl font-bold md:text-2xl">
           {formula}
         </div>
-        
+
         <div className="space-y-4">
-          <h5 className="text-slate text-[10px] font-black tracking-widest uppercase opacity-50">Variables & Constants</h5>
+          <h5 className="text-slate text-[10px] font-black tracking-widest uppercase opacity-50">
+            Variables & Constants
+          </h5>
           <div className="grid gap-4 sm:grid-cols-2">
             {variables.map((v, i) => (
               <div key={i} className="flex gap-3 text-sm">
-                <span className="text-oxblood font-mono font-bold">{v.name}</span>
+                <span className="text-oxblood font-mono font-bold">
+                  {v.name}
+                </span>
                 <span className="text-slate/70">{v.description}</span>
               </div>
             ))}
@@ -49,7 +56,7 @@ export function MethodologyFormula({ formula, variables, example }: Props) {
         </div>
 
         {example && (
-          <div className="bg-white/50 mt-8 rounded-lg border border-slate/10 p-4 text-sm italic text-slate/60">
+          <div className="border-slate/10 text-slate/60 mt-8 rounded-lg border bg-white/50 p-4 text-sm italic">
             <strong>Example:</strong> {example}
           </div>
         )}

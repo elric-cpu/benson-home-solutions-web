@@ -75,12 +75,13 @@ Do NOT recommend services that don't apply to this building type.
       throw new Error('No valid AI model configuration found');
     }
 
-    const { object }: { object: z.infer<typeof RecommendationSchema> } = await generateObject({
-      model,
-      schema: RecommendationSchema,
-      system: systemPrompt,
-      prompt: JSON.stringify({ property, service_catalog: catalogSummary }),
-    });
+    const { object }: { object: z.infer<typeof RecommendationSchema> } =
+      await generateObject({
+        model,
+        schema: RecommendationSchema,
+        system: systemPrompt,
+        prompt: JSON.stringify({ property, service_catalog: catalogSummary }),
+      });
 
     // Filter out invalid service IDs
     const validRecommendations = object.recommendations.filter((r) =>
