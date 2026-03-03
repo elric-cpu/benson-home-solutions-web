@@ -5,17 +5,20 @@ import { eq } from 'drizzle-orm';
 
 export async function POST(request: NextRequest) {
   try {
-    const { 
-      propertyId, 
-      clientId, 
-      services, 
-      totalAnnual, 
+    const {
+      propertyId,
+      clientId,
+      services,
+      totalAnnual,
       monthlySubscription,
-      agreementType = 'residential-subscription' 
+      agreementType = 'residential-subscription',
     } = await request.json();
 
     if (!propertyId || !clientId || !services) {
-      return NextResponse.json({ error: 'Missing required agreement data' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Missing required agreement data' },
+        { status: 400 },
+      );
     }
 
     // 1. Generate unique agreement number (BHS-YYYY-RANDOM)
@@ -52,8 +55,12 @@ export async function POST(request: NextRequest) {
       try {
         const { Resend } = await import('resend');
         const resend = new Resend(process.env.RESEND_API_KEY);
-        const [clientData] = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
-        
+        const [clientData] = await db
+          .select()
+          .from(clients)
+          .where(eq(clients.id, clientId))
+          .limit(1);
+
         await resend.emails.send({
           from: 'Benson Home Solutions <office@bensonhomesolutions.com>',
           to: ['office@bensonhomesolutions.com'],
@@ -68,21 +75,23 @@ export async function POST(request: NextRequest) {
               <hr />
               <a href="https://bensonhomesolutions.com/agreements/${newAgreement.id}">View Agreement Draft</a>
             </div>
-          `
+          `,
         });
       } catch (e) {
         console.error('Agreement notification failed', e);
       }
     }
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       agreementId: newAgreement.id,
-      agreementNumber: newAgreement.agreementNumber
+      agreementNumber: newAgreement.agreementNumber,
     });
-
   } catch (error) {
     console.error('[Agreement API] Finalize failed:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

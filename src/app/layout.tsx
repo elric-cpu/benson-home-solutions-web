@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { sourceSans3 } from '@/lib/fonts';
-import { Header } from '@/components/layout';
-import { Footer } from '@/components/layout';
-import { MobileActionBar } from '@/components/layout/MobileActionBar';
+import { Header, Footer, MobileActionBar } from '@/components/layout';
 import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import { Analytics } from '@vercel/analytics/next';
+import { ChatWidgetWrapper } from '@/components/ui';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -23,7 +22,9 @@ export const metadata: Metadata = {
     'Commercial Facility Management',
     'Benson Home Solutions',
   ],
-  authors: [{ name: 'Benson Home Solutions', url: 'https://bensonhomesolutions.com' }],
+  authors: [
+    { name: 'Benson Home Solutions', url: 'https://bensonhomesolutions.com' },
+  ],
   creator: 'Benson Home Solutions',
   publisher: 'Benson Home Solutions',
   formatDetection: {
@@ -36,7 +37,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     siteName: 'Benson Home Solutions',
     title: 'Oregon Contractor CCB #258533 | Benson Home Solutions',
-    description: 'Licensed Oregon General Contractor specializing in maintenance subscriptions and emergency restoration.',
+    description:
+      'Licensed Oregon General Contractor specializing in maintenance subscriptions and emergency restoration.',
     url: 'https://bensonhomesolutions.com',
   },
   robots: {
@@ -71,7 +73,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={sourceSans3.variable}>
-      <body className="min-h-screen flex flex-col antialiased">
+      <body className="flex min-h-screen flex-col antialiased">
         <a href="#main-content" className="skip-nav">
           Skip to main content
         </a>
@@ -81,6 +83,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <MobileActionBar />
+        <ChatWidgetWrapper />
         <GoogleAnalytics />
         <Analytics />
       </body>

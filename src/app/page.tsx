@@ -1,24 +1,31 @@
-import Link from 'next/link';
 import {
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Section,
-  Badge,
-  RichHero,
-  ResourcesSection,
-} from '@/components/ui';
-import { BUSINESS, SERVICE_AREAS, HERO_ASSETS, HERO_VIDEOS } from '@/lib/constants';
+  BUSINESS,
+  SERVICE_AREAS,
+} from '@/lib/constants';
 import { client } from '@/sanity/lib/client';
 import { LocalBusinessJsonLd } from '@/components/seo/json-ld';
+import { Container, Section, Button, Card } from '@/components/ui';
+import Link from 'next/link';
+import { HeroSection } from '@/components/content/homepage/HeroSection';
+import { ServicesGrid } from '@/components/content/homepage/ServicesGrid';
+import { TrustSignals } from '@/components/content/homepage/TrustSignals';
+import { AreasServed } from '@/components/content/homepage/AreasServed';
+import { ResourcesSection } from '@/components/ui';
+
+interface Resource {
+  title: string;
+  url: string;
+  description?: string;
+  isBacklink?: boolean;
+  authority?: string;
+}
 
 interface HomePageData {
   title?: string;
   heroHeadline?: string;
   heroDescription?: string;
   heroVideo?: string;
-  resources?: any[];
+  resources?: Resource[];
   services?: {
     title: string;
     description: string;
@@ -84,117 +91,76 @@ export default async function HomePage() {
     ...SERVICE_AREAS.harneyCounty,
   ];
 
-  const services = page?.services?.map(s => ({
-    title: s.title,
-    description: s.description,
-    href: `/services/${s.slug.current}`
-  })) || FALLBACK_SERVICES;
+  const services =
+    page?.services?.map((s) => ({
+      title: s.title,
+      description: s.description,
+      href: `/services/${s.slug.current}`,
+    })) || FALLBACK_SERVICES;
 
   const trustSignals = page?.trustSignals || [
     { label: 'Licensed & Bonded', detail: BUSINESS.license },
     { label: 'Fully Insured', detail: 'Liability & Workers\u2019 Comp' },
     { label: 'Locally Owned', detail: BUSINESS.experience + ' Experience' },
-    { label: BUSINESS.rating + ' Rating', detail: BUSINESS.projects + ' Projects Completed' },
+    {
+      label: BUSINESS.rating + ' Rating',
+      detail: BUSINESS.projects + ' Projects Completed',
+    },
   ];
 
   return (
     <>
       <LocalBusinessJsonLd />
-      {/* Hero Section */}
-      <RichHero
-        title={page?.heroHeadline || (
-          <>
-            Property Protection<br className="hidden sm:inline" />
-            Built on Reliability
-          </>
-        )}
-        description={page?.heroDescription || "We don’t just fix damage; we prevent it. From local maintenance programs to 24/7 emergency restoration, Benson Home Solutions provides the professional oversight your property deserves. Licensed, bonded, and ready to work."}
-        backgroundImage={HERO_ASSETS.homepage}
-        videoBackground={page?.heroVideo || HERO_VIDEOS.homepage}
-        badge="Mid-Willamette Valley | CCB #258533"
-      >
-        <Link href="/tools/cost-calculator">
-          <Button size="lg" variant="secondary">Calculate True Home Cost</Button>
-        </Link>
-        <Link href="/contact">
-          <Button variant="outline" size="lg" className="bg-white/10 text-cream border-cream/20 hover:bg-cream hover:text-oxblood">
-            Request a Quote
-          </Button>
-        </Link>
-      </RichHero>
+      
+      <HeroSection 
+        headline={page?.heroHeadline} 
+        description={page?.heroDescription} 
+        video={page?.heroVideo} 
+      />
 
-      {/* Services Section */}
-      <Section spacing="lg">
-        <Container>
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold">What We Do</h2>
-            <p className="mt-4 text-lg text-slate">
-              Comprehensive property maintenance, restoration, and mitigation
-              services tailored to your needs.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {services.map((service) => (
-              <Link key={service.title} href={service.href} className="group">
-                <Card hover className="h-full">
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold text-charcoal group-hover:text-oxblood transition-colors">
-                      {service.title}
-                    </h3>
-                    <p className="mt-2 text-slate leading-relaxed">
-                      {service.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </Section>
+      <ServicesGrid services={services} />
 
-      {/* Trust Signals */}
-      <Section variant="oxblood" spacing="sm">
-        <Container>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {trustSignals.map((signal) => (
-              <div key={signal.label}>
-                <div className="text-lg font-semibold text-cream">
-                  {signal.label}
-                </div>
-                <div className="mt-1 text-sm text-cream/70">
-                  {signal.detail}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </Section>
+      <TrustSignals signals={trustSignals} />
 
-      {/* Why Benson */}
+      {/* Static Content Section: The Benson Standard */}
       <Section spacing="md">
         <Container size="narrow">
           <div className="prose prose-lg text-slate max-w-none">
-            <h2 className="text-3xl font-bold text-charcoal text-center mb-8">The Benson Standard</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 not-prose">
+            <h2 className="text-charcoal mb-8 text-center text-3xl font-bold">
+              The Benson Standard
+            </h2>
+            <div className="not-prose grid grid-cols-1 gap-8 md:grid-cols-3">
               <div className="text-center">
-                <div className="text-4xl mb-3">🛠️</div>
-                <h3 className="text-lg font-bold text-charcoal mb-2">Proactive Oversight</h3>
+                <div className="mb-3 text-4xl">🛠️</div>
+                <h3 className="text-charcoal mb-2 text-lg font-bold">
+                  Proactive Oversight
+                </h3>
                 <p className="text-slate text-sm leading-relaxed">
-                  Most damage is preventable. Our maintenance programs identify risks like failing seals or blocked drainage before they turn into $10,000 insurance claims.
+                  Most damage is preventable. Our maintenance programs identify
+                  risks like failing seals or blocked drainage before they turn
+                  into $10,000 insurance claims.
                 </p>
               </div>
               <div className="text-center">
-                <div className="text-4xl mb-3">📄</div>
-                <h3 className="text-lg font-bold text-charcoal mb-2">Board-Ready Records</h3>
+                <div className="mb-3 text-4xl">📄</div>
+                <h3 className="text-charcoal mb-2 text-lg font-bold">
+                  Board-Ready Records
+                </h3>
                 <p className="text-slate text-sm leading-relaxed">
-                  We provide full photo documentation and moisture mapping for every job. Whether it’s for an adjuster or a facility board, our records stand up to scrutiny.
+                  We provide full photo documentation and moisture mapping for
+                  every job. Whether it’s for an adjuster or a facility board,
+                  our records stand up to scrutiny.
                 </p>
               </div>
               <div className="text-center">
-                <div className="text-4xl mb-3">🚒</div>
-                <h3 className="text-lg font-bold text-charcoal mb-2">60-Minute Response</h3>
+                <div className="mb-3 text-4xl">🚒</div>
+                <h3 className="text-charcoal mb-2 text-lg font-bold">
+                  60-Minute Response
+                </h3>
                 <p className="text-slate text-sm leading-relaxed">
-                  When a pipe bursts, every minute counts. Our emergency crews are mobilized and on-site within an hour in the Mid-Willamette Valley, 24/7.
+                  When a pipe bursts, every minute counts. Our emergency crews
+                  are mobilized and on-site within an hour in the Mid-Willamette
+                  Valley, 24/7.
                 </p>
               </div>
             </div>
@@ -202,31 +168,8 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* Areas We Serve */}
-      <Section variant="cream" spacing="md">
-        <Container>
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold">Areas We Serve</h2>
-            <p className="mt-4 text-lg text-slate">
-              Proudly serving communities throughout the Mid-Willamette Valley
-              and Harney County.
-            </p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-3">
-            {allAreas.map((area) => (
-              <Badge
-                key={area}
-                variant="secondary"
-                className="text-sm px-4 py-1.5"
-              >
-                {area}
-              </Badge>
-            ))}
-          </div>
-        </Container>
-      </Section>
+      <AreasServed areas={allAreas} />
 
-      {/* Authoritative Resources */}
       {page?.resources && <ResourcesSection resources={page.resources} />}
 
       {/* Emergency CTA */}
@@ -234,16 +177,16 @@ export default async function HomePage() {
         <Container size="narrow">
           <Card
             variant="outlined"
-            className="text-center p-8 md:p-12 border-red-200 bg-red-50/50"
+            className="border-red-200 bg-red-50/50 p-8 text-center md:p-12"
           >
-            <h2 className="text-2xl md:text-3xl font-bold">
+            <h2 className="text-2xl font-bold md:text-3xl">
               Need Emergency Restoration?
             </h2>
-            <p className="mt-4 text-lg text-slate">
+            <p className="text-slate mt-4 text-lg">
               Water damage, storm damage, or emergency board-ups — we respond
               24/7. Don&apos;t wait&nbsp;&mdash; call our emergency line now.
             </p>
-            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
+            <div className="mt-6 flex flex-col justify-center gap-4 sm:flex-row">
               <a href={`tel:${BUSINESS.afterhoursPhone}`}>
                 <Button variant="emergency" size="lg">
                   Emergency: {BUSINESS.afterhoursPhone}
@@ -263,10 +206,10 @@ export default async function HomePage() {
       <Section variant="charcoal" spacing="lg">
         <Container size="narrow">
           <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-cream">
+            <h2 className="text-cream text-3xl font-bold md:text-4xl">
               Ready to Protect Your Property?
             </h2>
-            <p className="mt-4 text-lg text-cream/80">
+            <p className="text-cream/80 mt-4 text-lg">
               Contact us today for a free, no-obligation quote. We&apos;ll
               assess your needs and provide a clear, upfront estimate.
             </p>

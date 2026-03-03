@@ -1,9 +1,9 @@
 /**
  * DB Seed Script — Benson Home Solutions
- * 
+ *
  * Seeds initial data into the Neon database.
  * Run via: npx tsx scripts/db-seed.ts
- * 
+ *
  * Requires DATABASE_URL env var to be set.
  * Safe to run multiple times — uses upsert-like patterns.
  */
@@ -32,12 +32,12 @@ async function seed() {
     WHERE table_schema = 'public'
     ORDER BY table_name
   `;
-  const tableNames = tables.map(t => t.table_name);
+  const tableNames = tables.map((t) => t.table_name);
   console.log('📊 Existing tables:', tableNames.join(', '));
 
   // Fail fast if required tables are missing
   const required = ['contact_submissions', 'subscription_leads'];
-  const missing = required.filter(name => !tableNames.includes(name));
+  const missing = required.filter((name) => !tableNames.includes(name));
   if (missing.length > 0) {
     console.error('❌ Required tables missing:', missing.join(', '));
     console.error('   Run `npx drizzle-kit push` first to create the schema.');
@@ -45,8 +45,10 @@ async function seed() {
   }
 
   // Count existing rows
-  const contactCount = await queryClient`SELECT count(*) as n FROM contact_submissions`;
-  const leadCount = await queryClient`SELECT count(*) as n FROM subscription_leads`;
+  const contactCount =
+    await queryClient`SELECT count(*) as n FROM contact_submissions`;
+  const leadCount =
+    await queryClient`SELECT count(*) as n FROM subscription_leads`;
   console.log(`   contact_submissions: ${contactCount[0].n} rows`);
   console.log(`   subscription_leads: ${leadCount[0].n} rows`);
 

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { serviceUtilizationView, underdeliveredServicesView } from '@/lib/db/schema';
+import {
+  serviceUtilizationView,
+  underdeliveredServicesView,
+} from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function GET(request: NextRequest) {
@@ -29,13 +32,16 @@ export async function GET(request: NextRequest) {
       results = await db.select().from(serviceUtilizationView);
     }
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       count: results.length,
-      data: results 
+      data: results,
     });
   } catch (error) {
     console.error('[Audit API] Fetch failed:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

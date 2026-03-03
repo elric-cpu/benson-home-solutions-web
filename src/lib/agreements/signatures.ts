@@ -20,7 +20,9 @@ export async function createSignatureRequest(data: SignatureRequest) {
   const apiKey = process.env.SIGNATURE_API_KEY;
 
   if (!apiKey) {
-    console.warn(`[Signature] Missing ${provider.toUpperCase()}_API_KEY. Using mock link.`);
+    console.warn(
+      `[Signature] Missing ${provider.toUpperCase()}_API_KEY. Using mock link.`,
+    );
     return {
       providerId: `mock-${Date.now()}`,
       signingUrl: `https://bensonhomesolutions.com/agreements/sign/${data.agreementId}?v=${data.version}`,
@@ -31,7 +33,7 @@ export async function createSignatureRequest(data: SignatureRequest) {
   // 1. Upload HTML/PDF to provider
   // 2. Create document from template
   // 3. Get signing session URL
-  
+
   return {
     providerId: `external-${Date.now()}`,
     signingUrl: `https://app.signing-provider.com/view/${Date.now()}`,

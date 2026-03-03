@@ -12,33 +12,33 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-xl bg-surface',
+          'bg-surface rounded-xl',
           {
             'shadow-card': variant === 'default',
             'shadow-elevated': variant === 'elevated',
-            'border border-border': variant === 'outlined',
+            'border-border border': variant === 'outlined',
           },
-          hover && 'transition-shadow hover:shadow-elevated',
-          className
+          hover && 'hover:shadow-elevated transition-shadow',
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 Card.displayName = 'Card';
 
 const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('p-6 pb-2', className)} {...props} />
-  )
+  ),
 );
 CardHeader.displayName = 'CardHeader';
 
 const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('p-6 pt-2', className)} {...props} />
-  )
+  ),
 );
 CardContent.displayName = 'CardContent';
 
@@ -46,10 +46,10 @@ const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('p-6 pt-0 flex items-center', className)}
+      className={cn('flex items-center p-6 pt-0', className)}
       {...props}
     />
-  )
+  ),
 );
 CardFooter.displayName = 'CardFooter';
 

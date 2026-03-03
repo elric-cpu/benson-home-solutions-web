@@ -19,30 +19,46 @@ export const BUSINESS = {
 
 export const HUBSPOT = {
   portalId: process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID || '49142342', // Placeholder
-  calculatorFormId: process.env.NEXT_PUBLIC_HUBSPOT_CALCULATOR_FORM_ID || '555-666', // Placeholder
+  calculatorFormId:
+    process.env.NEXT_PUBLIC_HUBSPOT_CALCULATOR_FORM_ID || '555-666', // Placeholder
   contactFormId: process.env.NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID || '111-222', // Placeholder
 } as const;
 
 export const HERO_ASSETS = {
-  homepage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2000',
-  emergency: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?auto=format&fit=crop&q=80&w=2000',
-  waterDamage: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&q=80&w=2000',
-  maintenance: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=2000',
-  remodeling: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=2000',
-  calculator: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000',
-  configurator: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000',
-  about: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2000',
+  homepage:
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2000',
+  emergency:
+    'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?auto=format&fit=crop&q=80&w=2000',
+  waterDamage:
+    'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&q=80&w=2000',
+  maintenance:
+    'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=2000',
+  remodeling:
+    'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=2000',
+  calculator:
+    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000',
+  configurator:
+    'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000',
+  about:
+    'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2000',
 } as const;
 
 export const HERO_VIDEOS = {
-  homepage: 'https://assets.mixkit.co/videos/preview/mixkit-architect-working-on-a-blueprint-4244-large.mp4', // Cinematic technical work
-  emergency: 'https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-a-window-at-night-4401-large.mp4', // Subtle emergency mood
+  homepage:
+    'https://assets.mixkit.co/videos/preview/mixkit-architect-working-on-a-blueprint-4244-large.mp4', // Cinematic technical work
+  emergency:
+    'https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-a-window-at-night-4401-large.mp4', // Subtle emergency mood
 } as const;
 
 export const SERVICE_AREAS = {
   midWillametteValley: [
-    'Salem', 'Keizer', 'Wilsonville', 'Corvallis',
-    'Albany', 'Lebanon', 'Sweet Home',
+    'Salem',
+    'Keizer',
+    'Wilsonville',
+    'Corvallis',
+    'Albany',
+    'Lebanon',
+    'Sweet Home',
   ],
   harneyCounty: ['Burns', 'Riley', 'Drewsey', 'Denio', 'McDermitt'],
 } as const;

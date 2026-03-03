@@ -8,7 +8,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function POST(request: NextRequest) {
   // 1. Verify webhook signature (implementation dependent on provider)
-  
+
   try {
     const payload = await request.json();
     const { documentId, status, signerEmail, signedAt } = payload;
@@ -28,10 +28,10 @@ export async function POST(request: NextRequest) {
     // 3. Update version status
     await db
       .update(agreementVersions)
-      .set({ 
-        status, 
+      .set({
+        status,
         signedAt: signedAt ? new Date(signedAt) : null,
-        signedByClient: signerEmail || version.signedByClient
+        signedByClient: signerEmail || version.signedByClient,
       })
       .where(eq(agreementVersions.id, version.id));
 
@@ -46,6 +46,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('[Signature Webhook Error]', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

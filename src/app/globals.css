@@ -1,23 +1,25 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-oxblood: #4C0C14;
-  --color-cream: #FFFDF9;
-  --color-charcoal: #2D2D2D;
-  --color-slate: #4A4A4A;
-  --color-oxblood-light: #6B1A24;
-  --color-oxblood-dark: #3A090F;
-  --color-cream-dark: #F5F0E8;
+  --color-oxblood: #4c0c14;
+  --color-cream: #fffdf9;
+  --color-charcoal: #2d2d2d;
+  --color-slate: #4a4a4a;
+  --color-oxblood-light: #6b1a24;
+  --color-oxblood-dark: #3a090f;
+  --color-cream-dark: #f5f0e8;
   --color-primary: var(--color-oxblood);
   --color-accent: var(--color-cream);
   --color-heading: var(--color-charcoal);
   --color-body: var(--color-slate);
   --color-background: var(--color-cream);
-  --color-surface: #FFFFFF;
-  --color-border: #E5E2DC;
-  --color-muted: #8A8A8A;
+  --color-surface: #ffffff;
+  --color-border: #e5e2dc;
+  --color-muted: #8a8a8a;
   /* Source Sans 3: next/font injects --font-source-sans; fallback to static */
-  --font-sans: var(--font-source-sans), 'Source Sans 3', 'Source Sans Pro', system-ui, -apple-system, sans-serif;
+  --font-sans:
+    var(--font-source-sans), 'Source Sans 3', 'Source Sans Pro', system-ui,
+    -apple-system, sans-serif;
   --spacing-section: 5rem;
   --spacing-block: 2.5rem;
   --radius-sm: 0.375rem;
@@ -25,7 +27,8 @@
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-elevated: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-elevated:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
 
 @layer base {
@@ -39,7 +42,12 @@
     color: var(--color-body);
     background-color: var(--color-background);
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     color: var(--color-heading);
     font-weight: 700;
   }

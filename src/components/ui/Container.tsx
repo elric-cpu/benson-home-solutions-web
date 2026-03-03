@@ -19,7 +19,7 @@ export function Container({
           'max-w-3xl': size === 'narrow',
           'max-w-7xl': size === 'wide',
         },
-        className
+        className,
       )}
       {...props}
     />

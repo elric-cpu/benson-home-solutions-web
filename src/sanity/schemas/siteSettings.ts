@@ -68,7 +68,7 @@ export const siteSettings = defineType({
           title: 'Chatbot System Prompt',
           type: 'text',
           rows: 15,
-          description: 'The primary system instructions for the Silas Vane AI assistant.',
+          description: 'The primary system instructions for the Gus AI assistant.',
         }),
         defineField({
           name: 'chatbotWelcomeMessage',

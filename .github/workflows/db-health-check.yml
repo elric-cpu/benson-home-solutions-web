@@ -1,4 +1,4 @@
-name: "DB Health Check — Neon Connection Validator"
+name: 'DB Health Check — Neon Connection Validator'
 
 on:
   workflow_dispatch:
