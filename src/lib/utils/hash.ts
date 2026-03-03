@@ -2,11 +2,7 @@
  * Normalizes an address for consistent hashing.
  */
 export function normalizeAddress(address: string): string {
-  return address
-    .toLowerCase()
-    .replace(/[.,]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+  return address.toLowerCase().replace(/[.,]/g, '').replace(/\s+/g, ' ').trim();
 }
 
 /**

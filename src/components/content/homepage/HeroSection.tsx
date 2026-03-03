@@ -10,7 +10,11 @@ interface HeroSectionProps {
   video?: string;
 }
 
-export function HeroSection({ headline, description, video }: HeroSectionProps) {
+export function HeroSection({
+  headline,
+  description,
+  video,
+}: HeroSectionProps) {
   return (
     <RichHero
       title={

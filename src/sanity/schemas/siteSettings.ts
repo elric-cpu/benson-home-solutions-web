@@ -68,14 +68,16 @@ export const siteSettings = defineType({
           title: 'Chatbot System Prompt',
           type: 'text',
           rows: 15,
-          description: 'The primary system instructions for the Gus AI assistant.',
+          description:
+            'The primary system instructions for the Gus AI assistant.',
         }),
         defineField({
           name: 'chatbotWelcomeMessage',
           title: 'Chatbot Welcome Message',
           type: 'text',
           rows: 3,
-          description: 'The first message shown when the chat widget is opened.',
+          description:
+            'The first message shown when the chat widget is opened.',
         }),
       ],
     }),

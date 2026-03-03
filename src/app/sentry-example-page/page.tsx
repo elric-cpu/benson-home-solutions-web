@@ -72,9 +72,7 @@ export default function Page() {
           <span>Throw Sample Error</span>
         </button>
 
-        {hasSentError && (
-          <p className="success">Error sent to Sentry.</p>
-        )}
+        {hasSentError && <p className="success">Error sent to Sentry.</p>}
 
         <div className="flex-spacer" />
       </main>

@@ -1,6 +1,6 @@
 /**
  * Seed Pinecone from Notion Operations Manual (Recursive Crawler)
- * 
+ *
  * Target: https://www.notion.so/Benson-Home-Solutions-Operations-Manual-313265d2478980069a7ad7b0da792c77
  * Run via: npx tsx scripts/seed-ops-manual.ts
  */
@@ -26,32 +26,45 @@ const notion = new Client({ auth: NOTION_API_KEY });
 async function getBlockText(block: any): Promise<string> {
   const type = block.type;
   const content = block[type];
-  
+
   if (!content?.rich_text) return '';
-  
+
   const text = content.rich_text.map((t: any) => t.plain_text).join('');
-  
+
   switch (type) {
-    case 'heading_1': return `# ${text}\n`;
-    case 'heading_2': return `## ${text}\n`;
-    case 'heading_3': return `### ${text}\n`;
-    case 'bulleted_list_item': return `* ${text}`;
-    case 'numbered_list_item': return `1. ${text}`;
-    case 'to_do': return `[ ] ${text}`;
-    case 'quote': return `> ${text}\n`;
-    case 'code': return `\`\`\`\n${text}\n\`\`\`\n`;
-    default: return text;
+    case 'heading_1':
+      return `# ${text}\n`;
+    case 'heading_2':
+      return `## ${text}\n`;
+    case 'heading_3':
+      return `### ${text}\n`;
+    case 'bulleted_list_item':
+      return `* ${text}`;
+    case 'numbered_list_item':
+      return `1. ${text}`;
+    case 'to_do':
+      return `[ ] ${text}`;
+    case 'quote':
+      return `> ${text}\n`;
+    case 'code':
+      return `\`\`\`\n${text}\n\`\`\`\n`;
+    default:
+      return text;
   }
 }
 
-async function crawlPage(pageId: string, titlePath: string[] = []): Promise<void> {
+async function crawlPage(
+  pageId: string,
+  titlePath: string[] = [],
+): Promise<void> {
   try {
     // 1. Get Page Metadata
     const page: any = await notion.pages.retrieve({ page_id: pageId });
-    const title = page.properties.title?.title?.[0]?.plain_text || 
-                  page.properties.Name?.title?.[0]?.plain_text || 
-                  'Untitled';
-    
+    const title =
+      page.properties.title?.title?.[0]?.plain_text ||
+      page.properties.Name?.title?.[0]?.plain_text ||
+      'Untitled';
+
     const currentPath = [...titlePath, title];
     const fullTitle = currentPath.join(' > ');
     console.log(`📖 Crawling: ${fullTitle}`);
@@ -59,7 +72,7 @@ async function crawlPage(pageId: string, titlePath: string[] = []): Promise<void
     // 2. Fetch all blocks for this page
     const blocks: any[] = [];
     let cursor: string | undefined = undefined;
-    
+
     while (true) {
       const response: any = await notion.blocks.children.list({
         block_id: pageId,
@@ -79,7 +92,7 @@ async function crawlPage(pageId: string, titlePath: string[] = []): Promise<void
         subPages.push(block.id);
         continue;
       }
-      
+
       const text = await getBlockText(block);
       if (text) {
         pageContent += text + '\n';
@@ -103,7 +116,6 @@ async function crawlPage(pageId: string, titlePath: string[] = []): Promise<void
     for (const subPageId of subPages) {
       await crawlPage(subPageId, currentPath);
     }
-
   } catch (error) {
     console.error(`❌ Error crawling page ${pageId}:`, error);
   }

@@ -165,7 +165,10 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
             overlayOpacity={70}
           />
         )}
-        <Section variant="cream" className={isEmbed ? 'py-4' : 'py-12 md:py-20'}>
+        <Section
+          variant="cream"
+          className={isEmbed ? 'py-4' : 'py-12 md:py-20'}
+        >
           <Container
             size="narrow"
             className={isEmbed ? 'relative z-20' : 'relative z-20 -mt-32'}
@@ -237,7 +240,10 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
 
     return (
       <>
-        <Section variant="oxblood" className={isEmbed ? 'py-10' : 'py-20 text-cream'}>
+        <Section
+          variant="oxblood"
+          className={isEmbed ? 'py-10' : 'text-cream py-20'}
+        >
           <Container size="narrow" className="text-center">
             {!isEmbed && (
               <Badge
@@ -247,13 +253,31 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                 True Annual Cost Reveal
               </Badge>
             )}
-            <div className={isEmbed ? 'mb-2 text-4xl font-black tabular-nums text-cream' : 'mb-4 text-6xl font-black tabular-nums md:text-8xl text-cream'}>
+            <div
+              className={
+                isEmbed
+                  ? 'text-cream mb-2 text-4xl font-black tabular-nums'
+                  : 'text-cream mb-4 text-6xl font-black tabular-nums md:text-8xl'
+              }
+            >
               ${animatedTotal.toLocaleString()}
-              <span className={isEmbed ? 'ml-1 text-base font-bold opacity-50' : 'ml-2 text-2xl font-bold opacity-50 md:text-3xl'}>
+              <span
+                className={
+                  isEmbed
+                    ? 'ml-1 text-base font-bold opacity-50'
+                    : 'ml-2 text-2xl font-bold opacity-50 md:text-3xl'
+                }
+              >
                 /year
               </span>
             </div>
-            <p className={isEmbed ? 'text-cream/80 text-sm font-medium' : 'text-cream/80 text-xl font-medium md:text-2xl'}>
+            <p
+              className={
+                isEmbed
+                  ? 'text-cream/80 text-sm font-medium'
+                  : 'text-cream/80 text-xl font-medium md:text-2xl'
+              }
+            >
               That&apos;s{' '}
               <strong className="text-cream">
                 ${monthlyTotal.toLocaleString()} per month
@@ -261,20 +285,25 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
               beyond your mortgage.
             </p>
             {!isEmbed && (
-              <div className="mt-10 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-6 py-3 backdrop-blur-sm text-cream">
+              <div className="text-cream mt-10 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-6 py-3 backdrop-blur-sm">
                 <span className="text-2xl">✈️</span>
                 <span className="text-sm font-bold tracking-wide uppercase">
-                  Equivalent to {tripsToHawaii} round-trip flights to Hawaii every
-                  year
+                  Equivalent to {tripsToHawaii} round-trip flights to Hawaii
+                  every year
                 </span>
               </div>
             )}
           </Container>
         </Section>
 
-        <Section spacing={isEmbed ? 'sm' : 'lg'} className={isEmbed ? 'pb-4' : ''}>
+        <Section
+          spacing={isEmbed ? 'sm' : 'lg'}
+          className={isEmbed ? 'pb-4' : ''}
+        >
           <Container>
-            <div className={`grid gap-8 ${isEmbed ? 'grid-cols-1' : 'lg:grid-cols-3'}`}>
+            <div
+              className={`grid gap-8 ${isEmbed ? 'grid-cols-1' : 'lg:grid-cols-3'}`}
+            >
               <div className={`space-y-6 ${isEmbed ? '' : 'lg:col-span-2'}`}>
                 <h3 className="text-charcoal mb-4 text-xl font-bold">
                   Cost Breakdown
@@ -530,7 +559,10 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                 href={`/tools/cost-calculator/report/${addressHash}`}
                 className="mb-4 block"
               >
-                <Button variant="outline" className="w-full border-oxblood text-oxblood hover:bg-oxblood hover:text-white">
+                <Button
+                  variant="outline"
+                  className="border-oxblood text-oxblood hover:bg-oxblood w-full hover:text-white"
+                >
                   View Full Property Report &rarr;
                 </Button>
               </Link>

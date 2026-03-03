@@ -21,7 +21,7 @@ export interface HubSpotLeadData {
 /**
  * Syncs a lead to HubSpot CRM.
  * Implementation uses the Contacts API (Create/Update by email).
- * 
+ *
  * @param data - The lead data to sync
  * @returns The HubSpot API response or null on failure
  */

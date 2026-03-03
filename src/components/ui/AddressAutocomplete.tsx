@@ -105,7 +105,9 @@ export function AddressAutocomplete({
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 : prev));
+      setSelectedIndex((prev) =>
+        prev < suggestions.length - 1 ? prev + 1 : prev,
+      );
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setSelectedIndex((prev) => (prev > 0 ? prev - 1 : 0));
@@ -286,7 +288,7 @@ export function AddressAutocomplete({
         </ul>
       )}
       {isOpen && query.length >= 3 && suggestions.length === 0 && !loading && (
-        <div className="border-slate/10 shadow-elevated absolute z-50 mt-1 w-full rounded-xl border bg-white p-4 text-center text-sm text-slate">
+        <div className="border-slate/10 shadow-elevated text-slate absolute z-50 mt-1 w-full rounded-xl border bg-white p-4 text-center text-sm">
           No US addresses found matching &quot;{query}&quot;
         </div>
       )}

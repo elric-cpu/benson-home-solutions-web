@@ -3,7 +3,14 @@ import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import { properties } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { Section, Container, Badge, Card, CardContent, Button } from '@/components/ui';
+import {
+  Section,
+  Container,
+  Badge,
+  Card,
+  CardContent,
+  Button,
+} from '@/components/ui';
 import { MOCK_ZIP_DATA, DEFAULT_BENCHMARK } from '@/lib/calculator-data';
 import Link from 'next/link';
 import { RefineEstimatesForm } from './RefineEstimatesForm';
@@ -26,11 +33,13 @@ async function ReportContent({ hash }: { hash: string }) {
 
   // Use the stored data or fallback to ZIP-level defaults
   const zipData = MOCK_ZIP_DATA[property.zip || ''] || DEFAULT_BENCHMARK;
-  
+
   // Extract costs with proper fallback
-  const energyBenchmarks = property.energyBenchmarks as { costs?: Record<string, number> } | null;
+  const energyBenchmarks = property.energyBenchmarks as {
+    costs?: Record<string, number>;
+  } | null;
   const costs = energyBenchmarks?.costs || zipData.costs;
-  
+
   const annualTotal = Object.values(costs).reduce((acc, val) => acc + val, 0);
   const monthlyTotal = Math.floor(annualTotal / 12);
 
@@ -56,7 +65,9 @@ async function ReportContent({ hash }: { hash: string }) {
             </span>
           </div>
           <p className="text-cream/80 text-xl font-medium md:text-2xl">
-            That&apos;s <strong>${monthlyTotal.toLocaleString()} per month</strong> in hidden costs.
+            That&apos;s{' '}
+            <strong>${monthlyTotal.toLocaleString()} per month</strong> in
+            hidden costs.
           </p>
         </Container>
       </Section>
@@ -69,12 +80,14 @@ async function ReportContent({ hash }: { hash: string }) {
                 <h3 className="text-charcoal text-2xl font-bold">
                   Cost Breakdown vs. Average
                 </h3>
-                <div className="flex gap-4 text-[10px] font-bold uppercase tracking-widest">
+                <div className="flex gap-4 text-[10px] font-bold tracking-widest uppercase">
                   <div className="flex items-center gap-2">
-                    <div className="bg-oxblood h-2 w-2 rounded-full" /> Your Home
+                    <div className="bg-oxblood h-2 w-2 rounded-full" /> Your
+                    Home
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="bg-slate/20 h-2 w-2 rounded-full" /> National Avg
+                    <div className="bg-slate/20 h-2 w-2 rounded-full" />{' '}
+                    National Avg
                   </div>
                 </div>
               </div>
@@ -101,8 +114,12 @@ async function ReportContent({ hash }: { hash: string }) {
                           {key.replace(/_/g, ' ')} &rarr;
                         </Link>
                         <div className="text-right">
-                          <div className="text-charcoal font-bold">${value.toLocaleString()}</div>
-                          <div className="text-slate text-[10px] opacity-50">Avg: ${avgVal.toLocaleString()}</div>
+                          <div className="text-charcoal font-bold">
+                            ${value.toLocaleString()}
+                          </div>
+                          <div className="text-slate text-[10px] opacity-50">
+                            Avg: ${avgVal.toLocaleString()}
+                          </div>
                         </div>
                       </div>
                       <div className="space-y-1.5">
@@ -128,14 +145,21 @@ async function ReportContent({ hash }: { hash: string }) {
             </div>
 
             <div className="space-y-8">
-              <Card variant="outlined" className="bg-red-50/30 border-red-100">
+              <Card variant="outlined" className="border-red-100 bg-red-50/30">
                 <CardContent className="p-8">
                   <h3 className="mb-4 text-xl font-bold text-red-900">
                     ⚠️ Deferred Maintenance Risk
                   </h3>
                   <p className="text-sm leading-relaxed text-red-800">
-                    Your estimated deferred maintenance risk is <strong>${(costs as Record<string, number>).deferred_maintenance_risk.toLocaleString()}</strong>. 
-                    Proactive maintenance through a Benson Home Solutions plan can reduce this risk by up to 60% over 5 years.
+                    Your estimated deferred maintenance risk is{' '}
+                    <strong>
+                      $
+                      {(
+                        costs as Record<string, number>
+                      ).deferred_maintenance_risk.toLocaleString()}
+                    </strong>
+                    . Proactive maintenance through a Benson Home Solutions plan
+                    can reduce this risk by up to 60% over 5 years.
                   </p>
                 </CardContent>
               </Card>
@@ -145,43 +169,73 @@ async function ReportContent({ hash }: { hash: string }) {
                   <h3 className="text-charcoal mb-6 text-xl font-bold">
                     Property Metadata
                   </h3>
-                  <dl className="grid grid-cols-2 gap-y-6 gap-x-4 text-sm">
+                  <dl className="grid grid-cols-2 gap-x-4 gap-y-6 text-sm">
                     <div>
-                      <dt className="text-slate font-bold uppercase tracking-wider opacity-50">City</dt>
-                      <dd className="text-charcoal font-medium">{property.city}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-slate font-bold uppercase tracking-wider opacity-50">State</dt>
-                      <dd className="text-charcoal font-medium">{property.state}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-slate font-bold uppercase tracking-wider opacity-50">ZIP Code</dt>
-                      <dd className="text-charcoal font-medium">{property.zip}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-slate font-bold uppercase tracking-wider opacity-50">County</dt>
-                      <dd className="text-charcoal font-medium">{property.county}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-slate font-bold uppercase tracking-wider opacity-50">Data Confidence</dt>
+                      <dt className="text-slate font-bold tracking-wider uppercase opacity-50">
+                        City
+                      </dt>
                       <dd className="text-charcoal font-medium">
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">High</Badge>
+                        {property.city}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-slate font-bold uppercase tracking-wider opacity-50">Report ID</dt>
-                      <dd className="text-charcoal truncate font-mono text-[10px]">{hash.slice(0, 8)}...</dd>
+                      <dt className="text-slate font-bold tracking-wider uppercase opacity-50">
+                        State
+                      </dt>
+                      <dd className="text-charcoal font-medium">
+                        {property.state}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate font-bold tracking-wider uppercase opacity-50">
+                        ZIP Code
+                      </dt>
+                      <dd className="text-charcoal font-medium">
+                        {property.zip}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate font-bold tracking-wider uppercase opacity-50">
+                        County
+                      </dt>
+                      <dd className="text-charcoal font-medium">
+                        {property.county}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate font-bold tracking-wider uppercase opacity-50">
+                        Data Confidence
+                      </dt>
+                      <dd className="text-charcoal font-medium">
+                        <Badge
+                          variant="secondary"
+                          className="bg-green-100 text-green-800"
+                        >
+                          High
+                        </Badge>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate font-bold tracking-wider uppercase opacity-50">
+                        Report ID
+                      </dt>
+                      <dd className="text-charcoal truncate font-mono text-[10px]">
+                        {hash.slice(0, 8)}...
+                      </dd>
                     </div>
                   </dl>
                 </CardContent>
               </Card>
 
-              <RefineEstimatesForm 
-                initialCosts={costs} 
+              <RefineEstimatesForm
+                initialCosts={costs}
                 initialMetadata={{
-                  sqft: (property.housingData as { sqft?: number } | null)?.sqft,
-                  yearBuilt: (property.housingData as { yearBuilt?: number } | null)?.yearBuilt,
-                }} 
+                  sqft: (property.housingData as { sqft?: number } | null)
+                    ?.sqft,
+                  yearBuilt: (
+                    property.housingData as { yearBuilt?: number } | null
+                  )?.yearBuilt,
+                }}
               />
 
               <Card className="bg-charcoal text-cream shadow-elevated border-none">
@@ -189,16 +243,30 @@ async function ReportContent({ hash }: { hash: string }) {
                   <h3 className="mb-4 text-2xl font-bold">Next Steps</h3>
                   <div className="mb-8 space-y-4">
                     <div className="flex gap-3">
-                      <div className="bg-oxblood flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold">1</div>
-                      <p className="text-cream/70 text-sm">Download your full maintenance checklist (sent to email).</p>
+                      <div className="bg-oxblood flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold">
+                        1
+                      </div>
+                      <p className="text-cream/70 text-sm">
+                        Download your full maintenance checklist (sent to
+                        email).
+                      </p>
                     </div>
                     <div className="flex gap-3">
-                      <div className="bg-oxblood flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold">2</div>
-                      <p className="text-cream/70 text-sm">Review energy efficiency recommendations for {property.city}.</p>
+                      <div className="bg-oxblood flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold">
+                        2
+                      </div>
+                      <p className="text-cream/70 text-sm">
+                        Review energy efficiency recommendations for{' '}
+                        {property.city}.
+                      </p>
                     </div>
                     <div className="flex gap-3">
-                      <div className="bg-oxblood flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold">3</div>
-                      <p className="text-cream/70 text-sm">Schedule a professional on-site audit with our team.</p>
+                      <div className="bg-oxblood flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold">
+                        3
+                      </div>
+                      <p className="text-cream/70 text-sm">
+                        Schedule a professional on-site audit with our team.
+                      </p>
                     </div>
                   </div>
                   <Link href="/contact">

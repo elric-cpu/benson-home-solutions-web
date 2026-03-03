@@ -347,30 +347,56 @@ export const MOCK_ZIP_DATA: Record<string, ZipData> = {
  * 1. Mid-Willamette Valley (Albany/Lebanon/Sweet Home + 75 mile radius)
  * 2. All of Harney County
  */
-export function isServiceArea(zip: string, county?: string, state?: string): boolean {
+export function isServiceArea(
+  zip: string,
+  county?: string,
+  state?: string,
+): boolean {
   if (state !== 'OR') return false;
 
   // Harney County Check
   if (county?.toLowerCase().includes('harney')) return true;
 
   // Specific Harney ZIPs
-  const harneyZips = ['97720', '97758', '97904', '97710', '97920', '97721', '97722', '97736'];
+  const harneyZips = [
+    '97720',
+    '97758',
+    '97904',
+    '97710',
+    '97920',
+    '97721',
+    '97722',
+    '97736',
+  ];
   if (harneyZips.includes(zip)) return true;
 
   // Mid-Willamette Valley ZIPs (Partial list, focusing on core + radius)
   // 97386 (Sweet Home) is the center.
   const coreZips = [
-    '97321', '97322', // Albany
-    '97355',          // Lebanon
-    '97386',          // Sweet Home
-    '97330', '97333', // Corvallis
-    '97301', '97302', '97303', '97304', '97305', '97306', '97317', // Salem/Keizer
-    '97370',          // Philomath
-    '97338',          // Dallas
-    '97361',          // Monmouth
-    '97348',          // Harrisburg
-    '97448',          // Junction City
-    '97401', '97402', '97403', '97404', '97405', '97408', // Eugene
+    '97321',
+    '97322', // Albany
+    '97355', // Lebanon
+    '97386', // Sweet Home
+    '97330',
+    '97333', // Corvallis
+    '97301',
+    '97302',
+    '97303',
+    '97304',
+    '97305',
+    '97306',
+    '97317', // Salem/Keizer
+    '97370', // Philomath
+    '97338', // Dallas
+    '97361', // Monmouth
+    '97348', // Harrisburg
+    '97448', // Junction City
+    '97401',
+    '97402',
+    '97403',
+    '97404',
+    '97405',
+    '97408', // Eugene
   ];
 
   if (coreZips.includes(zip)) return true;
