@@ -253,3 +253,94 @@ export function AboutPageJsonLd({
     />
   );
 }
+
+/** ContactPage schema with ContactPoint for LocalBusiness. */
+export function ContactPageJsonLd() {
+  const allAreas = [
+    ...SERVICE_AREAS.midWillametteValley,
+    ...SERVICE_AREAS.harneyCounty,
+  ];
+
+  return (
+    <JsonLdScript
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'HomeAndConstructionBusiness',
+        name: BUSINESS.name,
+        url: BUSINESS.url,
+        telephone: BUSINESS.phone,
+        email: BUSINESS.email,
+        priceRange: '$$',
+        founder: {
+          '@type': 'Person',
+          name: BUSINESS.owner,
+        },
+        areaServed: allAreas.map((city) => ({
+          '@type': 'City',
+          name: city,
+          containedInPlace: {
+            '@type': 'State',
+            name: 'Oregon',
+          },
+        })),
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '4.9',
+          bestRating: '5',
+          ratingCount: '200',
+        },
+        hasCredential: {
+          '@type': 'EducationalOccupationalCredential',
+          credentialCategory: 'license',
+          name: BUSINESS.license,
+          recognizedBy: {
+            '@type': 'Organization',
+            name: 'Oregon Construction Contractors Board',
+          },
+        },
+        openingHoursSpecification: [
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            opens: '08:00',
+            closes: '17:00',
+          },
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Saturday', 'Sunday'],
+            opens: '00:00',
+            closes: '00:00',
+            description: 'Emergency Services Available 24/7',
+          },
+        ],
+        sameAs: [
+          BUSINESS.gbp,
+          BUSINESS.facebook,
+          BUSINESS.ccb,
+          BUSINESS.bbb,
+          BUSINESS.yelp,
+        ],
+        contactPoint: [
+          {
+            '@type': 'ContactPoint',
+            telephone: BUSINESS.phone,
+            contactType: 'customer service',
+            email: BUSINESS.email,
+            areaServed: allAreas,
+            availableLanguage: ['English'],
+          },
+          {
+            '@type': 'ContactPoint',
+            telephone: BUSINESS.afterhoursPhone,
+            contactType: 'emergency',
+            areaServed: allAreas,
+            availableLanguage: ['English'],
+            hoursAvailable: '24/7',
+          },
+        ],
+        dateModified: new Date().toISOString(),
+      }}
+    />
+  );
+}
+
