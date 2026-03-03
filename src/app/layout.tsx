@@ -4,6 +4,7 @@ import { Header } from '@/components/layout';
 import { Footer } from '@/components/layout';
 import { MobileActionBar } from '@/components/layout/MobileActionBar';
 import { GoogleAnalytics } from '@/components/analytics/google-analytics';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -81,6 +82,7 @@ export default function RootLayout({
         <Footer />
         <MobileActionBar />
         <GoogleAnalytics />
+        <Analytics />
       </body>
     </html>
   );
