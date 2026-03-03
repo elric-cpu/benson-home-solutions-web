@@ -9,13 +9,41 @@ import {
   CardContent,
 } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
-import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
+import { BreadcrumbJsonLd, ServiceJsonLd, FAQPageJsonLd } from '@/components/seo/json-ld';
 
 export const metadata: Metadata = {
   title: 'Kitchen Remodeling & Reconstruction | Benson Home Solutions',
   description:
     'Professional kitchen remodeling and structural reconstruction in the Mid-Willamette Valley. We provide the trade precision required for a high-fidelity structural finish. Licensed CCB #258533.',
 };
+
+const faqItems = [
+  {
+    question: 'How long does a typical kitchen remodel take?',
+    answer:
+      'The timeline for a kitchen remodel can vary significantly based on the scope. A minor refresh might take 2-4 weeks, while a full structural reconstruction with layout changes could take 8-12 weeks or more. We provide a detailed project schedule during our consultation.',
+  },
+  {
+    question: 'What is the average cost of a kitchen remodel?',
+    answer:
+      'Kitchen remodeling costs in the Mid-Willamette Valley typically range from $25,000 to $45,000 for a comprehensive project, but can go higher for high-end finishes or extensive structural changes. We provide transparent, itemized estimates.',
+  },
+  {
+    question: 'Do you handle permits and inspections?',
+    answer:
+      'Yes, Benson Home Solutions manages all necessary permits and coordinates with local building inspectors. Our team ensures all work meets current building codes and safety standards.',
+  },
+  {
+    question: 'Can you help with kitchen design?',
+    answer:
+      'While we are primarily a construction company, we work closely with trusted local designers and architects. We can integrate seamlessly with your chosen design professionals or recommend partners who align with your vision.',
+  },
+  {
+    question: 'What kind of warranty do you offer?',
+    answer:
+      'We stand behind our work with a comprehensive warranty on all craftsmanship. Specific details are outlined in your project contract, ensuring your peace of mind long after completion.',
+  },
+];
 
 export default function KitchenRemodelingPage() {
   const breadcrumbs = [
@@ -35,6 +63,7 @@ export default function KitchenRemodelingPage() {
         description="High-fidelity kitchen remodeling and structural reconstruction focused on building envelope integrity and trade precision."
         url={`${BUSINESS.url}/services/kitchen-remodeling`}
       />
+      <FAQPageJsonLd questions={faqItems} />
 
       {/* Hero */}
       <Section variant="cream" spacing="lg">
@@ -51,6 +80,9 @@ export default function KitchenRemodelingPage() {
               that requires absolute structural integrity. We provide the trade
               precision needed to handle everything from layout reconstruction
               to professional finishing.
+            </p>
+            <p className="text-slate mt-2 text-lg font-medium">
+              Typical projects: $25,000 - $45,000
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link href="/contact">
@@ -106,6 +138,51 @@ export default function KitchenRemodelingPage() {
                 </p>
               </CardContent>
             </Card>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Before/After Placeholder */}
+      <Section spacing="lg" variant="cream">
+        <Container size="narrow">
+          <div className="text-center">
+            <h2 className="text-charcoal text-3xl font-bold md:text-4xl">
+              Before & After Transformations
+            </h2>
+            <p className="text-slate mt-4 text-lg">
+              (Placeholder for a dynamic image gallery showcasing past kitchen
+              remodeling projects. Images will be pulled from Sanity CMS.)
+            </p>
+            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="flex h-64 items-center justify-center rounded-lg bg-gray-200 text-gray-500">
+                Before Image Placeholder
+              </div>
+              <div className="flex h-64 items-center justify-center rounded-lg bg-gray-200 text-gray-500">
+                After Image Placeholder
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* FAQ */}
+      <Section spacing="lg" variant="cream">
+        <Container size="narrow">
+          <h2 className="mb-10 text-center text-3xl font-bold md:text-4xl">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-6">
+            {faqItems.map((faq, i) => (
+              <div
+                key={i}
+                className="bg-surface border-border rounded-xl border p-6"
+              >
+                <h3 className="text-charcoal text-lg font-semibold">
+                  {faq.question}
+                </h3>
+                <p className="text-slate mt-2 leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
           </div>
         </Container>
       </Section>
