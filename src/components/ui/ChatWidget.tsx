@@ -57,20 +57,19 @@ export function ChatWidget({
       {/* Chat Window */}
       {isOpen && (
         <Card className="shadow-elevated mb-4 flex h-[500px] w-[350px] flex-col overflow-hidden border-oxblood/10 bg-white sm:w-[400px]">
-          {/* Header */}
+          // Update the Header block:
           <div className="bg-oxblood flex items-center justify-between p-4 text-white">
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-widest">Ask Silas</h3>
-              <p className="text-[10px] opacity-70">Architect of Structural Integrity</p>
+              <h3 className="text-sm font-bold uppercase tracking-widest">Ask Gus</h3>
+              <p className="text-[10px] opacity-70">Senior Diagnostics Specialist</p>
             </div>
-            <button 
-              onClick={() => setIsOpen(false)}
-              className="hover:bg-white/10 rounded-full p-1 transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            </button>
+            {/* ... rest of header ... */}
           </div>
 
+// Update the footer text block below the form:
+            <p className="text-slate/40 mt-2 text-center text-[9px] uppercase tracking-widest font-bold">
+              Logic Core: Gus (Benson Home Solutions)
+            </p>
           {/* Messages */}
           <div 
             ref={scrollRef}

@@ -8,7 +8,7 @@ const GA4_API_SECRET = process.env.GA4_API_SECRET;
 
 interface GA4Event {
   name: string;
-  params?: Record<string, any>;
+  params?: Record<string, unknown>;
 }
 
 /**
@@ -18,7 +18,10 @@ interface GA4Event {
  */
 export async function trackServerEvent(clientId: string, event: GA4Event) {
   if (!GA4_MEASUREMENT_ID || !GA4_API_SECRET) {
-    console.warn('[GA4 Server] Missing credentials, skipping event:', event.name);
+    console.warn(
+      '[GA4 Server] Missing credentials, skipping event:',
+      event.name,
+    );
     return;
   }
 
@@ -52,7 +55,10 @@ export async function trackServerEvent(clientId: string, event: GA4Event) {
 
 // --- Specific server events ---
 
-export async function trackServerContactSubmit(clientId: string, service?: string) {
+export async function trackServerContactSubmit(
+  clientId: string,
+  service?: string,
+) {
   return trackServerEvent(clientId, {
     name: 'generate_lead',
     params: {
@@ -62,7 +68,10 @@ export async function trackServerContactSubmit(clientId: string, service?: strin
   });
 }
 
-export async function trackServerCalculatorUse(clientId: string, service: string) {
+export async function trackServerCalculatorUse(
+  clientId: string,
+  service: string,
+) {
   return trackServerEvent(clientId, {
     name: 'use_calculator',
     params: {

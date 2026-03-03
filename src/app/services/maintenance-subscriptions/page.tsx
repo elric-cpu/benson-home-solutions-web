@@ -1,6 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Section, Container, Badge, Button, Card, CardContent } from '@/components/ui';
+import {
+  Section,
+  Container,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+} from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
 import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
 
@@ -14,13 +21,16 @@ export default function MaintenanceSubscriptionsPage() {
   const breadcrumbs = [
     { name: 'Home', url: BUSINESS.url },
     { name: 'Services', url: `${BUSINESS.url}/services` },
-    { name: 'Maintenance Subscriptions', url: `${BUSINESS.url}/services/maintenance-subscriptions` },
+    {
+      name: 'Maintenance Subscriptions',
+      url: `${BUSINESS.url}/services/maintenance-subscriptions`,
+    },
   ];
 
   return (
     <main className="min-h-screen">
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <ServiceJsonLd 
+      <ServiceJsonLd
         name="Maintenance Subscriptions"
         description="Systematic preventive maintenance and professional oversight programs for Oregon property owners."
         url={`${BUSINESS.url}/services/maintenance-subscriptions`}
@@ -29,14 +39,18 @@ export default function MaintenanceSubscriptionsPage() {
       <Section variant="cream" spacing="lg">
         <Container>
           <div className="max-w-3xl">
-            <Badge variant="secondary" className="mb-4">Systematic Oversight</Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-oxblood leading-tight">
+            <Badge variant="secondary" className="mb-4">
+              Systematic Oversight
+            </Badge>
+            <h1 className="text-oxblood text-4xl leading-tight font-bold md:text-5xl lg:text-6xl">
               Proactive Property Defense
             </h1>
-            <p className="mt-6 text-xl text-slate leading-relaxed">
-              Reactive repairs are the most expensive way to own property. We provide the systematic oversight required to identify building envelope risks before they become five-figure restoration claims.
+            <p className="text-slate mt-6 text-xl leading-relaxed">
+              Reactive repairs are the most expensive way to own property. We
+              provide the systematic oversight required to identify building
+              envelope risks before they become five-figure restoration claims.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link href="/tools/maintenance-configurator">
                 <Button size="lg">Configure Your Plan</Button>
               </Link>
@@ -47,28 +61,39 @@ export default function MaintenanceSubscriptionsPage() {
 
       <Section spacing="lg">
         <Container>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+          <div className="grid gap-8 md:grid-cols-3">
+            <Card variant="elevated" className="border-t-oxblood border-t-4">
               <CardContent className="pt-8">
-                <h3 className="text-xl font-bold text-charcoal mb-3">Forensic Inspections</h3>
-                <p className="text-slate leading-relaxed text-sm">
-                  Scheduled reviews of your roof, gutters, seals, and foundations. We find the failure points before the rain does.
+                <h3 className="text-charcoal mb-3 text-xl font-bold">
+                  Forensic Inspections
+                </h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  Scheduled reviews of your roof, gutters, seals, and
+                  foundations. We find the failure points before the rain does.
                 </p>
               </CardContent>
             </Card>
-            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+            <Card variant="elevated" className="border-t-oxblood border-t-4">
               <CardContent className="pt-8">
-                <h3 className="text-xl font-bold text-charcoal mb-3">Board-Ready Logs</h3>
-                <p className="text-slate leading-relaxed text-sm">
-                  Every visit generates a forensic photo log and status report. You always have the documentation needed for insurance or resale.
+                <h3 className="text-charcoal mb-3 text-xl font-bold">
+                  Board-Ready Logs
+                </h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  Every visit generates a forensic photo log and status report.
+                  You always have the documentation needed for insurance or
+                  resale.
                 </p>
               </CardContent>
             </Card>
-            <Card variant="elevated" className="border-t-4 border-t-oxblood">
+            <Card variant="elevated" className="border-t-oxblood border-t-4">
               <CardContent className="pt-8">
-                <h3 className="text-xl font-bold text-charcoal mb-3">Priority Response</h3>
-                <p className="text-slate leading-relaxed text-sm">
-                  Subscription members receive 24/7 priority access to our emergency crews. If something breaks, you&apos;re at the front of the line.
+                <h3 className="text-charcoal mb-3 text-xl font-bold">
+                  Priority Response
+                </h3>
+                <p className="text-slate text-sm leading-relaxed">
+                  Subscription members receive 24/7 priority access to our
+                  emergency crews. If something breaks, you&apos;re at the front
+                  of the line.
                 </p>
               </CardContent>
             </Card>

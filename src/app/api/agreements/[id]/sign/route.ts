@@ -6,7 +6,7 @@ import { createSignatureRequest } from '@/lib/agreements/signatures';
 
 export async function POST(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 
@@ -23,7 +23,11 @@ export async function POST(
       .limit(1);
 
     const data = result[0];
-    if (!data) return NextResponse.json({ error: 'Agreement not found' }, { status: 404 });
+    if (!data)
+      return NextResponse.json(
+        { error: 'Agreement not found' },
+        { status: 404 },
+      );
 
     // 2. Determine next version number
     const [lastVersion] = await db
@@ -32,7 +36,7 @@ export async function POST(
       .where(eq(agreementVersions.agreementId, id))
       .orderBy(desc(agreementVersions.versionNumber))
       .limit(1);
-    
+
     const nextVersion = (lastVersion?.versionNumber || 0) + 1;
 
     // 3. Trigger external signature request
@@ -57,6 +61,9 @@ export async function POST(
     return NextResponse.json({ success: true, signingUrl });
   } catch (error) {
     console.error('[Sign API Error]', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

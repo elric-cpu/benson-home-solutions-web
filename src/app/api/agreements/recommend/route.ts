@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   if (!ANTHROPIC_API_KEY && !OPENAI_API_KEY) {
     return NextResponse.json(
       { error: 'AI provider (Anthropic/OpenAI) not configured' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -70,8 +70,10 @@ Respond in valid JSON only. Format: { "recommendations": [...] }
     });
 
     // Extract JSON from potential markdown blocks
-    const jsonString = text.includes('```') 
-      ? text.split('```json')[1]?.split('```')[0]?.trim() || text.split('```')[1]?.split('```')[0]?.trim() || text
+    const jsonString = text.includes('```')
+      ? text.split('```json')[1]?.split('```')[0]?.trim() ||
+        text.split('```')[1]?.split('```')[0]?.trim() ||
+        text
       : text;
 
     const data = JSON.parse(jsonString || '{}');
@@ -85,8 +87,8 @@ Respond in valid JSON only. Format: { "recommendations": [...] }
     }
 
     // Filter out invalid service IDs
-    const validRecommendations = (recommendations as Recommendation[]).filter((r) =>
-      SERVICE_CATALOG.some((s) => s.id === r.service_id)
+    const validRecommendations = (recommendations as Recommendation[]).filter(
+      (r) => SERVICE_CATALOG.some((s) => s.id === r.service_id),
     );
 
     return NextResponse.json({ recommendations: validRecommendations });
@@ -94,7 +96,7 @@ Respond in valid JSON only. Format: { "recommendations": [...] }
     console.error('[Agreement Recommendation] Error:', error);
     return NextResponse.json(
       { error: 'Failed to generate recommendations' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

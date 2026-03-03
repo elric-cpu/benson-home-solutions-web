@@ -24,8 +24,8 @@ export function MobileActionBar() {
   if (!isVisible) return null;
 
   return (
-    <div 
-      className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-slate/10 shadow-up md:hidden z-50 animate-in slide-in-from-bottom duration-300"
+    <div
+      className="border-slate/10 shadow-up animate-in slide-in-from-bottom fixed right-0 bottom-0 left-0 z-50 border-t bg-white/95 p-4 backdrop-blur-md duration-300 md:hidden"
       role="complementary"
       aria-label="Quick Actions"
     >
@@ -36,7 +36,11 @@ export function MobileActionBar() {
           </Button>
         </a>
         <a href="/contact" className="flex-1">
-          <Button variant="outline" className="w-full font-bold shadow-sm" size="lg">
+          <Button
+            variant="outline"
+            className="w-full font-bold shadow-sm"
+            size="lg"
+          >
             Get Quote
           </Button>
         </a>

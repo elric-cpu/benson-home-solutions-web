@@ -1,15 +1,30 @@
 import type { Metadata } from 'next';
-import { Section, Container, Card, CardContent, RichHero, ResourcesSection } from '@/components/ui';
+import {
+  Section,
+  Container,
+  Card,
+  CardContent,
+  RichHero,
+  ResourcesSection,
+} from '@/components/ui';
 import { HubSpotForm } from '@/components/content/HubSpotForm';
 import { BUSINESS, HUBSPOT, HERO_ASSETS } from '@/lib/constants';
 import { client } from '@/sanity/lib/client';
+
+interface Resource {
+  title: string;
+  url: string;
+  description?: string;
+  isBacklink?: boolean;
+  authority?: string;
+}
 
 interface ContactPageData {
   title?: string;
   heroHeadline?: string;
   heroSubtext?: string;
   heroVideo?: string;
-  resources?: any[];
+  resources?: Resource[];
   metaDescription?: string;
   formHeadline?: string;
   formDescription?: string;
@@ -51,8 +66,11 @@ export default async function ContactPage() {
       <BreadcrumbJsonLd items={breadcrumbs} />
       {/* Hero Section */}
       <RichHero
-        title={page?.heroHeadline || "Ready to Protect Your Property?"}
-        description={page?.heroSubtext || "Whether you need a preventive maintenance program, emergency water damage restoration, or a free property assessment, our licensed team is here to help."}
+        title={page?.heroHeadline || 'Ready to Protect Your Property?'}
+        description={
+          page?.heroSubtext ||
+          'Whether you need a preventive maintenance program, emergency water damage restoration, or a free property assessment, our licensed team is here to help.'
+        }
         backgroundImage={HERO_ASSETS.about}
         videoBackground={page?.heroVideo}
         badge="Get in Touch"
@@ -61,39 +79,39 @@ export default async function ContactPage() {
       {/* Main Contact Section */}
       <Section spacing="lg">
         <Container>
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="grid items-start gap-12 lg:grid-cols-2">
             {/* Contact Info */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-2xl font-bold text-charcoal mb-6">
+                <h2 className="text-charcoal mb-6 text-2xl font-bold">
                   Contact Information
                 </h2>
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-cream flex items-center justify-center text-oxblood text-xl shrink-0">
+                    <div className="bg-cream text-oxblood flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xl">
                       📞
                     </div>
                     <div>
-                      <h3 className="font-bold text-charcoal">Office Phone</h3>
+                      <h3 className="text-charcoal font-bold">Office Phone</h3>
                       <a
                         href={`tel:${BUSINESS.phone}`}
-                        className="text-lg text-oxblood hover:underline font-semibold"
+                        className="text-oxblood text-lg font-semibold hover:underline"
                       >
                         {BUSINESS.phone}
                       </a>
-                      <p className="text-sm text-slate">Mon–Fri, 8am–5pm</p>
+                      <p className="text-slate text-sm">Mon–Fri, 8am–5pm</p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4 p-4 rounded-xl bg-red-50 border border-red-100">
-                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600 text-xl shrink-0">
+                  <div className="flex items-start gap-4 rounded-xl border border-red-100 bg-red-50 p-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 text-xl text-red-600">
                       🚨
                     </div>
                     <div>
                       <h3 className="font-bold text-red-900">Emergency Line</h3>
                       <a
                         href={`tel:${BUSINESS.afterhoursPhone}`}
-                        className="text-lg text-red-600 hover:underline font-bold"
+                        className="text-lg font-bold text-red-600 hover:underline"
                       >
                         {BUSINESS.afterhoursPhone}
                       </a>
@@ -104,14 +122,14 @@ export default async function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-cream flex items-center justify-center text-oxblood text-xl shrink-0">
+                    <div className="bg-cream text-oxblood flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xl">
                       ✉️
                     </div>
                     <div>
-                      <h3 className="font-bold text-charcoal">Email Address</h3>
+                      <h3 className="text-charcoal font-bold">Email Address</h3>
                       <a
                         href={`mailto:${BUSINESS.email}`}
-                        className="text-lg text-oxblood hover:underline"
+                        className="text-oxblood text-lg hover:underline"
                       >
                         {BUSINESS.email}
                       </a>
@@ -121,26 +139,35 @@ export default async function ContactPage() {
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold text-charcoal mb-6">
+                <h2 className="text-charcoal mb-6 text-2xl font-bold">
                   Credentials
                 </h2>
                 <Card variant="outlined" className="bg-surface">
                   <CardContent className="p-6">
                     <div className="space-y-4">
                       <div className="flex items-center gap-3">
-                        <span className="text-oxblood font-bold text-xl">✓</span>
+                        <span className="text-oxblood text-xl font-bold">
+                          ✓
+                        </span>
                         <p className="text-slate font-medium">
-                          <strong>Oregon CCB #{BUSINESS.license.replace('CCB #', '')}</strong> — Licensed, Bonded, & Insured
+                          <strong>
+                            Oregon CCB #{BUSINESS.license.replace('CCB #', '')}
+                          </strong>{' '}
+                          — Licensed, Bonded, & Insured
                         </p>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-oxblood font-bold text-xl">✓</span>
+                        <span className="text-oxblood text-xl font-bold">
+                          ✓
+                        </span>
                         <p className="text-slate font-medium">
                           IICRC Certified Water Damage Restoration
                         </p>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-oxblood font-bold text-xl">✓</span>
+                        <span className="text-oxblood text-xl font-bold">
+                          ✓
+                        </span>
                         <p className="text-slate font-medium">
                           EPA Lead-Safe Certified Firm
                         </p>
@@ -152,14 +179,15 @@ export default async function ContactPage() {
             </div>
 
             {/* Form */}
-            <div className="bg-white rounded-2xl shadow-elevated p-6 md:p-8 border border-slate/10">
-              <h2 className="text-2xl font-bold text-charcoal mb-2">
-                {page?.formHeadline || "Send Us a Message"}
+            <div className="shadow-elevated border-slate/10 rounded-2xl border bg-white p-6 md:p-8">
+              <h2 className="text-charcoal mb-2 text-2xl font-bold">
+                {page?.formHeadline || 'Send Us a Message'}
               </h2>
               <p className="text-slate mb-8">
-                {page?.formDescription || "Fill out the form below and we'll get back to you within one business day."}
+                {page?.formDescription ||
+                  "Fill out the form below and we'll get back to you within one business day."}
               </p>
-              <HubSpotForm 
+              <HubSpotForm
                 portalId={HUBSPOT.portalId}
                 formId={HUBSPOT.contactFormId}
               />

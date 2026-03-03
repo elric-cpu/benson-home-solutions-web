@@ -1,10 +1,10 @@
-name: "DB Setup — Drizzle Push to Neon"
+name: 'DB Setup — Drizzle Push to Neon'
 
 on:
   workflow_dispatch:
     inputs:
       action:
-        description: "Database action to perform"
+        description: 'Database action to perform'
         required: true
         type: choice
         options:
@@ -22,7 +22,7 @@ env:
 
 jobs:
   db-setup:
-    name: "Drizzle ${{ github.event.inputs.action }}"
+    name: 'Drizzle ${{ github.event.inputs.action }}'
     runs-on: ubuntu-latest
     if: github.event.inputs.confirm == 'yes'
     environment: production
@@ -36,7 +36,7 @@ jobs:
 
       - run: npm ci
 
-      - name: "Run drizzle-kit ${{ github.event.inputs.action }}"
+      - name: 'Run drizzle-kit ${{ github.event.inputs.action }}'
         run: npx drizzle-kit ${{ github.event.inputs.action }}
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}

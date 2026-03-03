@@ -22,10 +22,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      
+
       - name: Install dependencies
         run: npm install
-        
+
       # TODO: Sprint 2 — remove soft-fail once scaffold pages have real types
       - name: TypeScript check (soft-fail)
         run: npx tsc --noEmit || echo "::warning::TypeScript check failed — soft-fail enabled for Sprint 1 scaffolds"

@@ -33,20 +33,30 @@ export async function POST(request: NextRequest) {
     const rateLimitResult = checkRateLimit(`contact:${ip}`, FORM_RATE_LIMIT);
 
     if (!rateLimitResult.success) {
-      return NextResponse.json({ error: 'Too many submissions. Please try again in a few minutes.' }, { status: 429 });
+      return NextResponse.json(
+        { error: 'Too many submissions. Please try again in a few minutes.' },
+        { status: 429 },
+      );
     }
 
     const body: ContactPayload = await request.json();
-    const resolvedName = body.name || [body.firstName, body.lastName].filter(Boolean).join(' ');
+    const resolvedName =
+      body.name || [body.firstName, body.lastName].filter(Boolean).join(' ');
 
     if (!resolvedName || resolvedName.trim().length === 0) {
       return NextResponse.json({ error: 'Name is required.' }, { status: 400 });
     }
     if (!body.email || !validateEmail(body.email)) {
-      return NextResponse.json({ error: 'A valid email address is required.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'A valid email address is required.' },
+        { status: 400 },
+      );
     }
     if (!body.message || body.message.trim().length < 10) {
-      return NextResponse.json({ error: 'Message must be at least 10 characters.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Message must be at least 10 characters.' },
+        { status: 400 },
+      );
     }
 
     const lead = {
@@ -68,11 +78,11 @@ export async function POST(request: NextRequest) {
       message: lead.message,
       source: 'web',
       serviceInterest: lead.service || undefined,
-    }).catch(err => console.error('[HubSpot Sync Error]', err));
+    }).catch((err) => console.error('[HubSpot Sync Error]', err));
 
     // 2. GA4 Server-side Tracking (Background - non-blocking)
-    trackServerContactSubmit(ip, lead.service || undefined).catch(err =>
-      console.error('[GA4 Sync Error]', err)
+    trackServerContactSubmit(ip, lead.service || undefined).catch((err) =>
+      console.error('[GA4 Sync Error]', err),
     );
 
     // 3. Database Persistence
@@ -87,10 +97,10 @@ export async function POST(request: NextRequest) {
         })
         .onConflictDoUpdate({
           target: clients.email,
-          set: { 
+          set: {
             name: lead.name,
             phone: lead.phone,
-            updatedAt: new Date() 
+            updatedAt: new Date(),
           },
         });
 
@@ -111,13 +121,13 @@ export async function POST(request: NextRequest) {
       try {
         const { sendContactNotification, sendContactConfirmation } =
           await import('@/lib/email/resend');
-        
+
         await Promise.allSettled([
           sendContactNotification(lead),
-          sendContactConfirmation({ 
-            name: lead.name, 
+          sendContactConfirmation({
+            name: lead.name,
             email: lead.email,
-            service: lead.service 
+            service: lead.service,
           }),
         ]);
       } catch (emailError) {
@@ -127,10 +137,14 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Thank you! We received your message and will respond within one business day.',
+      message:
+        'Thank you! We received your message and will respond within one business day.',
     });
   } catch (error) {
     console.error('[Contact] Unexpected error:', error);
-    return NextResponse.json({ error: 'Invalid request. Please try again.' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Invalid request. Please try again.' },
+      { status: 400 },
+    );
   }
 }

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { client } from '@/sanity/lib/client';
+import { client, isConfigured } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
 import {
   Button,
@@ -14,6 +14,14 @@ import {
 import { PortableTextRenderer } from '@/components/content/PortableText';
 import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
 
+interface Resource {
+  title: string;
+  url: string;
+  description?: string;
+  isBacklink?: boolean;
+  authority?: string;
+}
+
 interface AreaPageData {
   _id: string;
   title: string;
@@ -21,9 +29,15 @@ interface AreaPageData {
   city: string;
   county?: string;
   metaDescription?: string;
-  heroImage?: any;
+  heroImage?: {
+    _type: 'image';
+    asset: {
+      _ref: string;
+      _type: 'reference';
+    };
+  };
   heroVideo?: string;
-  resources?: any[];
+  resources?: Resource[];
   localContent?: Record<string, unknown>[];
   servicesOffered?: {
     _id: string;
@@ -68,18 +82,15 @@ function formatSlugToCity(slug: string) {
 }
 
 export async function generateStaticParams() {
-  if (
-    !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
-    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === 'PLACEHOLDER'
-  ) {
+  if (!isConfigured) {
     return [];
   }
 
   try {
     const slugs = await client.fetch<{ slug: { current: string } }[]>(
-      `*[_type == "areaPage" && defined(slug.current)]{ slug }`
+      `*[_type == "areaPage" && defined(slug.current)]{ slug }`,
     );
-    return slugs.map((s) => ({ slug: s.slug.current }));
+    return (slugs || []).map((s) => ({ slug: s.slug.current }));
   } catch (error) {
     console.error('Error fetching area slugs:', error);
     return [];
@@ -139,16 +150,29 @@ export default async function AreaPage({
       {/* Hero */}
       <RichHero
         title={`Professional Property Care in ${city}`}
-        description={area?.metaDescription || `Benson Home Solutions provides comprehensive maintenance, restoration, and emergency mitigation services to homeowners and businesses throughout ${city} and ${county} County.`}
-        backgroundImage={area?.heroImage ? urlForImage(area.heroImage).width(1600).url() : HERO_ASSETS.maintenance}
+        description={
+          area?.metaDescription ||
+          `Benson Home Solutions provides comprehensive maintenance, restoration, and emergency mitigation services to homeowners and businesses throughout ${city} and ${county} County.`
+        }
+        backgroundImage={
+          area?.heroImage
+            ? urlForImage(area.heroImage).width(1600).url()
+            : HERO_ASSETS.maintenance
+        }
         videoBackground={area?.heroVideo}
         badge={`Service Area: ${city}, Oregon`}
       >
         <Link href="/contact">
-          <Button size="lg" variant="secondary">Get a Free {city} Estimate</Button>
+          <Button size="lg" variant="secondary">
+            Get a Free {city} Estimate
+          </Button>
         </Link>
         <a href={`tel:${BUSINESS.phone}`}>
-          <Button variant="outline" size="lg" className="bg-white/10 text-cream border-cream/20 hover:bg-cream hover:text-oxblood">
+          <Button
+            variant="outline"
+            size="lg"
+            className="text-cream border-cream/20 hover:bg-cream hover:text-oxblood bg-white/10"
+          >
             Call {BUSINESS.phone}
           </Button>
         </a>
@@ -161,7 +185,7 @@ export default async function AreaPage({
             <PortableTextRenderer value={area.localContent} />
           ) : (
             <div className="prose prose-lg text-slate max-w-none">
-              <h2 className="text-2xl md:text-3xl font-bold text-charcoal mb-6">
+              <h2 className="text-charcoal mb-6 text-2xl font-bold md:text-3xl">
                 Why {city} Properties Trust Benson Home Solutions
               </h2>
               <p>
@@ -185,13 +209,15 @@ export default async function AreaPage({
       {/* Services Offered */}
       <Section variant="cream" spacing="md">
         <Container>
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-3xl font-bold">Services We Provide in {city}</h2>
-            <p className="mt-4 text-slate">
+          <div className="mx-auto mb-10 max-w-2xl text-center">
+            <h2 className="text-3xl font-bold">
+              Services We Provide in {city}
+            </h2>
+            <p className="text-slate mt-4">
               Complete property protection from a single, trusted source.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {(area?.servicesOffered && area.servicesOffered.length > 0
               ? area.servicesOffered
               : [
@@ -203,7 +229,10 @@ export default async function AreaPage({
                     title: 'Water Damage Restoration',
                     slug: { current: 'water-damage' },
                   },
-                  { title: 'Emergency Response', slug: { current: 'emergency' } },
+                  {
+                    title: 'Emergency Response',
+                    slug: { current: 'emergency' },
+                  },
                   {
                     title: 'Kitchen & Bath Remodeling',
                     slug: { current: 'remodeling' },
@@ -215,8 +244,8 @@ export default async function AreaPage({
                 href={`/services/${service.slug.current}`}
               >
                 <Card hover className="h-full">
-                  <CardContent className="p-6 flex items-center justify-between">
-                    <span className="font-bold text-charcoal">
+                  <CardContent className="flex items-center justify-between p-6">
+                    <span className="text-charcoal font-bold">
                       {service.title}
                     </span>
                     <span className="text-oxblood">→</span>
@@ -232,26 +261,28 @@ export default async function AreaPage({
       {area?.testimonials && area.testimonials.length > 0 && (
         <Section spacing="md">
           <Container>
-            <h2 className="text-3xl font-bold text-center mb-10">
+            <h2 className="mb-10 text-center text-3xl font-bold">
               What Your Neighbors in {city} Are Saying
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               {area.testimonials.map((t) => (
                 <Card key={t._id} variant="elevated">
                   <CardContent className="p-6">
-                    <div className="flex text-amber-400 mb-4">
+                    <div className="mb-4 flex text-amber-400">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <span key={i}>{i < t.rating ? '★' : '☆'}</span>
                       ))}
                     </div>
-                    <blockquote className="text-slate italic mb-4">
+                    <blockquote className="text-slate mb-4 italic">
                       &quot;{t.quote}&quot;
                     </blockquote>
-                    <div className="font-bold text-charcoal">
+                    <div className="text-charcoal font-bold">
                       — {t.clientName}
                     </div>
                     {t.service && (
-                      <div className="text-sm text-oxblood">{t.service.title}</div>
+                      <div className="text-oxblood text-sm">
+                        {t.service.title}
+                      </div>
                     )}
                   </CardContent>
                 </Card>
@@ -265,16 +296,20 @@ export default async function AreaPage({
       <Section variant="oxblood" spacing="md">
         <Container size="narrow">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-cream">
+            <h2 className="text-cream text-3xl font-bold">
               Active Emergency in {city}?
             </h2>
-            <p className="mt-4 text-cream/80 text-lg">
+            <p className="text-cream/80 mt-4 text-lg">
               Water damage, storm damage, or urgent board-ups — we are on-site
               within 60 minutes in the Mid-Willamette Valley.
             </p>
             <div className="mt-8">
               <a href={`tel:${BUSINESS.afterhoursPhone}`}>
-                <Button variant="emergency" size="lg" className="w-full sm:w-auto">
+                <Button
+                  variant="emergency"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                >
                   Call Now: {BUSINESS.afterhoursPhone}
                 </Button>
               </a>
@@ -287,7 +322,7 @@ export default async function AreaPage({
       {area?.nearbyAreas && area.nearbyAreas.length > 0 && (
         <Section spacing="sm" variant="cream">
           <Container>
-            <p className="text-sm font-bold text-slate uppercase tracking-wider text-center mb-4">
+            <p className="text-slate mb-4 text-center text-sm font-bold tracking-wider uppercase">
               Also Serving Nearby Communities
             </p>
             <div className="flex flex-wrap justify-center gap-4">

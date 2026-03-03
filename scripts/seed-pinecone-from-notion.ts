@@ -1,6 +1,6 @@
 /**
  * Seed Pinecone from Notion Database
- * 
+ *
  * Fetches data from the Notion Knowledge/SOP database and upserts it into Pinecone.
  * Run via: npx tsx scripts/seed-pinecone-from-notion.ts
  */
@@ -16,7 +16,8 @@ import { upsertRecord } from '../src/lib/ai/vector-service';
 
 async function seed() {
   const apiKey = process.env.NOTION_API_KEY;
-  const databaseId = process.env.NOTION_DB_KNOWLEDGE || '310265d247898091b645d3cde2a8e051';
+  const databaseId =
+    process.env.NOTION_DB_KNOWLEDGE || '310265d247898091b645d3cde2a8e051';
 
   if (!apiKey) {
     console.error('❌ NOTION_API_KEY is not defined in .env.local');
@@ -37,8 +38,10 @@ async function seed() {
     });
 
     // Filter results to only those belonging to the specific database
-    const results = response.results.filter((page: any) => 
-      page.parent?.database_id?.replace(/-/g, '') === databaseId.replace(/-/g, '')
+    const results = response.results.filter(
+      (page: any) =>
+        page.parent?.database_id?.replace(/-/g, '') ===
+        databaseId.replace(/-/g, ''),
     );
 
     console.log(`✅ Found ${results.length} relevant pages in Notion.`);
@@ -47,7 +50,7 @@ async function seed() {
       if (!('properties' in page)) continue;
 
       const props = page.properties as any;
-      
+
       // Helper to extract plain text from rich_text/title arrays
       const extractPlainText = (prop: any) => {
         const arr = prop?.rich_text || prop?.title;
@@ -56,20 +59,29 @@ async function seed() {
       };
 
       // Extract Title
-      const titleProp = Object.values(props).find((p: any) => p.type === 'title') as any;
+      const titleProp = Object.values(props).find(
+        (p: any) => p.type === 'title',
+      ) as any;
       const title = extractPlainText(titleProp) || 'Untitled';
 
       // Extract Content (Check for common property names)
-      const contentProp = props.Content || props.Description || props.Notes || 
-                          Object.values(props).find((p: any) => p.type === 'rich_text') as any;
+      const contentProp =
+        props.Content ||
+        props.Description ||
+        props.Notes ||
+        (Object.values(props).find((p: any) => p.type === 'rich_text') as any);
       const content = extractPlainText(contentProp);
 
       // Extract Category
-      const categoryProp = props.Category || Object.values(props).find((p: any) => p.type === 'select') as any;
+      const categoryProp =
+        props.Category ||
+        (Object.values(props).find((p: any) => p.type === 'select') as any);
       const category = categoryProp?.select?.name || 'General';
 
       if (!content && !title) {
-        console.warn(`⚠️ Skipping page ${page.id} - No title or content found.`);
+        console.warn(
+          `⚠️ Skipping page ${page.id} - No title or content found.`,
+        );
         continue;
       }
 
