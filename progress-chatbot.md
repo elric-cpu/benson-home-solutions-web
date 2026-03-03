@@ -20,3 +20,6 @@
 | 13        | Performance Benchmarking (< 3s response) | ✅ Done | Edge-compatible streaming implemented |
 | 14        | Final QA & Bug Fixing | ✅ Done | Inline SVGs used to avoid extra dependencies |
 | 15        | Reflection & Cleanup | ✅ Done | RAG architecture complete and widget deployed |
+
+## Note:
+- **Agreement Recommendation API:** Refactored to use `generateObject` with Zod schema for 100% reliable structured output.

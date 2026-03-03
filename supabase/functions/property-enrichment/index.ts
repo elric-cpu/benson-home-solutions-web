@@ -65,11 +65,15 @@ serve(async (req) => {
 
       // Tier 2: US Census (Federal Standard)
       if (!geocodeResult) {
-        const censusUrl = `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${encodeURIComponent(address)}&benchmark=Public_AR_Current&format=json`;
+        const censusUrl = `https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=${encodeURIComponent(address)}&benchmark=Public_AR_Current&vintage=Current_Current&layers=8,10,12&format=json`;
         const res = await fetch(censusUrl);
         const data = await res.json();
         if (data.result?.addressMatches?.[0]) {
           const match = data.result.addressMatches[0];
+          // Extract FIPS from geographies (State code + County code)
+          const countyGeog = data.result.addressMatches[0].geographies?.Counties?.[0];
+          const fips = countyGeog ? `${countyGeog.STATE}${countyGeog.COUNTY}` : null;
+          
           geocodeResult = {
             properties: {
               formatted: match.matchedAddress,
@@ -77,6 +81,7 @@ serve(async (req) => {
               state: match.addressComponents.state,
               postcode: match.addressComponents.zip,
               county: match.addressComponents.county,
+              county_code: fips,
               rank: { confidence: 0.8 },
             },
             geometry: {
@@ -130,9 +135,11 @@ serve(async (req) => {
     const lon = geometry.coordinates[0];
 
     // 3. Data Enrichment (Parallel)
+    const fipsCode = p.county_code || p.postcode; // Use FIPS or ZIP as fallback
+
     const [disasterData, hudData, floodZone] = await Promise.all([
       fetchDisasterHistory(p.postcode || ''),
-      fetchHudEnrichment(p.postcode || '', p.county || ''),
+      fetchHudEnrichment(fipsCode, p.state || 'OR'),
       fetchOregonFloodZone(lat, lon, p.state || ''),
     ]);
 
@@ -212,9 +219,48 @@ async function fetchDisasterHistory(zip: string) {
   }
 }
 
-async function fetchHudEnrichment(_zip: string, _county: string) {
+async function fetchHudEnrichment(fips: string, _state: string) {
   if (!HUD_API_TOKEN) return { fmr: 1450, il: 65000 };
-  return { fmr: 1450, il: 65000 };
+
+  try {
+    const year = new Date().getFullYear();
+    // Default values if API fails
+    let fmr = 1450;
+    let il = 65000;
+
+    // Fetch FMR (Fair Market Rent)
+    const fmrRes = await fetch(
+      `https://www.huduser.gov/hudapi/public/fmr/data/${fips}?year=${year}`,
+      {
+        headers: { Authorization: `Bearer ${HUD_API_TOKEN}` },
+      },
+    );
+
+    if (fmrRes.ok) {
+      const fmrData = await fmrRes.json();
+      // Use 2BR rent as the standard benchmark
+      fmr = fmrData.data?.basicdata?.fmr_2 || fmr;
+    }
+
+    // Fetch IL (Income Limits)
+    const ilRes = await fetch(
+      `https://www.huduser.gov/hudapi/public/il/data/${fips}?year=${year}`,
+      {
+        headers: { Authorization: `Bearer ${HUD_API_TOKEN}` },
+      },
+    );
+
+    if (ilRes.ok) {
+      const ilData = await ilRes.json();
+      // Use Median Family Income as the area income limit benchmark
+      il = ilData.data?.basicdata?.median_income || il;
+    }
+
+    return { fmr, il };
+  } catch (err) {
+    console.error('[HUD Enrichment] Failed:', err);
+    return { fmr: 1450, il: 65000 };
+  }
 }
 
 async function fetchOregonFloodZone(lat: number, lon: number, state: string) {
