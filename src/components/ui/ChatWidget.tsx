@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
-import { DefaultChatTransport, type UIMessage, type TextUIPart, type SourceUrlUIPart } from 'ai';
 import { Card } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
@@ -12,50 +11,36 @@ interface ChatWidgetProps {
 
 export function ChatWidget({ initialWelcomeMessage }: ChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   
-  // Set Gus's fallback greeting just in case the prop fails to pass
+  // Set Gus's fallback greeting
   const fallbackGreeting = "Every second you spend looking at this chat is a second your house is getting closer to a condemned sign. Give me the dimensions, the damage, and the deadline. Now.";
 
-  const { messages, sendMessage, status } =
-    useChat<UIMessage>({
-      transport: new DefaultChatTransport({ api: '/api/chat' }),
-      messages: [
-        {
-          id: 'welcome',
-          role: 'assistant',
-          parts: [{ type: 'text', text: initialWelcomeMessage || fallbackGreeting }],
-        },
-      ],
-    });
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+    api: '/api/chat',
+    initialMessages: [
+      {
+        id: 'welcome',
+        role: 'assistant',
+        content: initialWelcomeMessage || fallbackGreeting,
+      },
+    ],
+  });
 
-  const isLoading = status === 'streaming' || status === 'submitted';
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
-    sendMessage({ text: input });
-    setInput('');
-  };
-
-  // Extract sources from message parts
-  const getSourcesForMessage = (m: UIMessage) => {
-    return m.parts
-      .filter((p): p is SourceUrlUIPart => p.type === 'source-url')
-      .map(p => ({ title: p.title || p.url, url: p.url }));
-  };
-
-  // Auto-scroll to bottom on new messages
+  // Client-side only state to avoid hydration mismatch
   useEffect(() => {
-    if (scrollRef.current) {
+    setMounted(true);
+  }, []);
+
+  // Auto-scroll to bottom
+  useEffect(() => {
+    if (scrollRef.current && isOpen) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isOpen]);
+
+  if (!mounted) return null;
 
   return (
     <div className="fixed right-6 bottom-6 z-[100] flex flex-col items-end">
@@ -90,62 +75,21 @@ export function ChatWidget({ initialWelcomeMessage }: ChatWidgetProps) {
             ref={scrollRef}
             className="bg-cream/30 flex-1 space-y-4 overflow-y-auto p-4"
           >
-            {messages.length === 0 && (
-              <div className="text-slate py-10 text-center text-sm italic opacity-60">
-                Ask me about our maintenance plans, emergency restoration
-                process, or company SOPs.
-              </div>
-            )}
-            
-            {messages.map((m) => {
-              const content = m.parts
-                .filter((p): p is TextUIPart => p.type === 'text')
-                .map(p => p.text)
-                .join('');
-              
-              const sources = getSourcesForMessage(m);
-
-              return (
-                <div
-                  key={m.id}
-                  className={cn(
-                    'flex max-w-[85%] flex-col rounded-2xl p-3 text-sm shadow-sm',
-                    m.role === 'user'
-                      ? 'bg-oxblood ml-auto rounded-tr-none text-white'
-                      : 'border-slate/10 text-charcoal mr-auto rounded-tl-none border bg-white',
-                  )}
-                >
-                  <div className="leading-relaxed whitespace-pre-wrap">
-                    {content}
-                  </div>
-
-                  {sources && sources.length > 0 && (
-                    <div className="border-slate/5 mt-3 border-t pt-2">
-                      <p className="text-slate/40 mb-1 text-[10px] font-bold tracking-wider uppercase">
-                        Sources
-                      </p>
-                      <div className="flex flex-wrap gap-1">
-                        {sources.slice(0, 3).map((source, si) => (
-                          <a
-                            key={si}
-                            href={
-                              source.url ||
-                              'https://www.notion.so/Benson-Home-Solutions-Operations-Manual-313265d2478980069a7ad7b0da792c77'
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-slate/5 hover:bg-oxblood/5 text-oxblood border-oxblood/10 max-w-[120px] truncate rounded border px-1.5 py-0.5 text-[10px] transition-colors"
-                            title={source.title}
-                          >
-                            {source.title || 'Manual'}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+            {messages.map((m) => (
+              <div
+                key={m.id}
+                className={cn(
+                  'flex max-w-[85%] flex-col rounded-2xl p-3 text-sm shadow-sm',
+                  m.role === 'user'
+                    ? 'bg-oxblood ml-auto rounded-tr-none text-white'
+                    : 'border-slate/10 text-charcoal mr-auto rounded-tl-none border bg-white',
+                )}
+              >
+                <div className="leading-relaxed whitespace-pre-wrap">
+                  {m.content}
                 </div>
-              );
-            })}
+              </div>
+            ))}
             
             {isLoading && (
               <div className="border-slate/10 text-charcoal mr-auto rounded-2xl rounded-tl-none border bg-white p-3 shadow-sm">
