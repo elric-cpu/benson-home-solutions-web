@@ -29,12 +29,19 @@ test.describe('Property Enrichment Webhook API', () => {
     expect(response.status()).toBe(400);
   });
 
-  test('should accept a valid Oregon address', async ({ request }) => {
-    // Note: This will likely fail with 404 until we implement the route
+  test('should accept a valid Oregon address and return enriched data', async ({ request }) => {
     const response = await request.post(ENDPOINT, {
       headers: { 'X-BHS-Webhook-Secret': 'test-secret' },
       data: { address: '123 Main St, Albany, OR 97321' }
     });
+    
     expect(response.status()).toBe(200);
+    const body = await response.json();
+    
+    expect(body.status).toBe('success');
+    expect(body.data.city).toBe('Albany');
+    expect(body.data.floodZone).toBeDefined();
+    expect(body.data.disasterHistory).toBeDefined();
+    expect(body.data.dataSources.geocode).toBeDefined();
   });
 });

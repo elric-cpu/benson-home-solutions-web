@@ -4,6 +4,9 @@ import { db } from '@/lib/db';
 import { properties } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { geocodeAddress } from '@/lib/services/geocoding';
+import { fetchFloodZone, fetchDisasterHistory } from '@/lib/services/fema';
+import { fetchHudData } from '@/lib/services/hud';
+import { getEnergyBenchmark } from '@/lib/services/energy';
 
 const WEBHOOK_SECRET = process.env.BHS_WEBHOOK_SECRET || 'test-secret';
 
@@ -28,7 +31,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid address format' }, { status: 400 });
     }
 
-    // Reject if address doesn't contain at least one digit and one alphabetic character
     const hasDigit = /\d/.test(address);
     const hasAlpha = /[a-zA-Z]/.test(address);
     if (!hasDigit || !hasAlpha) {
@@ -41,7 +43,6 @@ export async function POST(req: NextRequest) {
     
     if (hasDb) {
       try {
-        // Check if record exists and is < 90 days old
         const [existingProperty] = await db
           .select()
           .from(properties)
@@ -60,13 +61,33 @@ export async function POST(req: NextRequest) {
           }
         }
       } catch (dbError) {
-        console.warn('[Property Enrichment] DB lookup failed, proceeding without cache:', dbError);
+        console.warn('[Property Enrichment] DB lookup failed:', dbError);
       }
     }
 
-    // 5. Geocoding & Validation
+    // 5. Sequential Step: Geocoding
     const geocode = await geocodeAddress(address);
-    
+    const isManual = geocode.source === 'manual_required';
+
+    // 6. Parallel Enrichment (if geocoded)
+    let floodZone = null;
+    let disasterHistory: any[] = [];
+    let hudData = null;
+
+    if (!isManual) {
+      const [fz, dh, hud] = await Promise.all([
+        fetchFloodZone(geocode.lat, geocode.lng),
+        fetchDisasterHistory(geocode.zip),
+        fetchHudData(geocode.zip)
+      ]);
+      floodZone = fz;
+      disasterHistory = dh;
+      hudData = hud;
+    }
+
+    // 7. Energy Benchmarks (Default to 1978 median if unknown)
+    const energy = getEnergyBenchmark(1978, geocode.zip?.startsWith('977') ? '6' : '4C');
+
     const enrichedData = {
       addressHash,
       rawAddress: address,
@@ -77,13 +98,32 @@ export async function POST(req: NextRequest) {
       county: geocode.county,
       latitude: geocode.lat,
       longitude: geocode.lng,
-      geocodeStatus: geocode.source === 'manual_required' ? 'manual_required' : 'success',
-      dataCompleteness: geocode.source === 'manual_required' ? 10 : 30, // 30% if geocoded
+      geocodeStatus: isManual ? 'manual_required' : 'success',
+      floodZone: floodZone?.zone || 'Unknown',
+      floodZoneSource: floodZone?.source || 'N/A',
+      disasterHistory,
+      fairMarketRent: hudData?.fairMarketRent ? String(hudData.fairMarketRent) : null,
+      areaIncomeLimit: hudData?.areaIncomeLimit ? String(hudData.areaIncomeLimit) : null,
+      energyBenchmarks: energy,
+      dataCompleteness: isManual ? 10 : (hudData ? 100 : 70), 
       enrichedAt: new Date(),
       dataSources: {
         geocode: {
           source: geocode.source,
           confidence: geocode.confidence,
+          fetchedAt: new Date().toISOString()
+        },
+        floodZone: floodZone ? {
+          value: floodZone.zone,
+          source: floodZone.source,
+          fetchedAt: floodZone.fetchedAt
+        } : null,
+        hud: hudData ? {
+          source: hudData.source,
+          fetchedAt: hudData.fetchedAt
+        } : null,
+        energy: {
+          source: 'DOE ResStock/EIA RECS Model',
           fetchedAt: new Date().toISOString()
         }
       }
@@ -93,7 +133,6 @@ export async function POST(req: NextRequest) {
 
     if (hasDb) {
       try {
-        // Upsert the property record
         const [property] = await db
           .insert(properties)
           .values({
@@ -106,7 +145,13 @@ export async function POST(req: NextRequest) {
             county: enrichedData.county,
             latitude: enrichedData.latitude,
             longitude: enrichedData.longitude,
-            geocodeStatus: enrichedData.geocodeStatus as 'success' | 'partial' | 'pending' | 'manual_required',
+            geocodeStatus: enrichedData.geocodeStatus as any,
+            floodZone: enrichedData.floodZone,
+            floodZoneSource: enrichedData.floodZoneSource,
+            disasterHistory: enrichedData.disasterHistory,
+            fairMarketRent: enrichedData.fairMarketRent,
+            areaIncomeLimit: enrichedData.areaIncomeLimit,
+            energyBenchmarks: enrichedData.energyBenchmarks,
             dataCompleteness: enrichedData.dataCompleteness,
             enrichedAt: enrichedData.enrichedAt,
             dataSources: enrichedData.dataSources,
@@ -116,13 +161,15 @@ export async function POST(req: NextRequest) {
             set: {
               updatedAt: new Date(),
               enrichedAt: enrichedData.enrichedAt,
-              // Update other fields only if they are better/newer? For now, overwrite.
               standardizedAddress: enrichedData.standardizedAddress,
               city: enrichedData.city,
               state: enrichedData.state,
               zip: enrichedData.zip,
               latitude: enrichedData.latitude,
               longitude: enrichedData.longitude,
+              floodZone: enrichedData.floodZone,
+              disasterHistory: enrichedData.disasterHistory,
+              energyBenchmarks: enrichedData.energyBenchmarks,
               dataCompleteness: enrichedData.dataCompleteness,
               dataSources: enrichedData.dataSources,
             }
@@ -131,7 +178,7 @@ export async function POST(req: NextRequest) {
         
         resultData = property as any;
       } catch (dbError) {
-        console.warn('[Property Enrichment] DB upsert failed, returning transient result:', dbError);
+        console.warn('[Property Enrichment] DB upsert failed:', dbError);
       }
     }
 
