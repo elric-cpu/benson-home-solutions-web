@@ -14,6 +14,7 @@ import { EmergencyActionBar } from '@/components/layout';
 import { PortableTextRenderer } from '@/components/content/PortableText';
 import Link from 'next/link';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface EmergencyPageData {
   title?: string;
   metaDescription?: string;
@@ -27,6 +28,7 @@ interface EmergencyPageData {
   emergencyServices?: any;
   content?: any;
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 const emergencyQuery = `*[_type == "emergencyPage"][0]{
   title,

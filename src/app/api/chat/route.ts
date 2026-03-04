@@ -37,6 +37,8 @@ export async function POST(req: Request) {
       system: systemBase.replace('{context}', context),
       messages,
       tools, 
+      // @ts-expect-error - maxSteps exists in runtime but type definition is missing in this version
+      maxSteps: 5, 
       temperature: 1.0, 
     });
 
