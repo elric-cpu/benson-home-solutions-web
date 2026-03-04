@@ -1,48 +1,53 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useChat } from 'ai/react';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport, type UIMessage, type TextUIPart, type SourceUrlUIPart } from 'ai';
 import { Card } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
-interface ChatSource {
-  title: string;
-  url?: string;
-}
-
-interface ChatData {
-  sources?: ChatSource[];
-}
-
-export function ChatWidget({
-  initialWelcomeMessage,
-}: {
+interface ChatWidgetProps {
   initialWelcomeMessage?: string;
-}) {
+}
+
+export function ChatWidget({ initialWelcomeMessage }: ChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { messages, input, handleInputChange, handleSubmit, isLoading, data } =
-    useChat({
-      api: '/api/chat',
-      initialMessages: [
+  
+  // Set Gus's fallback greeting just in case the prop fails to pass
+  const fallbackGreeting = "Every second you spend looking at this chat is a second your house is getting closer to a condemned sign. Give me the dimensions, the damage, and the deadline. Now.";
+
+  const { messages, sendMessage, status } =
+    useChat<UIMessage>({
+      transport: new DefaultChatTransport({ api: '/api/chat' }),
+      messages: [
         {
           id: 'welcome',
           role: 'assistant',
-          content:
-            initialWelcomeMessage ||
-            'I am Silas Vane, Senior Principal Architect of Logic & Structural Integrity. I have provided this interface for those who have apparently forgotten how to consult a search engine or the 2026 IRC. What is your data-specific inquiry, and how many seconds do you intend to waste?',
+          parts: [{ type: 'text', text: initialWelcomeMessage || fallbackGreeting }],
         },
       ],
     });
 
-  // Extract sources from data stream
-  const getSourcesForMessage = (_messageIndex: number) => {
-    if (!data || data.length === 0) return null;
-    // For Vercel AI SDK data streaming, find the entry containing sources
-    const sourcesData = data.find(
-      (d) => d && typeof d === 'object' && (d as ChatData).sources,
-    ) as ChatData | undefined;
-    return sourcesData ? sourcesData.sources : null;
+  const isLoading = status === 'streaming' || status === 'submitted';
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+    sendMessage({ text: input });
+    setInput('');
+  };
+
+  // Extract sources from message parts
+  const getSourcesForMessage = (m: UIMessage) => {
+    return m.parts
+      .filter((p): p is SourceUrlUIPart => p.type === 'source-url')
+      .map(p => ({ title: p.title || p.url, url: p.url }));
   };
 
   // Auto-scroll to bottom on new messages
@@ -50,14 +55,15 @@ export function ChatWidget({
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isOpen]);
 
   return (
     <div className="fixed right-6 bottom-6 z-[100] flex flex-col items-end">
       {/* Chat Window */}
       {isOpen && (
         <Card className="shadow-elevated border-oxblood/10 mb-4 flex h-[500px] w-[350px] flex-col overflow-hidden bg-white sm:w-[400px]">
-          // Update the Header block:
+          
+          {/* Header */}
           <div className="bg-oxblood flex items-center justify-between p-4 text-white">
             <div>
               <h3 className="text-sm font-bold tracking-widest uppercase">
@@ -67,12 +73,18 @@ export function ChatWidget({
                 Senior Diagnostics Specialist
               </p>
             </div>
-            {/* ... rest of header ... */}
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="text-white/70 hover:text-white transition-colors"
+              aria-label="Close chat"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
           </div>
-          // Update the footer text block below the form:
-          <p className="text-slate/40 mt-2 text-center text-[9px] font-bold tracking-widest uppercase">
-            Logic Core: Gus (Benson Home Solutions)
-          </p>
+
           {/* Messages */}
           <div
             ref={scrollRef}
@@ -84,9 +96,14 @@ export function ChatWidget({
                 process, or company SOPs.
               </div>
             )}
-            {messages.map((m, i) => {
-              const sources =
-                m.role === 'assistant' ? getSourcesForMessage(i) : null;
+            
+            {messages.map((m) => {
+              const content = m.parts
+                .filter((p): p is TextUIPart => p.type === 'text')
+                .map(p => p.text)
+                .join('');
+              
+              const sources = getSourcesForMessage(m);
 
               return (
                 <div
@@ -99,7 +116,7 @@ export function ChatWidget({
                   )}
                 >
                   <div className="leading-relaxed whitespace-pre-wrap">
-                    {m.content}
+                    {content}
                   </div>
 
                   {sources && sources.length > 0 && (
@@ -129,6 +146,7 @@ export function ChatWidget({
                 </div>
               );
             })}
+            
             {isLoading && (
               <div className="border-slate/10 text-charcoal mr-auto rounded-2xl rounded-tl-none border bg-white p-3 shadow-sm">
                 <div className="flex gap-1 py-1">
@@ -139,6 +157,7 @@ export function ChatWidget({
               </div>
             )}
           </div>
+
           {/* Input */}
           <form
             onSubmit={handleSubmit}
@@ -148,7 +167,8 @@ export function ChatWidget({
               <input
                 value={input}
                 onChange={handleInputChange}
-                placeholder="Inquire with precision..."
+                placeholder="Describe the failure..."
+                disabled={isLoading}
                 className="focus:ring-oxblood/50 border-slate/20 flex-1 rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
               />
               <button
@@ -172,8 +192,8 @@ export function ChatWidget({
                 </svg>
               </button>
             </div>
-            <p className="text-slate/40 mt-2 text-center text-[9px] font-bold tracking-widest uppercase">
-              Logic Core: Silas Vane (Benson Home Solutions)
+            <p className="text-slate/40 mt-3 text-center text-[9px] font-bold tracking-widest uppercase">
+              Logic Core: Gus (Benson Home Solutions)
             </p>
           </form>
         </Card>

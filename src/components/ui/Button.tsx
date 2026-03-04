@@ -9,7 +9,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     | 'ghost'
     | 'emergency'
     | 'link';
-  size?: 'sm' | 'md' | 'lg' | 'icon';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'icon';
   loading?: boolean;
 }
 
@@ -48,6 +48,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             'h-8 px-3 text-sm': size === 'sm',
             'h-10 px-5 text-base': size === 'md',
             'h-12 px-8 text-lg': size === 'lg',
+            'h-14 px-10 text-xl': size === 'xl',
             'h-10 w-10 p-0': size === 'icon',
           },
           className,
