@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
 
   // --- Next.js 15: Performance & Optimization ---
   experimental: {
@@ -14,9 +15,6 @@ const nextConfig: NextConfig = {
       'tailwind-merge',
     ],
   },
-
-  // Enable Turbopack for development (optional, disabled for build stability)
-  turbopack: {},
 
   // --- Strict Mode: Ensure zero errors/warnings for production builds ---
   typescript: {
