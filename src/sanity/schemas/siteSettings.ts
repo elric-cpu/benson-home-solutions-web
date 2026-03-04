@@ -69,7 +69,7 @@ export const siteSettings = defineType({
           type: 'text',
           rows: 15,
           description:
-            'The primary system instructions for the Gus AI assistant.',
+            'The primary system instructions for the Silas Vane AI assistant. Grounded in 2026 market data.',
         }),
         defineField({
           name: 'chatbotWelcomeMessage',
