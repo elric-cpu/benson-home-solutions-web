@@ -5,7 +5,6 @@ import { eq } from 'drizzle-orm';
 
 /**
  * Define minimal Notion property types to satisfy ESLint and provide safety.
- * These align with the structure required by the Notion API for page creation/updates.
  */
 type NotionUpdateProperties = Record<
   string,

@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from 'next';
+import { Suspense } from 'react';
 import { sourceSans3 } from '@/lib/fonts';
 import { Header, Footer, MobileActionBar } from '@/components/layout';
-import { GoogleAnalytics } from '@/components/analytics/google-analytics';
-import { ChatWidgetWrapper } from '@/components/ui';
+import { DeferredComponents } from '@/components/layout/DeferredComponents';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -81,9 +81,10 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
-        <MobileActionBar />
-        <ChatWidgetWrapper />
-        <GoogleAnalytics />
+        <Suspense fallback={null}>
+          <MobileActionBar />
+        </Suspense>
+        <DeferredComponents />
       </body>
     </html>
   );

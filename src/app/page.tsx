@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 import { client } from '@/sanity/lib/client';
 import { LocalBusinessJsonLd } from '@/components/seo/json-ld';
@@ -32,6 +33,14 @@ interface HomePageData {
     label: string;
     detail: string;
   }[];
+}
+
+function HeroFallback() {
+  return <div className="bg-oxblood min-h-[70vh] animate-pulse" />;
+}
+
+function SectionFallback() {
+  return <div className="h-64 animate-pulse bg-gray-100" />;
 }
 
 const homeQuery = `*[_type == "homePage"][0]{
@@ -109,15 +118,21 @@ export default async function HomePage() {
     <>
       <LocalBusinessJsonLd />
 
-      <HeroSection
-        headline={page?.heroHeadline}
-        description={page?.heroDescription}
-        video={page?.heroVideo}
-      />
+      <Suspense fallback={<HeroFallback />}>
+        <HeroSection
+          headline={page?.heroHeadline}
+          description={page?.heroDescription}
+          video={page?.heroVideo}
+        />
+      </Suspense>
 
-      <ServicesGrid services={services} />
+      <Suspense fallback={<SectionFallback />}>
+        <ServicesGrid services={services} />
+      </Suspense>
 
-      <TrustSignals signals={trustSignals} />
+      <Suspense fallback={<SectionFallback />}>
+        <TrustSignals signals={trustSignals} />
+      </Suspense>
 
       {/* Static Content Section: The Benson Standard */}
       <Section spacing="md">
@@ -165,9 +180,15 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      <AreasServed areas={allAreas} />
+      <Suspense fallback={<SectionFallback />}>
+        <AreasServed areas={allAreas} />
+      </Suspense>
 
-      {page?.resources && <ResourcesSection resources={page.resources} />}
+      {page?.resources && (
+        <Suspense fallback={<SectionFallback />}>
+          <ResourcesSection resources={page.resources} />
+        </Suspense>
+      )}
 
       {/* Emergency CTA */}
       <Section variant="default" spacing="md">

@@ -1,10 +1,7 @@
-'use client';
-
-import { useState } from 'react';
 import Link from 'next/link';
 import { Container } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
-import { MobileNav } from './MobileNav';
+import { MobileNavButton } from './MobileNavButton';
 
 const navigation = [
   { name: 'Services', href: '/services' },
@@ -15,8 +12,6 @@ const navigation = [
 ];
 
 export function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
     <header className="bg-surface/95 border-border sticky top-0 z-50 border-b backdrop-blur-sm">
       <Container>
@@ -31,7 +26,9 @@ export function Header() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-green-600">Live</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-green-600">
+                Live
+              </span>
             </div>
           </Link>
 
@@ -64,44 +61,9 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            type="button"
-            className="text-charcoal p-2 md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
-              {mobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                />
-              )}
-            </svg>
-          </button>
+          <MobileNavButton navigation={navigation} />
         </div>
       </Container>
-
-      {/* Mobile Navigation */}
-      <MobileNav
-        isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-        navigation={navigation}
-      />
     </header>
   );
 }

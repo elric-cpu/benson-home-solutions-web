@@ -96,17 +96,18 @@ function formatSlugToTitle(slug: string) {
 
 export async function generateStaticParams() {
   if (!isConfigured) {
-    return [];
+    return [{ slug: 'maintenance-subscriptions' }];
   }
 
   try {
     const slugs = await client.fetch<{ slug: { current: string } }[]>(
       `*[_type == "servicePage" && defined(slug.current)]{ slug }`,
     );
-    return (slugs || []).map((s) => ({ slug: s.slug.current }));
+    const result = (slugs || []).map((s) => ({ slug: s.slug.current }));
+    return result.length > 0 ? result : [{ slug: 'maintenance-subscriptions' }];
   } catch (error) {
     console.error('Error fetching service slugs:', error);
-    return [];
+    return [{ slug: 'maintenance-subscriptions' }];
   }
 }
 

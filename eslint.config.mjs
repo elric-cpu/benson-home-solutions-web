@@ -48,6 +48,7 @@ const eslintConfig = [
       'node_modules/**',
       'public/**',
       'eslint.config.mjs',
+      'next-env.d.ts',
     ],
   },
 ];

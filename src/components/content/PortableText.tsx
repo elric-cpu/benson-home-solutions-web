@@ -92,7 +92,7 @@ const components: PortableTextComponents = {
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: any;
+  value: any; // Using any here because Sanity fetch returns Record<string, unknown>[] which doesn't perfectly match PortableTextBlock[] but is compatible at runtime
 }
 
 export function PortableTextRenderer({ value }: Props) {

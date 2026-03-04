@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { Container, Section } from '@/components/ui';
 import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
@@ -27,6 +25,8 @@ const footerLinks = {
 };
 
 export function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="border-cream/5 border-t">
       <Section variant="charcoal" className="py-16 md:py-20">
@@ -171,8 +171,7 @@ export function Footer() {
         <Container>
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <p className="text-cream/70 text-xs font-medium">
-              &copy; {new Date().getFullYear()} {BUSINESS.name}. All rights
-              reserved.
+              &copy; {currentYear} {BUSINESS.name}. All rights reserved.
             </p>
             <div className="flex gap-8">
               <Link
@@ -194,5 +193,3 @@ export function Footer() {
     </footer>
   );
 }
-
-// Internal Section component removed in favor of shared UI component
