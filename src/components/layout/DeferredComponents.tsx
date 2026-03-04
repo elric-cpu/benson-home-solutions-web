@@ -1,20 +1,6 @@
-'use client';
-
-import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-
-const ChatWidgetWrapper = dynamic(
-  () => import('@/components/ui').then((mod) => mod.ChatWidgetWrapper),
-  { ssr: false },
-);
-
-const GoogleAnalytics = dynamic(
-  () =>
-    import('@/components/analytics/google-analytics').then(
-      (mod) => mod.GoogleAnalytics,
-    ),
-  { ssr: false },
-);
+import { ChatWidgetWrapper } from '@/components/ui/ChatWidgetWrapper';
+import { GoogleAnalytics } from '@/components/analytics/DeferredAnalytics';
 
 export function DeferredComponents() {
   return (
