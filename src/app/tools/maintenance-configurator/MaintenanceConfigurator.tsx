@@ -34,6 +34,7 @@ export function MaintenanceConfigurator() {
   const [selectedServices, setSelectedServices] = useState<
     Record<string, SelectedService>
   >({});
+  const [showComparison, setShowComparison] = useState(false);
 
   // Mock property data for demo
   const property = useMemo(
@@ -109,6 +110,10 @@ export function MaintenanceConfigurator() {
     0,
   );
   const monthlySubscription = Math.round(totalAnnual / 12);
+
+  // Projection: Deferred maintenance costs are typically 3-5x higher than routine maintenance
+  const deferredMaintenanceAnnual = Math.round(totalAnnual * 3.5);
+  const deferredMaintenanceMonthly = Math.round(deferredMaintenanceAnnual / 12);
 
   const finalizeAgreement = async () => {
     setIsFinalizing(true);
@@ -251,7 +256,25 @@ export function MaintenanceConfigurator() {
             </div>
 
             <div className="sticky top-24">
-              <Card className="bg-oxblood text-cream shadow-elevated overflow-hidden border-none">
+              {/* Comparison Toggle */}
+              <div className="mb-6 flex items-center justify-between rounded-xl bg-slate-100 p-1">
+                <button
+                  onClick={() => setShowComparison(false)}
+                  className={`flex-1 rounded-lg px-4 py-2 text-xs font-bold transition-all ${!showComparison ? 'bg-white text-oxblood shadow-sm' : 'text-slate-500'}`}
+                >
+                  Subscription Plan
+                </button>
+                <button
+                  onClick={() => setShowComparison(true)}
+                  className={`flex-1 rounded-lg px-4 py-2 text-xs font-bold transition-all ${showComparison ? 'bg-white text-red-600 shadow-sm' : 'text-slate-500'}`}
+                >
+                  No Plan (Risk)
+                </button>
+              </div>
+
+              <Card
+                className={`transition-all duration-500 ${showComparison ? 'bg-red-900 border-red-700' : 'bg-oxblood border-none'} text-cream shadow-elevated overflow-hidden`}
+              >
                 <div className="absolute top-0 right-0 p-4 opacity-10">
                   <svg
                     width="120"
@@ -259,25 +282,31 @@ export function MaintenanceConfigurator() {
                     viewBox="0 0 24 24"
                     fill="currentColor"
                   >
-                    <path d="M12 2L1 21h22L12 2zm0 3.45l8.27 14.1H3.73L12 5.45zM11 16h2v2h-2v-2zm0-7h2v5h-2V9z" />
+                    {showComparison ? (
+                      <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+                    ) : (
+                      <path d="M12 2L1 21h22L12 2zm0 3.45l8.27 14.1H3.73L12 5.45zM11 16h2v2h-2v-2zm0-7h2v5h-2V9z" />
+                    )}
                   </svg>
                 </div>
                 <CardContent className="p-8">
                   <h3 className="text-cream mb-6 text-xl font-bold">
-                    Systematic Oversight
+                    {showComparison ? 'Deferred Cost Projection' : 'Systematic Oversight'}
                   </h3>
                   <div className="mb-8 space-y-4">
                     <div className="text-cream/70 flex justify-between text-sm">
-                      <span>Annual Operational Cost</span>
-                      <span>${totalAnnual.toLocaleString()}</span>
+                      <span>{showComparison ? 'Est. Emergency Repairs' : 'Annual Operational Cost'}</span>
+                      <span className={showComparison ? 'text-red-300' : ''}>
+                        ${(showComparison ? deferredMaintenanceAnnual : totalAnnual).toLocaleString()}
+                      </span>
                     </div>
                     <div className="flex items-end justify-between border-t border-white/10 pt-4">
                       <div>
                         <span className="text-cream/50 block text-xs font-bold tracking-wider uppercase">
-                          Subscription
+                          {showComparison ? 'Risk Burden' : 'Subscription'}
                         </span>
-                        <span className="text-4xl font-black">
-                          ${monthlySubscription}
+                        <span className={`text-4xl font-black ${showComparison ? 'text-red-400' : ''}`}>
+                          ${showComparison ? deferredMaintenanceMonthly : monthlySubscription}
                         </span>
                         <span className="text-cream/70 ml-1 text-sm font-medium">
                           /mo
@@ -287,18 +316,30 @@ export function MaintenanceConfigurator() {
                   </div>
 
                   <div className="space-y-3">
-                    <Button
-                      variant="secondary"
-                      size="lg"
-                      className="w-full font-bold"
-                      onClick={finalizeAgreement}
-                      loading={isFinalizing}
-                    >
-                      Initialize Agreement
-                    </Button>
+                    {!showComparison ? (
+                      <Button
+                        variant="secondary"
+                        size="lg"
+                        className="w-full font-bold"
+                        onClick={finalizeAgreement}
+                        loading={isFinalizing}
+                      >
+                        Initialize Agreement
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        className="border-red-400 text-red-400 hover:bg-red-400 hover:text-red-950 w-full font-bold"
+                        onClick={() => setShowComparison(false)}
+                      >
+                        Switch to Preventive Plan
+                      </Button>
+                    )}
                     <p className="text-cream/40 text-center text-[10px] leading-relaxed font-bold tracking-widest uppercase">
-                      24/7 Priority Access • Forensic Photo Logs • Board-Ready
-                      Reports
+                      {showComparison
+                        ? 'Projected 3.5x Cost Escalation • No Warranty'
+                        : '24/7 Priority Access • Forensic Photo Logs • Board-Ready Reports'}
                     </p>
                   </div>
                 </CardContent>
@@ -307,17 +348,28 @@ export function MaintenanceConfigurator() {
               <Card className="border-slate/10 mt-6 bg-slate-50 shadow-sm">
                 <CardContent className="p-6">
                   <h4 className="text-charcoal mb-4 text-[10px] font-bold tracking-widest uppercase">
-                    What is Professional Oversight?
+                    {showComparison ? 'The Cost of "Waiting"' : 'What is Professional Oversight?'}
                   </h4>
                   <ul className="space-y-3">
-                    {[
-                      'Harden the building envelope against rain & ice.',
-                      'Identify deferred maintenance before loss occurs.',
-                      'Maintain a forensic paper trail for insurance.',
-                      'Direct access to trade professionals, no call centers.',
-                    ].map((f) => (
+                    {(showComparison
+                      ? [
+                          'Compounding damage from building envelope failure.',
+                          '2-3x higher labor rates for emergency call-outs.',
+                          'Lack of documentation leads to insurance denial.',
+                          'Shorter asset life for HVAC and roof systems.',
+                        ]
+                      : [
+                          'Harden the building envelope against rain & ice.',
+                          'Identify deferred maintenance before loss occurs.',
+                          'Maintain a forensic paper trail for insurance.',
+                          'Direct access to trade professionals, no call centers.',
+                        ]
+                    ).map((f) => (
                       <li key={f} className="text-slate flex gap-2 text-xs">
-                        <span className="text-oxblood">✓</span> {f}
+                        <span className={showComparison ? 'text-red-600' : 'text-oxblood'}>
+                          {showComparison ? '!' : '✓'}
+                        </span>{' '}
+                        {f}
                       </li>
                     ))}
                   </ul>

@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import { properties } from '@/lib/db/schema';
@@ -14,9 +15,37 @@ import {
 import { MOCK_ZIP_DATA, DEFAULT_BENCHMARK } from '@/lib/calculator-data';
 import Link from 'next/link';
 import { RefineEstimatesForm } from './RefineEstimatesForm';
+import { BUSINESS } from '@/lib/constants';
 
 interface Props {
   params: Promise<{ hash: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { hash } = await params;
+  const [property] = await db.select().from(properties).where(eq(properties.addressHash, hash));
+  
+  if (!property) return { title: 'Report Not Found' };
+
+  // Calculate total for OG image
+  const zipData = MOCK_ZIP_DATA[property.zip || ''] || DEFAULT_BENCHMARK;
+  const energyBenchmarks = property.energyBenchmarks as any;
+  const rawCosts = energyBenchmarks?.costs || zipData.costs;
+  const annualTotal = Object.values(rawCosts).reduce((acc: number, curr: any) => acc + (typeof curr === 'number' ? curr : curr.annual), 0);
+
+  const ogUrl = new URL(`${BUSINESS.url}/api/calculator/og`);
+  ogUrl.searchParams.set('total', annualTotal.toString());
+  ogUrl.searchParams.set('address', property.rawAddress);
+
+  return {
+    title: `True Cost Report: ${property.rawAddress} | Benson Home Solutions`,
+    description: `The estimated annual cost of homeownership for this property is $${annualTotal.toLocaleString()} per year beyond the mortgage.`,
+    openGraph: {
+      title: `True Cost Report: ${property.rawAddress}`,
+      description: `See the hidden costs of homeownership for this address in ${property.city}, ${property.state}.`,
+      images: [{ url: ogUrl.toString(), width: 1200, height: 630 }],
+    }
+  };
 }
 
 async function ReportContent({ hash }: { hash: string }) {
