@@ -4,7 +4,22 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
-  turbopack: {},
+  // --- Next.js 16+: Performance & Optimization ---
+  // cacheComponents: true, // Disabled temporarily due to Sentry crypto incompatibility in canary
+
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react',
+      '@ai-sdk/react',
+      'clsx',
+      'tailwind-merge',
+    ],
+  },
+
+  // Force Webpack for production builds until Sentry + Turbopack is stable
+  webpack: (config) => {
+    return config;
+  },
 
   // --- Strict Mode: Ensure zero errors/warnings for production builds ---
   typescript: {

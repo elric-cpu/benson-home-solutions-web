@@ -1,5 +1,8 @@
 // src/lib/ai/config.ts
 
+import { client } from '@/sanity/lib/client';
+import { getAIConfigQuery } from '@/sanity/lib/queries';
+
 // Fallback prompt in case Sanity CMS fails or hasn't loaded
 export const FALLBACK_SYSTEM_PROMPT = `
 System Prompt: Gus, Senior Diagnostics Specialist
@@ -21,14 +24,20 @@ If the user mentions flooding, 2 AM, emergency, burst pipe, or water damage, DRO
 
 export async function getAIConfig() {
   try {
-    // Attempt to fetch from your Sanity CMS or Database here
-    // For now, we return the fallback if the DB fetch fails
+    const config = await client.fetch(getAIConfigQuery);
+    if (config?.chatbotSystemPrompt) {
+      return {
+        chatbotSystemPrompt: config.chatbotSystemPrompt,
+        chatbotWelcomeMessage: config.chatbotWelcomeMessage || "State the failure clearly or close the window."
+      };
+    }
+    console.warn("AI Config not found in Sanity, using fallback.");
     return {
       chatbotSystemPrompt: FALLBACK_SYSTEM_PROMPT,
-      chatbotWelcomeMessage: "Every second you spend looking at this chat is a second your house is getting closer to a condemned sign. Give me the dimensions, the damage, and the deadline. Now."
+      chatbotWelcomeMessage: "State the failure clearly or close the window."
     };
-  } catch {
-    console.warn("Failed to load AI config from CMS, using fallback.");
+  } catch (error) {
+    console.warn("Failed to load AI config from CMS, using fallback.", error);
     return {
       chatbotSystemPrompt: FALLBACK_SYSTEM_PROMPT,
       chatbotWelcomeMessage: "State the failure clearly or close the window."

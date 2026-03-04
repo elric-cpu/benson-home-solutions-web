@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { Button, RichHero } from '@/components/ui';
 import { HERO_ASSETS, HERO_VIDEOS } from '@/lib/constants';

@@ -83,17 +83,18 @@ function formatSlugToCity(slug: string) {
 
 export async function generateStaticParams() {
   if (!isConfigured) {
-    return [];
+    return [{ slug: 'albany-or' }];
   }
 
   try {
     const slugs = await client.fetch<{ slug: { current: string } }[]>(
       `*[_type == "areaPage" && defined(slug.current)]{ slug }`,
     );
-    return (slugs || []).map((s) => ({ slug: s.slug.current }));
+    const result = (slugs || []).map((s) => ({ slug: s.slug.current }));
+    return result.length > 0 ? result : [{ slug: 'albany-or' }];
   } catch (error) {
     console.error('Error fetching area slugs:', error);
-    return [];
+    return [{ slug: 'albany-or' }];
   }
 }
 

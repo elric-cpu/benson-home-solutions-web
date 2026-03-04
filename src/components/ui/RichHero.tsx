@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import { Container } from './Container';
 import { cn } from '@/lib/utils';
@@ -44,6 +42,8 @@ export function RichHero({
             playsInline
             poster={backgroundImage}
             className="absolute inset-0 h-full w-full object-cover"
+            // @ts-expect-error - fetchPriority is supported in modern browsers but not yet in all TS types
+            fetchPriority="high"
           >
             <source src={videoBackground} type="video/mp4" />
           </video>

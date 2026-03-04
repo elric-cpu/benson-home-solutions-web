@@ -50,3 +50,6 @@ next-env.d.ts
 
 .gemini/
 gha-creds-*.json
+
+# HubSpot config file
+hubspot.config.yml
