@@ -4,10 +4,9 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
-  // --- Next.js 16+: Performance & Optimization ---
-  // cacheComponents: true, // Disabled temporarily due to Sentry crypto incompatibility in canary
-
+  // --- Next.js 15: Performance & Optimization ---
   experimental: {
+    // ppr: 'incremental', // PPR requires next@canary even in v15
     optimizePackageImports: [
       'lucide-react',
       '@ai-sdk/react',
@@ -16,92 +15,44 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Force Webpack for production builds until Sentry + Turbopack is stable
-  webpack: (config) => {
-    return config;
-  },
+  // Enable Turbopack for development (optional, disabled for build stability)
+  turbopack: {},
 
   // --- Strict Mode: Ensure zero errors/warnings for production builds ---
   typescript: {
     ignoreBuildErrors: false,
   },
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
 
+  // --- External Assets ---
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'cdn.sanity.io',
       },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
     ],
-    formats: ['image/avif', 'image/webp'],
-  },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(self)',
-          },
-        ],
-      },
-      {
-        source: '/tools/cost-calculator/embed',
-        headers: [
-          { key: 'Content-Security-Policy', value: 'frame-ancestors *' },
-          { key: 'X-Frame-Options', value: 'ALLOWALL' },
-        ],
-      },
-    ];
-  },
-  async redirects() {
-    return [
-      // === Sprint 0: Legacy URL redirect map (portal.bensonhomesolutions.com → new) ===
-      {
-        source: '/services/water-damage-restoration',
-        destination: '/services/water-damage',
-        permanent: true,
-      },
-      {
-        source: '/services/window-door-replacement',
-        destination: '/services/windows-doors',
-        permanent: true,
-      },
-      {
-        source: '/services/mold-mitigation',
-        destination: '/services/mold-remediation',
-        permanent: true,
-      },
-      {
-        source: '/maintenance',
-        destination: '/services/maintenance-subscriptions',
-        permanent: true,
-      },
-    ];
   },
 };
 
-export default withSentryConfig(nextConfig, {
+// Sentry configuration options
+const sentryConfig = {
   // For all available options, see:
-  // https://www.npmjs.com/package/@sentry/webpack-plugin#options
+  // https://github.com/getsentry/sentry-javascript/blob/master/packages/nextjs/src/config/types.ts
 
-  org: 'benson-home-solutions',
+  // Suppress source map warnings
+  hideSourceMaps: true,
 
-  project: 'javascript-nextjs',
+  // Automatically tree-shake Sentry logger statements to reduce bundle size
+  disableLogger: true,
 
-  // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
-
-  // For all available options, see:
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+  // Enables automatic instrumentation of Vercel Cron Monitors.
+  // See the following for more information:
+  // https://docs.sentry.io/product/crons/
+  // https://vercel.com/docs/cron-jobs
+  automaticVercelMonitors: true,
 
   // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: false,
@@ -111,4 +62,6 @@ export default withSentryConfig(nextConfig, {
   // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
   // side errors will fail.
   tunnelRoute: '/monitoring',
-});
+};
+
+export default withSentryConfig(nextConfig, sentryConfig);
