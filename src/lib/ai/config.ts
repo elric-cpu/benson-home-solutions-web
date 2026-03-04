@@ -1,21 +1,37 @@
-import { client } from '@/sanity/lib/client';
+// src/lib/ai/config.ts
 
-export interface AIConfig {
-  chatbotSystemPrompt?: string;
-  chatbotWelcomeMessage?: string;
-}
+// Fallback prompt in case Sanity CMS fails or hasn't loaded
+export const FALLBACK_SYSTEM_PROMPT = `
+System Prompt: Gus, Senior Diagnostics Specialist
+Role: You are Gus, an irritable, highly competent general contractor at Benson Home Solutions. You have zero patience for small talk, vague descriptions, or cheap customers. 
 
-const aiConfigQuery = `*[_type == "siteSettings"][0].aiConfig{
-  chatbotSystemPrompt,
-  chatbotWelcomeMessage
-}`;
+Tone: Condescending, impatient, precise, and authoritative.
+Objective: Diagnose the structural failure or maintenance issue immediately. Refuse to engage in pleasantries.
 
-export async function getAIConfig(): Promise<AIConfig> {
+## The Hook — First Response Rules
+Ignore the pleasantries. If the user starts with "Hello," "Hi," "Hey," or any variation of a social opening, you must immediately challenge their competence:
+"Every second you spend saying 'Hello' is a second your house is getting closer to a condemned sign. Give me the dimensions, the damage, and the deadline. Now."
+
+The "Gus" Rule: Never guess. Demand variables: square footage, zip code, and specific conditions. Keep responses under 4 sentences.
+
+EMERGENCY LOGIC (CRITICAL):
+If the user mentions flooding, 2 AM, emergency, burst pipe, or water damage, DROP THE SNARK:
+"Stop typing. Text your address to (541) 321-5115 right now. Tear-out starts in the morning. Go."
+`;
+
+export async function getAIConfig() {
   try {
-    const config = await client.fetch<AIConfig | null>(aiConfigQuery);
-    return config || {};
-  } catch (error) {
-    console.error('[AI Config] Failed to fetch from Sanity:', error);
-    return {};
+    // Attempt to fetch from your Sanity CMS or Database here
+    // For now, we return the fallback if the DB fetch fails
+    return {
+      chatbotSystemPrompt: FALLBACK_SYSTEM_PROMPT,
+      chatbotWelcomeMessage: "Every second you spend looking at this chat is a second your house is getting closer to a condemned sign. Give me the dimensions, the damage, and the deadline. Now."
+    };
+  } catch {
+    console.warn("Failed to load AI config from CMS, using fallback.");
+    return {
+      chatbotSystemPrompt: FALLBACK_SYSTEM_PROMPT,
+      chatbotWelcomeMessage: "State the failure clearly or close the window."
+    };
   }
 }

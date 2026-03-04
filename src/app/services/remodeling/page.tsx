@@ -8,9 +8,8 @@ import {
   Card,
   CardContent,
 } from '@/components/ui';
-import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
+import { BUSINESS } from '@/lib/constants';
 import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
-import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Remodeling & Reconstruction | Benson Home Solutions',

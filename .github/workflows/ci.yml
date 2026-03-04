@@ -19,22 +19,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}/.next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       # TODO: Sprint 2 — remove soft-fail once scaffold pages have real types
       - name: TypeScript check (soft-fail)
-        run: npx tsc --noEmit || echo "::warning::TypeScript check failed — soft-fail enabled for Sprint 1 scaffolds"
+        run: pnpm exec tsc --noEmit || echo "::warning::TypeScript check failed — soft-fail enabled for Sprint 1 scaffolds"
       # TODO: Sprint 2 — remove soft-fail once all files are properly linted
       - name: ESLint (soft-fail)
-        run: npm run lint || echo "::warning::ESLint failed — soft-fail enabled for Sprint 1 scaffolds"
+        run: pnpm lint || echo "::warning::ESLint failed — soft-fail enabled for Sprint 1 scaffolds"
       # TODO: Sprint 2 — remove soft-fail once format is enforced on all files
       - name: Prettier check (soft-fail)
-        run: npm run format:check || echo "::warning::Prettier check failed — soft-fail enabled for API-pushed code"
+        run: pnpm format:check || echo "::warning::Prettier check failed — soft-fail enabled for API-pushed code"
 
   build:
     name: Build
@@ -42,11 +57,16 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm install
-      - run: npm run build
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - run: pnpm build
       - uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
@@ -59,20 +79,24 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm install
-      - run: npx playwright install --with-deps chromium
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
       - uses: actions/download-artifact@v4
         with:
           name: nextjs-build
           path: .next
       - name: Start server & run tests
         run: |
-          npm start &
-          npx wait-on http://localhost:3000 --timeout 30000
-          npm test
+          pnpm start &
+          pnpm exec wait-on http://localhost:3000 --timeout 30000
+          pnpm test
         env:
           NODE_ENV: production
 
@@ -82,18 +106,22 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm install
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - uses: actions/download-artifact@v4
         with:
           name: nextjs-build
           path: .next
       - name: Run Lighthouse CI
         run: |
-          npm start &
-          npx wait-on http://localhost:3000 --timeout 30000
-          npx @lhci/cli autorun
+          pnpm start &
+          pnpm exec wait-on http://localhost:3000 --timeout 30000
+          pnpm exec lhci autorun
         env:
           NODE_ENV: production
