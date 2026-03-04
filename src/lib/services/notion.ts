@@ -4,10 +4,18 @@ const notion = new Client({
   auth: process.env.NOTION_API_KEY,
 });
 
+interface NotionPropertyData {
+  address: string;
+  buildingType?: string;
+  yearBuilt?: number;
+  floodZone?: string;
+  id?: string;
+}
+
 /**
  * Creates a new property page in the Notion Properties Database.
  */
-export async function createNotionProperty(data: any) {
+export async function createNotionProperty(data: NotionPropertyData) {
   const databaseId = process.env.NOTION_DB_PROPERTIES;
   if (!databaseId) return null;
 
@@ -28,7 +36,7 @@ export async function createNotionProperty(data: any) {
           select: { name: data.floodZone || 'Unknown' },
         },
         'Supabase ID': {
-          rich_text: [{ text: { content: data.id } }],
+          rich_text: [{ text: { content: data.id || '' } }],
         },
       },
     });

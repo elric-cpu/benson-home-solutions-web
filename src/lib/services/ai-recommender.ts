@@ -1,7 +1,7 @@
 import { generateObject } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { z } from 'zod';
-import { SERVICE_CATALOG } from './service-catalog';
+import { SERVICE_CATALOG } from '@/lib/agreement-engine';
 
 export interface PropertyContext {
   address: string;
@@ -9,7 +9,7 @@ export interface PropertyContext {
   year_built: number;
   sqft: number;
   flood_zone: string;
-  disaster_history: any[];
+  disaster_history: { declarationDate: string; incidentType: string; title: string }[];
 }
 
 export async function getAiRecommendations(property: PropertyContext) {

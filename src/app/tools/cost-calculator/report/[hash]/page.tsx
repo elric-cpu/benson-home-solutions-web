@@ -21,6 +21,10 @@ interface Props {
   params: Promise<{ hash: string }>;
 }
 
+interface EnergyBenchmarkCosts {
+  costs?: Record<string, { annual: number; source?: string; confidence?: string } | number>;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { hash } = await params;
   const [property] = await db.select().from(properties).where(eq(properties.addressHash, hash));
@@ -29,9 +33,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // Calculate total for OG image
   const zipData = MOCK_ZIP_DATA[property.zip || ''] || DEFAULT_BENCHMARK;
-  const energyBenchmarks = property.energyBenchmarks as any;
+  const energyBenchmarks = property.energyBenchmarks as EnergyBenchmarkCosts | null;
   const rawCosts = energyBenchmarks?.costs || zipData.costs;
-  const annualTotal = Object.values(rawCosts).reduce((acc: number, curr: any) => acc + (typeof curr === 'number' ? curr : curr.annual), 0);
+  const annualTotal = Object.values(rawCosts).reduce((acc: number, curr) => acc + (typeof curr === 'number' ? curr : curr.annual), 0);
 
   const ogUrl = new URL(`${BUSINESS.url}/api/calculator/og`);
   ogUrl.searchParams.set('total', annualTotal.toString());

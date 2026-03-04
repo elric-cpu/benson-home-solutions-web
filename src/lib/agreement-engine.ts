@@ -58,14 +58,17 @@ function calculateRawPrice(
   return service.base_price * sqftFactor * ageMult * floodMult * freqMultiplier;
 }
 
+export interface PricingInput {
+  service: ServiceCatalogItem;
+  property: PropertyData;
+  frequency: Frequency;
+}
+
 /**
  * Final deterministic pricing engine for maintenance services.
  */
-export function calculateServicePrice(
-  service: ServiceCatalogItem,
-  property: PropertyData,
-  frequency: Frequency,
-): number {
+export function calculateServicePrice(input: PricingInput): number {
+  const { service, property, frequency } = input;
   let price = calculateRawPrice(service, property, frequency);
 
   // Apply Church discount (20% off all line items per company policy)

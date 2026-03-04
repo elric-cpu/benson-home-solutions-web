@@ -1,25 +1,30 @@
 import { test, expect } from '@playwright/test';
-import { calculateServicePrice } from '../src/lib/services/pricing-engine';
+import { calculateServicePrice, SERVICE_CATALOG } from '../src/lib/agreement-engine';
 
 test.describe('Hybrid Agreement Engine', () => {
+  const service = SERVICE_CATALOG.find(s => s.id === 'GUTTER_CLEAN')!;
   
   test('Deterministic Pricing: Church should get 20% discount', async () => {
     const resPrice = calculateServicePrice({
-      serviceId: 'GUTTER_CLEAN',
-      sqft: 1000,
-      yearBuilt: 2020,
-      floodZone: 'X',
-      frequency: 'annual',
-      propertyType: 'residential'
+      service,
+      property: {
+        sqft: 1000,
+        age: 4,
+        floodZone: 'X',
+        buildingType: 'residential'
+      },
+      frequency: 'annual'
     });
 
     const churchPrice = calculateServicePrice({
-      serviceId: 'GUTTER_CLEAN',
-      sqft: 1000,
-      yearBuilt: 2020,
-      floodZone: 'X',
-      frequency: 'annual',
-      propertyType: 'church_community'
+      service,
+      property: {
+        sqft: 1000,
+        age: 4,
+        floodZone: 'X',
+        buildingType: 'church'
+      },
+      frequency: 'annual'
     });
 
     expect(churchPrice).toBe(resPrice * 0.8);
@@ -27,21 +32,25 @@ test.describe('Hybrid Agreement Engine', () => {
 
   test('Deterministic Pricing: Older homes should have higher prices', async () => {
     const newHome = calculateServicePrice({
-      serviceId: 'GUTTER_CLEAN',
-      sqft: 1000,
-      yearBuilt: 2024,
-      floodZone: 'X',
-      frequency: 'annual',
-      propertyType: 'residential'
+      service,
+      property: {
+        sqft: 1000,
+        age: 0,
+        floodZone: 'X',
+        buildingType: 'residential'
+      },
+      frequency: 'annual'
     });
 
     const oldHome = calculateServicePrice({
-      serviceId: 'GUTTER_CLEAN',
-      sqft: 1000,
-      yearBuilt: 1950,
-      floodZone: 'X',
-      frequency: 'annual',
-      propertyType: 'residential'
+      service,
+      property: {
+        sqft: 1000,
+        age: 60,
+        floodZone: 'X',
+        buildingType: 'residential'
+      },
+      frequency: 'annual'
     });
 
     expect(oldHome).toBeGreaterThan(newHome);
