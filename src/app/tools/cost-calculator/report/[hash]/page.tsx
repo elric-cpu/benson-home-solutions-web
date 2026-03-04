@@ -36,14 +36,31 @@ async function ReportContent({ hash }: { hash: string }) {
 
   // Extract costs with proper fallback
   const energyBenchmarks = property.energyBenchmarks as {
-    costs?: Record<string, number>;
+    costs?: Record<string, { annual: number }>;
   } | null;
-  const costs = energyBenchmarks?.costs || zipData.costs;
+  const rawCosts = energyBenchmarks?.costs || zipData.costs;
+
+  // Normalize to number map for simple totals/logic
+  const costs: Record<string, number> = Object.entries(rawCosts).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: typeof value === 'number' ? value : value.annual,
+    }),
+    {},
+  );
 
   const annualTotal = Object.values(costs).reduce((acc, val) => acc + val, 0);
   const monthlyTotal = Math.floor(annualTotal / 12);
 
-  const avgCosts = DEFAULT_BENCHMARK.costs;
+  const avgCosts: Record<string, number> = Object.entries(
+    DEFAULT_BENCHMARK.costs,
+  ).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: value.annual,
+    }),
+    {},
+  );
 
   return (
     <>
@@ -93,7 +110,7 @@ async function ReportContent({ hash }: { hash: string }) {
               </div>
               <div className="space-y-8">
                 {Object.entries(costs).map(([key, value]) => {
-                  const avgVal = (avgCosts as Record<string, number>)[key] || 0;
+                  const avgVal = avgCosts[key] || 0;
                   const maxVal = Math.max(value, avgVal);
                   const slugMap: Record<string, string> = {
                     property_tax: 'property-taxes',
@@ -153,10 +170,7 @@ async function ReportContent({ hash }: { hash: string }) {
                   <p className="text-sm leading-relaxed text-red-800">
                     Your estimated deferred maintenance risk is{' '}
                     <strong>
-                      $
-                      {(
-                        costs as Record<string, number>
-                      ).deferred_maintenance_risk.toLocaleString()}
+                      ${costs.deferred_maintenance_risk.toLocaleString()}
                     </strong>
                     . Proactive maintenance through a Benson Home Solutions plan
                     can reduce this risk by up to 60% over 5 years.
