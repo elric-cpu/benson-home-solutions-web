@@ -1,62 +1,38 @@
-// src/app/api/chat/route.ts
-import { createOpenAI } from '@ai-sdk/openai';
-import { streamText } from 'ai';
-import { getAIConfig } from '@/lib/ai/config';
-import { queryRecords } from '@/lib/ai/vector-service'; 
-import { tools } from '@/lib/ai/tools'; 
+import { openai } from '@ai-sdk/openai';
+import { streamText, tool } from 'ai';
+import { z } from 'zod';
+import { getConstructionMarketData2026 } from '@/lib/ai/tools';
 
-// Configure OpenRouter to act as our provider
-const openrouter = createOpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: process.env.OPENROUTER_API_KEY,
-  headers: {
-    'HTTP-Referer': 'https://bensonhomesolutions.com', 
-    'X-Title': 'Benson Home Solutions Chat',
-  },
-});
+// Allow streaming responses up to 30 seconds
+export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  try {
-    const { messages } = await req.json();
-    const lastMessage = messages[messages.length - 1].content;
+  const { messages } = await req.json();
 
-    // 1. Get AI Config (Silas/Gus Persona)
-    const config = await getAIConfig();
-    const systemBase = config.chatbotSystemPrompt;
+  const result = await streamText({
+    model: openai('gpt-4o'),
+    messages,
+    system: `You are a helpful assistant for Benson Home Solutions. 
+    You have access to construction market data for 2026. 
+    If a user asks about costs or market trends for softwood lumber, structural steel, 
+    ready-mix concrete, or copper wire, use the provided tools.`,
+    tools: {
+      get_construction_market_data_2026: tool({
+        description: 'Get construction material market data and projections for 2026 by region or material type.',
+        parameters: z.object({
+          material_type: z.enum(['softwood_lumber', 'structural_steel', 'ready_mix_concrete', 'copper_wire']),
+          zip_code: z.string().optional().describe('The zip code to check regional pricing for.'),
+        }),
+        execute: async ({ material_type, zip_code }) => {
+          return await getConstructionMarketData2026(material_type, zip_code);
+        },
+      }),
+    },
+    // maxSteps allows the model to call tools multiple times in a single request
+    // if it needs more information to answer the user's query.
+    maxSteps: 5,
+    temperature: 0.7,
+  });
 
-    // 2. Retrieve context from Pinecone (RAG) with a timeout
-    let context = "No additional context provided.";
-    try {
-      const ragPromise = queryRecords(lastMessage, 5);
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('RAG Timeout')), 3000)
-      );
-      
-      const matches = await Promise.race([ragPromise, timeoutPromise]) as any[];
-      if (matches && matches.length > 0) {
-        context = matches.map((m) => m.metadata.text).join('\n\n');
-      }
-    } catch (ragError) {
-      console.error('[Chat API] RAG retrieval failed or timed out:', ragError);
-    }
-
-    // 3. Generate Streamed Response using a reliable model
-    const result = await streamText({
-      model: openrouter('anthropic/claude-3.5-sonnet'),
-      system: systemBase.replace('{context}', context),
-      messages,
-      tools,
-      maxSteps: 5,
-      temperature: 0.7, 
-    });
-
-    return result.toTextStreamResponse();
-  } catch (error) {
-    console.error('[Chat API Error]', error);
-    
-    return new Response(
-      JSON.stringify({ error: 'Silas is currently ignoring you (Server Error).' }), 
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
+  return result.toDataStreamResponse();
 }
