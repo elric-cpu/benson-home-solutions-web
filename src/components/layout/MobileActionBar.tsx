@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
 
 export function MobileActionBar() {
   const [isVisible, setIsVisible] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,7 +23,8 @@ export function MobileActionBar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (!isVisible) return null;
+  // Hide on emergency page to avoid UI conflict
+  if (!isVisible || pathname === '/emergency') return null;
 
   return (
     <div

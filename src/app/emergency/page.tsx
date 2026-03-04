@@ -8,7 +8,9 @@ import {
   Button,
   Card,
   RichHero,
+  TrustBar,
 } from '@/components/ui';
+import { EmergencyActionBar } from '@/components/layout';
 import { PortableTextRenderer } from '@/components/content/PortableText';
 import Link from 'next/link';
 
@@ -17,15 +19,12 @@ interface EmergencyPageData {
   metaDescription?: string;
   heroHeadline?: string;
   heroSubtext?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   heroImage?: any;
   heroVideo?: string;
   emergencyPhone?: string;
   afterHoursPhone?: string;
   responseTimeSLA?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   emergencyServices?: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content?: any;
 }
 
@@ -72,28 +71,31 @@ export default async function EmergencyPage() {
   return (
     <main>
       <RichHero
-        title={page?.heroHeadline || '24/7 Emergency Response'}
+        title={page?.heroHeadline || 'Property Crisis? Call Now.'}
         description={
           page?.heroSubtext ||
-          'Water damage, storm mitigation, and emergency board-ups. We protect your property when disaster strikes.'
+          'On-site within 60 minutes. 24/7 emergency water extraction, drying, and storm mitigation to protect your property.'
         }
         backgroundImage={heroImage}
         videoBackground={heroVideo}
-        badge="Immediate Dispatch Available"
+        badge="Immediate Dispatch: 24/7"
       >
-        <a href={`tel:${page?.emergencyPhone || BUSINESS.afterhoursPhone}`}>
-          <Button variant="emergency" size="xl">
-            Call Emergency Line: {page?.emergencyPhone || BUSINESS.afterhoursPhone}
-          </Button>
-        </a>
-        <Link href="/contact">
-          <Button variant="secondary" size="xl">
-            Request Non-Emergency Help
-          </Button>
-        </Link>
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <a href={`tel:${page?.emergencyPhone || BUSINESS.afterhoursPhone}`}>
+            <Button variant="emergency" size="xl" className="w-full sm:w-auto">
+              Call Emergency Line
+            </Button>
+          </a>
+          <Link href="/contact" className="w-full sm:w-auto">
+            <Button variant="secondary" size="xl" className="w-full">
+              Non-Emergency Request
+            </Button>
+          </Link>
+        </div>
       </RichHero>
 
-      {/* Response Time SLA Section */}
+      <TrustBar />
+
       <Section variant="default" spacing="md">
         <Container size="narrow">
           <div className="bg-oxblood rounded-2xl p-8 text-center text-white md:p-12">
@@ -104,23 +106,23 @@ export default async function EmergencyPage() {
             <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
               <div>
                 <div className="mb-2 text-3xl">⏱️</div>
-                <h3 className="font-bold">Rapid Response</h3>
-                <p className="text-sm opacity-80">
+                <h3 className="font-bold text-sm uppercase tracking-widest text-white">Rapid Response</h3>
+                <p className="mt-2 text-xs opacity-80">
                   Crews mobilized immediately upon dispatch.
                 </p>
               </div>
               <div>
                 <div className="mb-2 text-3xl">🛡️</div>
-                <h3 className="font-bold">Expert Mitigation</h3>
-                <p className="text-sm opacity-80">
+                <h3 className="font-bold text-sm uppercase tracking-widest text-white">Expert Mitigation</h3>
+                <p className="mt-2 text-xs opacity-80">
                   Stopping further damage is our first priority.
                 </p>
               </div>
               <div>
                 <div className="mb-2 text-3xl">📑</div>
-                <h3 className="font-bold">Insurance-Ready</h3>
-                <p className="text-sm opacity-80">
-                  Full documentation and mapping for your adjuster.
+                <h3 className="font-bold text-sm uppercase tracking-widest text-white">Insurance-Ready</h3>
+                <p className="mt-2 text-xs opacity-80">
+                  Full documentation for your adjuster.
                 </p>
               </div>
             </div>
@@ -128,7 +130,6 @@ export default async function EmergencyPage() {
         </Container>
       </Section>
 
-      {/* Emergency Services Detail */}
       <Section spacing="lg">
         <Container>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
@@ -140,35 +141,29 @@ export default async function EmergencyPage() {
                 <PortableTextRenderer value={page.emergencyServices} />
               ) : (
                 <div className="prose prose-lg text-slate max-w-none">
-                  <p>
-                    Benson Home Solutions provides comprehensive emergency
-                    restoration and mitigation services for residential,
+                  <p className="font-semibold text-oxblood">
+                    Benson Home Solutions provides 24/7 mitigation for residential,
                     commercial, and community properties.
                   </p>
-                  <ul className="space-y-4">
+                  <ul className="mt-6 space-y-4 text-sm">
                     <li>
-                      <strong>Water Damage Mitigation:</strong> Immediate
-                      extraction, structural drying, and moisture mapping to
-                      prevent mold growth.
+                      <strong>Water Damage:</strong> Extraction, drying, and moisture mapping.
                     </li>
                     <li>
-                      <strong>Emergency Board-Ups:</strong> Securing your
-                      property after a break-in, storm, or vehicle impact.
+                      <strong>Board-Ups:</strong> Securing properties after break-ins or impact.
                     </li>
                     <li>
-                      <strong>Roof Tarping:</strong> Stopping water intrusion
-                      from storm damage or structural failure.
+                      <strong>Roof Tarping:</strong> Stopping water intrusion from storm damage.
                     </li>
                     <li>
-                      <strong>Storm Damage Cleanup:</strong> Removing debris and
-                      securing structural hazards after severe weather.
+                      <strong>Storm Cleanup:</strong> Debris removal and structural security.
                     </li>
                   </ul>
                 </div>
               )}
             </div>
             <div>
-              <Card className="bg-cream/50 p-8">
+              <Card className="bg-cream/50 p-8 shadow-sm">
                 <h3 className="text-charcoal mb-4 text-xl font-bold">
                   What to do while you wait:
                 </h3>
@@ -178,8 +173,7 @@ export default async function EmergencyPage() {
                       1
                     </span>
                     <span>
-                      <strong>Safety first:</strong> If there is structural
-                      danger or active electrical hazards, evacuate immediately.
+                      <strong>Safety first:</strong> Evacuate if there are structural or electrical hazards.
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
@@ -187,8 +181,7 @@ export default async function EmergencyPage() {
                       2
                     </span>
                     <span>
-                      <strong>Stop the source:</strong> If safe to do so, turn
-                      off the main water supply to prevent further flooding.
+                      <strong>Stop the source:</strong> If safe, turn off main water supply.
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
@@ -196,24 +189,13 @@ export default async function EmergencyPage() {
                       3
                     </span>
                     <span>
-                      <strong>Document everything:</strong> Take photos and video
-                      of the damage before mitigation begins. This is critical
-                      for insurance.
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="bg-oxblood flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
-                      4
-                    </span>
-                    <span>
-                      <strong>Call Benson Home Solutions:</strong> Our dispatchers
-                      will guide you through the next steps and mobilize a crew.
+                      <strong>Document:</strong> Take photos/video of damage for insurance.
                     </span>
                   </li>
                 </ul>
                 <div className="mt-8 border-t border-slate/10 pt-8">
                   <a href={`tel:${page?.emergencyPhone || BUSINESS.afterhoursPhone}`}>
-                    <Button variant="emergency" className="w-full">
+                    <Button variant="emergency" className="w-full py-6 text-lg">
                       Call Now: {page?.emergencyPhone || BUSINESS.afterhoursPhone}
                     </Button>
                   </a>
@@ -224,10 +206,12 @@ export default async function EmergencyPage() {
         </Container>
       </Section>
 
-      {/* Additional Content */}
       {page?.content && (
-        <Section spacing="lg" className="bg-white">
+        <Section spacing="lg" className="bg-white border-t border-slate/5">
           <Container size="narrow">
+            <h2 className="text-oxblood mb-8 text-3xl font-bold tracking-tight md:text-4xl">
+              While You Wait for Help
+            </h2>
             <div className="prose prose-lg max-w-none">
               <PortableTextRenderer value={page.content} />
             </div>
@@ -235,31 +219,7 @@ export default async function EmergencyPage() {
         </Section>
       )}
 
-      {/* Trust & Verification */}
-      <Section variant="cream" spacing="md">
-        <Container>
-          <div className="flex flex-wrap justify-center gap-8 opacity-60 grayscale filter md:gap-16">
-            <div className="flex flex-col items-center">
-              <span className="text-2xl font-bold">CCB #258533</span>
-              <span className="text-xs uppercase tracking-widest">
-                Oregon Licensed
-              </span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-2xl font-bold">Fully Insured</span>
-              <span className="text-xs uppercase tracking-widest">
-                General Liability
-              </span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-2xl font-bold">24/7 Service</span>
-              <span className="text-xs uppercase tracking-widest">
-                Emergency Only
-              </span>
-            </div>
-          </div>
-        </Container>
-      </Section>
+      <EmergencyActionBar />
     </main>
   );
 }
