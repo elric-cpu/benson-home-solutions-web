@@ -20,7 +20,7 @@
 
 | Layer | Choice |
 |-------|--------|
-| Framework | **Next.js 15** (App Router) + TypeScript strict |
+| Framework | **Next.js 15 (STABLE)** — Do not upgrade to v16/canary. |
 | CMS | Sanity (headless, schema-as-code) |
 | Styling | Tailwind CSS v4 (custom config) + CSS custom properties |
 | Hosting | Vercel Pro (edge CDN, serverless, ISR) |

@@ -12,6 +12,7 @@
 - **Styling:** Tailwind CSS (Vanilla CSS preferred for new components)
 
 ## Key Directives
+- **Framework:** Must use Next.js 15 (stable). Do not upgrade to Next.js 16/canary due to Sentry and build-time incompatibilities.
 - **Security:** Never log or commit secrets. Protect `.env` files.
 - **Tone:** Professional, direct, authoritative (Owner: Elric Benson).
 - **Validation:** Always verify changes with tests and linting.
