@@ -1,33 +1,39 @@
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateObject } from 'ai';
-import { openai } from '@ai-sdk/openai';
 import { z } from 'zod';
-import { SERVICE_CATALOG } from '@/lib/agreement-engine';
 
-export interface PropertyContext {
-  address: string;
-  building_type: 'residential' | 'commercial' | 'church_community';
-  year_built: number;
-  sqft: number;
-  flood_zone: string;
-  disaster_history: { declarationDate: string; incidentType: string; title: string }[];
-}
+const openrouter = createOpenRouter({
+  apiKey: process.env.OPENROUTER_API_KEY,
+});
 
-export async function getAiRecommendations(property: PropertyContext) {
-  const { object } = await generateObject({
-    model: openai('gpt-4o'),
-    schema: z.object({
-      recommendations: z.array(z.object({
-        service_id: z.string(),
-        priority: z.enum(['essential', 'recommended', 'optional']),
-        reasoning: z.string(),
-        frequency: z.enum(['monthly', 'quarterly', 'semi-annual', 'annual']),
-      }))
-    }),
-    system: `You are a maintenance planning expert for properties in Oregon. 
-    Recommend services from the provided catalog based on the property data.
-    Service Catalog: ${JSON.stringify(SERVICE_CATALOG.map(s => ({ id: s.id, name: s.name, applicable: s.applicable_to })))}`,
-    prompt: `Property Data: ${JSON.stringify(property)}`,
-  });
+/**
+ * Uses GPT-4o-mini to recommend services based on user description.
+ * This is used in the lead capture flow to suggest the best starting point.
+ */
+export async function recommendServices(description: string) {
+  try {
+    const { object } = await generateObject({
+      model: openrouter('openai/gpt-4o-mini'),
+      schema: z.object({
+        recommendations: z.array(z.object({
+          service: z.string(),
+          confidence: z.number(),
+          reasoning: z.string()
+        })),
+        urgency: z.enum(['low', 'medium', 'high']),
+      }),
+      prompt: `Analyze this home improvement request: "${description}". 
+      Recommend relevant services from: Bathroom Remodeling, Kitchen Remodeling, 
+      Windows & Doors, Maintenance, Water Damage, Mold Remediation, Demolition, Commercial.`,
+    });
 
-  return object.recommendations;
+    return object;
+  } catch (error) {
+    console.error('AI Recommendation failed:', error);
+    // Fallback to basic maintenance if AI fails
+    return {
+      recommendations: [{ service: 'Maintenance', confidence: 0.5, reasoning: 'Standard fallback' }],
+      urgency: 'low' as const
+    };
+  }
 }
