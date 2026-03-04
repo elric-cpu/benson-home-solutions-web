@@ -1,79 +1,38 @@
-import { getPineconeClient } from './pinecone';
-
-const MODEL = 'llama-text-embed-v2';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { openai } from '@ai-sdk/openai';
+import { embed, embedMany } from 'ai';
 
 /**
- * Generate a single embedding for the given text.
- * Uses Pinecone's llama-text-embed-v2 model.
+ * Generates a single embedding for a string of text.
+ * Used for user queries to search the vector database.
  */
-export async function getEmbedding(
-  text: string,
-  inputType: 'passage' | 'query' = 'passage',
-) {
-  const pinecone = getPineconeClient();
-  try {
-    // Pinecone SDK 5.x Inference API requires inputs to be an array of objects: [{ text: "..." }]
-    const embeddings = await pinecone.inference.embed(
-      MODEL, 
-      [{ text }] as any, 
-      {
-        inputType,
-        truncate: 'END',
-      }
-    );
-
-    if (!embeddings.data || embeddings.data.length === 0) {
-      throw new Error('No embedding data returned from Pinecone');
-    }
-
-    const firstResult = embeddings.data[0];
-    if (firstResult.vectorType !== 'dense' || !('values' in firstResult)) {
-      throw new Error('Dense embedding values missing from response');
-    }
-
-    return (firstResult as { values: number[] }).values;
-  } catch (error) {
-    console.error(
-      `[Pinecone Inference Error] Failed to generate embedding:`,
-      error,
-    );
-    throw error;
-  }
+export async function generateEmbedding(value: string): Promise<number[]> {
+  const input = value.replaceAll('\n', ' ');
+  const { embedding } = await embed({
+    model: openai.embedding('text-embedding-3-small'),
+    value: input,
+  });
+  return embedding;
 }
 
 /**
- * Generate multiple embeddings for a list of texts.
+ * Generates embeddings for multiple strings of text.
+ * Used for batch processing and seeding the vector database.
  */
-export async function getEmbeddings(texts: string[]) {
-  const pinecone = getPineconeClient();
-  try {
-    // Map the string array into an array of objects
-    const formattedInputs = texts.map((t) => ({ text: t }));
+export async function generateEmbeddings(values: string[]): Promise<number[][]> {
+  const inputs = values.map(v => v.replaceAll('\n', ' '));
+  const { embeddings } = await embedMany({
+    model: openai.embedding('text-embedding-3-small'),
+    values: inputs,
+  });
+  return embeddings;
+}
 
-    const embeddings = await pinecone.inference.embed(
-      MODEL, 
-      formattedInputs as any, 
-      {
-        inputType: 'passage',
-        truncate: 'END',
-      }
-    );
-
-    if (!embeddings.data) {
-      throw new Error('No embedding data returned from Pinecone');
-    }
-
-    return embeddings.data.map((d) => {
-      if (d.vectorType === 'dense' && 'values' in d) {
-        return (d as { values: number[] }).values;
-      }
-      throw new Error('Non-dense embedding encountered');
-    });
-  } catch (error) {
-    console.error(
-      `[Pinecone Inference Error] Failed to generate multiple embeddings:`,
-      error,
-    );
-    throw error;
-  }
+/**
+ * Helper to handle generic metadata or response structures from AI providers
+ * while satisfying strict linting requirements.
+ */
+export function sanitizeMetadata(data: unknown): Record<string, any> {
+  if (typeof data !== 'object' || data === null) return {};
+  return data as Record<string, any>;
 }
