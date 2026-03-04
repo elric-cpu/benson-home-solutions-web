@@ -128,7 +128,10 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
 
   useEffect(() => {
     if (step === 'result' && data) {
-      const total = Object.values(data.costs).reduce((a, b) => a + b, 0);
+      const total = Object.values(data.costs).reduce(
+        (acc, curr) => acc + curr.annual,
+        0,
+      );
       let start = 0;
       const duration = 2000;
       const increment = total / (duration / 16);
@@ -309,7 +312,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                   Cost Breakdown
                 </h3>
                 <div className="space-y-4">
-                  {Object.entries(data.costs).map(([key, value]) => {
+                  {Object.entries(data.costs).map(([key, detail]) => {
                     const slugMap: Record<string, string> = {
                       property_tax: 'property-taxes',
                       insurance: 'insurance',
@@ -319,32 +322,51 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                       deferred_maintenance_risk: 'deferred-maintenance',
                       appliance_reserve: 'appliance-lifecycle',
                     };
+
+                    const confidenceColors = {
+                      high: 'bg-green-500/10 text-green-700',
+                      medium: 'bg-amber-500/10 text-amber-700',
+                      low: 'bg-red-500/10 text-red-700',
+                    };
+
                     return (
-                      <Link
-                        key={key}
-                        href={`/methodology/${slugMap[key] || ''}`}
-                        className="group block"
-                      >
-                        <div className="mb-2 flex items-end justify-between">
-                          <span className="text-slate group-hover:text-oxblood flex items-center gap-2 text-sm font-bold tracking-wider uppercase transition-colors">
-                            {key.replace(/_/g, ' ')}
-                            <span className="text-[10px] opacity-0 transition-opacity group-hover:opacity-100">
-                              (Methodology &rarr;)
+                      <div key={key} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate text-xs font-bold tracking-wider uppercase">
+                              {key.replace(/_/g, ' ')}
                             </span>
-                          </span>
+                            <Badge
+                              variant="secondary"
+                              className={`px-1.5 py-0 text-[8px] ${confidenceColors[detail.confidence]}`}
+                            >
+                              {detail.confidence} confidence
+                            </Badge>
+                          </div>
                           <span className="text-charcoal font-bold">
-                            ${value.toLocaleString()}
+                            ${detail.annual.toLocaleString()}
                           </span>
                         </div>
                         <div className="bg-slate/5 h-3 overflow-hidden rounded-full">
                           <div
                             className="bg-oxblood h-full transition-all duration-1000 ease-out"
                             style={{
-                              width: `${(value / animatedTotal) * 100}%`,
+                              width: `${(detail.annual / animatedTotal) * 100}%`,
                             }}
                           />
                         </div>
-                      </Link>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate/40 text-[9px]">
+                            Source: {detail.source}
+                          </span>
+                          <Link
+                            href={`/methodology/${slugMap[key] || ''}`}
+                            className="text-oxblood hover:underline text-[9px] font-bold"
+                          >
+                            Methodology &rarr;
+                          </Link>
+                        </div>
+                      </div>
                     );
                   })}
                 </div>
@@ -362,7 +384,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                       Skipping routine maintenance on a home like yours in{' '}
                       <strong>{data.city}</strong> costs an average of{' '}
                       <strong>
-                        ${data.costs.deferred_maintenance_risk.toLocaleString()}{' '}
+                        ${data.costs.deferred_maintenance_risk.annual.toLocaleString()}{' '}
                         extra
                       </strong>{' '}
                       in emergency repairs within 3–5 years.
