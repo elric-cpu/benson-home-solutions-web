@@ -12,11 +12,15 @@ export async function getEmbedding(
 ) {
   const pinecone = getPineconeClient();
   try {
-    // Pinecone SDK 5.x Inference API requires (model, inputs, parameters)
-    const embeddings = await pinecone.inference.embed(MODEL, [text], {
-      inputType,
-      truncate: 'END',
-    });
+    // Pinecone SDK 5.x Inference API requires inputs to be an array of objects: [{ text: "..." }]
+    const embeddings = await pinecone.inference.embed(
+      MODEL, 
+      [{ text }] as any, 
+      {
+        inputType,
+        truncate: 'END',
+      }
+    );
 
     if (!embeddings.data || embeddings.data.length === 0) {
       throw new Error('No embedding data returned from Pinecone');
@@ -43,10 +47,17 @@ export async function getEmbedding(
 export async function getEmbeddings(texts: string[]) {
   const pinecone = getPineconeClient();
   try {
-    const embeddings = await pinecone.inference.embed(MODEL, texts, {
-      inputType: 'passage',
-      truncate: 'END',
-    });
+    // Map the string array into an array of objects
+    const formattedInputs = texts.map((t) => ({ text: t }));
+
+    const embeddings = await pinecone.inference.embed(
+      MODEL, 
+      formattedInputs as any, 
+      {
+        inputType: 'passage',
+        truncate: 'END',
+      }
+    );
 
     if (!embeddings.data) {
       throw new Error('No embedding data returned from Pinecone');

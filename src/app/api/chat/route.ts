@@ -9,7 +9,6 @@ import { tools } from '@/lib/ai/tools';
 const openrouter = createOpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
   apiKey: process.env.OPENROUTER_API_KEY,
-  // OpenRouter requires these headers for ranking/analytics
   headers: {
     'HTTP-Referer': 'https://bensonhomesolutions.com', 
     'X-Title': 'Benson Home Solutions Chat',
@@ -21,34 +20,42 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
     const lastMessage = messages[messages.length - 1].content;
 
-    // 1. Get AI Config (Gus Persona)
+    // 1. Get AI Config (Silas/Gus Persona)
     const config = await getAIConfig();
     const systemBase = config.chatbotSystemPrompt;
 
-    // 2. Retrieve context from Pinecone (RAG)
-    const matches = await queryRecords(lastMessage, 5);
-    const context = matches.length > 0 
-      ? matches.map((m) => m.metadata.text).join('\n\n')
-      : "No additional context provided.";
+    // 2. Retrieve context from Pinecone (RAG) with a timeout
+    let context = "No additional context provided.";
+    try {
+      const ragPromise = queryRecords(lastMessage, 5);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('RAG Timeout')), 3000)
+      );
+      
+      const matches = await Promise.race([ragPromise, timeoutPromise]) as any[];
+      if (matches && matches.length > 0) {
+        context = matches.map((m) => m.metadata.text).join('\n\n');
+      }
+    } catch (ragError) {
+      console.error('[Chat API] RAG retrieval failed or timed out:', ragError);
+    }
 
-    // 3. Generate Streamed Response using a FREE Qwen model
+    // 3. Generate Streamed Response using a reliable model
     const result = await streamText({
-      model: openrouter('qwen/qwen-2-7b-instruct:free'),
+      model: openrouter('anthropic/claude-3.5-sonnet'),
       system: systemBase.replace('{context}', context),
       messages,
-      tools, 
-      // @ts-expect-error - maxSteps exists in runtime but type definition is missing in this version
-      maxSteps: 5, 
-      temperature: 1.0, 
+      tools,
+      maxSteps: 5,
+      temperature: 0.7, 
     });
 
     return result.toTextStreamResponse();
   } catch (error) {
     console.error('[Chat API Error]', error);
     
-    // Return a visible error to the frontend instead of failing silently
     return new Response(
-      JSON.stringify({ error: 'Gus is currently ignoring you (Server Error).' }), 
+      JSON.stringify({ error: 'Silas is currently ignoring you (Server Error).' }), 
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }

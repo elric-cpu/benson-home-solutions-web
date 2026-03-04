@@ -134,9 +134,8 @@ export function AddressAutocomplete({
 
     if (!API_KEY || API_KEY === 'FREE_KEY') {
       console.warn(
-        '[AddressAutocomplete] Geoapify API key is missing. Autocomplete is disabled.',
+        '[AddressAutocomplete] Geoapify API key is missing. Falling back to secondary geocoders.',
       );
-      return;
     }
 
     const fetchSuggestions = async () => {
