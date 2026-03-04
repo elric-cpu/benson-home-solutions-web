@@ -1,5 +1,3 @@
-import { checkRateLimit } from '@/lib/rate-limit';
-
 interface GeocodeResult {
   lat: number;
   lng: number;

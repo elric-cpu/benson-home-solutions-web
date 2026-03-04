@@ -10,7 +10,7 @@ const METABASE_SECRET_KEY = process.env.METABASE_SECRET_KEY;
 
 export interface MetabaseEmbedConfig {
   resource: { dashboard: number } | { question: number };
-  params: Record<string, any>;
+  params: Record<string, unknown>;
 }
 
 /**
@@ -34,7 +34,6 @@ export function getMetabaseEmbedUrl(config: MetabaseEmbedConfig): string | null 
   const token = jwt.sign(payload, METABASE_SECRET_KEY);
   
   const resourceType = 'dashboard' in config.resource ? 'dashboard' : 'question';
-  const resourceId = 'dashboard' in config.resource ? config.resource.dashboard : config.resource.question;
 
   return `${METABASE_SITE_URL}/embed/${resourceType}/${token}#bordered=true&titled=false`;
 }

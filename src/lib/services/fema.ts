@@ -52,6 +52,12 @@ export async function fetchFloodZone(lat: number, lng: number): Promise<FloodZon
  * Fetches disaster history for a given ZIP code or county.
  * Uses OpenFEMA API.
  */
+interface OpenFemaDisaster {
+  declarationDate: string;
+  incidentType: string;
+  declarationTitle: string;
+}
+
 export async function fetchDisasterHistory(zip: string): Promise<DisasterRecord[]> {
   try {
     // OpenFEMA Disaster Declarations Summaries
@@ -61,7 +67,7 @@ export async function fetchDisasterHistory(zip: string): Promise<DisasterRecord[
     const res = await fetch(url);
     if (res.ok) {
       const data = await res.json();
-      return data.DisasterDeclarationsSummaries.map((d: any) => ({
+      return data.DisasterDeclarationsSummaries.map((d: OpenFemaDisaster) => ({
         declarationDate: d.declarationDate,
         incidentType: d.incidentType,
         title: d.declarationTitle,

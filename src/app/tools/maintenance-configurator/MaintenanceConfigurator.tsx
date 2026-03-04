@@ -12,14 +12,14 @@ import {
   Badge,
   RichHero,
 } from '@/components/ui';
-import { SERVICE_CATALOG, calculateServicePrice } from '@/lib/agreement-engine';
+import { SERVICE_CATALOG, calculateServicePrice, type Frequency } from '@/lib/agreement-engine';
 import { HERO_ASSETS } from '@/lib/constants';
 
 interface Recommendation {
   service_id: string;
   priority: 'essential' | 'recommended' | 'optional';
   reasoning: string;
-  frequency: 'monthly' | 'quarterly' | 'semi-annual' | 'annual';
+  frequency: Frequency;
 }
 
 interface SelectedService extends Recommendation {
@@ -43,7 +43,7 @@ export function MaintenanceConfigurator() {
       sqft: 2400,
       age: 42,
       floodZone: 'AE',
-      buildingType: 'residential' as 'residential' | 'commercial' | 'church',
+      buildingType: 'residential' as const,
       address: '123 Main St, Albany, OR 97321',
     }),
     [],
@@ -59,21 +59,22 @@ export function MaintenanceConfigurator() {
         const data = await response.json();
 
         if (data.recommendations) {
-          setRecommendations(data.recommendations);
+          const recs = data.recommendations as Recommendation[];
+          setRecommendations(recs);
 
           const initial: Record<string, SelectedService> = {};
-          data.recommendations.forEach((r: Recommendation) => {
+          recs.forEach((r) => {
             if (r.priority !== 'optional') {
               const catalogItem = SERVICE_CATALOG.find(
                 (s) => s.id === r.service_id,
               )!;
               initial[r.service_id] = {
                 ...r,
-                price: calculateServicePrice(
-                  catalogItem,
+                price: calculateServicePrice({
+                  service: catalogItem,
                   property,
-                  r.frequency,
-                ),
+                  frequency: r.frequency
+                }),
               };
             }
           });
@@ -98,7 +99,11 @@ export function MaintenanceConfigurator() {
       } else {
         next[r.service_id] = {
           ...r,
-          price: calculateServicePrice(catalogItem, property, r.frequency),
+          price: calculateServicePrice({
+            service: catalogItem,
+            property,
+            frequency: r.frequency
+          }),
         };
       }
       return next;
@@ -111,7 +116,6 @@ export function MaintenanceConfigurator() {
   );
   const monthlySubscription = Math.round(totalAnnual / 12);
 
-  // Projection: Deferred maintenance costs are typically 3-5x higher than routine maintenance
   const deferredMaintenanceAnnual = Math.round(totalAnnual * 3.5);
   const deferredMaintenanceMonthly = Math.round(deferredMaintenanceAnnual / 12);
 
@@ -128,7 +132,7 @@ export function MaintenanceConfigurator() {
           totalAnnual,
           monthlySubscription,
           agreementType:
-            property.buildingType === 'church'
+            (property.buildingType as string) === 'church'
               ? 'church-subscription'
               : 'residential-subscription',
         }),
@@ -222,13 +226,13 @@ export function MaintenanceConfigurator() {
                                     </h3>
                                     <span className="text-oxblood font-bold">
                                       $
-                                      {calculateServicePrice(
-                                        SERVICE_CATALOG.find(
+                                      {calculateServicePrice({
+                                        service: SERVICE_CATALOG.find(
                                           (s) => s.id === r.service_id,
                                         )!,
                                         property,
-                                        r.frequency,
-                                      ).toLocaleString()}
+                                        frequency: r.frequency
+                                      }).toLocaleString()}
                                       /yr
                                     </span>
                                   </div>
