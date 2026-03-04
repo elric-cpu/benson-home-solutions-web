@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { agreements, clients, properties } from '@/lib/db/schema';
+import { agreements, clients, properties, agreementVersions } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(request: NextRequest) {
@@ -44,7 +44,17 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
-    // 3. Update property status
+    // 3. Create initial version (Layer 2)
+    await db.insert(agreementVersions).values({
+      agreementId: newAgreement.id,
+      versionNumber: 1,
+      documentProvider: 'system',
+      documentProviderId: `initial-${agreementNumber}`,
+      status: 'draft',
+      changesSummary: 'Initial agreement generation from calculator.',
+    });
+
+    // 4. Update property status
     await db
       .update(properties)
       .set({ agreementStatus: 'draft' })
