@@ -1,19 +1,15 @@
-import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateObject } from 'ai';
 import { z } from 'zod';
-
-const openrouter = createOpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY,
-});
+import { openrouter } from '../ai/provider';
 
 /**
- * Uses GPT-4o-mini to recommend services based on user description.
+ * Uses 'meta-llama/llama-3.3-70b-instruct:free' via OpenRouter to recommend services based on user description.
  * This is used in the lead capture flow to suggest the best starting point.
  */
 export async function recommendServices(description: string) {
   try {
     const { object } = await generateObject({
-      model: openrouter('openai/gpt-4o-mini'),
+      model: openrouter('meta-llama/llama-3.3-70b-instruct:free'),
       schema: z.object({
         recommendations: z.array(z.object({
           service: z.string(),

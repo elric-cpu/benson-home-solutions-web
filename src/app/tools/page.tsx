@@ -26,6 +26,13 @@ const tools = [
     icon: '📊',
   },
   {
+    title: 'Maintenance Configurator',
+    href: '/tools/maintenance-configurator',
+    desc: 'Our AI-powered engine analyzes your property data to recommend a systematic maintenance plan tailored to your building age and zone.',
+    badge: 'AI Recommendations',
+    icon: '⚙️',
+  },
+  {
     title: 'Cost Estimator',
     href: '/tools/cost-estimator',
     desc: 'Get a quick estimate for specific restoration or maintenance projects based on Mid-Willamette Valley labor and material rates.',
@@ -33,11 +40,18 @@ const tools = [
     icon: '🧮',
   },
   {
-    title: 'Maintenance Configurator',
-    href: '/tools/maintenance-configurator',
-    desc: 'Our AI-powered engine analyzes your property data to recommend a systematic maintenance plan tailored to your building age and zone.',
-    badge: 'AI Recommendations',
-    icon: '⚙️',
+    title: 'Outdoor Living Visualizer',
+    href: '/tools/outdoor-living',
+    desc: 'Design and estimate your custom outdoor living space, from decks to exterior kitchens. Coming April 2026.',
+    badge: 'Coming Soon',
+    icon: '🌳',
+  },
+  {
+    title: 'Home Theater 3D',
+    href: '/tools/home-theater',
+    desc: 'Visualize your custom media room in 3D. Optimize seating, acoustics, and equipment. Coming April 2026.',
+    badge: 'Coming Soon',
+    icon: '🎬',
   },
 ];
 

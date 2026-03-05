@@ -2,7 +2,9 @@
 // The added config here will be used whenever a users loads a page in their browser.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from "@sentry/nextjs";
+
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
 
 Sentry.init({
   dsn: 'https://92d53faf42884035a27a716911d8186b@o4510972855910400.ingest.us.sentry.io/4510972856958976',

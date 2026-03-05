@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { embed, embedMany } from 'ai';
-
-// Initialize OpenRouter provider
-const openrouter = createOpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY,
-});
+import { openrouter } from './provider';
 
 /**
  * Generates a single embedding for a string of text via OpenRouter.
@@ -19,6 +14,11 @@ export async function generateEmbedding(value: string): Promise<number[]> {
   });
   return embedding;
 }
+
+/**
+ * Alias for generateEmbedding to satisfy dependencies in vector-service.ts
+ */
+export const getEmbedding = generateEmbedding;
 
 /**
  * Generates embeddings for multiple strings of text via OpenRouter.

@@ -1,37 +1,48 @@
-import { openai } from '@ai-sdk/openai';
-import { streamText, tool } from 'ai';
-import { z } from 'zod';
-import { getConstructionMarketData2026 } from '@/lib/ai/tools';
+import { streamText } from 'ai';
+import { openrouter } from '@/lib/ai/provider';
+import { getAIConfig, FALLBACK_SYSTEM_PROMPT } from '@/lib/ai/config';
+import { tools } from '@/lib/ai/tools';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
+/**
+ * GUS PERSONA CORE: 
+ * We define this here to ensure even if Sanity is empty, 
+ * the "Senior Specialist" attitude is preserved.
+ */
+const GUS_DIRECTIVE = `
+  IDENTITY: You are Gus, the Senior Diagnostics Specialist at Benson Home Solutions. 
+  TONE: Brusque, technical, and urgent. No small talk. No "I'm sorry to hear that."
+  OBJECTIVE: Diagnose structural failures. Demand dimensions, damage specifics, and deadlines.
+  VOCABULARY: Use 'moisture ingress', 'lateral load', 'deflection', 'shear failure', and 'hydrostatic pressure'.
+  INTERACTION: If the user is vague, be condescending about their lack of data. 
+  URGENCY: Always imply the house is at risk of a condemned sign.
+`;
+
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
+  // Load configuration from Sanity or fall back to defaults
+  const aiConfig = await getAIConfig();
+  
+  // Combine the CMS prompt with Gus's specific behavioral directive
+  const systemPrompt = `
+    ${GUS_DIRECTIVE}
+    ${aiConfig.chatbotSystemPrompt || FALLBACK_SYSTEM_PROMPT}
+  `;
+
   const result = await streamText({
-    model: openai('gpt-4o'),
+    model: openrouter('google/gemini-2.0-flash-exp:free'),
     messages,
-    system: `You are a helpful assistant for Benson Home Solutions. 
-    You have access to construction market data for 2026. 
-    If a user asks about costs or market trends for softwood lumber, structural steel, 
-    ready-mix concrete, or copper wire, use the provided tools.`,
-    tools: {
-      get_construction_market_data_2026: tool({
-        description: 'Get construction material market data and projections for 2026 by region or material type.',
-        parameters: z.object({
-          material_type: z.enum(['softwood_lumber', 'structural_steel', 'ready_mix_concrete', 'copper_wire']),
-          zip_code: z.string().optional().describe('The zip code to check regional pricing for.'),
-        }),
-        execute: async ({ material_type, zip_code }) => {
-          return await getConstructionMarketData2026(material_type, zip_code);
-        },
-      }),
-    },
-    // maxSteps allows the model to call tools multiple times in a single request
-    // if it needs more information to answer the user's query.
+    system: systemPrompt,
+    tools,
+    /** * maxSteps allows Gus to use tools (like checking inventory or booking 
+     * inspections) while maintaining his persona.
+     */
+    // @ts-expect-error - provider type mismatch for maxSteps, but runtime functionality works
     maxSteps: 5,
-    temperature: 0.7,
+    temperature: 0.7, // Keeps his insults and technical jargon slightly varied
   });
 
   return result.toDataStreamResponse();

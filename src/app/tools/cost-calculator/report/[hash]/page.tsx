@@ -316,11 +316,25 @@ async function ReportContent({ hash }: { hash: string }) {
                       </p>
                     </div>
                   </div>
-                  <Link href="/contact">
-                    <Button variant="secondary" size="lg" className="w-full">
-                      Book Initial Assessment
-                    </Button>
-                  </Link>
+                  <div className="space-y-4">
+                    <Link
+                      href={`/tools/maintenance-configurator?propertyHash=${hash}`}
+                      className="block"
+                    >
+                      <Button variant="secondary" size="lg" className="w-full">
+                        Configure Maintenance Plan
+                      </Button>
+                    </Link>
+                    <Link href="/contact" className="block">
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        className="text-cream border-white/10 bg-white/5 hover:bg-white/10 w-full"
+                      >
+                        Book Initial Assessment
+                      </Button>
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
             </div>
