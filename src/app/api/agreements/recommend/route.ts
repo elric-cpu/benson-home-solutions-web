@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { anthropic } from '@ai-sdk/anthropic';
-import { openai, createOpenAI } from '@ai-sdk/openai';
 import { generateObject } from 'ai';
 import { z } from 'zod';
 import { SERVICE_CATALOG } from '@/lib/agreement-engine';
+import { openrouter } from '@/lib/ai/provider';
 
 const RecommendationSchema = z.object({
   recommendations: z.array(
@@ -25,16 +24,6 @@ const RecommendationSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-  const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-
-  if (!ANTHROPIC_API_KEY && !OPENAI_API_KEY) {
-    return NextResponse.json(
-      { error: 'AI provider (Anthropic/OpenAI) not configured' },
-      { status: 500 },
-    );
-  }
-
   try {
     const { property } = await request.json();
 
@@ -55,29 +44,10 @@ Do NOT recommend services that don't apply to this building type.
       applicable_to: s.applicable_to,
     }));
 
-    // Choose provider (Prefer Anthropic, fallback to OpenAI or OpenRouter)
-    let model;
-    if (ANTHROPIC_API_KEY) {
-      model = anthropic('claude-3-5-sonnet-20240620');
-    } else if (OPENAI_API_KEY) {
-      if (OPENAI_API_KEY.startsWith('sk-or-')) {
-        const openrouter = createOpenAI({
-          apiKey: OPENAI_API_KEY,
-          baseURL: 'https://openrouter.ai/api/v1',
-        });
-        model = openrouter('openai/gpt-4o');
-      } else {
-        model = openai('gpt-4o');
-      }
-    }
-
-    if (!model) {
-      throw new Error('No valid AI model configuration found');
-    }
-
     const { object }: { object: z.infer<typeof RecommendationSchema> } =
       await generateObject({
-        model,
+        model: openrouter('meta-llama/llama-3.3-70b-instruct:free'),
+		maxTokens: 4000,
         schema: RecommendationSchema,
         system: systemPrompt,
         prompt: JSON.stringify({ property, service_catalog: catalogSummary }),

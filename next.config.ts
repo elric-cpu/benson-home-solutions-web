@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
 
   // --- Next.js 15: Performance & Optimization ---
   experimental: {
-    // ppr: 'incremental', // PPR requires next@canary even in v15
     optimizePackageImports: [
       'lucide-react',
       '@ai-sdk/react',
@@ -16,7 +15,7 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // --- Strict Mode: Ensure zero errors/warnings for production builds ---
+  // --- Strict Mode ---
   typescript: {
     ignoreBuildErrors: false,
   },
@@ -24,12 +23,18 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: false,
   },
 
-  // --- External Assets ---
+  // --- External Assets FIX ---
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'cdn.sanity.io',
+        pathname: '/**', // Ensures all Sanity assets are allowed
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**', // Fixes the Unsplash "Invalid src prop" error
       },
     ],
   },
@@ -37,24 +42,22 @@ const nextConfig: NextConfig = {
 
 // Sentry configuration options
 const sentryConfig = {
-  // Suppress source map warnings
   hideSourceMaps: true,
-
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
-  disableLogger: true,
-
-  automaticVercelMonitors: true,
-  widenClientFileUpload: false,
-  tunnelRoute: '/monitoring',
-
-  // --- TURBOPACK COMPATIBILITY FIXES ---
+  webpack: {
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    automaticVercelMonitors: true,
+  },
+  tunnelRoute: '/monitoring-tunnel',
   
-  // Disable Sentry's Webpack plugins to prevent conflicts with Turbopack during the build
+  // --- TURBOPACK COMPATIBILITY FIXES ---
   disableServerWebpackPlugin: true,
   disableClientWebpackPlugin: true,
-
-  // Force Sentry to upload source maps after the build completes (Required for Turbopack)
   useRunAfterProductionCompileHook: true,
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
 };
 
 export default withSentryConfig(nextConfig, sentryConfig);

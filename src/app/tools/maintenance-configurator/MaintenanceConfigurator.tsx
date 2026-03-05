@@ -12,7 +12,11 @@ import {
   Badge,
   RichHero,
 } from '@/components/ui';
-import { SERVICE_CATALOG, calculateServicePrice, type Frequency } from '@/lib/agreement-engine';
+import {
+  SERVICE_CATALOG,
+  calculateServicePrice,
+  type Frequency,
+} from '@/lib/agreement-engine';
 import { HERO_ASSETS } from '@/lib/constants';
 
 interface Recommendation {
@@ -26,7 +30,26 @@ interface SelectedService extends Recommendation {
   price: number;
 }
 
-export function MaintenanceConfigurator() {
+interface HousingData {
+  sqft?: number;
+  yearBuilt?: number;
+}
+
+interface Property {
+  id: string;
+  rawAddress: string;
+  city: string;
+  state: string;
+  zip: string;
+  floodZone: string;
+  housingData?: HousingData;
+}
+
+interface Props {
+  propertyHash?: string;
+}
+
+export function MaintenanceConfigurator({ propertyHash }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [isFinalizing, setIsFinalizing] = useState(false);
@@ -35,26 +58,52 @@ export function MaintenanceConfigurator() {
     Record<string, SelectedService>
   >({});
   const [showComparison, setShowComparison] = useState(false);
+  const [property, setProperty] = useState<Property | null>(null);
 
-  // Mock property data for demo
-  const property = useMemo(
-    () => ({
+  // Fallback property for demo if hash is missing
+  const fallbackProperty = useMemo(
+    (): Property => ({
       id: '00000000-0000-0000-0000-000000000000',
-      sqft: 2400,
-      age: 42,
+      rawAddress: '123 Main St, Albany, OR 97321',
+      city: 'Albany',
+      state: 'OR',
+      zip: '97321',
       floodZone: 'AE',
-      buildingType: 'residential' as const,
-      address: '123 Main St, Albany, OR 97321',
+      housingData: { sqft: 2400, yearBuilt: 1984 },
     }),
     [],
   );
 
   useEffect(() => {
-    async function fetchRecommendations() {
+    async function fetchData() {
+      setLoading(true);
       try {
+        let activeProperty = fallbackProperty;
+
+        if (propertyHash) {
+          const propRes = await fetch(`/api/properties/${propertyHash}`);
+          if (propRes.ok) {
+            const { property: dbProp } = await propRes.json();
+            activeProperty = dbProp;
+          }
+        }
+
+        setProperty(activeProperty);
+
+        // Map database property to pricing engine format
+        const pricingProperty = {
+          sqft: activeProperty.housingData?.sqft || 2000,
+          age: activeProperty.housingData?.yearBuilt
+            ? new Date().getFullYear() - activeProperty.housingData.yearBuilt
+            : 30,
+          floodZone: activeProperty.floodZone || 'X',
+          buildingType: 'residential' as const, // Default for tool
+        };
+
         const response = await fetch('/api/agreements/recommend', {
           method: 'POST',
-          body: JSON.stringify({ property }),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ property: pricingProperty }),
         });
         const data = await response.json();
 
@@ -72,8 +121,8 @@ export function MaintenanceConfigurator() {
                 ...r,
                 price: calculateServicePrice({
                   service: catalogItem,
-                  property,
-                  frequency: r.frequency
+                  property: pricingProperty,
+                  frequency: r.frequency,
                 }),
               };
             }
@@ -81,14 +130,24 @@ export function MaintenanceConfigurator() {
           setSelectedServices(initial);
         }
       } catch (error) {
-        console.error('Failed to load recommendations', error);
+        console.error('Failed to load configurator data', error);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchRecommendations();
-  }, [property]);
+    fetchData();
+  }, [propertyHash, fallbackProperty]);
+
+  const activeProperty = property || fallbackProperty;
+  const pricingProperty = {
+    sqft: activeProperty.housingData?.sqft || 2000,
+    age: activeProperty.housingData?.yearBuilt
+      ? new Date().getFullYear() - activeProperty.housingData.yearBuilt
+      : 30,
+    floodZone: activeProperty.floodZone || 'X',
+    buildingType: 'residential' as const,
+  };
 
   const toggleService = (r: Recommendation) => {
     const catalogItem = SERVICE_CATALOG.find((s) => s.id === r.service_id)!;
@@ -101,8 +160,8 @@ export function MaintenanceConfigurator() {
           ...r,
           price: calculateServicePrice({
             service: catalogItem,
-            property,
-            frequency: r.frequency
+            property: pricingProperty,
+            frequency: r.frequency,
           }),
         };
       }
@@ -126,15 +185,12 @@ export function MaintenanceConfigurator() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          propertyId: property.id,
-          clientId: '00000000-0000-0000-0000-000000000000',
+          propertyId: activeProperty.id,
+          clientId: '00000000-0000-0000-0000-000000000000', // Still need client context
           services: Object.values(selectedServices),
           totalAnnual,
           monthlySubscription,
-          agreementType:
-            (property.buildingType as string) === 'church'
-              ? 'church-subscription'
-              : 'residential-subscription',
+          agreementType: 'residential-subscription',
         }),
       });
 
@@ -169,7 +225,7 @@ export function MaintenanceConfigurator() {
     <>
       <RichHero
         title="Tailored Maintenance Plan"
-        description={`Professional Oversight for ${property.address} • ${property.sqft} sqft • Built 1984 • Zone ${property.floodZone}`}
+        description={`Professional Oversight for ${activeProperty.rawAddress} • ${pricingProperty.sqft} sqft • Built ${activeProperty.housingData?.yearBuilt || 'Unknown'} • Zone ${pricingProperty.floodZone}`}
         backgroundImage={HERO_ASSETS.configurator}
         badge="Technical Recommendation"
         overlayOpacity={70}
@@ -230,8 +286,8 @@ export function MaintenanceConfigurator() {
                                         service: SERVICE_CATALOG.find(
                                           (s) => s.id === r.service_id,
                                         )!,
-                                        property,
-                                        frequency: r.frequency
+                                        property: pricingProperty,
+                                        frequency: r.frequency,
                                       }).toLocaleString()}
                                       /yr
                                     </span>
@@ -295,13 +351,23 @@ export function MaintenanceConfigurator() {
                 </div>
                 <CardContent className="p-8">
                   <h3 className="text-cream mb-6 text-xl font-bold">
-                    {showComparison ? 'Deferred Cost Projection' : 'Systematic Oversight'}
+                    {showComparison
+                      ? 'Deferred Cost Projection'
+                      : 'Systematic Oversight'}
                   </h3>
                   <div className="mb-8 space-y-4">
                     <div className="text-cream/70 flex justify-between text-sm">
-                      <span>{showComparison ? 'Est. Emergency Repairs' : 'Annual Operational Cost'}</span>
+                      <span>
+                        {showComparison
+                          ? 'Est. Emergency Repairs'
+                          : 'Annual Operational Cost'}
+                      </span>
                       <span className={showComparison ? 'text-red-300' : ''}>
-                        ${(showComparison ? deferredMaintenanceAnnual : totalAnnual).toLocaleString()}
+                        $
+                        {(showComparison
+                          ? deferredMaintenanceAnnual
+                          : totalAnnual
+                        ).toLocaleString()}
                       </span>
                     </div>
                     <div className="flex items-end justify-between border-t border-white/10 pt-4">
@@ -309,8 +375,13 @@ export function MaintenanceConfigurator() {
                         <span className="text-cream/50 block text-xs font-bold tracking-wider uppercase">
                           {showComparison ? 'Risk Burden' : 'Subscription'}
                         </span>
-                        <span className={`text-4xl font-black ${showComparison ? 'text-red-400' : ''}`}>
-                          ${showComparison ? deferredMaintenanceMonthly : monthlySubscription}
+                        <span
+                          className={`text-4xl font-black ${showComparison ? 'text-red-400' : ''}`}
+                        >
+                          $
+                          {showComparison
+                            ? deferredMaintenanceMonthly
+                            : monthlySubscription}
                         </span>
                         <span className="text-cream/70 ml-1 text-sm font-medium">
                           /mo
@@ -352,7 +423,9 @@ export function MaintenanceConfigurator() {
               <Card className="border-slate/10 mt-6 bg-slate-50 shadow-sm">
                 <CardContent className="p-6">
                   <h4 className="text-charcoal mb-4 text-[10px] font-bold tracking-widest uppercase">
-                    {showComparison ? 'The Cost of "Waiting"' : 'What is Professional Oversight?'}
+                    {showComparison
+                      ? 'The Cost of "Waiting"'
+                      : 'What is Professional Oversight?'}
                   </h4>
                   <ul className="space-y-3">
                     {(showComparison
@@ -370,7 +443,11 @@ export function MaintenanceConfigurator() {
                         ]
                     ).map((f) => (
                       <li key={f} className="text-slate flex gap-2 text-xs">
-                        <span className={showComparison ? 'text-red-600' : 'text-oxblood'}>
+                        <span
+                          className={
+                            showComparison ? 'text-red-600' : 'text-oxblood'
+                          }
+                        >
                           {showComparison ? '!' : '✓'}
                         </span>{' '}
                         {f}
