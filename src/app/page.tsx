@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 import { client } from '@/sanity/lib/client';
 import { LocalBusinessJsonLd } from '@/components/seo/json-ld';
-import { Container, Section, Button, Card } from '@/components/ui';
+import { Container, Section, Button, Card, Badge } from '@/components/ui';
 import Link from 'next/link';
 import { HeroSection } from '@/components/content/homepage/HeroSection';
 import { ServicesGrid } from '@/components/content/homepage/ServicesGrid';
@@ -214,7 +214,7 @@ export default async function HomePage() {
               <Card className="bg-oxblood border-none shadow-elevated overflow-hidden text-cream p-8 md:p-12">
                 <div className="relative z-10">
                   <div className="mb-6 flex items-center justify-between">
-                    <span className="text-4xl font-black opacity-20 uppercase tracking-tighter">BHS-2026</span>
+                    <span className="text-4xl font-black opacity-20 uppercase tracking-tighter" aria-hidden="true">BHS-2026</span>
                     <Badge variant="secondary" className="bg-cream/10 text-cream border-cream/20">Active Analysis</Badge>
                   </div>
                   <div className="space-y-6">
@@ -225,7 +225,7 @@ export default async function HomePage() {
                       <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">Benchmarking Complete</p>
                     </div>
                     <div className="space-y-1">
-                      <h3 className="text-2xl font-bold">Subscription Estimate</h3>
+                      <h3 className="text-2xl font-bold text-cream">Subscription Estimate</h3>
                       <div className="text-5xl font-black">$119<span className="text-sm opacity-50 ml-1">/mo</span></div>
                     </div>
                     <div className="pt-4 border-t border-white/10">
