@@ -47,9 +47,9 @@ const tools = [
     icon: '🔌',
   },
   {
-    title: 'Maintenance Configurator',
-    href: '/tools/maintenance-configurator',
-    desc: 'Our AI-powered engine analyzes your property data to recommend a systematic maintenance plan.',
+    title: 'Subscription Recommender',
+    href: '/tools/subscription-recommender',
+    desc: 'Our AI-powered engine analyzes your property data to recommend a systematic maintenance plan with early cost reveal.',
     badge: 'AI Recommendations',
     icon: '⚙️',
   },

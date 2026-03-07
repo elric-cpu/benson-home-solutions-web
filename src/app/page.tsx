@@ -180,6 +180,68 @@ export default async function HomePage() {
         </Container>
       </Section>
 
+      {/* Subscription Recommender CTA */}
+      <Section variant="cream" spacing="lg">
+        <Container>
+          <div className="flex flex-col items-center gap-12 lg:flex-row">
+            <div className="flex-1 space-y-6">
+              <Badge variant="secondary" className="uppercase tracking-widest">
+                AI Powered Recommendations
+              </Badge>
+              <h2 className="text-oxblood text-4xl font-black leading-tight md:text-5xl">
+                Get Your Personalized Maintenance Plan
+              </h2>
+              <p className="text-slate text-xl leading-relaxed opacity-80">
+                Identify predictable property failures and receive a customized
+                oversight plan in under 60 seconds. Our AI analyzes your
+                property age, size, and location to recommend the perfect
+                subscription tier.
+              </p>
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <Link href="/tools/subscription-recommender">
+                  <Button variant="oxblood" size="lg" className="w-full sm:w-auto font-bold">
+                    Start My Recommendation
+                  </Button>
+                </Link>
+                <Link href="/services/maintenance-subscriptions">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                    View Subscription Tiers
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="flex-1">
+              <Card className="bg-oxblood border-none shadow-elevated overflow-hidden text-cream p-8 md:p-12">
+                <div className="relative z-10">
+                  <div className="mb-6 flex items-center justify-between">
+                    <span className="text-4xl font-black opacity-20 uppercase tracking-tighter">BHS-2026</span>
+                    <Badge variant="secondary" className="bg-cream/10 text-cream border-cream/20">Active Analysis</Badge>
+                  </div>
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                        <div className="bg-green-500 h-full w-[85%] animate-pulse" />
+                      </div>
+                      <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">Benchmarking Complete</p>
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-2xl font-bold">Subscription Estimate</h3>
+                      <div className="text-5xl font-black">$119<span className="text-sm opacity-50 ml-1">/mo</span></div>
+                    </div>
+                    <div className="pt-4 border-t border-white/10">
+                      <p className="text-sm italic opacity-70">
+                        &quot;Benson caught a failing wax ring and blocked gutters during our first month. Their systematic oversight saved us at least $8,000 in water damage repairs.&quot;
+                      </p>
+                      <p className="mt-2 text-xs font-bold uppercase tracking-widest">&mdash; Local Property Owner</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
       <Suspense fallback={<SectionFallback />}>
         <AreasServed areas={allAreas} />
       </Suspense>
