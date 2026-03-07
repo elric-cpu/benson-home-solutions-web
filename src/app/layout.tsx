@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Suspense } from 'react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 import { sourceSans3 } from '@/lib/fonts';
 import { Header, Footer, MobileActionBar } from '@/components/layout';
 import { DeferredComponents } from '@/components/layout/DeferredComponents';
@@ -87,6 +88,7 @@ export default function RootLayout({
         </Suspense>
         <DeferredComponents />
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
