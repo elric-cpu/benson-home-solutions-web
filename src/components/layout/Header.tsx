@@ -5,7 +5,7 @@ import { MobileNavButton } from './MobileNavButton';
 
 const navigation = [
   { name: 'Services', href: '/services' },
-  { name: 'Tools', href: '/tools/cost-calculator' },
+  { name: 'Tools', href: '/tools' },
   { name: 'About', href: '/about' },
   { name: 'Areas We Serve', href: '/areas' },
   { name: 'Contact', href: '/contact' },
@@ -21,12 +21,12 @@ export function Header() {
             <span className="text-oxblood text-xl font-bold md:text-2xl">
               {BUSINESS.name}
             </span>
-            <div className="flex items-center gap-1.5 ml-2">
+            <div className="ml-2 flex items-center gap-1.5">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-green-800">
+              <span className="text-[10px] font-bold tracking-widest text-green-800 uppercase">
                 Live
               </span>
             </div>
