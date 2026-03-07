@@ -1,10 +1,6 @@
 #!/usr/bin/env tsx
 
-import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import * as schema from '../src/lib/db/schema';
-import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import { sql } from 'drizzle-orm';
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -14,16 +10,15 @@ if (!connectionString) {
 
 async function setupDatabase() {
   console.log('Setting up database...');
-  
-  const client = postgres(connectionString, { prepare: false });
-  const db = drizzle(client, { schema });
+
+  const client = postgres(connectionString!, { prepare: false });
 
   try {
     // Create tables manually if they don't exist
     console.log('Creating tables...');
-    
+
     // Create clients table
-    await client.execute(`
+    await client`
       CREATE TABLE IF NOT EXISTS clients (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         name varchar(255) NOT NULL,
@@ -35,10 +30,10 @@ async function setupDatabase() {
         created_at timestamp with time zone DEFAULT now() NOT NULL,
         updated_at timestamp with time zone DEFAULT now() NOT NULL
       );
-    `);
+    `;
 
     // Create properties table
-    await client.execute(`
+    await client`
       CREATE TABLE IF NOT EXISTS properties (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         client_id uuid REFERENCES clients(id),
@@ -67,10 +62,10 @@ async function setupDatabase() {
         updated_at timestamp with time zone DEFAULT now() NOT NULL,
         enriched_at timestamp with time zone
       );
-    `);
+    `;
 
     // Create other tables
-    await client.execute(`
+    await client`
       CREATE TABLE IF NOT EXISTS agreements (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         agreement_number varchar(100) UNIQUE NOT NULL,
@@ -88,9 +83,9 @@ async function setupDatabase() {
         created_at timestamp with time zone DEFAULT now() NOT NULL,
         updated_at timestamp with time zone DEFAULT now() NOT NULL
       );
-    `);
+    `;
 
-    await client.execute(`
+    await client`
       CREATE TABLE IF NOT EXISTS agreement_versions (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         agreement_id uuid NOT NULL REFERENCES agreements(id),
@@ -105,9 +100,9 @@ async function setupDatabase() {
         signed_by_benson text,
         created_at timestamp with time zone DEFAULT now() NOT NULL
       );
-    `);
+    `;
 
-    await client.execute(`
+    await client`
       CREATE TABLE IF NOT EXISTS service_log (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         property_id uuid NOT NULL REFERENCES properties(id),
@@ -122,9 +117,9 @@ async function setupDatabase() {
         notion_page_id varchar(255),
         created_at timestamp with time zone DEFAULT now() NOT NULL
       );
-    `);
+    `;
 
-    await client.execute(`
+    await client`
       CREATE TABLE IF NOT EXISTS audit_log (
         id bigserial PRIMARY KEY NOT NULL,
         table_name text NOT NULL,
@@ -137,9 +132,9 @@ async function setupDatabase() {
         ip_address text,
         created_at timestamp with time zone DEFAULT now()
       );
-    `);
+    `;
 
-    await client.execute(`
+    await client`
       CREATE TABLE IF NOT EXISTS contact_submissions (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         name varchar(255) NOT NULL,
@@ -151,9 +146,9 @@ async function setupDatabase() {
         email_sent boolean DEFAULT false,
         created_at timestamp with time zone DEFAULT now() NOT NULL
       );
-    `);
+    `;
 
-    await client.execute(`
+    await client`
       CREATE TABLE IF NOT EXISTS subscription_leads (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         name varchar(255) NOT NULL,
@@ -164,10 +159,9 @@ async function setupDatabase() {
         source varchar(100) DEFAULT 'website-subscription',
         created_at timestamp with time zone DEFAULT now() NOT NULL
       );
-    `);
+    `;
 
     console.log('Database tables created successfully!');
-    
   } catch (error) {
     console.error('Error setting up database:', error);
     throw error;

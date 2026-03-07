@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity';
+import { defineField, defineType } from 'sanity';
 
 export const contactPage = defineType({
   name: 'contactPage',
@@ -15,73 +15,39 @@ export const contactPage = defineType({
       name: 'heroHeadline',
       title: 'Hero Headline',
       type: 'string',
+      initialValue: 'Get in Touch',
     }),
     defineField({
       name: 'heroSubtext',
       title: 'Hero Subtext',
       type: 'text',
-      rows: 2,
-    }),
-    defineField({
-      name: 'heroImage',
-      title: 'Hero Background Image',
-      type: 'image',
-      options: { hotspot: true },
+      initialValue: "We're here to help with your property needs. Reach out 24/7 for emergencies.",
     }),
     defineField({
       name: 'heroVideo',
       title: 'Hero Video URL',
-      type: 'url',
-      description: 'Enter a direct MP4 link for the hero background video',
-    }),
-    defineField({
-      name: 'metaDescription',
-      title: 'Meta Description',
-      type: 'text',
-      rows: 3,
-      validation: (r) => r.max(160),
-    }),
-    defineField({
-      name: 'resources',
-      title: 'Resources & Backlinks',
-      type: 'array',
-      of: [{ type: 'resource' }],
-      validation: (r) => r.min(6).max(6),
-    }),
-    defineField({ name: 'phone', title: 'Phone', type: 'string' }),
-    defineField({
-      name: 'afterHoursPhone',
-      title: 'After-Hours Phone',
       type: 'string',
-    }),
-    defineField({ name: 'email', title: 'Email', type: 'string' }),
-    defineField({ name: 'address', title: 'Address', type: 'text', rows: 3 }),
-    defineField({
-      name: 'officeHours',
-      title: 'Office Hours',
-      type: 'text',
-      rows: 3,
+      description: 'Optional video background for the hero section.',
     }),
     defineField({
-      name: 'formHeadline',
-      title: 'Form Headline',
+      name: 'emergencyBannerText',
+      title: 'Emergency Banner Text',
       type: 'string',
-      initialValue: 'Request a Free Estimate',
+      initialValue: '24/7 EMERGENCY? CALL (541) 413-0480 IMMEDIATELY.',
     }),
     defineField({
-      name: 'formDescription',
-      title: 'Form Description',
-      type: 'text',
-      rows: 2,
-    }),
-    defineField({
-      name: 'content',
-      title: 'Additional Content',
+      name: 'contactInfo',
+      title: 'Contact Info Cards',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'title', type: 'string' },
+            { name: 'content', type: 'array', of: [{ type: 'block' }] },
+          ],
+        },
+      ],
     }),
   ],
-  preview: {
-    prepare: () => ({ title: 'Contact Page' }),
-  },
 });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Section,
@@ -19,6 +19,8 @@ import {
   SERVICE_CATALOG,
   calculateServicePrice,
   type Frequency,
+  type BuildingType,
+  type PropertyData,
 } from '@/lib/agreement-engine';
 import { HERO_ASSETS } from '@/lib/constants';
 
@@ -29,27 +31,40 @@ interface Recommendation {
   priority: 'essential' | 'recommended' | 'optional';
   reasoning: string;
   frequency: Frequency;
+  climate_adjustment?: boolean;
 }
 
 interface SelectedService extends Recommendation {
   price: number;
 }
 
+interface AddressData {
+  formatted: string;
+  postcode: string;
+  city: string;
+  state: string;
+  county: string;
+  lat: number;
+  lon: number;
+}
+
 export function SubscriptionRecommender() {
   const router = useRouter();
   const [step, setStep] = useState<Step>('address');
-  const [address, setAddress] = useState<any>(null);
-  const [propertyType, setPropertyType] = useState('residential');
+  const [address, setAddress] = useState<AddressData | null>(null);
+  const [propertyType, setPropertyType] = useState<BuildingType>('residential');
   const [sqft, setSqft] = useState(2000);
   const [yearBuilt, setYearBuilt] = useState(1990);
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFinalizing, setIsFinalizing] = useState(false);
+  const [clientId, setClientId] = useState<string | null>(null);
+  const [propertyId, setPropertyId] = useState<string | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [selectedServices, setSelectedServices] = useState<Record<string, SelectedService>>({});
-  const [showComparison, setShowComparison] = useState(false);
 
   // Address Selection
-  const handleAddressSelect = (suggestion: any) => {
+  const handleAddressSelect = (suggestion: AddressData) => {
     setAddress(suggestion);
     setStep('info');
   };
@@ -68,7 +83,7 @@ export function SubscriptionRecommender() {
 
     try {
       // 1. Capture Lead
-      await fetch('/api/calculator/lead', {
+      const leadRes = await fetch('/api/calculator/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -78,9 +93,13 @@ export function SubscriptionRecommender() {
           source: 'subscription-recommender'
         }),
       });
+      const leadData = (await leadRes.json()) as { clientId?: string; propertyId?: string };
+      
+      if (leadData.clientId) setClientId(leadData.clientId);
+      if (leadData.propertyId) setPropertyId(leadData.propertyId);
 
       // 2. Get AI Recommendations
-      const pricingProperty = {
+      const pricingProperty: PropertyData = {
         sqft,
         age: new Date().getFullYear() - yearBuilt,
         floodZone: 'X', // Default if not found
@@ -92,10 +111,10 @@ export function SubscriptionRecommender() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ property: pricingProperty }),
       });
-      const data = await recsRes.json();
+      const data = (await recsRes.json()) as { recommendations?: Recommendation[] };
 
       if (data.recommendations) {
-        const recs = data.recommendations as Recommendation[];
+        const recs = data.recommendations;
         setRecommendations(recs);
 
         const initial: Record<string, SelectedService> = {};
@@ -124,11 +143,47 @@ export function SubscriptionRecommender() {
     }
   };
 
-  const pricingProperty = {
+  // Finalize Agreement
+  const handleInitializeAgreement = async () => {
+    if (!clientId || !propertyId) {
+      alert('Session expired. Please try again.');
+      return;
+    }
+
+    setIsFinalizing(true);
+    try {
+      const res = await fetch('/api/agreements/finalize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientId,
+          propertyId,
+          services: Object.values(selectedServices),
+          totalAnnual,
+          monthlySubscription,
+          agreementType: `${propertyType}-subscription`,
+        }),
+      });
+
+      const data = (await res.json()) as { success: boolean; agreementId?: string; error?: string };
+      if (data.success && data.agreementId) {
+        router.push(`/agreements/${data.agreementId}`);
+      } else {
+        throw new Error(data.error || 'Failed to finalize');
+      }
+    } catch (error) {
+      console.error('Finalization failed:', error);
+      alert('Failed to initialize agreement. Please contact our office.');
+    } finally {
+      setIsFinalizing(false);
+    }
+  };
+
+  const pricingProperty: PropertyData = {
     sqft,
     age: new Date().getFullYear() - yearBuilt,
     floodZone: 'X',
-    buildingType: propertyType as any,
+    buildingType: propertyType,
   };
 
   const toggleService = (r: Recommendation) => {
@@ -154,7 +209,6 @@ export function SubscriptionRecommender() {
   const totalAnnual = Object.values(selectedServices).reduce((sum, s) => sum + s.price, 0);
   const monthlySubscription = Math.round(totalAnnual / 12);
   const deferredMaintenanceAnnual = Math.round(totalAnnual * 3.5);
-  const deferredMaintenanceMonthly = Math.round(deferredMaintenanceAnnual / 12);
 
   // Address Input
   if (step === 'address') {
@@ -195,7 +249,7 @@ export function SubscriptionRecommender() {
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="propertyType">Building Type</Label>
-                    <Select id="propertyType" value={propertyType} onChange={(e) => setPropertyType(e.target.value)}>
+                    <Select id="propertyType" value={propertyType} onChange={(e) => setPropertyType(e.target.value as BuildingType)}>
                       <option value="residential">Residential Home</option>
                       <option value="commercial">Commercial Property</option>
                       <option value="church">Church / Community Facility</option>
@@ -210,7 +264,7 @@ export function SubscriptionRecommender() {
                   <Label htmlFor="yearBuilt">Estimated Year Built</Label>
                   <Input id="yearBuilt" type="number" value={yearBuilt} onChange={(e) => setYearBuilt(Number(e.target.value))} />
                 </div>
-                <Button variant="oxblood" size="lg" className="w-full">
+                <Button variant="primary" size="lg" className="w-full">
                   Analyze Maintenance Requirements &rarr;
                 </Button>
               </form>
@@ -246,7 +300,7 @@ export function SubscriptionRecommender() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="text-lg py-6"
                 />
-                <Button variant="oxblood" size="lg" className="w-full py-6 font-bold" loading={isSubmitting}>
+                <Button variant="primary" size="lg" className="w-full py-6 font-bold" loading={isSubmitting}>
                   Reveal My Maintenance Plan
                 </Button>
                 <p className="text-[10px] text-slate/70 font-bold uppercase tracking-widest">
@@ -380,7 +434,13 @@ export function SubscriptionRecommender() {
                     </div>
                   </div>
 
-                  <Button variant="secondary" size="lg" className="w-full font-black py-6 shadow-lg">
+                  <Button 
+                    variant="secondary" 
+                    size="lg" 
+                    className="w-full font-black py-6 shadow-lg"
+                    onClick={handleInitializeAgreement}
+                    loading={isFinalizing}
+                  >
                     Initialize Agreement
                   </Button>
                   <p className="mt-4 text-[10px] text-center font-bold uppercase tracking-widest opacity-40 leading-relaxed">

@@ -1,8 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Button, Card, CardContent } from '@/components/ui';
 import { Input, Textarea, Label, Select } from '@/components/ui/Form';
+
+const contactFormSchema = z.object({
+  firstName: z.string().min(2, 'First name is required'),
+  lastName: z.string().min(2, 'Last name is required'),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().optional(),
+  service: z.string().min(1, 'Please select a service'),
+  message: z.string().min(10, 'Message must be at least 10 characters'),
+  website: z.string().optional(), // Honeypot
+});
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
 
 const SERVICES = [
   { value: 'maintenance', label: 'Maintenance Program' },
@@ -14,26 +29,28 @@ const SERVICES = [
 ];
 
 export function ContactForm() {
-  const [status, setStatus] = useState<
-    'idle' | 'loading' | 'success' | 'error'
-  >('idle');
-  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setStatus('loading');
-    setMessage('');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+  });
 
-    const formData = new FormData(event.currentTarget);
-
-    // Honeypot check
-    if (formData.get('website')) {
-      console.warn('Honeypot submission detected.');
-      setStatus('success'); // Pretend success to bots
+  async function onSubmit(data: ContactFormData) {
+    if (data.website) {
+      // Honeypot hit - ignore submission silently
+      console.warn('Honeypot hit');
+      setStatus('success');
       return;
     }
 
-    const data = Object.fromEntries(formData.entries());
+    setStatus('loading');
+    setErrorMessage('');
 
     try {
       const response = await fetch('/api/contact', {
@@ -46,83 +63,90 @@ export function ContactForm() {
 
       if (response.ok) {
         setStatus('success');
-        setMessage(result.message);
-        (event.target as HTMLFormElement).reset();
+        reset();
       } else {
         setStatus('error');
-        setMessage(result.error || 'Something went wrong. Please try again.');
+        setErrorMessage(result.error || 'Something went wrong. Please try again.');
       }
     } catch {
       setStatus('error');
-      setMessage('Network error. Please check your connection.');
+      setErrorMessage('Network error. Please check your connection.');
     }
   }
 
   if (status === 'success') {
     return (
-      <div className="rounded-xl border border-green-200 bg-green-50 p-8 text-center">
-        <div className="mb-4 text-4xl">✅</div>
-        <h3 className="mb-2 text-2xl font-bold text-green-900">
-          Message Sent!
-        </h3>
-        <p className="mb-6 text-green-800">{message}</p>
-        <Button onClick={() => setStatus('idle')} variant="outline">
-          Send Another Message
-        </Button>
-      </div>
+      <Card className="border-green-100 bg-green-50 text-center">
+        <CardContent className="p-12">
+          <div className="mb-6 text-5xl">✅</div>
+          <h3 className="mb-3 text-2xl font-black text-green-900">Message Sent!</h3>
+          <p className="mb-8 text-green-800">
+            We&apos;ve received your inquiry and will be in touch within 24 hours.
+            For emergencies, please call our 24/7 line at (541) 413-0480.
+          </p>
+          <Button onClick={() => setStatus('idle')} variant="outline">
+            Send Another Message
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Honeypot */}
       <div className="hidden" aria-hidden="true">
-        <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+        <input {...register('website')} tabIndex={-1} autoComplete="off" />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name *</Label>
           <Input
             id="firstName"
-            name="firstName"
+            {...register('firstName')}
             placeholder="Jane"
-            required
-            disabled={status === 'loading'}
+            aria-invalid={errors.firstName ? 'true' : 'false'}
           />
+          {errors.firstName && (
+            <p className="text-xs text-red-600">{errors.firstName.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="lastName">Last Name *</Label>
           <Input
             id="lastName"
-            name="lastName"
+            {...register('lastName')}
             placeholder="Doe"
-            required
-            disabled={status === 'loading'}
+            aria-invalid={errors.lastName ? 'true' : 'false'}
           />
+          {errors.lastName && (
+            <p className="text-xs text-red-600">{errors.lastName.message}</p>
+          )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="email">Email Address *</Label>
           <Input
             id="email"
-            name="email"
             type="email"
+            {...register('email')}
             placeholder="jane@example.com"
-            required
-            disabled={status === 'loading'}
+            aria-invalid={errors.email ? 'true' : 'false'}
           />
+          {errors.email && (
+            <p className="text-xs text-red-600">{errors.email.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="phone">Phone Number</Label>
           <Input
             id="phone"
-            name="phone"
             type="tel"
+            {...register('phone')}
             placeholder="(541) 555-0123"
-            disabled={status === 'loading'}
           />
         </div>
       </div>
@@ -131,52 +155,47 @@ export function ContactForm() {
         <Label htmlFor="service">How can we help? *</Label>
         <Select
           id="service"
-          name="service"
-          required
-          disabled={status === 'loading'}
-          defaultValue=""
+          {...register('service')}
+          aria-invalid={errors.service ? 'true' : 'false'}
         >
-          <option value="" disabled>
-            Select a service...
-          </option>
+          <option value="">Select a service...</option>
           {SERVICES.map((s) => (
             <option key={s.value} value={s.value}>
               {s.label}
             </option>
           ))}
         </Select>
+        {errors.service && (
+          <p className="text-xs text-red-600">{errors.service.message}</p>
+        )}
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="message">Your Message *</Label>
         <Textarea
           id="message"
-          name="message"
-          placeholder="Tell us about your property and what you need..."
-          required
-          minLength={10}
-          disabled={status === 'loading'}
+          {...register('message')}
+          placeholder="Tell us about your property needs..."
+          aria-invalid={errors.message ? 'true' : 'false'}
+          rows={4}
         />
+        {errors.message && (
+          <p className="text-xs text-red-600">{errors.message.message}</p>
+        )}
       </div>
 
       {status === 'error' && (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-          {message}
+        <div className="rounded-lg border border-red-100 bg-red-50 p-4 text-sm text-red-700">
+          {errorMessage}
         </div>
       )}
 
-      <Button
-        type="submit"
-        size="lg"
-        className="w-full"
-        loading={status === 'loading'}
-      >
+      <Button type="submit" size="lg" className="w-full" loading={status === 'loading'}>
         {status === 'loading' ? 'Sending...' : 'Send Message'}
       </Button>
 
-      <p className="text-slate text-center text-xs">
-        We typically respond within 1 business day. For emergencies, please call
-        our 24/7 line at (541) 413-0480.
+      <p className="text-muted-foreground text-center text-xs">
+        We respect your privacy. All inquiries are handled with strict confidentiality.
       </p>
     </form>
   );

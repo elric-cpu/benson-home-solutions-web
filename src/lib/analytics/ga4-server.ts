@@ -28,8 +28,12 @@ export async function trackServerEvent(clientId: string, event: GA4Event) {
   const url = `https://www.google-analytics.com/mp/collect?measurement_id=${GA4_MEASUREMENT_ID}&api_secret=${GA4_API_SECRET}`;
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+
     const response = await fetch(url, {
       method: 'POST',
+      signal: controller.signal,
       body: JSON.stringify({
         client_id: clientId,
         events: [
@@ -43,6 +47,8 @@ export async function trackServerEvent(clientId: string, event: GA4Event) {
         ],
       }),
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();

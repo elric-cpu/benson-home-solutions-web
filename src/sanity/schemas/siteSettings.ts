@@ -58,29 +58,6 @@ export const siteSettings = defineType({
       rows: 3,
     }),
     defineField({ name: 'ogImage', title: 'Default OG Image', type: 'image' }),
-    defineField({
-      name: 'aiConfig',
-      title: 'AI & Chatbot Configuration',
-      type: 'object',
-      fields: [
-        defineField({
-          name: 'chatbotSystemPrompt',
-          title: 'Chatbot System Prompt',
-          type: 'text',
-          rows: 15,
-          description:
-            'The primary system instructions for the Silas Vane AI assistant. Grounded in 2026 market data.',
-        }),
-        defineField({
-          name: 'chatbotWelcomeMessage',
-          title: 'Chatbot Welcome Message',
-          type: 'text',
-          rows: 3,
-          description:
-            'The first message shown when the chat widget is opened.',
-        }),
-      ],
-    }),
   ],
   preview: {
     prepare: () => ({ title: 'Site Settings' }),

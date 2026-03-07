@@ -133,7 +133,7 @@ export default function RemodelingPage() {
               <Card key={service.title} variant="elevated" className="group">
                 <CardContent className="p-8">
                   <div className="mb-4 text-4xl">{service.icon}</div>
-                  <h3 className="text-charcoal mb-3 text-xl font-bold transition-colors group-hover:text-oxblood">
+                  <h3 className="text-charcoal group-hover:text-oxblood mb-3 text-xl font-bold transition-colors">
                     {service.title}
                   </h3>
                   <p className="text-slate mb-6 leading-relaxed">
@@ -151,13 +151,21 @@ export default function RemodelingPage() {
                   </ul>
                   {service.href ? (
                     <Link href={service.href}>
-                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full sm:w-auto"
+                      >
                         View Service Details
                       </Button>
                     </Link>
                   ) : (
                     <Link href="/contact">
-                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full sm:w-auto"
+                      >
                         Inquire About This Service
                       </Button>
                     </Link>
@@ -237,7 +245,7 @@ export default function RemodelingPage() {
               <Button
                 variant="outline"
                 size="lg"
-                className="text-cream border-white/20 hover:bg-cream hover:text-oxblood bg-white/5"
+                className="text-cream hover:bg-cream hover:text-oxblood border-white/20 bg-white/5"
               >
                 Call {BUSINESS.phone}
               </Button>

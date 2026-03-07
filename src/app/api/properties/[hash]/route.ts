@@ -4,7 +4,7 @@ import { properties } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ hash: string }> },
 ) {
   try {
@@ -17,7 +17,10 @@ export async function GET(
       .limit(1);
 
     if (!property) {
-      return NextResponse.json({ error: 'Property not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Property not found' },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json({ property });

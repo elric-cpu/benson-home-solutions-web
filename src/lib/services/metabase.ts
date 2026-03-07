@@ -15,11 +15,13 @@ export interface MetabaseEmbedConfig {
 
 /**
  * Generates a signed Metabase embedding URL.
- * 
+ *
  * @param config - Resource ID and filter parameters (e.g., client_id)
  * @returns The full signed URL for an iframe src
  */
-export function getMetabaseEmbedUrl(config: MetabaseEmbedConfig): string | null {
+export function getMetabaseEmbedUrl(
+  config: MetabaseEmbedConfig,
+): string | null {
   if (!METABASE_SITE_URL || !METABASE_SECRET_KEY) {
     console.warn('[Metabase] Missing environment variables for embedding.');
     return null;
@@ -28,12 +30,13 @@ export function getMetabaseEmbedUrl(config: MetabaseEmbedConfig): string | null 
   const payload = {
     resource: config.resource,
     params: config.params,
-    exp: Math.round(Date.now() / 1000) + (60 * 60) // 1 hour expiration
+    exp: Math.round(Date.now() / 1000) + 60 * 60, // 1 hour expiration
   };
 
   const token = jwt.sign(payload, METABASE_SECRET_KEY);
-  
-  const resourceType = 'dashboard' in config.resource ? 'dashboard' : 'question';
+
+  const resourceType =
+    'dashboard' in config.resource ? 'dashboard' : 'question';
 
   return `${METABASE_SITE_URL}/embed/${resourceType}/${token}#bordered=true&titled=false`;
 }

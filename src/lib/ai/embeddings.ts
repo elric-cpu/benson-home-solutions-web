@@ -1,43 +1,24 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { openai } from '@ai-sdk/openai';
 import { embed, embedMany } from 'ai';
-import { openrouter } from './provider';
 
 /**
- * Generates a single embedding for a string of text via OpenRouter.
- * Used for user queries to search the vector database.
+ * Generates an embedding for a single string.
  */
-export async function generateEmbedding(value: string): Promise<number[]> {
-  const input = value.replaceAll('\n', ' ');
+export async function generateEmbedding(text: string): Promise<number[]> {
   const { embedding } = await embed({
-    model: openrouter.textEmbeddingModel('openai/text-embedding-3-small'),
-    value: input,
+    model: openai.embedding('text-embedding-3-small'),
+    value: text.replace(/\n/g, ' '),
   });
   return embedding;
 }
 
 /**
- * Alias for generateEmbedding to satisfy dependencies in vector-service.ts
+ * Generates embeddings for multiple strings in a batch.
  */
-export const getEmbedding = generateEmbedding;
-
-/**
- * Generates embeddings for multiple strings of text via OpenRouter.
- * Used for batch processing and seeding the vector database.
- */
-export async function generateEmbeddings(values: string[]): Promise<number[][]> {
-  const inputs = values.map(v => v.replaceAll('\n', ' '));
+export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
   const { embeddings } = await embedMany({
-    model: openrouter.textEmbeddingModel('openai/text-embedding-3-small'),
-    values: inputs,
+    model: openai.embedding('text-embedding-3-small'),
+    values: texts.map(t => t.replace(/\n/g, ' ')),
   });
   return embeddings;
-}
-
-/**
- * Helper to handle generic metadata or response structures from AI providers
- * while satisfying strict linting requirements.
- */
-export function sanitizeMetadata(data: unknown): Record<string, any> {
-  if (typeof data !== 'object' || data === null) return {};
-  return data as Record<string, any>;
 }

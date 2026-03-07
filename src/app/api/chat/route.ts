@@ -1,49 +1,47 @@
 import { streamText } from 'ai';
 import { openrouter } from '@/lib/ai/provider';
-import { getAIConfig, FALLBACK_SYSTEM_PROMPT } from '@/lib/ai/config';
-import { tools } from '@/lib/ai/tools';
+import { GUS_DIRECTIVE } from '@/lib/ai/config';
+import { findRelevantContent } from '@/lib/ai/vector-service';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
-/**
- * GUS PERSONA CORE: 
- * We define this here to ensure even if Sanity is empty, 
- * the "Senior Specialist" attitude is preserved.
- */
-const GUS_DIRECTIVE = `
-  IDENTITY: You are Gus, the Senior Diagnostics Specialist at Benson Home Solutions. 
-  TONE: Brusque, technical, and urgent. No small talk. No "I'm sorry to hear that."
-  OBJECTIVE: Diagnose structural failures. Demand dimensions, damage specifics, and deadlines.
-  VOCABULARY: Use 'moisture ingress', 'lateral load', 'deflection', 'shear failure', and 'hydrostatic pressure'.
-  INTERACTION: If the user is vague, be condescending about their lack of data. 
-  URGENCY: Always imply the house is at risk of a condemned sign.
-`;
-
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  try {
+    const body = await req.text();
+    if (!body) {
+      console.error('[Gus API] Empty request body received');
+      return new Response('Empty request body', { status: 400 });
+    }
 
-  // Load configuration from Sanity or fall back to defaults
-  const aiConfig = await getAIConfig();
-  
-  // Combine the CMS prompt with Gus's specific behavioral directive
-  const systemPrompt = `
-    ${GUS_DIRECTIVE}
-    ${aiConfig.chatbotSystemPrompt || FALLBACK_SYSTEM_PROMPT}
-  `;
+    const { messages } = JSON.parse(body);
+    const lastMessage = messages[messages.length - 1]?.content || '';
+    
+    console.log(`[Gus API] Received ${messages?.length || 0} messages. Query: "${lastMessage.substring(0, 50)}..."`);
 
-  const result = await streamText({
-    model: openrouter('google/gemini-2.0-flash-exp:free'),
-    messages,
-    system: systemPrompt,
-    tools,
-    /** * maxSteps allows Gus to use tools (like checking inventory or booking 
-     * inspections) while maintaining his persona.
-     */
-    // @ts-expect-error - provider type mismatch for maxSteps, but runtime functionality works
-    maxSteps: 5,
-    temperature: 0.7, // Keeps his insults and technical jargon slightly varied
-  });
+    // 1. Fetch Context (RAG)
+    let context = '';
+    try {
+      const relevantDocs = await findRelevantContent(lastMessage, 3);
+      if (relevantDocs.length > 0) {
+        context = "\n\nRELEVANT TECHNICAL CONTEXT:\n" + 
+          relevantDocs.map(doc => `[Source: ${doc.title}] ${doc.text}`).join('\n---\n');
+      }
+    } catch (ragError) {
+      console.error('[Gus RAG Error] Falling back to base persona', ragError);
+    }
 
-  return result.toDataStreamResponse();
+    // 2. Stream Response
+    const result = await streamText({
+      model: openrouter('meta-llama/llama-3.3-70b-instruct:free'),
+      messages,
+      system: GUS_DIRECTIVE + context,
+      temperature: 0.7,
+    });
+
+    return result.toTextStreamResponse();
+  } catch (error) {
+    console.error('[Gus API Error]', error);
+    return new Response('Diagnostic terminal offline. Call the office.', { status: 500 });
+  }
 }

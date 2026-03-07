@@ -90,12 +90,8 @@
           "name": "agreement_versions_agreement_id_agreements_id_fk",
           "tableFrom": "agreement_versions",
           "tableTo": "agreements",
-          "columnsFrom": [
-            "agreement_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["agreement_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -211,12 +207,8 @@
           "name": "agreements_client_id_clients_id_fk",
           "tableFrom": "agreements",
           "tableTo": "clients",
-          "columnsFrom": [
-            "client_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["client_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -224,12 +216,8 @@
           "name": "agreements_property_id_properties_id_fk",
           "tableFrom": "agreements",
           "tableTo": "properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -239,9 +227,7 @@
         "agreements_agreement_number_unique": {
           "name": "agreements_agreement_number_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "agreement_number"
-          ]
+          "columns": ["agreement_number"]
         }
       },
       "policies": {},
@@ -391,9 +377,7 @@
         "clients_email_unique": {
           "name": "clients_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -644,12 +628,8 @@
           "name": "properties_client_id_clients_id_fk",
           "tableFrom": "properties",
           "tableTo": "clients",
-          "columnsFrom": [
-            "client_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["client_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -659,9 +639,7 @@
         "properties_address_hash_unique": {
           "name": "properties_address_hash_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "address_hash"
-          ]
+          "columns": ["address_hash"]
         }
       },
       "policies": {},
@@ -755,12 +733,8 @@
           "name": "service_log_property_id_properties_id_fk",
           "tableFrom": "service_log",
           "tableTo": "properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -768,12 +742,8 @@
           "name": "service_log_agreement_id_agreements_id_fk",
           "tableFrom": "service_log",
           "tableTo": "agreements",
-          "columnsFrom": [
-            "agreement_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["agreement_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

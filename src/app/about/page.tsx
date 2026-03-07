@@ -272,8 +272,8 @@ export default async function AboutPage() {
               Ready to Discuss Your Project?
             </h2>
             <p className="text-cream/80 mt-4 text-lg">
-              Contact us today for a free, no-obligation consultation. Let&apos;s
-              build something great together.
+              Contact us today for a free, no-obligation consultation.
+              Let&apos;s build something great together.
             </p>
             <div className="mt-8">
               <Link href="/contact">

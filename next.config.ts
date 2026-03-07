@@ -43,18 +43,18 @@ const nextConfig: NextConfig = {
 // Sentry configuration options
 const sentryConfig = {
   hideSourceMaps: true,
-  webpack: {
-    treeshake: {
-      removeDebugLogging: true,
-    },
-    automaticVercelMonitors: true,
-  },
   tunnelRoute: '/monitoring-tunnel',
-  
+
   // --- TURBOPACK COMPATIBILITY FIXES ---
   disableServerWebpackPlugin: true,
   disableClientWebpackPlugin: true,
   useRunAfterProductionCompileHook: true,
+
+  // --- VERSION 10 CONFIG ---
+  _experimental: {
+    vercelCronsMonitoring: true,
+  },
+
   sourcemaps: {
     deleteSourcemapsAfterUpload: true,
   },
