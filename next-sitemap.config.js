@@ -20,6 +20,10 @@ module.exports = {
     if (path === '/') return { loc: path, changefreq: 'daily', priority: 1.0 };
     if (path.startsWith('/services/'))
       return { loc: path, changefreq: 'weekly', priority: 0.9 };
+    if (path.startsWith('/tools/'))
+      return { loc: path, changefreq: 'weekly', priority: 0.9 };
+    if (path.startsWith('/methodology/'))
+      return { loc: path, changefreq: 'weekly', priority: 0.8 };
     if (path.startsWith('/areas/'))
       return { loc: path, changefreq: 'weekly', priority: 0.8 };
     return {

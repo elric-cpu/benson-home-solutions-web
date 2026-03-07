@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benson Home Solutions - Operations Manual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fcfbf9; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 400px; }
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .nav-active { border-left-color: #4C0C14; background-color: #f3ecec; color: #4C0C14; font-weight: 700; }
+        .tab-active { background-color: #4C0C14; color: #fcfbf9; }
+        .service-card { transition: all 0.2s ease-in-out; cursor: pointer; }
+        .service-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(76, 12, 20, 0.1); border-color: #4C0C14; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        benson: {
+                            maroon: '#4C0C14',
+                            maroonLight: '#6a121d',
+                            cream: '#fcfbf9',
+                            creamDark: '#f3ecec',
+                            text: '#1a1a1a',
+                            muted: '#666666'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="text-benson-text antialiased flex flex-col md:flex-row min-h-screen">
+
+    <!-- Chosen Palette: Benson Official (Primary: Oxblood/Maroon #4C0C14, Accent/Background: Cream #fcfbf9, Text: Dark Gray #1a1a1a) -->
+    <!-- Application Structure Plan: A centralized Operations Dashboard. The manual is dense with varied information (legal, voice, services, AI strategy). A sidebar navigation structure allows rapid context switching. The content is reorganized from a flat list into functional hubs: 'Command Center' (Legal/Org), 'Service Matrix' (Field Ops), 'Communications' (Brand Voice), and 'Future State' (AI/Tech Pipeline). This prioritization serves an internal team needing quick reference over linear reading. -->
+    <!-- Visualization & Content Choices: 
+         1. Organizational Structure -> Doughnut Chart (Chart.js/Canvas) -> Clickable legend/segments -> Goal: Organize & Inform. A hierarchy tree requires SVG/Mermaid. A Doughnut chart groups roles by department (Exec, Field, Back-Office), showing the 100% subcontracted lean model visually.
+         2. Services Directory -> Interactive CSS Grid Cards -> Click to expand details -> Goal: Organize. Allows quick scanning of 8 distinct service lines without overwhelming the screen with text.
+         3. Brand Voice Protocol -> Tabbed Interface & Side-by-Side comparison -> Goal: Compare. Puts "Do's" and "Don'ts" adjacent for immediate contrast, emphasizing the "Elric" persona.
+         4. Massive AI/Tech Pipeline -> Horizontal Bar Chart (Chart.js/Canvas) -> Goal: Inform & Organize. The raw report lists 24+ AI/Tech bullet points. The chart categorizes them (SEO, Content, Automations) to show strategic weight rather than just a wall of text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="w-full md:w-72 bg-white border-r border-benson-creamDark flex-shrink-0 sticky top-0 md:h-screen overflow-y-auto hide-scrollbar shadow-sm z-20">
+        <div class="p-6 border-b border-benson-creamDark">
+            <div class="text-3xl font-black text-benson-maroon tracking-tighter leading-none mb-1">BENSON</div>
+            <div class="text-xs font-bold tracking-widest text-benson-muted uppercase">Operations Manual</div>
+        </div>
+        
+        <div class="p-4">
+            <div class="text-xs font-bold text-benson-muted uppercase tracking-wider mb-2 px-3">Directory</div>
+            <ul class="space-y-1" id="nav-list">
+                <li><button onclick="navigate('dashboard')" class="nav-btn w-full text-left px-3 py-2.5 rounded text-sm font-medium border-l-4 border-transparent text-benson-muted hover:bg-benson-creamDark hover:text-benson-maroon transition-colors" data-target="dashboard">&#9873; Command Center</button></li>
+                <li><button onclick="navigate('services')" class="nav-btn w-full text-left px-3 py-2.5 rounded text-sm font-medium border-l-4 border-transparent text-benson-muted hover:bg-benson-creamDark hover:text-benson-maroon transition-colors" data-target="services">&#9874; Service Matrix</button></li>
+                <li><button onclick="navigate('voice')" class="nav-btn w-full text-left px-3 py-2.5 rounded text-sm font-medium border-l-4 border-transparent text-benson-muted hover:bg-benson-creamDark hover:text-benson-maroon transition-colors" data-target="voice">&#9993; Voice Protocol</button></li>
+                <li><button onclick="navigate('ai-tech')" class="nav-btn w-full text-left px-3 py-2.5 rounded text-sm font-medium border-l-4 border-transparent text-benson-muted hover:bg-benson-creamDark hover:text-benson-maroon transition-colors" data-target="ai-tech">&#9881; AI & Tech Pipeline</button></li>
+            </ul>
+        </div>
+
+        <div class="p-6 mt-auto border-t border-benson-creamDark bg-benson-creamDark/50">
+            <div class="text-xs font-bold text-benson-maroon uppercase mb-1">Emergency Dispatch</div>
+            <div class="text-lg font-black text-benson-text">(541) 413-0480</div>
+        </div>
+    </nav>
+
+    <main class="flex-grow p-6 md:p-12 overflow-x-hidden relative" id="main-content">
+        
+        <div id="dashboard" class="content-section">
+            <div class="max-w-5xl mb-12">
+                <h1 class="text-4xl font-black text-benson-text tracking-tight mb-4">Command Center</h1>
+                <p class="text-lg text-benson-muted">Primary corporate intelligence, legal structuring, and organizational hierarchy. Target: ~$5M revenue, 100% subcontracted model.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-lg border border-benson-creamDark shadow-sm border-t-4 border-t-benson-maroon">
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">&#128193;</span> Legal & Identity</h2>
+                    <table class="w-full text-sm">
+                        <tbody class="divide-y divide-benson-creamDark">
+                            <tr class="py-2 flex justify-between"><td class="py-2 font-bold text-benson-muted">Legal Entity</td><td class="py-2 font-bold text-benson-text">Benson Enterprises</td></tr>
+                            <tr class="py-2 flex justify-between"><td class="py-2 font-bold text-benson-muted">DBA</td><td class="py-2 font-bold text-benson-text">Benson Home Solutions</td></tr>
+                            <tr class="py-2 flex justify-between"><td class="py-2 font-bold text-benson-muted">Owner</td><td class="py-2 font-bold text-benson-text">Elric Benson</td></tr>
+                            <tr class="py-2 flex justify-between"><td class="py-2 font-bold text-benson-muted">CCB License</td><td class="py-2 font-bold text-benson-text">#258533</td></tr>
+                            <tr class="py-2 flex justify-between"><td class="py-2 font-bold text-benson-muted">EIN</td><td class="py-2 font-bold text-benson-text">33-4085009</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg border border-benson-creamDark shadow-sm border-t-4 border-t-benson-text">
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">&#128222;</span> Corporate Comms</h2>
+                    <table class="w-full text-sm">
+                        <tbody class="divide-y divide-benson-creamDark">
+                            <tr class="py-2 flex justify-between"><td class="py-2 font-bold text-benson-muted">Business Phone</td><td class="py-2 font-bold text-benson-text">(541) 321-5115</td></tr>
+                            <tr class="py-2 flex justify-between"><td class="py-2 font-bold text-red-600">After-Hours/EMG</td><td class="py-2 font-black text-red-600">(541) 413-0480</td></tr>
+                            <tr class="py-2 flex flex-col sm:flex-row justify-between"><td class="py-2 font-bold text-benson-muted">Email</td><td class="py-2 font-bold text-benson-maroon break-all">office@bensonhomesolutions.com</td></tr>
+                            <tr class="py-2 flex justify-between"><td class="py-2 font-bold text-benson-muted">Primary DNS</td><td class="py-2 font-bold text-benson-text">76.76.21.21 (Vercel)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 md:p-8 rounded-lg border border-benson-creamDark shadow-sm mb-12">
+                <div class="mb-6 max-w-2xl">
+                    <h2 class="text-2xl font-bold mb-2 text-benson-text">Organizational Structure</h2>
+                    <p class="text-sm text-benson-muted">Distribution of core functional roles supporting the 100% subcontracted operational model. Click chart segments to isolate departments.</p>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-8 items-center">
+                    <div class="chart-container">
+                        <canvas id="orgChart"></canvas>
+                    </div>
+                    <div>
+                        <div id="org-details" class="bg-benson-cream p-6 rounded border border-benson-creamDark h-full">
+                            <h3 class="font-bold text-lg mb-4 text-benson-maroon">Role Directory</h3>
+                            <ul class="space-y-3 text-sm" id="org-list">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="services" class="content-section hidden">
+            <div class="max-w-5xl mb-10">
+                <h1 class="text-4xl font-black text-benson-text tracking-tight mb-4">Service Matrix</h1>
+                <p class="text-lg text-benson-muted">Deterministic, auditable processes across 8 core operational categories. Select a category to view scope and documentation requirements.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8" id="service-grid">
+            </div>
+
+            <div id="service-detail-panel" class="hidden bg-white p-8 rounded-lg border-2 border-benson-maroon shadow-md relative mt-4">
+                <button onclick="closeServicePanel()" class="absolute top-4 right-4 text-2xl text-benson-muted hover:text-benson-maroon font-bold">&#10005;</button>
+                <div class="flex items-center gap-4 mb-4">
+                    <span id="sd-icon" class="text-4xl"></span>
+                    <h2 id="sd-title" class="text-3xl font-black text-benson-text"></h2>
+                </div>
+                <div class="w-16 h-1 bg-benson-maroon mb-6"></div>
+                <ul id="sd-list" class="space-y-3 text-lg text-benson-text font-medium list-none">
+                </ul>
+                <div class="mt-8 p-4 bg-benson-creamDark rounded border border-benson-muted/20 text-sm font-bold text-benson-muted flex items-center gap-2">
+                    <span class="text-xl">&#9888;</span> Documentation Standard: Photographic evidence & line-item estimate sign-off required.
+                </div>
+            </div>
+        </div>
+
+        <div id="voice" class="content-section hidden">
+            <div class="max-w-5xl mb-10">
+                <h1 class="text-4xl font-black text-benson-text tracking-tight mb-4">The "Elric" Voice Protocol</h1>
+                <p class="text-lg text-benson-muted">All written materials must use Elric Benson's authentic voice. Confident, direct, authoritative. It must sound like a contractor, not a marketing agency.</p>
+            </div>
+
+            <div class="bg-white rounded-lg border border-benson-creamDark shadow-sm overflow-hidden mb-12">
+                <div class="p-6 md:p-8 bg-benson-text text-white">
+                    <h2 class="text-xs font-bold text-benson-muted uppercase tracking-widest mb-4">Primary Brand Headline</h2>
+                    <blockquote class="text-2xl md:text-3xl font-black italic leading-tight mb-6">
+                        "We're maintenance specialists. We own the specialized tools — interior concrete saws, dehumidifiers, the equipment most contractors don't carry — so the job gets done right the first time."
+                    </blockquote>
+                    <div class="flex gap-2">
+                        <button onclick="setHeadline('A')" class="px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-xs font-bold transition-colors">Alt A</button>
+                        <button onclick="setHeadline('B')" class="px-3 py-1 bg-benson-maroon text-white rounded text-xs font-bold transition-colors">Chosen (B)</button>
+                        <button onclick="setHeadline('C')" class="px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-xs font-bold transition-colors">Alt C</button>
+                        <button onclick="setHeadline('D')" class="px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-xs font-bold transition-colors">Alt D</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-12">
+                <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+                    <h3 class="text-xl font-black text-green-900 mb-4 border-b border-green-200 pb-2">The Do's</h3>
+                    <ul class="space-y-4 text-green-800 font-medium text-sm" id="voice-dos">
+                    </ul>
+                </div>
+                <div class="bg-red-50 p-6 rounded-lg border border-red-200">
+                    <h3 class="text-xl font-black text-red-900 mb-4 border-b border-red-200 pb-2">The Don'ts</h3>
+                    <ul class="space-y-4 text-red-800 font-medium text-sm" id="voice-donts">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg border border-benson-creamDark shadow-sm">
+                <h3 class="text-lg font-bold mb-6 text-benson-text border-b border-benson-creamDark pb-2">Core Conversational Patterns</h3>
+                <div class="grid md:grid-cols-3 gap-6 text-sm" id="voice-patterns">
+                </div>
+            </div>
+        </div>
+
+        <div id="ai-tech" class="content-section hidden">
+            <div class="max-w-5xl mb-10">
+                <h1 class="text-4xl font-black text-benson-text tracking-tight mb-4">AI & Tech Pipeline</h1>
+                <p class="text-lg text-benson-muted">Roadmap for the subscription-based maintenance program, smart intake API integrations, and 2026-2027 technical scaling initiatives.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8 mb-12">
+                <div class="lg:col-span-2 bg-white p-6 rounded-lg border border-benson-creamDark shadow-sm">
+                    <h2 class="text-xl font-bold mb-2 text-benson-text">Initiative Volume by Category</h2>
+                    <p class="text-sm text-benson-muted mb-6">Categorization of the extensive 2026/2027 tech requirements outline.</p>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="techChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-benson-maroon text-white p-6 rounded-lg shadow-sm flex flex-col">
+                    <h2 class="text-xl font-bold mb-4 border-b border-white/20 pb-2">Smart Intake Specs</h2>
+                    <ul class="space-y-4 text-sm font-medium flex-grow">
+                        <li class="flex gap-2"><span class="text-benson-creamDark">&#10003;</span> Free federal property APIs (USPS, Census, FEMA, HUD, DOE, EIA)</li>
+                        <li class="flex gap-2"><span class="text-benson-creamDark">&#10003;</span> Webhook-triggered enrichment pipeline ($0/month target)</li>
+                        <li class="flex gap-2"><span class="text-benson-creamDark">&#10003;</span> Address validation & Geocoding</li>
+                        <li class="flex gap-2"><span class="text-benson-creamDark">&#10003;</span> True Cost of Homeownership Calculator widget</li>
+                    </ul>
+                    <div class="mt-6 pt-4 border-t border-white/20">
+                        <span class="block text-xs uppercase tracking-widest text-white/70 mb-1">Target Segments</span>
+                        <span class="font-bold">Residential | Commercial | Church</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg border border-benson-creamDark shadow-sm">
+                <h2 class="text-xl font-bold mb-4 text-benson-text border-b border-benson-creamDark pb-2">Feature Deployment Matrix</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="feature-matrix">
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const state = {
+            currentNav: 'dashboard',
+            orgData: [
+                { role: 'Owner / President', desc: 'Strategic direction, client relationships, final sign-off', dept: 'Executive' },
+                { role: 'Operations Manager', desc: 'Day-to-day workflow, subcontractor coordination', dept: 'Operations' },
+                { role: 'Project Manager', desc: 'Scope management, timelines, client communication', dept: 'Operations' },
+                { role: 'Site Superintendent', desc: 'On-site quality control, safety, progress verification', dept: 'Field' },
+                { role: 'Estimator / Precon', desc: 'Takeoffs, pricing, bid preparation', dept: 'Back-Office' },
+                { role: 'Marketing / Biz Dev', desc: 'Lead generation, branding, community engagement', dept: 'Back-Office' },
+                { role: 'IT Manager', desc: 'Website, AI systems, integrations, data security', dept: 'Back-Office' },
+                { role: 'Finance / Controller', desc: 'Bookkeeping, invoicing, job costing, tax compliance', dept: 'Back-Office' },
+                { role: 'Office Manager', desc: 'Scheduling, document management, client intake', dept: 'Back-Office' }
+            ],
+            services: [
+                { id: 'demo', title: 'Demolition', icon: '&#9935;', items: ['Interior and exterior — selective or full-scope', 'Permit coordination', 'Debris removal', 'Site documentation'] },
+                { id: 'window', title: 'Windows & Doors', icon: '&#128106;', items: ['Residential and commercial windows', 'Exterior, interior, and entry doors', 'Lock changes & lockbox installation', 'Measurement verification & specs'] },
+                { id: 'water', title: 'Water Damage', icon: '&#128167;', items: ['Dry-out and mitigation', 'Branded mitigation & rebuild packets', 'Insurance-aligned documentation', 'Itemized scopes'] },
+                { id: 'mold', title: 'Mold Mitigation', icon: '&#129440;', items: ['Remediation processes', 'Post-mitigation verification', 'Reporting standards', 'Lab testing coordination'] },
+                { id: 'site', title: 'Sitework', icon: '&#128668;', items: ['Driveway installations', 'Utility replacements', 'Grading & stump removal', 'Site prep documentation'] },
+                { id: 'tenant', title: 'Tenant & Maint.', icon: '&#127960;', items: ['Move-in/out prep & trash-outs', 'Subscription maintenance (Res/Com/Church)', 'Air sealing & weatherization'] },
+                { id: 'emerg', title: 'Emergency', icon: '&#9888;', items: ['Emergency board-ups', 'Property securing', 'Rapid lockbox installs', 'Immediate weatherization'] },
+                { id: 'field', title: 'Field Service', icon: '&#128203;', items: ['Drive-by/Interior condition reports', 'Occupancy verification', 'Winterization (dry/wet methods)', 'Hazard assessments & bid walks'] }
+            ],
+            headlines: {
+                A: '"We\'re maintenance specialists. We carry the tools most contractors don\'t — interior concrete saws, dehumidifiers, everything it takes to get the job done right the first time."',
+                B: '"We\'re maintenance specialists. We own the specialized tools — interior concrete saws, dehumidifiers, the equipment most contractors don\'t carry — so the job gets done right the first time."',
+                C: '"Maintenance specialists with the tools most contractors don\'t carry. Interior concrete saws, dehumidifiers, and the experience to get it right the first time."',
+                D: '"We own interior concrete saws, dehumidifiers, and the equipment most contractors have to rent. That\'s why the job gets done right the first time — we\'re maintenance specialists, not generalists."'
+            },
+            voiceDos: [
+                "Use specific numbers, dimensions, and product details instead of adjectives.",
+                "Describe results as felt experiences ('no temperature change walking past it').",
+                "Write like you're talking to the customer across a kitchen table.",
+                "Include real trade-off language ('nicer kitchen, but it's reflected in the price').",
+                "Use investigative questions as a content pattern ('Is there a bathroom above there?').",
+                "Show the math — margins, cost ranges, what drives the number."
+            ],
+            voiceDonts: [
+                "NEVER use 'we're committed to excellence' or any variation.",
+                "NEVER use 'your trusted partner' or 'dedicated team'.",
+                "NEVER hide behind 'call for a quote' — show ranges and explain.",
+                "NEVER write emergency content that puts a form between the customer and a phone number.",
+                "NEVER use 'I'd be happy to help' — Elric doesn't talk like that.",
+                "NEVER describe the business as a general contractor — it's maintenance specialists."
+            ],
+            voicePatterns: [
+                { title: 'Diagnoses before selling', desc: 'On a water damage call: "Is there a bathroom above there?" Solves the problem before selling.' },
+                { title: 'Meets customers where they are', desc: '"Text it to me if that works." Phone-first, not form-first.' },
+                { title: 'Emergency = immediate action', desc: '"Get me your address, text it to me, dehumidifiers today, tear-out in the morning." No scripts.' },
+                { title: 'Honest about trade-offs', desc: '"You end up with a way nicer kitchen but it\'s also reflected in the price."' },
+                { title: 'Family credibility', desc: '"My dad has been a custom cabinet builder for forty years." Context, not marketing.' },
+                { title: 'Transparent margins', desc: '"Margin is at 30% gross so under 15% net." Treats the customer like an adult.' }
+            ],
+            techCategories: {
+                labels: ['AI Content & SEO Tools', 'Web Dev & Performance', 'Marketing & Advertising', 'Analytics & Scoring', 'Video Integration'],
+                data: [8, 5, 6, 3, 4] 
+            },
+            features: [
+                "AI Chatbot for custom plans", "Tiered Subscription logic", "Webhooks & API integration",
+                "Automated email sequences", "CRM lead management", "GA4/Conversion Analytics",
+                "A/B testing tools", "Accessibility WCAG 2.1 AA", "Mobile-first responsive",
+                "Edge caching / Fast loads", "Dynamic PDF generation"
+            ]
+        };
+
+        let chartInstances = {};
+
+        function navigate(targetId) {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(targetId).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active'));
+            document.querySelector(`.nav-btn[data-target="${targetId}"]`).classList.add('nav-active');
+            
+            state.currentNav = targetId;
+            
+            if(targetId === 'dashboard') initOrgChart();
+            if(targetId === 'ai-tech') initTechChart();
+        }
+
+        function initOrgChart() {
+            if(chartInstances['org']) return; 
+            
+            const deptCounts = { 'Executive': 1, 'Operations': 2, 'Field': 1, 'Back-Office': 5 };
+            const ctx = document.getElementById('orgChart').getContext('2d');
+            
+            chartInstances['org'] = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(deptCounts),
+                    datasets: [{
+                        data: Object.values(deptCounts),
+                        backgroundColor: ['#1a1a1a', '#4C0C14', '#b54855', '#f3ecec'],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right', labels: { font: { family: 'Inter' } } } },
+                    onClick: (e, activeElements) => {
+                        if(activeElements.length > 0) {
+                            const idx = activeElements[0].index;
+                            const dept = Object.keys(deptCounts)[idx];
+                            renderOrgList(dept);
+                        } else {
+                            renderOrgList('All');
+                        }
+                    }
+                }
+            });
+            renderOrgList('All');
+        }
+
+        function renderOrgList(filterDept) {
+            const list = document.getElementById('org-list');
+            list.innerHTML = '';
+            state.orgData.forEach(item => {
+                if(filterDept === 'All' || item.dept === filterDept) {
+                    list.innerHTML += `
+                        <li class="p-3 bg-white border border-benson-creamDark rounded shadow-sm">
+                            <div class="font-bold text-benson-text">${item.role}</div>
+                            <div class="text-xs text-benson-maroon font-bold uppercase tracking-wider mb-1">${item.dept}</div>
+                            <div class="text-benson-muted">${item.desc}</div>
+                        </li>`;
+                }
+            });
+        }
+
+        function initServices() {
+            const grid = document.getElementById('service-grid');
+            state.services.forEach(svc => {
+                grid.innerHTML += `
+                    <div onclick="openService('${svc.id}')" class="service-card bg-white p-6 rounded-lg border border-benson-creamDark flex flex-col items-center text-center">
+                        <div class="text-4xl mb-3">${svc.icon}</div>
+                        <h3 class="font-bold text-benson-text">${svc.title}</h3>
+                    </div>`;
+            });
+        }
+
+        function openService(id) {
+            const svc = state.services.find(s => s.id === id);
+            document.getElementById('sd-icon').innerHTML = svc.icon;
+            document.getElementById('sd-title').innerText = svc.title;
+            const ul = document.getElementById('sd-list');
+            ul.innerHTML = '';
+            svc.items.forEach(item => {
+                ul.innerHTML += `<li class="flex items-start gap-3"><span class="text-benson-maroon mt-1">&#10004;</span> <span>${item}</span></li>`;
+            });
+            document.getElementById('service-detail-panel').classList.remove('hidden');
+        }
+
+        function closeServicePanel() {
+            document.getElementById('service-detail-panel').classList.add('hidden');
+        }
+
+        function setHeadline(opt) {
+            const el = document.querySelector('blockquote');
+            el.style.opacity = 0;
+            setTimeout(() => {
+                el.innerText = state.headlines[opt];
+                el.style.opacity = 1;
+            }, 200);
+        }
+
+        function initVoice() {
+            document.getElementById('voice-dos').innerHTML = state.voiceDos.map(d => `<li class="flex items-start gap-2"><span class="text-green-600 font-bold text-lg leading-none">&#43;</span> <span>${d}</span></li>`).join('');
+            document.getElementById('voice-donts').innerHTML = state.voiceDonts.map(d => `<li class="flex items-start gap-2"><span class="text-red-600 font-bold text-lg leading-none">&#8722;</span> <span>${d}</span></li>`).join('');
+            document.getElementById('voice-patterns').innerHTML = state.voicePatterns.map(p => `
+                <div class="border-l-2 border-benson-maroon pl-4">
+                    <div class="font-bold text-benson-text mb-1">${p.title}</div>
+                    <div class="text-benson-muted italic">${p.desc}</div>
+                </div>`).join('');
+        }
+
+        function initTechChart() {
+            if(chartInstances['tech']) return;
+            const ctx = document.getElementById('techChart').getContext('2d');
+            chartInstances['tech'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: state.techCategories.labels,
+                    datasets: [{
+                        label: 'Planned Initiatives',
+                        data: state.techCategories.data,
+                        backgroundColor: '#4C0C14',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } }
+                }
+            });
+
+            document.getElementById('feature-matrix').innerHTML = state.features.map(f => `
+                <div class="bg-benson-creamDark p-3 rounded border border-benson-muted/10 text-center font-semibold text-sm text-benson-text">
+                    ${f}
+                </div>`).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initServices();
+            initVoice();
+            navigate('dashboard');
+        });
+
+    </script>
+</body>
+</html>

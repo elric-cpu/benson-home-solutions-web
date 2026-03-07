@@ -199,7 +199,7 @@ export default async function HomePage() {
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link href="/tools/subscription-recommender">
-                  <Button variant="oxblood" size="lg" className="w-full sm:w-auto font-bold">
+                  <Button variant="primary" size="lg" className="w-full sm:w-auto font-bold">
                     Start My Recommendation
                   </Button>
                 </Link>

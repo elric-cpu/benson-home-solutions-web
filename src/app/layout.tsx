@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { sourceSans3 } from '@/lib/fonts';
 import { Header, Footer, MobileActionBar } from '@/components/layout';
 import { DeferredComponents } from '@/components/layout/DeferredComponents';
+import { OrganizationJsonLd } from '@/components/seo/json-ld';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -59,6 +60,9 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.svg',
   },
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export const viewport: Viewport = {
@@ -74,6 +78,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={sourceSans3.variable}>
+      <head>
+        <OrganizationJsonLd />
+      </head>
       <body className="flex min-h-screen flex-col antialiased">
         <a href="#main-content" className="skip-nav">
           Skip to main content

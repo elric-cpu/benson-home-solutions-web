@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { clients, properties, agreements } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { upsertRecord, deleteRecord } from '@/lib/ai/vector-service';
 
 /**
  * Handle incoming webhooks from Make.com/n8n for Notion updates.
@@ -29,25 +28,6 @@ export async function POST(request: NextRequest) {
     console.log(`[Notion Sync] Updating ${entity} ${id} (Action: ${action})`);
 
     switch (entity) {
-      case 'knowledge':
-        if (action === 'delete') {
-          console.log(`[Notion Sync] Deleting Pinecone vectors for ID: ${id}`);
-          await deleteRecord(id);
-        } else {
-          console.log(
-            `[Notion Sync] Upserting Pinecone vectors for Knowledge item: ${data?.title}`,
-          );
-          await upsertRecord({
-            id, // Notion Page ID
-            text: `Title: ${data?.title}\n\nContent: ${data?.content}`,
-            source: 'notion',
-            category: data?.category || 'General',
-            title: data?.title,
-            url: data?.url,
-          });
-        }
-        break;
-
       case 'client':
         await db
           .update(clients)

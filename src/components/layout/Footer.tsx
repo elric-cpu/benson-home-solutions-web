@@ -153,13 +153,23 @@ export function Footer() {
                   </a>
                 </div>
               </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                <p className="text-cream mb-1 text-xs font-bold">
-                  {BUSINESS.license}
-                </p>
-                <p className="text-cream/70 text-[10px] font-bold tracking-widest uppercase">
-                  Oregon CCB Registered
-                </p>
+              <div className="space-y-4">
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <p className="text-cream mb-1 text-xs font-bold">
+                    {BUSINESS.license}
+                  </p>
+                  <p className="text-cream/70 text-[10px] font-bold tracking-widest uppercase">
+                    Oregon CCB Registered
+                  </p>
+                </div>
+                <div className="rounded-xl border border-oxblood/30 bg-oxblood/10 p-4">
+                  <p className="text-cream mb-1 text-xs font-bold italic">
+                    2026 Senior Principal Engine
+                  </p>
+                  <p className="text-cream/70 text-[10px] font-bold tracking-widest uppercase">
+                    Forensic Data Modeling
+                  </p>
+                </div>
               </div>
             </div>
           </div>

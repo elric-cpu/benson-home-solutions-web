@@ -47,7 +47,7 @@ Do NOT recommend services that don't apply to this building type.
     const { object }: { object: z.infer<typeof RecommendationSchema> } =
       await generateObject({
         model: openrouter('meta-llama/llama-3.3-70b-instruct:free'),
-		maxTokens: 4000,
+        maxOutputTokens: 4000,
         schema: RecommendationSchema,
         system: systemPrompt,
         prompt: JSON.stringify({ property, service_catalog: catalogSummary }),

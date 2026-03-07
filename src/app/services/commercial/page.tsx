@@ -91,7 +91,11 @@ export default function CommercialPage() {
                 desc: 'Apartment complexes, duplexes, and rental portfolios. We help landlords and property managers maintain multiple units efficiently with scheduled maintenance rotations.',
               },
             ].map((type) => (
-              <Card key={type.title} variant="elevated" className="border-t-oxblood border-t-4">
+              <Card
+                key={type.title}
+                variant="elevated"
+                className="border-t-oxblood border-t-4"
+              >
                 <CardContent className="pt-8">
                   <span className="mb-4 block text-4xl">{type.icon}</span>
                   <h3 className="text-charcoal mb-3 text-xl font-bold">
@@ -160,7 +164,9 @@ export default function CommercialPage() {
             ].map((sla) => (
               <Card key={sla.title} variant="default">
                 <CardContent className="p-6">
-                  <h3 className="text-charcoal mb-4 text-lg font-bold">{sla.title}</h3>
+                  <h3 className="text-charcoal mb-4 text-lg font-bold">
+                    {sla.title}
+                  </h3>
                   <ul className="space-y-3">
                     {sla.items.map((item) => (
                       <li
@@ -182,25 +188,26 @@ export default function CommercialPage() {
       {/* Church-specific */}
       <Section spacing="lg">
         <Container size="narrow">
-          <h2 className="text-charcoal mb-8 text-3xl font-bold md:text-4xl text-center">
+          <h2 className="text-charcoal mb-8 text-center text-3xl font-bold md:text-4xl">
             Church Maintenance Expertise
           </h2>
           <Card className="border-oxblood/10 bg-oxblood/[0.02] p-8 md:p-12">
             <div className="prose prose-lg text-slate max-w-none">
               <p>
-                Churches face maintenance challenges that residential contractors
-                often do not understand: high ceilings and roof systems, large
-                gathering spaces with heavy foot traffic, commercial kitchens,
-                aging plumbing in historic buildings, and the need to maintain a
-                welcoming environment on a limited budget.
+                Churches face maintenance challenges that residential
+                contractors often do not understand: high ceilings and roof
+                systems, large gathering spaces with heavy foot traffic,
+                commercial kitchens, aging plumbing in historic buildings, and
+                the need to maintain a welcoming environment on a limited
+                budget.
               </p>
               <p>
                 We work with church boards and facility committees to create
                 maintenance programs that fit within annual budgets while
-                protecting the building from the deferred maintenance that plagues
-                so many worship facilities. Our documentation helps boards make
-                informed decisions about capital projects and long-term facility
-                planning.
+                protecting the building from the deferred maintenance that
+                plagues so many worship facilities. Our documentation helps
+                boards make informed decisions about capital projects and
+                long-term facility planning.
               </p>
             </div>
           </Card>
@@ -227,7 +234,7 @@ export default function CommercialPage() {
               <Button
                 variant="outline"
                 size="lg"
-                className="text-cream border-white/20 hover:bg-cream hover:text-oxblood bg-white/5"
+                className="text-cream hover:bg-cream hover:text-oxblood border-white/20 bg-white/5"
               >
                 Call {BUSINESS.phone}
               </Button>

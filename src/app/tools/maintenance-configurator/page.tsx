@@ -8,17 +8,20 @@ export const metadata: Metadata = {
 };
 
 interface Props {
-  searchParams: Promise<{ propertyHash?: string }>;
+  searchParams: Promise<{ propertyHash?: string; clientId?: string }>;
 }
 
 export default async function MaintenanceConfiguratorPage({
   searchParams,
 }: Props) {
-  const { propertyHash } = await searchParams;
+  const { propertyHash, clientId } = await searchParams;
 
   return (
     <main className="min-h-screen">
-      <MaintenanceConfigurator propertyHash={propertyHash} />
+      <MaintenanceConfigurator
+        propertyHash={propertyHash}
+        clientId={clientId}
+      />
     </main>
   );
 }

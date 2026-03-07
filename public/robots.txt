@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /studio/
+
+# Host
+Host: https://bensonhomesolutions.com
+
+# Sitemaps
+Sitemap: https://bensonhomesolutions.com/sitemap.xml

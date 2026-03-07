@@ -1,4 +1,4 @@
-import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
+import { BUSINESS, SERVICE_AREAS, HERO_ASSETS } from '@/lib/constants';
 
 interface JsonLdProps {
   data: Record<string, unknown>;
@@ -30,7 +30,17 @@ export function LocalBusinessJsonLd() {
         url: BUSINESS.url,
         telephone: BUSINESS.phone,
         email: BUSINESS.email,
+        logo: `${BUSINESS.url}/logo.png`,
+        image: HERO_ASSETS.homepage,
         priceRange: '$$',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: BUSINESS.address.street,
+          addressLocality: BUSINESS.address.city,
+          addressRegion: BUSINESS.address.state,
+          postalCode: BUSINESS.address.zip,
+          addressCountry: 'US',
+        },
         founder: {
           '@type': 'Person',
           name: BUSINESS.owner,
@@ -86,6 +96,43 @@ export function LocalBusinessJsonLd() {
   );
 }
 
+/** Organization schema — providing global brand authority. */
+export function OrganizationJsonLd() {
+  return (
+    <JsonLdScript
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: BUSINESS.name,
+        url: BUSINESS.url,
+        logo: `${BUSINESS.url}/logo.png`,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: BUSINESS.address.street,
+          addressLocality: BUSINESS.address.city,
+          addressRegion: BUSINESS.address.state,
+          postalCode: BUSINESS.address.zip,
+          addressCountry: 'US',
+        },
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: BUSINESS.phone,
+          contactType: 'customer service',
+          areaServed: 'US',
+          availableLanguage: 'en',
+        },
+        sameAs: [
+          BUSINESS.gbp,
+          BUSINESS.facebook,
+          BUSINESS.ccb,
+          BUSINESS.bbb,
+          BUSINESS.yelp,
+        ],
+      }}
+    />
+  );
+}
+
 /** Article schema — used for Methodology Hub and blog posts to signal E-E-A-T. */
 export function ArticleJsonLd({
   headline,
@@ -122,8 +169,12 @@ export function ArticleJsonLd({
           name: BUSINESS.name,
           logo: {
             '@type': 'ImageObject',
-            url: `${BUSINESS.url}/logo.png`, // Ensure this asset exists
+            url: `${BUSINESS.url}/logo.png`,
           },
+        },
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': `${BUSINESS.url}/methodology`, // Default id for methodology hub
         },
         speakable: {
           '@type': 'SpeakableSpecification',

@@ -11,11 +11,13 @@ export async function recommendServices(description: string) {
     const { object } = await generateObject({
       model: openrouter('meta-llama/llama-3.3-70b-instruct:free'),
       schema: z.object({
-        recommendations: z.array(z.object({
-          service: z.string(),
-          confidence: z.number(),
-          reasoning: z.string()
-        })),
+        recommendations: z.array(
+          z.object({
+            service: z.string(),
+            confidence: z.number(),
+            reasoning: z.string(),
+          }),
+        ),
         urgency: z.enum(['low', 'medium', 'high']),
       }),
       prompt: `Analyze this home improvement request: "${description}". 
@@ -28,8 +30,14 @@ export async function recommendServices(description: string) {
     console.error('AI Recommendation failed:', error);
     // Fallback to basic maintenance if AI fails
     return {
-      recommendations: [{ service: 'Maintenance', confidence: 0.5, reasoning: 'Standard fallback' }],
-      urgency: 'low' as const
+      recommendations: [
+        {
+          service: 'Maintenance',
+          confidence: 0.5,
+          reasoning: 'Standard fallback',
+        },
+      ],
+      urgency: 'low' as const,
     };
   }
 }

@@ -103,26 +103,33 @@ export default async function EmergencyPage() {
           <div className="bg-oxblood rounded-2xl p-8 text-center text-white md:p-12">
             <h2 className="text-3xl font-bold md:text-4xl">Our Commitment</h2>
             <p className="mt-4 text-xl opacity-90">
-              {page?.responseTimeSLA || 'On-site within 60 minutes in the Mid-Willamette Valley.'}
+              {page?.responseTimeSLA ||
+                'On-site within 60 minutes in the Mid-Willamette Valley.'}
             </p>
             <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
               <div>
                 <div className="mb-2 text-3xl">⏱️</div>
-                <h3 className="font-bold text-sm uppercase tracking-widest text-white">Rapid Response</h3>
+                <h3 className="text-sm font-bold tracking-widest text-white uppercase">
+                  Rapid Response
+                </h3>
                 <p className="mt-2 text-xs opacity-80">
                   Crews mobilized immediately upon dispatch.
                 </p>
               </div>
               <div>
                 <div className="mb-2 text-3xl">🛡️</div>
-                <h3 className="font-bold text-sm uppercase tracking-widest text-white">Expert Mitigation</h3>
+                <h3 className="text-sm font-bold tracking-widest text-white uppercase">
+                  Expert Mitigation
+                </h3>
                 <p className="mt-2 text-xs opacity-80">
                   Stopping further damage is our first priority.
                 </p>
               </div>
               <div>
                 <div className="mb-2 text-3xl">📑</div>
-                <h3 className="font-bold text-sm uppercase tracking-widest text-white">Insurance-Ready</h3>
+                <h3 className="text-sm font-bold tracking-widest text-white uppercase">
+                  Insurance-Ready
+                </h3>
                 <p className="mt-2 text-xs opacity-80">
                   Full documentation for your adjuster.
                 </p>
@@ -143,22 +150,26 @@ export default async function EmergencyPage() {
                 <PortableTextRenderer value={page.emergencyServices} />
               ) : (
                 <div className="prose prose-lg text-slate max-w-none">
-                  <p className="font-semibold text-oxblood">
-                    Benson Home Solutions provides 24/7 mitigation for residential,
-                    commercial, and community properties.
+                  <p className="text-oxblood font-semibold">
+                    Benson Home Solutions provides 24/7 mitigation for
+                    residential, commercial, and community properties.
                   </p>
                   <ul className="mt-6 space-y-4 text-sm">
                     <li>
-                      <strong>Water Damage:</strong> Extraction, drying, and moisture mapping.
+                      <strong>Water Damage:</strong> Extraction, drying, and
+                      moisture mapping.
                     </li>
                     <li>
-                      <strong>Board-Ups:</strong> Securing properties after break-ins or impact.
+                      <strong>Board-Ups:</strong> Securing properties after
+                      break-ins or impact.
                     </li>
                     <li>
-                      <strong>Roof Tarping:</strong> Stopping water intrusion from storm damage.
+                      <strong>Roof Tarping:</strong> Stopping water intrusion
+                      from storm damage.
                     </li>
                     <li>
-                      <strong>Storm Cleanup:</strong> Debris removal and structural security.
+                      <strong>Storm Cleanup:</strong> Debris removal and
+                      structural security.
                     </li>
                   </ul>
                 </div>
@@ -175,7 +186,8 @@ export default async function EmergencyPage() {
                       1
                     </span>
                     <span>
-                      <strong>Safety first:</strong> Evacuate if there are structural or electrical hazards.
+                      <strong>Safety first:</strong> Evacuate if there are
+                      structural or electrical hazards.
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
@@ -183,7 +195,8 @@ export default async function EmergencyPage() {
                       2
                     </span>
                     <span>
-                      <strong>Stop the source:</strong> If safe, turn off main water supply.
+                      <strong>Stop the source:</strong> If safe, turn off main
+                      water supply.
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
@@ -191,14 +204,18 @@ export default async function EmergencyPage() {
                       3
                     </span>
                     <span>
-                      <strong>Document:</strong> Take photos/video of damage for insurance.
+                      <strong>Document:</strong> Take photos/video of damage for
+                      insurance.
                     </span>
                   </li>
                 </ul>
-                <div className="mt-8 border-t border-slate/10 pt-8">
-                  <a href={`tel:${page?.emergencyPhone || BUSINESS.afterhoursPhone}`}>
+                <div className="border-slate/10 mt-8 border-t pt-8">
+                  <a
+                    href={`tel:${page?.emergencyPhone || BUSINESS.afterhoursPhone}`}
+                  >
                     <Button variant="emergency" className="w-full py-6 text-lg">
-                      Call Now: {page?.emergencyPhone || BUSINESS.afterhoursPhone}
+                      Call Now:{' '}
+                      {page?.emergencyPhone || BUSINESS.afterhoursPhone}
                     </Button>
                   </a>
                 </div>
@@ -209,7 +226,7 @@ export default async function EmergencyPage() {
       </Section>
 
       {page?.content && (
-        <Section spacing="lg" className="bg-white border-t border-slate/5">
+        <Section spacing="lg" className="border-slate/5 border-t bg-white">
           <Container size="narrow">
             <h2 className="text-oxblood mb-8 text-3xl font-bold tracking-tight md:text-4xl">
               While You Wait for Help

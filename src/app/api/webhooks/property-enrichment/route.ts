@@ -28,19 +28,25 @@ export async function POST(req: NextRequest) {
 
     // 3. Basic Input Validation
     if (!address || typeof address !== 'string' || address.length < 5) {
-      return NextResponse.json({ error: 'Invalid address format' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid address format' },
+        { status: 400 },
+      );
     }
 
     const hasDigit = /\d/.test(address);
     const hasAlpha = /[a-zA-Z]/.test(address);
     if (!hasDigit || !hasAlpha) {
-      return NextResponse.json({ error: 'Invalid address format' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid address format' },
+        { status: 400 },
+      );
     }
 
     // 4. Deduplication
     const addressHash = await generateAddressHash(address);
     const hasDb = !!process.env.DATABASE_URL;
-    
+
     if (hasDb) {
       try {
         const [existingProperty] = await db
@@ -52,11 +58,11 @@ export async function POST(req: NextRequest) {
         if (existingProperty && existingProperty.enrichedAt) {
           const ninetyDaysAgo = new Date();
           ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-          
+
           if (existingProperty.enrichedAt > ninetyDaysAgo) {
             return NextResponse.json({
               status: 'cached',
-              data: existingProperty
+              data: existingProperty,
             });
           }
         }
@@ -78,7 +84,7 @@ export async function POST(req: NextRequest) {
       const [fz, dh, hud] = await Promise.all([
         fetchFloodZone(geocode.lat, geocode.lng),
         fetchDisasterHistory(geocode.zip),
-        fetchHudData(geocode.zip)
+        fetchHudData(geocode.zip),
       ]);
       floodZone = fz;
       disasterHistory = dh;
@@ -86,7 +92,10 @@ export async function POST(req: NextRequest) {
     }
 
     // 7. Energy Benchmarks (Default to 1978 median if unknown)
-    const energy = getEnergyBenchmark(1978, geocode.zip?.startsWith('977') ? '6' : '4C');
+    const energy = getEnergyBenchmark(
+      1978,
+      geocode.zip?.startsWith('977') ? '6' : '4C',
+    );
 
     const enrichedData = {
       addressHash,
@@ -102,31 +111,39 @@ export async function POST(req: NextRequest) {
       floodZone: floodZone?.zone || 'Unknown',
       floodZoneSource: floodZone?.source || 'N/A',
       disasterHistory,
-      fairMarketRent: hudData?.fairMarketRent ? String(hudData.fairMarketRent) : null,
-      areaIncomeLimit: hudData?.areaIncomeLimit ? String(hudData.areaIncomeLimit) : null,
+      fairMarketRent: hudData?.fairMarketRent
+        ? String(hudData.fairMarketRent)
+        : null,
+      areaIncomeLimit: hudData?.areaIncomeLimit
+        ? String(hudData.areaIncomeLimit)
+        : null,
       energyBenchmarks: energy,
-      dataCompleteness: isManual ? 10 : (hudData ? 100 : 70), 
+      dataCompleteness: isManual ? 10 : hudData ? 100 : 70,
       enrichedAt: new Date(),
       dataSources: {
         geocode: {
           source: geocode.source,
           confidence: geocode.confidence,
-          fetchedAt: new Date().toISOString()
+          fetchedAt: new Date().toISOString(),
         },
-        floodZone: floodZone ? {
-          value: floodZone.zone,
-          source: floodZone.source,
-          fetchedAt: floodZone.fetchedAt
-        } : null,
-        hud: hudData ? {
-          source: hudData.source,
-          fetchedAt: hudData.fetchedAt
-        } : null,
+        floodZone: floodZone
+          ? {
+              value: floodZone.zone,
+              source: floodZone.source,
+              fetchedAt: floodZone.fetchedAt,
+            }
+          : null,
+        hud: hudData
+          ? {
+              source: hudData.source,
+              fetchedAt: hudData.fetchedAt,
+            }
+          : null,
         energy: {
           source: 'DOE ResStock/EIA RECS Model',
-          fetchedAt: new Date().toISOString()
-        }
-      }
+          fetchedAt: new Date().toISOString(),
+        },
+      },
     };
 
     let resultData = enrichedData;
@@ -172,10 +189,10 @@ export async function POST(req: NextRequest) {
               energyBenchmarks: enrichedData.energyBenchmarks,
               dataCompleteness: enrichedData.dataCompleteness,
               dataSources: enrichedData.dataSources,
-            }
+            },
           })
           .returning();
-        
+
         resultData = property as any;
       } catch (dbError) {
         console.warn('[Property Enrichment] DB upsert failed:', dbError);
@@ -184,11 +201,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       status: 'success',
-      data: resultData
+      data: resultData,
     });
-
   } catch (error) {
     console.error('[Property Enrichment Webhook Error]', error);
-    return NextResponse.json({ error: 'Internal server error', details: String(error) }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error', details: String(error) },
+      { status: 500 },
+    );
   }
 }

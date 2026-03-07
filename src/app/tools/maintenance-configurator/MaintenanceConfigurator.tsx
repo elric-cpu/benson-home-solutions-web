@@ -47,9 +47,10 @@ interface Property {
 
 interface Props {
   propertyHash?: string;
+  clientId?: string;
 }
 
-export function MaintenanceConfigurator({ propertyHash }: Props) {
+export function MaintenanceConfigurator({ propertyHash, clientId }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [isFinalizing, setIsFinalizing] = useState(false);
@@ -59,6 +60,10 @@ export function MaintenanceConfigurator({ propertyHash }: Props) {
   >({});
   const [showComparison, setShowComparison] = useState(false);
   const [property, setProperty] = useState<Property | null>(null);
+
+  // Fallback IDs
+  const FALLBACK_CLIENT_ID = '00000000-0000-0000-0000-000000000000';
+  const activeClientId = clientId || FALLBACK_CLIENT_ID;
 
   // Fallback property for demo if hash is missing
   const fallbackProperty = useMemo(
@@ -186,7 +191,7 @@ export function MaintenanceConfigurator({ propertyHash }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           propertyId: activeProperty.id,
-          clientId: '00000000-0000-0000-0000-000000000000', // Still need client context
+          clientId: activeClientId,
           services: Object.values(selectedServices),
           totalAnnual,
           monthlySubscription,
@@ -320,7 +325,7 @@ export function MaintenanceConfigurator({ propertyHash }: Props) {
               <div className="mb-6 flex items-center justify-between rounded-xl bg-slate-100 p-1">
                 <button
                   onClick={() => setShowComparison(false)}
-                  className={`flex-1 rounded-lg px-4 py-2 text-xs font-bold transition-all ${!showComparison ? 'bg-white text-oxblood shadow-sm' : 'text-slate-500'}`}
+                  className={`flex-1 rounded-lg px-4 py-2 text-xs font-bold transition-all ${!showComparison ? 'text-oxblood bg-white shadow-sm' : 'text-slate-500'}`}
                 >
                   Subscription Plan
                 </button>
@@ -333,7 +338,7 @@ export function MaintenanceConfigurator({ propertyHash }: Props) {
               </div>
 
               <Card
-                className={`transition-all duration-500 ${showComparison ? 'bg-red-900 border-red-700' : 'bg-oxblood border-none'} text-cream shadow-elevated overflow-hidden`}
+                className={`transition-all duration-500 ${showComparison ? 'border-red-700 bg-red-900' : 'bg-oxblood border-none'} text-cream shadow-elevated overflow-hidden`}
               >
                 <div className="absolute top-0 right-0 p-4 opacity-10">
                   <svg
@@ -405,7 +410,7 @@ export function MaintenanceConfigurator({ propertyHash }: Props) {
                       <Button
                         variant="outline"
                         size="lg"
-                        className="border-red-400 text-red-400 hover:bg-red-400 hover:text-red-950 w-full font-bold"
+                        className="w-full border-red-400 font-bold text-red-400 hover:bg-red-400 hover:text-red-950"
                         onClick={() => setShowComparison(false)}
                       >
                         Switch to Preventive Plan

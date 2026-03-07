@@ -1,21 +1,12 @@
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
 import { TrueCostCalculator } from './TrueCostCalculator';
 
 export const metadata: Metadata = {
-  title: 'True Cost of Homeownership Calculator',
+  title: 'True Cost of Homeownership Calculator | Benson Home Solutions',
   description:
-    'Calculate the true annual cost of owning your home beyond the mortgage. Get a realistic breakdown of taxes, insurance, maintenance, and energy costs.',
-  openGraph: {
-    title: 'True Cost of Homeownership Calculator | Benson Home Solutions',
-    description: 'Find out the hidden costs of your home beyond the mortgage.',
-    type: 'website',
-  },
+    'Calculate the real annual cost of owning a home in Oregon. Property taxes, insurance, maintenance, and hidden expenses.',
 };
 
 export default function CostCalculatorPage() {
-  return (
-    <main className="min-h-screen">
-      <TrueCostCalculator />
-    </main>
-  );
+  return <TrueCostCalculator />;
 }

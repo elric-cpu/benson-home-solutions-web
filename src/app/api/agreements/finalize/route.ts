@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { agreements, clients, properties, agreementVersions } from '@/lib/db/schema';
+import {
+  agreements,
+  clients,
+  properties,
+  agreementVersions,
+} from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(request: NextRequest) {
@@ -45,6 +50,21 @@ export async function POST(request: NextRequest) {
       .returning();
 
     // 3. Create initial version (Layer 2)
+    const initialData = JSON.stringify({
+      agreementNumber,
+      clientId,
+      propertyId,
+      services,
+      totalAnnual,
+      monthlySubscription,
+    });
+    
+    // Generate document hash for integrity tracking
+    const msgUint8 = new TextEncoder().encode(initialData);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const versionHash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+
     await db.insert(agreementVersions).values({
       agreementId: newAgreement.id,
       versionNumber: 1,
@@ -52,6 +72,7 @@ export async function POST(request: NextRequest) {
       documentProviderId: `initial-${agreementNumber}`,
       status: 'draft',
       changesSummary: 'Initial agreement generation from calculator.',
+      versionHash,
     });
 
     // 4. Update property status

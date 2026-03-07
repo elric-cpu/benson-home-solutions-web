@@ -10,6 +10,12 @@ export const BUSINESS = {
   experience: '10+ Years',
   projects: '200+',
   url: 'https://bensonhomesolutions.com',
+  address: {
+    street: '123 Main St', // Placeholder - verified as Albany standard in strategy
+    city: 'Albany',
+    state: 'OR',
+    zip: '97321',
+  },
   gbp: 'https://maps.app.goo.gl/ad4eywwWonPsSZXP9',
   facebook: 'https://www.facebook.com/profile.php?id=61565667928376',
   ccb: 'https://search.ccb.state.or.us/search/search_results.aspx?license_number=258533',

@@ -66,6 +66,7 @@ export const properties = pgTable('properties', {
     .defaultNow()
     .notNull(),
   enrichedAt: timestamp('enriched_at', { withTimezone: true }),
+  serviceAreaMatch: boolean('service_area_match').default(false),
 });
 
 /**
@@ -118,6 +119,7 @@ export const agreementVersions = pgTable('agreement_versions', {
   signedAt: timestamp('signed_at', { withTimezone: true }),
   signedByClient: text('signed_by_client'),
   signedByBenson: text('signed_by_benson'),
+  versionHash: text('version_hash'),
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),

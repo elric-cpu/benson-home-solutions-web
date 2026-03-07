@@ -49,8 +49,8 @@ export default function HomeTheaterPage() {
             </h2>
             <p>
               Our 3D modeling engine is being calibrated for the latest 2026
-              audio-visual standards and acoustic material data. This tool
-              will be live in April 2026.
+              audio-visual standards and acoustic material data. This tool will
+              be live in April 2026.
             </p>
           </div>
         </Container>

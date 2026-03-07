@@ -48,9 +48,11 @@ interface OsmSuggestion {
   lat: string;
   lon: string;
   address: {
+    house_number?: string;
     road?: string;
     city?: string;
     town?: string;
+    village?: string;
     state?: string;
     postcode?: string;
     county?: string;
@@ -60,12 +62,12 @@ interface OsmSuggestion {
 interface CensusSuggestion {
   matchedAddress: string;
   addressComponents: {
-    number: string;
-    streetName: string;
-    city: string;
-    state: string;
-    zip: string;
-    county: string;
+    number?: string;
+    streetName?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    county?: string;
   };
   coordinates: {
     x: number;
@@ -132,12 +134,6 @@ export function AddressAutocomplete({
       return;
     }
 
-    if (!API_KEY || API_KEY === 'FREE_KEY') {
-      console.warn(
-        '[AddressAutocomplete] Geoapify API key is missing. Falling back to secondary geocoders.',
-      );
-    }
-
     const fetchSuggestions = async () => {
       setLoading(true);
       try {
@@ -180,18 +176,42 @@ export function AddressAutocomplete({
         if (!response.ok) throw new Error('Geocoding service unavailable');
 
         const data = (await response.json()) as OsmSuggestion[];
-        const osmSuggestions = data.map((item: OsmSuggestion) => ({
-          formatted: item.display_name,
-          place_id: `osm-${item.place_id}`,
-          address_line1: item.address.road || item.display_name.split(',')[0],
-          address_line2: item.address.city || item.address.town || '',
-          city: item.address.city || item.address.town || '',
-          state: item.address.state || '',
-          postcode: item.address.postcode || '',
-          county: item.address.county || '',
-          lat: parseFloat(item.lat),
-          lon: parseFloat(item.lon),
-        }));
+        const osmSuggestions = data.map((item: OsmSuggestion) => {
+          const houseNumber = item.address.house_number || '';
+          const road = item.address.road || '';
+          const city = item.address.city || item.address.town || item.address.village || '';
+          const state = item.address.state || '';
+          const postcode = item.address.postcode || '';
+
+          // Safely construct Address Line 1
+          let line1 = item.display_name.split(',')[0];
+          if (houseNumber && road) {
+            line1 = `${houseNumber} ${road}`;
+          } else if (road) {
+            line1 = road;
+          }
+
+          // Safely construct Address Line 2
+          let line2 = '';
+          if (city || state || postcode) {
+            line2 = [city ? `${city},` : '', state, postcode].filter(Boolean).join(' ').trim();
+          } else {
+            line2 = item.display_name.split(',').slice(1).join(',').trim();
+          }
+
+          return {
+            formatted: item.display_name,
+            place_id: `osm-${item.place_id}`,
+            address_line1: line1,
+            address_line2: line2,
+            city,
+            state,
+            postcode,
+            county: item.address.county || '',
+            lat: parseFloat(item.lat),
+            lon: parseFloat(item.lon),
+          };
+        });
 
         if (osmSuggestions.length > 0) {
           setSuggestions(osmSuggestions);
@@ -200,7 +220,6 @@ export function AddressAutocomplete({
         }
 
         // Tertiary Fallback: US Census Geocoder (Direct Search)
-        // Only trigger if string is long (likely a full address attempt)
         if (query.length > 10) {
           const censusUrl = `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${encodeURIComponent(query)}&benchmark=Public_AR_Current&format=json`;
           const cRes = await fetch(censusUrl);
@@ -209,22 +228,24 @@ export function AddressAutocomplete({
           if (cData.result?.addressMatches?.[0]) {
             setSuggestions(
               cData.result.addressMatches.map(
-                (m: CensusSuggestion, i: number) => ({
-                  formatted: m.matchedAddress,
-                  place_id: `census-${i}`,
-                  address_line1:
-                    m.addressComponents.number +
-                    ' ' +
-                    m.addressComponents.streetName,
-                  address_line2:
-                    m.addressComponents.city + ', ' + m.addressComponents.state,
-                  city: m.addressComponents.city,
-                  state: m.addressComponents.state,
-                  postcode: m.addressComponents.zip,
-                  county: m.addressComponents.county,
-                  lat: m.coordinates.y,
-                  lon: m.coordinates.x,
-                }),
+                (m: CensusSuggestion, i: number) => {
+                  const city = m.addressComponents.city || '';
+                  const state = m.addressComponents.state || '';
+                  const zip = m.addressComponents.zip || '';
+                  
+                  return {
+                    formatted: m.matchedAddress,
+                    place_id: `census-${i}`,
+                    address_line1: `${m.addressComponents.number || ''} ${m.addressComponents.streetName || ''}`.trim(),
+                    address_line2: [city ? `${city},` : '', state, zip].filter(Boolean).join(' ').trim(),
+                    city,
+                    state,
+                    postcode: zip,
+                    county: m.addressComponents.county || '',
+                    lat: m.coordinates.y,
+                    lon: m.coordinates.x,
+                  };
+                }
               ),
             );
             setIsOpen(true);
@@ -279,9 +300,11 @@ export function AddressAutocomplete({
               <div className="text-charcoal font-semibold">
                 {s.address_line1}
               </div>
-              <div className="text-sm opacity-70">
-                {s.address_line2 || s.formatted.split(',').slice(1).join(',')}
-              </div>
+              {s.address_line2 && (
+                <div className="text-sm opacity-70">
+                  {s.address_line2}
+                </div>
+              )}
             </li>
           ))}
         </ul>

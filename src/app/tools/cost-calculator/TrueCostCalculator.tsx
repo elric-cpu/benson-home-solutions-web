@@ -11,20 +11,15 @@ import {
   CardContent,
   Badge,
   RichHero,
-  Input,
-  Label,
-  Select,
 } from '@/components/ui';
 import {
   MOCK_ZIP_DATA,
   DEFAULT_BENCHMARK,
-  isServiceArea,
   type ZipData,
 } from '@/lib/calculator-data';
 import { HERO_ASSETS } from '@/lib/constants';
-import { generateAddressHash } from '@/lib/utils/hash';
 
-type Step = 'input' | 'processing' | 'result' | 'lead-gen';
+type Step = 'input' | 'processing' | 'unlock' | 'result';
 
 interface AddressSuggestion {
   formatted: string;
@@ -39,7 +34,6 @@ interface AddressSuggestion {
 export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
   const [step, setStep] = useState<Step>('input');
   const [address, setAddress] = useState<AddressSuggestion | null>(null);
-  const [addressHash, setAddressHash] = useState<string | null>(null);
   const [data, setData] = useState<ZipData | null>(null);
   const [progressStep, setProgressStep] = useState(0);
   const [animatedTotal, setAnimatedTotal] = useState(0);
@@ -52,17 +46,13 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
     'Projecting maintenance risk based on building age...',
   ];
 
-  const handleAddressSelect = async (suggestion: AddressSuggestion) => {
-    setAddress(suggestion);
-    const zipData = MOCK_ZIP_DATA[suggestion.postcode] || DEFAULT_BENCHMARK;
-    setData({ ...zipData, city: suggestion.city || zipData.city });
-
-    try {
-      const hash = await generateAddressHash(suggestion.formatted);
-      setAddressHash(hash);
-    } catch (err) {
-      console.error('Failed to generate address hash', err);
-    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleAddressSelect = async (suggestion: any) => {
+    const s = suggestion as AddressSuggestion;
+    setAddress(s);
+    
+    const zipData = MOCK_ZIP_DATA[s.postcode] || DEFAULT_BENCHMARK;
+    setData({ ...zipData, city: s.city || zipData.city });
 
     setStep('processing');
   };
@@ -76,32 +66,25 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
     const propertyType = formData.get('propertyType') as string;
 
     try {
-      const response = await fetch('/api/calculator/report', {
+      // Pre-calculate total for the API
+      const total = Object.values(data?.costs || {}).reduce(
+        (acc, curr) => acc + curr.annual,
+        0,
+      );
+
+      await fetch('/api/calculator/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          address: address?.formatted,
           propertyType,
-          annualTotal: animatedTotal,
-          monthlyTotal: Math.floor(animatedTotal / 12),
-          isServiceArea: isServiceArea(
-            address?.postcode || '',
-            data?.county || '',
-            data?.state || '',
-          ),
-          addressHash,
-          zip: address?.postcode || data?.zip,
-          city: address?.city || data?.city,
-          state: address?.state || data?.state,
-          county: address?.county || data?.county,
+          address,
           costs: data?.costs,
+          total,
         }),
       });
 
-      if (response.ok) {
-        setStep('lead-gen');
-      }
+      setStep('result');
     } catch (error) {
       console.error('Lead submission failed', error);
     } finally {
@@ -116,7 +99,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
         setProgressStep((prev) => {
           if (prev >= messagesCount - 1) {
             clearInterval(interval);
-            setTimeout(() => setStep('result'), 800);
+            setTimeout(() => setStep('unlock'), 800);
             return prev;
           }
           return prev + 1;
@@ -237,6 +220,82 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
     );
   }
 
+  if (step === 'unlock') {
+    return (
+      <Section variant="cream" className="flex min-h-[600px] items-center">
+        <Container size="narrow">
+          <div className="mx-auto max-w-md">
+            <Card className="shadow-elevated border-oxblood/10 bg-white/95 backdrop-blur-md">
+              <CardContent className="p-8">
+                <div className="mb-6 text-center">
+                  <Badge variant="secondary" className="mb-4 tracking-widest uppercase">
+                    Analysis Complete
+                  </Badge>
+                  <h2 className="text-charcoal text-2xl font-bold">
+                    Unlock Your Full Report
+                  </h2>
+                  <p className="text-slate mt-2 text-sm">
+                    We&apos;ve processed <strong>{address?.formatted}</strong>. Where should we send your detailed annual cost breakdown?
+                  </p>
+                </div>
+
+                <form className="space-y-4" onSubmit={handleLeadSubmit}>
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="mb-1 block text-xs font-bold tracking-wider text-slate/50 uppercase"
+                    >
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      placeholder="you@example.com"
+                      className="w-full rounded-lg border border-slate/20 bg-white px-4 py-3 text-charcoal outline-none transition-all focus:border-oxblood/50"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="propertyType"
+                      className="mb-1 block text-xs font-bold tracking-wider text-slate/50 uppercase"
+                    >
+                      Property Type
+                    </label>
+                    <select
+                      id="propertyType"
+                      name="propertyType"
+                      required
+                      className="w-full appearance-none rounded-lg border border-slate/20 bg-white px-4 py-3 text-charcoal outline-none transition-all focus:border-oxblood/50"
+                    >
+                      <option value="residential">Residential</option>
+                      <option value="commercial">Commercial</option>
+                      <option value="church_community">Church or Community</option>
+                    </select>
+                  </div>
+
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="w-full"
+                    loading={isSubmitting}
+                  >
+                    {isSubmitting ? 'Generating...' : 'Reveal My Annual Cost'}
+                  </Button>
+                  <p className="text-[9px] text-center text-slate/40 font-medium uppercase tracking-tighter">
+                    Secure Data &bull; Local CCB #258533 Standards
+                  </p>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
+
   if (step === 'result' && data) {
     const monthlyTotal = Math.floor(animatedTotal / 12);
     const tripsToHawaii = Math.floor(animatedTotal / 600);
@@ -308,11 +367,24 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
               className={`grid gap-8 ${isEmbed ? 'grid-cols-1' : 'lg:grid-cols-3'}`}
             >
               <div className={`space-y-6 ${isEmbed ? '' : 'lg:col-span-2'}`}>
-                <h3 className="text-charcoal mb-4 text-xl font-bold">
-                  Cost Breakdown
-                </h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-charcoal text-xl font-bold">
+                    Cost Breakdown
+                  </h3>
+                  {!isEmbed && (
+                    <span className="text-[10px] text-slate/40 font-bold uppercase tracking-widest">
+                      Click badges for methodology
+                    </span>
+                  )}
+                </div>
                 <div className="space-y-4">
                   {Object.entries(data.costs).map(([key, detail]) => {
+                    const confidenceColors = {
+                      high: 'bg-green-500/10 text-green-700 hover:bg-green-500/20',
+                      medium: 'bg-amber-500/10 text-amber-700 hover:bg-amber-500/20',
+                      low: 'bg-red-500/10 text-red-700 hover:bg-red-500/20',
+                    };
+
                     const slugMap: Record<string, string> = {
                       property_tax: 'property-taxes',
                       insurance: 'insurance',
@@ -323,11 +395,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                       appliance_reserve: 'appliance-lifecycle',
                     };
 
-                    const confidenceColors = {
-                      high: 'bg-green-500/10 text-green-700',
-                      medium: 'bg-amber-500/10 text-amber-700',
-                      low: 'bg-red-500/10 text-red-700',
-                    };
+                    const methodologyUrl = `/methodology/${slugMap[key]}`;
 
                     return (
                       <div key={key} className="space-y-2">
@@ -336,12 +404,14 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                             <span className="text-slate text-xs font-bold tracking-wider uppercase">
                               {key.replace(/_/g, ' ')}
                             </span>
-                            <Badge
-                              variant="secondary"
-                              className={`px-1.5 py-0 text-[8px] ${confidenceColors[detail.confidence]}`}
-                            >
-                              {detail.confidence} confidence
-                            </Badge>
+                            <Link href={methodologyUrl} title={`View ${key.replace(/_/g, ' ')} methodology`}>
+                              <Badge
+                                variant="secondary"
+                                className={`px-1.5 py-0 text-[8px] transition-colors ${confidenceColors[detail.confidence]}`}
+                              >
+                                {detail.confidence} confidence
+                              </Badge>
+                            </Link>
                           </div>
                           <span className="text-charcoal font-bold">
                             ${detail.annual.toLocaleString()}
@@ -359,178 +429,35 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                           <span className="text-slate/40 text-[9px]">
                             Source: {detail.source}
                           </span>
-                          <Link
-                            href={`/methodology/${slugMap[key] || ''}`}
-                            className="text-oxblood hover:underline text-[9px] font-bold"
-                          >
-                            Methodology &rarr;
-                          </Link>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-
-                <Card
-                  variant="outlined"
-                  className="relative mt-12 overflow-hidden border-red-200 bg-red-50/30"
-                >
-                  <div className="absolute top-0 left-0 h-full w-1 bg-red-500" />
-                  <CardContent className="p-8">
-                    <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-red-900">
-                      ⚠️ Deferred Maintenance Alert
-                    </h3>
-                    <p className="mb-8 leading-relaxed text-red-800">
-                      Skipping routine maintenance on a home like yours in{' '}
-                      <strong>{data.city}</strong> costs an average of{' '}
-                      <strong>
-                        ${data.costs.deferred_maintenance_risk.annual.toLocaleString()}{' '}
-                        extra
-                      </strong>{' '}
-                      in emergency repairs within 3–5 years.
-                    </p>
-
-                    {/* Cost Escalation Curve */}
-                    <div className="relative mb-6 h-32 w-full rounded-xl border border-red-100 bg-white/50 p-4">
-                      <div className="text-slate/40 absolute bottom-4 left-4 text-[10px] font-bold uppercase">
-                        Year 1: Routine
-                      </div>
-                      <div className="absolute right-4 bottom-4 text-right text-[10px] font-bold text-red-600 uppercase">
-                        Year 5: Emergency
-                      </div>
-                      <svg
-                        className="h-full w-full"
-                        preserveAspectRatio="none"
-                        viewBox="0 0 100 100"
-                      >
-                        <path
-                          d="M 0 80 Q 50 75 100 20"
-                          fill="none"
-                          stroke="url(#grad-red)"
-                          strokeWidth="4"
-                          strokeLinecap="round"
-                          className="drop-shadow-md"
-                        />
-                        <circle cx="0" cy="80" r="4" fill="#4C0C14" />
-                        <circle
-                          cx="100"
-                          cy="20"
-                          r="4"
-                          fill="#ef4444"
-                          className="animate-ping"
-                        />
-                        <defs>
-                          <linearGradient
-                            id="grad-red"
-                            x1="0%"
-                            y1="0%"
-                            x2="100%"
-                            y2="0%"
-                          >
-                            <stop offset="0%" stopColor="#4C0C14" />
-                            <stop offset="100%" stopColor="#ef4444" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-red-200">
-                        <div className="h-full w-1/4 animate-pulse bg-red-500" />
-                      </div>
-                      <span className="text-xs font-black tracking-widest text-red-700 uppercase">
-                        Extreme Risk
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
 
               <div className={`space-y-6 ${isEmbed ? 'order-first' : ''}`}>
                 <div className={isEmbed ? '' : 'sticky top-24'}>
                   <Card className="bg-charcoal text-cream shadow-elevated border-none">
-                    <CardContent className="p-8">
+                    <CardContent className="p-8 text-center">
                       <h3 className="mb-4 text-2xl font-bold">
-                        Cut These Costs
+                        Protect Your Investment
                       </h3>
-                      <div className="mb-6 flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-3">
-                        <div className="bg-oxblood/20 text-oxblood flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold">
-                          80%
-                        </div>
-                        <p className="text-cream/70 text-[11px] leading-tight">
-                          <strong>Your report is almost ready.</strong>
-                          <br />
-                          Unlock the final 20% &mdash; your custom maintenance
-                          schedule.
-                        </p>
-                      </div>
-
-                      <form className="space-y-4" onSubmit={handleLeadSubmit}>
-                        <div className="space-y-2 text-left">
-                          <Label
-                            htmlFor="propertyType"
-                            className="text-cream/50 text-xs font-bold tracking-widest uppercase"
-                          >
-                            Property Type
-                          </Label>
-                          <Select
-                            id="propertyType"
-                            name="propertyType"
-                            required
-                            className="text-cream border-white/10 bg-white/10"
-                          >
-                            <option
-                              value="residential"
-                              className="text-charcoal"
-                            >
-                              Residential Home
-                            </option>
-                            <option
-                              value="commercial"
-                              className="text-charcoal"
-                            >
-                              Commercial Facility
-                            </option>
-                            <option
-                              value="church_community"
-                              className="text-charcoal"
-                            >
-                              Church or Community
-                            </option>
-                          </Select>
-                        </div>
-                        <div className="space-y-2 text-left">
-                          <Label
-                            htmlFor="email"
-                            className="text-cream/50 text-xs font-bold tracking-widest uppercase"
-                          >
-                            Email Address
-                          </Label>
-                          <Input
-                            id="email"
-                            type="email"
-                            name="email"
-                            required
-                            placeholder="jane@example.com"
-                            className="text-cream border-white/10 bg-white/10 placeholder:text-white/30"
-                          />
-                        </div>
-
+                      <p className="text-cream/70 mb-8 text-sm leading-relaxed">
+                        These costs are inevitable, but they don&apos;t have to be surprises. Our systematic maintenance plans can reduce your reactive repair risks by up to 60%.
+                      </p>
+                      <Link href="/services/maintenance-subscriptions">
                         <Button
                           variant="secondary"
                           size="lg"
-                          className="w-full"
-                          loading={isSubmitting}
+                          className="w-full font-bold shadow-lg"
                         >
-                          {isSubmitting
-                            ? 'Sending Report...'
-                            : 'Get My Full Report'}
+                          View Maintenance Plans
                         </Button>
-                        <p className="text-cream/30 text-center text-[10px] italic">
-                          By clicking, you agree to our privacy policy and
-                          marketing opt-in.
-                        </p>
-                      </form>
+                      </Link>
+                      <p className="mt-4 text-[10px] font-bold uppercase tracking-widest opacity-40">
+                        Licensed &bull; Bonded &bull; Insured
+                      </p>
                     </CardContent>
                   </Card>
                 </div>
@@ -539,124 +466,6 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
           </Container>
         </Section>
       </>
-    );
-  }
-
-  if (step === 'lead-gen') {
-    const handleShare = () => {
-      if (navigator.share) {
-        navigator
-          .share({
-            title: 'True Cost of Homeownership',
-            text: `I just calculated that my home costs $${animatedTotal.toLocaleString()} per year beyond the mortgage! Check your address:`,
-            url: window.location.href,
-          })
-          .catch(console.error);
-      }
-    };
-
-    const isBensonArea = isServiceArea(
-      data?.zip || '',
-      data?.county || '',
-      data?.state || '',
-    );
-
-    return (
-      <Section
-        variant="cream"
-        className="flex min-h-[600px] items-center text-center"
-      >
-        <Container size="narrow">
-          <div className="mb-6 text-6xl">📊</div>
-          <h2 className="text-charcoal mb-4 text-3xl font-bold">
-            Your Report is Ready!
-          </h2>
-          <p className="text-slate mx-auto mb-8 max-w-md text-lg">
-            We&apos;ve sent your detailed breakdown and maintenance schedule to
-            your inbox.
-          </p>
-          <div className="shadow-elevated border-slate/10 mx-auto mb-8 max-w-md rounded-2xl border bg-white p-8 text-left">
-            {addressHash && (
-              <Link
-                href={`/tools/cost-calculator/report/${addressHash}`}
-                className="mb-4 block"
-              >
-                <Button
-                  variant="outline"
-                  className="border-oxblood text-oxblood hover:bg-oxblood w-full hover:text-white"
-                >
-                  View Full Property Report &rarr;
-                </Button>
-              </Link>
-            )}
-            {isBensonArea ? (
-              <>
-                <Badge variant="secondary" className="mb-2">
-                  Benson Service Area Match
-                </Badge>
-                <h3 className="text-oxblood mb-2 text-xl font-bold">
-                  Exclusive Mid-Willamette Access
-                </h3>
-                <p className="text-slate mb-6 text-sm leading-relaxed">
-                  Your property in <strong>{address?.formatted}</strong>{' '}
-                  qualifies for our 24/7 Priority Protection program.
-                </p>
-                <div className="space-y-4">
-                  <a href="/contact" className="block">
-                    <Button size="lg" className="w-full">
-                      Book Initial Assessment
-                    </Button>
-                  </a>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full"
-                    onClick={handleShare}
-                  >
-                    Share Your Result
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <>
-                <Badge variant="secondary" className="mb-2">
-                  Outside Current Service Area
-                </Badge>
-                <h3 className="text-charcoal mb-2 text-xl font-bold">
-                  Expanding Soon
-                </h3>
-                <p className="text-slate mb-6 text-sm leading-relaxed">
-                  We don&apos;t currently service <strong>{data?.state}</strong>
-                  , but we are expanding. Bookmark this page and we&apos;ll
-                  notify you when we launch in your area.
-                </p>
-                <div className="space-y-4">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full"
-                    onClick={handleShare}
-                  >
-                    Share Your Result
-                  </Button>
-                </div>
-              </>
-            )}
-
-            <div className="mt-6 flex flex-wrap justify-center gap-4 opacity-50 grayscale">
-              <span className="text-[10px] font-black tracking-tighter uppercase">
-                IICRC Certified
-              </span>
-              <span className="text-[10px] font-black tracking-tighter uppercase">
-                Oregon CCB #258533
-              </span>
-              <span className="text-[10px] font-black tracking-tighter uppercase">
-                Lead-Safe Firm
-              </span>
-            </div>
-          </div>
-        </Container>
-      </Section>
     );
   }
 

@@ -19,7 +19,10 @@ export interface DisasterRecord {
  * Fetches the FEMA Flood Zone for a given coordinate.
  * Uses the NFHL (National Flood Hazard Layer) REST API.
  */
-export async function fetchFloodZone(lat: number, lng: number): Promise<FloodZoneResult> {
+export async function fetchFloodZone(
+  lat: number,
+  lng: number,
+): Promise<FloodZoneResult> {
   try {
     // FEMA NFHL REST API - Query Layer 28 (Flood Hazard Zones)
     // We use a small buffer around the point to find the intersecting zone
@@ -58,7 +61,9 @@ interface OpenFemaDisaster {
   declarationTitle: string;
 }
 
-export async function fetchDisasterHistory(zip: string): Promise<DisasterRecord[]> {
+export async function fetchDisasterHistory(
+  zip: string,
+): Promise<DisasterRecord[]> {
   try {
     // OpenFEMA Disaster Declarations Summaries
     // Filter by zip code and limit to recent or major events
