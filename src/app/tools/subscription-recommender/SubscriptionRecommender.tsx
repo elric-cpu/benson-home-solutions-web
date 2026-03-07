@@ -172,7 +172,7 @@ export function SubscriptionRecommender() {
               <CardContent>
                 <Label className="mb-4 block text-center text-slate font-bold uppercase tracking-widest text-xs">Enter Your Property Address</Label>
                 <AddressAutocomplete onSelect={handleAddressSelect} />
-                <div className="mt-6 text-center text-[10px] text-slate/40 font-bold uppercase tracking-[0.2em]">
+                <div className="mt-6 text-center text-[10px] text-slate/60 font-bold uppercase tracking-[0.2em]">
                   Real-time Benchmarking vs. Oregon CCB Standards
                 </div>
               </CardContent>
@@ -249,7 +249,7 @@ export function SubscriptionRecommender() {
                 <Button variant="oxblood" size="lg" className="w-full py-6 font-bold" loading={isSubmitting}>
                   Reveal My Maintenance Plan
                 </Button>
-                <p className="text-[10px] text-slate/50 font-bold uppercase tracking-widest">
+                <p className="text-[10px] text-slate/70 font-bold uppercase tracking-widest">
                   Secure Data • No Spam • Professional Consultation
                 </p>
               </form>
@@ -289,7 +289,7 @@ export function SubscriptionRecommender() {
               </p>
             </div>
             <div className="text-right">
-              <div className="text-oxblood text-5xl font-black tabular-nums">${monthlySubscription}<span className="text-base font-bold opacity-40 ml-1">/mo</span></div>
+              <div className="text-oxblood text-5xl font-black tabular-nums">${monthlySubscription}<span className="text-base font-bold opacity-70 ml-1">/mo</span></div>
               <p className="text-slate text-xs font-bold uppercase tracking-widest mt-1">Subscription Estimate</p>
             </div>
           </div>
@@ -317,6 +317,7 @@ export function SubscriptionRecommender() {
                                 type="checkbox"
                                 checked={!!selectedServices[r.service_id]}
                                 onChange={() => toggleService(r)}
+                                aria-label={`Select ${SERVICE_CATALOG.find((s) => s.id === r.service_id)?.name}`}
                                 className="mt-1.5 h-5 w-5 rounded border-slate/20 text-oxblood focus:ring-oxblood"
                               />
                               <div className="flex-1">
@@ -330,7 +331,7 @@ export function SubscriptionRecommender() {
                                       property: pricingProperty,
                                       frequency: r.frequency,
                                     })}
-                                    <span className="text-[10px] ml-0.5 opacity-50 uppercase tracking-tighter">/yr</span>
+                                    <span className="text-[10px] ml-0.5 opacity-70 uppercase tracking-tighter">/yr</span>
                                   </span>
                                 </div>
                                 <p className="text-slate mb-3 text-sm leading-relaxed">

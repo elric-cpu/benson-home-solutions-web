@@ -66,9 +66,9 @@ export function Footer() {
 
             {/* Services */}
             <div>
-              <h4 className="text-cream mb-6 text-xs font-bold tracking-widest uppercase">
+              <h3 className="text-cream mb-6 text-xs font-bold tracking-widest uppercase">
                 Services
-              </h4>
+              </h3>
               <ul className="space-y-4">
                 {footerLinks.services.map((link) => (
                   <li key={link.href}>
@@ -85,9 +85,9 @@ export function Footer() {
 
             {/* Company */}
             <div>
-              <h4 className="text-cream mb-6 text-xs font-bold tracking-widest uppercase">
+              <h3 className="text-cream mb-6 text-xs font-bold tracking-widest uppercase">
                 Company
-              </h4>
+              </h3>
               <ul className="space-y-4">
                 {footerLinks.company.map((link) => (
                   <li key={link.href}>
@@ -100,9 +100,9 @@ export function Footer() {
                   </li>
                 ))}
               </ul>
-              <h4 className="text-cream mt-10 mb-6 text-xs font-bold tracking-widest uppercase">
+              <h3 className="text-cream mt-10 mb-6 text-xs font-bold tracking-widest uppercase">
                 Service Areas
-              </h4>
+              </h3>
               <ul className="space-y-4">
                 {footerLinks.areas.map((link) => (
                   <li key={link.href}>
@@ -120,9 +120,9 @@ export function Footer() {
             {/* Contact */}
             <div className="space-y-8">
               <div>
-                <h4 className="text-cream mb-6 text-xs font-bold tracking-widest uppercase">
+                <h3 className="text-cream mb-6 text-xs font-bold tracking-widest uppercase">
                   Get in Touch
-                </h4>
+                </h3>
                 <div className="space-y-4">
                   <a href={`tel:${BUSINESS.phone}`} className="group block">
                     <span className="text-cream/70 mb-1 block text-xs font-bold tracking-tighter uppercase">
