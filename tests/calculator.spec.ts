@@ -37,7 +37,9 @@ test.describe('True Cost Calculator', () => {
 
     // Verify "Report Unlocked" state
     await expect(page.getByText(/Report Unlocked/i)).toBeVisible();
-    await expect(page.getByRole('link', { name: /View Full Report/i })).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: /View Full Report/i }),
+    ).toBeVisible();
   });
 });
 
