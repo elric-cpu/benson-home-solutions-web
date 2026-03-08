@@ -18,7 +18,7 @@ export async function generateEmbedding(text: string): Promise<number[]> {
 export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
   const { embeddings } = await embedMany({
     model: openai.embedding('text-embedding-3-small'),
-    values: texts.map(t => t.replace(/\n/g, ' ')),
+    values: texts.map((t) => t.replace(/\n/g, ' ')),
   });
   return embeddings;
 }

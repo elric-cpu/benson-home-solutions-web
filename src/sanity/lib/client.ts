@@ -29,7 +29,9 @@ const enhancedClient = new Proxy(baseClient, {
   get(target, prop, receiver) {
     if (prop === 'fetch') {
       const originalFetch = target.fetch.bind(target);
-      return async <T = unknown>(...args: Parameters<typeof originalFetch>): Promise<T> => {
+      return async <T = unknown>(
+        ...args: Parameters<typeof originalFetch>
+      ): Promise<T> => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
         try {

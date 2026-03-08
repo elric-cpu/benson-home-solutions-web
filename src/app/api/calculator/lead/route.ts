@@ -37,33 +37,45 @@ export async function POST(req: NextRequest) {
     let propertyId: string | undefined;
     if (address && clientId) {
       try {
-        const inServiceAreaMatch = isServiceArea(address.postcode, address.county, address.state);
-        
+        const inServiceAreaMatch = isServiceArea(
+          address.postcode,
+          address.county,
+          address.state,
+        );
+
         // Generate address hash for uniqueness
-        const msgUint8 = new TextEncoder().encode(address.formatted.toLowerCase().trim());
+        const msgUint8 = new TextEncoder().encode(
+          address.formatted.toLowerCase().trim(),
+        );
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const addressHash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+        const addressHash = hashArray
+          .map((b) => b.toString(16).padStart(2, '0'))
+          .join('');
 
-        const [prop] = await db.insert(properties).values({
-          clientId,
-          addressHash,
-          rawAddress: address.formatted,
-          standardizedAddress: address.formatted,
-          city: address.city,
-          state: address.state,
-          zip: address.postcode,
-          county: address.county,
-          latitude: address.lat,
-          longitude: address.lon,
-          geocodeStatus: 'success',
-          dataCompleteness: 100,
-          housingData: { costs, total },
-          serviceAreaMatch: inServiceAreaMatch,
-        }).onConflictDoUpdate({
-          target: properties.addressHash,
-          set: { updatedAt: new Date(), clientId: clientId } // Update clientId in case it changed
-        }).returning({ id: properties.id });
+        const [prop] = await db
+          .insert(properties)
+          .values({
+            clientId,
+            addressHash,
+            rawAddress: address.formatted,
+            standardizedAddress: address.formatted,
+            city: address.city,
+            state: address.state,
+            zip: address.postcode,
+            county: address.county,
+            latitude: address.lat,
+            longitude: address.lon,
+            geocodeStatus: 'success',
+            dataCompleteness: 100,
+            housingData: { costs, total },
+            serviceAreaMatch: inServiceAreaMatch,
+          })
+          .onConflictDoUpdate({
+            target: properties.addressHash,
+            set: { updatedAt: new Date(), clientId: clientId }, // Update clientId in case it changed
+          })
+          .returning({ id: properties.id });
         propertyId = prop.id;
       } catch (propError) {
         console.error('Database property insertion failed:', propError);
@@ -72,8 +84,10 @@ export async function POST(req: NextRequest) {
 
     // 3. Sync to HubSpot
     try {
-      const inServiceArea = address ? isServiceArea(address.postcode, address.county, address.state) : false;
-      
+      const inServiceArea = address
+        ? isServiceArea(address.postcode, address.county, address.state)
+        : false;
+
       await syncLeadToHubSpot({
         email,
         source: body.source || 'cost-calculator',
@@ -85,13 +99,19 @@ export async function POST(req: NextRequest) {
       console.error('HubSpot sync failed:', hubspotError);
     }
 
-    return NextResponse.json({ 
-      message: 'Lead captured successfully',
-      clientId,
-      propertyId
-    }, { status: 200 });
+    return NextResponse.json(
+      {
+        message: 'Lead captured successfully',
+        clientId,
+        propertyId,
+      },
+      { status: 200 },
+    );
   } catch (error) {
     console.error('Calculator Lead API error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

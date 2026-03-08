@@ -10,6 +10,7 @@ import {
 } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
 import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
+import { SubscriptionSelector } from '@/components/content/subscription/SubscriptionSelector';
 
 export const metadata: Metadata = {
   title: 'Maintenance Subscriptions | Proactive Property Oversight',
@@ -51,10 +52,56 @@ export default function MaintenanceSubscriptionsPage() {
               envelope risks before they become five-figure restoration claims.
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <Link href="/tools/maintenance-configurator">
-                <Button size="lg">Configure Your Plan</Button>
+              <Link href="/tools/subscription-recommender">
+                <Button size="lg" className="font-bold">
+                  Recommend My Plan
+                </Button>
               </Link>
+              <a href={`tel:${BUSINESS.phone}`}>
+                <Button variant="outline" size="lg">
+                  Call Office: {BUSINESS.phone}
+                </Button>
+              </a>
             </div>
+          </div>
+        </Container>
+      </Section>
+
+      <Section spacing="lg">
+        <Container>
+          <div className="mx-auto mb-16 max-w-2xl text-center">
+            <h2 className="text-charcoal text-3xl font-black tracking-tight uppercase">
+              Subscription Tiers
+            </h2>
+            <p className="text-slate mt-4">
+              Transparent pricing designed for residential, commercial, and
+              community properties.
+            </p>
+          </div>
+          <SubscriptionSelector />
+        </Container>
+      </Section>
+
+      <Section variant="cream" spacing="lg">
+        <Container size="narrow">
+          <div className="bg-oxblood text-cream rounded-3xl p-8 text-center md:p-12">
+            <h2 className="mb-6 text-3xl font-black">
+              Not sure which tier you need?
+            </h2>
+            <p className="text-cream/80 mb-8 text-lg">
+              Our AI Recommender analyzes your property data to build a custom
+              maintenance schedule based on building age, location, and flood
+              risk.
+            </p>
+            <Link href="/tools/subscription-recommender">
+              <Button
+                variant="secondary"
+                size="xl"
+                className="font-black tracking-widest uppercase"
+              >
+                Start Free Analysis
+              </Button>
+            </Link>
           </div>
         </Container>
       </Section>

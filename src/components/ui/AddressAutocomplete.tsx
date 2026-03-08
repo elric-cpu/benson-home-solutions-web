@@ -179,7 +179,11 @@ export function AddressAutocomplete({
         const osmSuggestions = data.map((item: OsmSuggestion) => {
           const houseNumber = item.address.house_number || '';
           const road = item.address.road || '';
-          const city = item.address.city || item.address.town || item.address.village || '';
+          const city =
+            item.address.city ||
+            item.address.town ||
+            item.address.village ||
+            '';
           const state = item.address.state || '';
           const postcode = item.address.postcode || '';
 
@@ -194,7 +198,10 @@ export function AddressAutocomplete({
           // Safely construct Address Line 2
           let line2 = '';
           if (city || state || postcode) {
-            line2 = [city ? `${city},` : '', state, postcode].filter(Boolean).join(' ').trim();
+            line2 = [city ? `${city},` : '', state, postcode]
+              .filter(Boolean)
+              .join(' ')
+              .trim();
           } else {
             line2 = item.display_name.split(',').slice(1).join(',').trim();
           }
@@ -232,12 +239,16 @@ export function AddressAutocomplete({
                   const city = m.addressComponents.city || '';
                   const state = m.addressComponents.state || '';
                   const zip = m.addressComponents.zip || '';
-                  
+
                   return {
                     formatted: m.matchedAddress,
                     place_id: `census-${i}`,
-                    address_line1: `${m.addressComponents.number || ''} ${m.addressComponents.streetName || ''}`.trim(),
-                    address_line2: [city ? `${city},` : '', state, zip].filter(Boolean).join(' ').trim(),
+                    address_line1:
+                      `${m.addressComponents.number || ''} ${m.addressComponents.streetName || ''}`.trim(),
+                    address_line2: [city ? `${city},` : '', state, zip]
+                      .filter(Boolean)
+                      .join(' ')
+                      .trim(),
                     city,
                     state,
                     postcode: zip,
@@ -245,7 +256,7 @@ export function AddressAutocomplete({
                     lat: m.coordinates.y,
                     lon: m.coordinates.x,
                   };
-                }
+                },
               ),
             );
             setIsOpen(true);
@@ -301,9 +312,7 @@ export function AddressAutocomplete({
                 {s.address_line1}
               </div>
               {s.address_line2 && (
-                <div className="text-sm opacity-70">
-                  {s.address_line2}
-                </div>
+                <div className="text-sm opacity-70">{s.address_line2}</div>
               )}
             </li>
           ))}

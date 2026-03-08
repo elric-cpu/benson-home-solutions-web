@@ -50,7 +50,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
   const handleAddressSelect = async (suggestion: any) => {
     const s = suggestion as AddressSuggestion;
     setAddress(s);
-    
+
     const zipData = MOCK_ZIP_DATA[s.postcode] || DEFAULT_BENCHMARK;
     setData({ ...zipData, city: s.city || zipData.city });
 
@@ -228,14 +228,18 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
             <Card className="shadow-elevated border-oxblood/10 bg-white/95 backdrop-blur-md">
               <CardContent className="p-8">
                 <div className="mb-6 text-center">
-                  <Badge variant="secondary" className="mb-4 tracking-widest uppercase">
+                  <Badge
+                    variant="secondary"
+                    className="mb-4 tracking-widest uppercase"
+                  >
                     Analysis Complete
                   </Badge>
                   <h2 className="text-charcoal text-2xl font-bold">
                     Unlock Your Full Report
                   </h2>
                   <p className="text-slate mt-2 text-sm">
-                    We&apos;ve processed <strong>{address?.formatted}</strong>. Where should we send your detailed annual cost breakdown?
+                    We&apos;ve processed <strong>{address?.formatted}</strong>.
+                    Where should we send your detailed annual cost breakdown?
                   </p>
                 </div>
 
@@ -243,7 +247,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                   <div>
                     <label
                       htmlFor="email"
-                      className="mb-1 block text-xs font-bold tracking-wider text-slate/50 uppercase"
+                      className="text-slate/50 mb-1 block text-xs font-bold tracking-wider uppercase"
                     >
                       Email Address
                     </label>
@@ -253,14 +257,14 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                       name="email"
                       required
                       placeholder="you@example.com"
-                      className="w-full rounded-lg border border-slate/20 bg-white px-4 py-3 text-charcoal outline-none transition-all focus:border-oxblood/50"
+                      className="border-slate/20 text-charcoal focus:border-oxblood/50 w-full rounded-lg border bg-white px-4 py-3 transition-all outline-none"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="propertyType"
-                      className="mb-1 block text-xs font-bold tracking-wider text-slate/50 uppercase"
+                      className="text-slate/50 mb-1 block text-xs font-bold tracking-wider uppercase"
                     >
                       Property Type
                     </label>
@@ -268,11 +272,13 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                       id="propertyType"
                       name="propertyType"
                       required
-                      className="w-full appearance-none rounded-lg border border-slate/20 bg-white px-4 py-3 text-charcoal outline-none transition-all focus:border-oxblood/50"
+                      className="border-slate/20 text-charcoal focus:border-oxblood/50 w-full appearance-none rounded-lg border bg-white px-4 py-3 transition-all outline-none"
                     >
                       <option value="residential">Residential</option>
                       <option value="commercial">Commercial</option>
-                      <option value="church_community">Church or Community</option>
+                      <option value="church_community">
+                        Church or Community
+                      </option>
                     </select>
                   </div>
 
@@ -284,7 +290,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                   >
                     {isSubmitting ? 'Generating...' : 'Reveal My Annual Cost'}
                   </Button>
-                  <p className="text-[9px] text-center text-slate/40 font-medium uppercase tracking-tighter">
+                  <p className="text-slate/40 text-center text-[9px] font-medium tracking-tighter uppercase">
                     Secure Data &bull; Local CCB #258533 Standards
                   </p>
                 </form>
@@ -367,12 +373,12 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
               className={`grid gap-8 ${isEmbed ? 'grid-cols-1' : 'lg:grid-cols-3'}`}
             >
               <div className={`space-y-6 ${isEmbed ? '' : 'lg:col-span-2'}`}>
-                <div className="flex items-center justify-between mb-4">
+                <div className="mb-4 flex items-center justify-between">
                   <h3 className="text-charcoal text-xl font-bold">
                     Cost Breakdown
                   </h3>
                   {!isEmbed && (
-                    <span className="text-[10px] text-slate/40 font-bold uppercase tracking-widest">
+                    <span className="text-slate/40 text-[10px] font-bold tracking-widest uppercase">
                       Click badges for methodology
                     </span>
                   )}
@@ -381,7 +387,8 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                   {Object.entries(data.costs).map(([key, detail]) => {
                     const confidenceColors = {
                       high: 'bg-green-500/10 text-green-700 hover:bg-green-500/20',
-                      medium: 'bg-amber-500/10 text-amber-700 hover:bg-amber-500/20',
+                      medium:
+                        'bg-amber-500/10 text-amber-700 hover:bg-amber-500/20',
                       low: 'bg-red-500/10 text-red-700 hover:bg-red-500/20',
                     };
 
@@ -404,7 +411,10 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                             <span className="text-slate text-xs font-bold tracking-wider uppercase">
                               {key.replace(/_/g, ' ')}
                             </span>
-                            <Link href={methodologyUrl} title={`View ${key.replace(/_/g, ' ')} methodology`}>
+                            <Link
+                              href={methodologyUrl}
+                              title={`View ${key.replace(/_/g, ' ')} methodology`}
+                            >
                               <Badge
                                 variant="secondary"
                                 className={`px-1.5 py-0 text-[8px] transition-colors ${confidenceColors[detail.confidence]}`}
@@ -444,7 +454,9 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                         Protect Your Investment
                       </h3>
                       <p className="text-cream/70 mb-8 text-sm leading-relaxed">
-                        These costs are inevitable, but they don&apos;t have to be surprises. Our systematic maintenance plans can reduce your reactive repair risks by up to 60%.
+                        These costs are inevitable, but they don&apos;t have to
+                        be surprises. Our systematic maintenance plans can
+                        reduce your reactive repair risks by up to 60%.
                       </p>
                       <Link href="/services/maintenance-subscriptions">
                         <Button
@@ -455,7 +467,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                           View Maintenance Plans
                         </Button>
                       </Link>
-                      <p className="mt-4 text-[10px] font-bold uppercase tracking-widest opacity-40">
+                      <p className="mt-4 text-[10px] font-bold tracking-widest uppercase opacity-40">
                         Licensed &bull; Bonded &bull; Insured
                       </p>
                     </CardContent>

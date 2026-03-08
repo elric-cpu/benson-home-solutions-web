@@ -29,7 +29,9 @@ const SERVICES = [
 ];
 
 export function ContactForm() {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<
+    'idle' | 'loading' | 'success' | 'error'
+  >('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
   const {
@@ -66,7 +68,9 @@ export function ContactForm() {
         reset();
       } else {
         setStatus('error');
-        setErrorMessage(result.error || 'Something went wrong. Please try again.');
+        setErrorMessage(
+          result.error || 'Something went wrong. Please try again.',
+        );
       }
     } catch {
       setStatus('error');
@@ -79,10 +83,12 @@ export function ContactForm() {
       <Card className="border-green-100 bg-green-50 text-center">
         <CardContent className="p-12">
           <div className="mb-6 text-5xl">✅</div>
-          <h3 className="mb-3 text-2xl font-black text-green-900">Message Sent!</h3>
+          <h3 className="mb-3 text-2xl font-black text-green-900">
+            Message Sent!
+          </h3>
           <p className="mb-8 text-green-800">
-            We&apos;ve received your inquiry and will be in touch within 24 hours.
-            For emergencies, please call our 24/7 line at (541) 413-0480.
+            We&apos;ve received your inquiry and will be in touch within 24
+            hours. For emergencies, please call our 24/7 line at (541) 413-0480.
           </p>
           <Button onClick={() => setStatus('idle')} variant="outline">
             Send Another Message
@@ -190,12 +196,18 @@ export function ContactForm() {
         </div>
       )}
 
-      <Button type="submit" size="lg" className="w-full" loading={status === 'loading'}>
+      <Button
+        type="submit"
+        size="lg"
+        className="w-full"
+        loading={status === 'loading'}
+      >
         {status === 'loading' ? 'Sending...' : 'Send Message'}
       </Button>
 
       <p className="text-muted-foreground text-center text-xs">
-        We respect your privacy. All inquiries are handled with strict confidentiality.
+        We respect your privacy. All inquiries are handled with strict
+        confidentiality.
       </p>
     </form>
   );

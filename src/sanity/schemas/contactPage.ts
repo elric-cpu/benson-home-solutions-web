@@ -21,7 +21,8 @@ export const contactPage = defineType({
       name: 'heroSubtext',
       title: 'Hero Subtext',
       type: 'text',
-      initialValue: "We're here to help with your property needs. Reach out 24/7 for emergencies.",
+      initialValue:
+        "We're here to help with your property needs. Reach out 24/7 for emergencies.",
     }),
     defineField({
       name: 'heroVideo',

@@ -3,7 +3,8 @@ import { SubscriptionRecommender } from './SubscriptionRecommender';
 
 export const metadata: Metadata = {
   title: 'Maintenance Subscription Recommender | Benson Home Solutions',
-  description: 'Get a personalized property maintenance plan using our AI-powered recommendation engine.',
+  description:
+    'Get a personalized property maintenance plan using our AI-powered recommendation engine.',
 };
 
 export default function SubscriptionRecommenderPage() {

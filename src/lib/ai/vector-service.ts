@@ -45,7 +45,7 @@ export async function upsertRecord(data: {
 export async function findRelevantContent(
   query: string,
   limit: number = 3,
-  minScore: number = 0.5
+  minScore: number = 0.5,
 ): Promise<VectorMetadata[]> {
   const queryEmbedding = await generateEmbedding(query);
 
@@ -56,6 +56,6 @@ export async function findRelevantContent(
   });
 
   return queryResponse.matches
-    .filter(match => match.score && match.score >= minScore)
-    .map(match => match.metadata as unknown as VectorMetadata);
+    .filter((match) => match.score && match.score >= minScore)
+    .map((match) => match.metadata as unknown as VectorMetadata);
 }

@@ -162,7 +162,7 @@ export function Footer() {
                     Oregon CCB Registered
                   </p>
                 </div>
-                <div className="rounded-xl border border-oxblood/30 bg-oxblood/10 p-4">
+                <div className="border-oxblood/30 bg-oxblood/10 rounded-xl border p-4">
                   <p className="text-cream mb-1 text-xs font-bold italic">
                     2026 Senior Principal Engine
                   </p>

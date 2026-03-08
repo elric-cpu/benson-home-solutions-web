@@ -43,19 +43,24 @@ export const MARCH_2026_ANCHORS = {
  */
 export function calculateRemodelEstimate(
   type: 'KITCHEN' | 'BATH',
-  vars: EstimatingVariables
+  vars: EstimatingVariables,
 ): { low: number; high: number; formula: string } {
   const anchor = MARCH_2026_ANCHORS[type];
   const gradeMult = anchor.grades[vars.materialGrade];
   const laborMod = vars.laborModifier || 1.0;
-  
+
   // Base calculation: Area * BaseRate * Grade * LaborInflation * RegionalMod
-  const base = vars.sqft * anchor.base_per_sqft * gradeMult * MARCH_2026_ANCHORS.LABOR_MARKET_2026 * laborMod;
-  
+  const base =
+    vars.sqft *
+    anchor.base_per_sqft *
+    gradeMult *
+    MARCH_2026_ANCHORS.LABOR_MARKET_2026 *
+    laborMod;
+
   return {
     low: Math.round(base * 0.9),
     high: Math.round(base * 1.15),
-    formula: "$Estimate = Area \times Base \times Grade \times Labor_{2026}$",
+    formula: '$Estimate = Area \times Base \times Grade \times Labor_{2026}$',
   };
 }
 
@@ -65,11 +70,12 @@ export function calculateRemodelEstimate(
  */
 export function calculateMaintenanceROI(
   initialRepairCost: number,
-  yearsDeferred: number = 5
+  yearsDeferred: number = 5,
 ) {
   const compoundRate = 0.22; // 22% average annual escalation for deferred failures (water/structural)
-  const deferredCost = initialRepairCost * Math.pow(1 + compoundRate, yearsDeferred);
-  
+  const deferredCost =
+    initialRepairCost * Math.pow(1 + compoundRate, yearsDeferred);
+
   return {
     preventative: initialRepairCost,
     reactive: Math.round(deferredCost),
