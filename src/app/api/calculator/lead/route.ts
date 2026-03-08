@@ -104,6 +104,7 @@ export async function POST(req: NextRequest) {
         message: 'Lead captured successfully',
         clientId,
         propertyId,
+        addressHash,
       },
       { status: 200 },
     );

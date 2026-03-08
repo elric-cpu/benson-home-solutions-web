@@ -18,8 +18,9 @@ import {
   type ZipData,
 } from '@/lib/calculator-data';
 import { HERO_ASSETS } from '@/lib/constants';
+import { ChevronDown, ChevronUp, Plane, Info, AlertTriangle, CheckCircle2, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
 
-type Step = 'input' | 'processing' | 'unlock' | 'result';
+type Step = 'input' | 'processing' | 'result' | 'captured';
 
 interface AddressSuggestion {
   formatted: string;
@@ -38,6 +39,8 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
   const [progressStep, setProgressStep] = useState(0);
   const [animatedTotal, setAnimatedTotal] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [addressHash, setAddressHash] = useState<string | null>(null);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
   const PROGRESS_MESSAGES = [
     'Checking property tax records via Census Bureau...',
@@ -46,11 +49,10 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
     'Projecting maintenance risk based on building age...',
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleAddressSelect = async (suggestion: any) => {
     const s = suggestion as AddressSuggestion;
     setAddress(s);
-
+    
     const zipData = MOCK_ZIP_DATA[s.postcode] || DEFAULT_BENCHMARK;
     setData({ ...zipData, city: s.city || zipData.city });
 
@@ -66,13 +68,12 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
     const propertyType = formData.get('propertyType') as string;
 
     try {
-      // Pre-calculate total for the API
       const total = Object.values(data?.costs || {}).reduce(
         (acc, curr) => acc + curr.annual,
         0,
       );
 
-      await fetch('/api/calculator/lead', {
+      const res = await fetch('/api/calculator/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -84,7 +85,12 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
         }),
       });
 
-      setStep('result');
+      const responseData = await res.json();
+      if (responseData.addressHash) {
+        setAddressHash(responseData.addressHash);
+      }
+
+      setStep('captured');
     } catch (error) {
       console.error('Lead submission failed', error);
     } finally {
@@ -99,7 +105,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
         setProgressStep((prev) => {
           if (prev >= messagesCount - 1) {
             clearInterval(interval);
-            setTimeout(() => setStep('unlock'), 800);
+            setTimeout(() => setStep('result'), 1200); // Wait a bit for effect
             return prev;
           }
           return prev + 1;
@@ -110,13 +116,13 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
   }, [step, PROGRESS_MESSAGES.length]);
 
   useEffect(() => {
-    if (step === 'result' && data) {
+    if ((step === 'result' || step === 'captured') && data) {
       const total = Object.values(data.costs).reduce(
         (acc, curr) => acc + curr.annual,
         0,
       );
       let start = 0;
-      const duration = 2000;
+      const duration = 2500;
       const increment = total / (duration / 16);
 
       const timer = setInterval(() => {
@@ -188,29 +194,33 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
         <Container size="narrow">
           <div className="mx-auto max-w-md">
             <div className="mb-12 text-center">
-              <div className="relative mx-auto mb-6 h-20 w-20">
+              <div className="relative mx-auto mb-6 h-24 w-24">
                 <div className="border-oxblood/10 absolute inset-0 rounded-full border-4" />
-                <div className="text-oxblood absolute inset-0 flex items-center justify-center text-xl font-bold tabular-nums">
+                <div 
+                  className="border-oxblood absolute inset-0 rounded-full border-4 border-t-transparent animate-spin" 
+                  style={{ animationDuration: '1.5s' }}
+                />
+                <div className="text-oxblood absolute inset-0 flex items-center justify-center text-2xl font-black tabular-nums">
                   {progressPercent}%
                 </div>
               </div>
-              <h2 className="text-charcoal text-2xl font-bold">
+              <h2 className="text-charcoal text-3xl font-black tracking-tight uppercase">
                 Analyzing Property Data
               </h2>
-              <p className="text-slate mt-2 text-sm italic">
+              <p className="text-slate mt-2 font-medium italic">
                 Searching federal and regional datasets...
               </p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-6">
               {PROGRESS_MESSAGES.map((msg, i) => (
                 <div
                   key={i}
-                  className={`flex items-center gap-3 transition-all duration-500 ${i <= progressStep ? 'opacity-100' : 'opacity-20'}`}
+                  className={`flex items-center gap-4 transition-all duration-500 ${i <= progressStep ? 'opacity-100 scale-100' : 'opacity-20 scale-95'}`}
                 >
                   <div
-                    className={`h-2 w-2 rounded-full ${i < progressStep ? 'bg-green-500' : i === progressStep ? 'bg-oxblood animate-pulse' : 'bg-slate/20'}`}
+                    className={`h-3 w-3 rounded-full flex-shrink-0 ${i < progressStep ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : i === progressStep ? 'bg-oxblood animate-pulse shadow-[0_0_10px_rgba(76,12,20,0.5)]' : 'bg-slate/20'}`}
                   />
-                  <span className="text-slate text-sm font-medium">{msg}</span>
+                  <span className="text-slate font-bold uppercase tracking-wide text-xs">{msg}</span>
                 </div>
               ))}
             </div>
@@ -220,103 +230,27 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
     );
   }
 
-  if (step === 'unlock') {
-    return (
-      <Section variant="cream" className="flex min-h-[600px] items-center">
-        <Container size="narrow">
-          <div className="mx-auto max-w-md">
-            <Card className="shadow-elevated border-oxblood/10 bg-white/95 backdrop-blur-md">
-              <CardContent className="p-8">
-                <div className="mb-6 text-center">
-                  <Badge
-                    variant="secondary"
-                    className="mb-4 tracking-widest uppercase"
-                  >
-                    Analysis Complete
-                  </Badge>
-                  <h2 className="text-charcoal text-2xl font-bold">
-                    Unlock Your Full Report
-                  </h2>
-                  <p className="text-slate mt-2 text-sm">
-                    We&apos;ve processed <strong>{address?.formatted}</strong>.
-                    Where should we send your detailed annual cost breakdown?
-                  </p>
-                </div>
-
-                <form className="space-y-4" onSubmit={handleLeadSubmit}>
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="text-slate/50 mb-1 block text-xs font-bold tracking-wider uppercase"
-                    >
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      placeholder="you@example.com"
-                      className="border-slate/20 text-charcoal focus:border-oxblood/50 w-full rounded-lg border bg-white px-4 py-3 transition-all outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="propertyType"
-                      className="text-slate/50 mb-1 block text-xs font-bold tracking-wider uppercase"
-                    >
-                      Property Type
-                    </label>
-                    <select
-                      id="propertyType"
-                      name="propertyType"
-                      required
-                      className="border-slate/20 text-charcoal focus:border-oxblood/50 w-full appearance-none rounded-lg border bg-white px-4 py-3 transition-all outline-none"
-                    >
-                      <option value="residential">Residential</option>
-                      <option value="commercial">Commercial</option>
-                      <option value="church_community">
-                        Church or Community
-                      </option>
-                    </select>
-                  </div>
-
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    className="w-full"
-                    loading={isSubmitting}
-                  >
-                    {isSubmitting ? 'Generating...' : 'Reveal My Annual Cost'}
-                  </Button>
-                  <p className="text-slate/40 text-center text-[9px] font-medium tracking-tighter uppercase">
-                    Secure Data &bull; Local CCB #258533 Standards
-                  </p>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        </Container>
-      </Section>
-    );
-  }
-
-  if (step === 'result' && data) {
+  if (step === 'result' || step === 'captured') {
     const monthlyTotal = Math.floor(animatedTotal / 12);
     const tripsToHawaii = Math.floor(animatedTotal / 600);
 
     return (
       <>
+        {/* Step 3: The Reveal */}
         <Section
           variant="oxblood"
-          className={isEmbed ? 'py-10' : 'text-cream py-20'}
+          className={isEmbed ? 'py-10' : 'text-cream py-20 overflow-hidden relative'}
         >
-          <Container size="narrow" className="text-center">
+          <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none overflow-hidden">
+             <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full border-[40px] border-cream" />
+             <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full border-[40px] border-cream" />
+          </div>
+          
+          <Container size="narrow" className="text-center relative z-10">
             {!isEmbed && (
               <Badge
                 variant="secondary"
-                className="bg-cream/10 text-cream border-cream/20 mb-6 tracking-widest uppercase"
+                className="bg-cream/10 text-cream border-cream/20 mb-8 px-6 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase"
               >
                 True Annual Cost Reveal
               </Badge>
@@ -324,8 +258,8 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
             <div
               className={
                 isEmbed
-                  ? 'text-cream mb-2 text-4xl font-black tabular-nums'
-                  : 'text-cream mb-4 text-6xl font-black tabular-nums md:text-8xl'
+                  ? 'text-cream mb-2 text-5xl font-black tabular-nums tracking-tighter'
+                  : 'text-cream mb-4 text-7xl font-black tabular-nums tracking-tighter md:text-9xl'
               }
             >
               ${animatedTotal.toLocaleString()}
@@ -333,7 +267,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                 className={
                   isEmbed
                     ? 'ml-1 text-base font-bold opacity-50'
-                    : 'ml-2 text-2xl font-bold opacity-50 md:text-3xl'
+                    : 'ml-2 text-2xl font-bold opacity-50 md:text-4xl'
                 }
               >
                 /year
@@ -343,19 +277,21 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
               className={
                 isEmbed
                   ? 'text-cream/80 text-sm font-medium'
-                  : 'text-cream/80 text-xl font-medium md:text-2xl'
+                  : 'text-cream/80 text-2xl font-medium md:text-3xl'
               }
             >
               That&apos;s{' '}
-              <strong className="text-cream">
+              <strong className="text-cream underline decoration-cream/30 underline-offset-8">
                 ${monthlyTotal.toLocaleString()} per month
               </strong>{' '}
               beyond your mortgage.
             </p>
             {!isEmbed && (
-              <div className="text-cream mt-10 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-6 py-3 backdrop-blur-sm">
-                <span className="text-2xl">✈️</span>
-                <span className="text-sm font-bold tracking-wide uppercase">
+              <div className="text-cream mt-12 inline-flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-8 py-4 backdrop-blur-md shadow-2xl animate-in zoom-in duration-700 delay-1000 fill-mode-both">
+                <div className="bg-cream text-oxblood p-2 rounded-lg">
+                  <Plane className="w-6 h-6 fill-current" />
+                </div>
+                <span className="text-sm md:text-base font-black tracking-tight uppercase">
                   Equivalent to {tripsToHawaii} round-trip flights to Hawaii
                   every year
                 </span>
@@ -366,30 +302,29 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
 
         <Section
           spacing={isEmbed ? 'sm' : 'lg'}
-          className={isEmbed ? 'pb-4' : ''}
+          className={isEmbed ? 'pb-4' : 'bg-cream/30'}
         >
           <Container>
             <div
-              className={`grid gap-8 ${isEmbed ? 'grid-cols-1' : 'lg:grid-cols-3'}`}
+              className={`grid gap-12 ${isEmbed ? 'grid-cols-1' : 'lg:grid-cols-3'}`}
             >
-              <div className={`space-y-6 ${isEmbed ? '' : 'lg:col-span-2'}`}>
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-charcoal text-xl font-bold">
-                    Cost Breakdown
+              <div className={`space-y-8 ${isEmbed ? '' : 'lg:col-span-2'}`}>
+                <div className="flex items-center justify-between mb-4 px-2">
+                  <h3 className="text-charcoal text-2xl font-black uppercase tracking-tight">
+                    Forensic Cost Breakdown
                   </h3>
                   {!isEmbed && (
-                    <span className="text-slate/40 text-[10px] font-bold tracking-widest uppercase">
-                      Click badges for methodology
+                    <span className="text-[10px] text-slate/40 font-black uppercase tracking-widest flex items-center gap-1">
+                      <Info className="w-3 h-3" /> Click for Methodology
                     </span>
                   )}
                 </div>
                 <div className="space-y-4">
-                  {Object.entries(data.costs).map(([key, detail]) => {
+                  {Object.entries(data?.costs || {}).map(([key, detail]) => {
                     const confidenceColors = {
-                      high: 'bg-green-500/10 text-green-700 hover:bg-green-500/20',
-                      medium:
-                        'bg-amber-500/10 text-amber-700 hover:bg-amber-500/20',
-                      low: 'bg-red-500/10 text-red-700 hover:bg-red-500/20',
+                      high: 'bg-green-500/10 text-green-700 border-green-500/20',
+                      medium: 'bg-amber-500/10 text-amber-700 border-amber-500/20',
+                      low: 'bg-red-500/10 text-red-700 border-red-500/20',
                     };
 
                     const slugMap: Record<string, string> = {
@@ -403,75 +338,206 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                     };
 
                     const methodologyUrl = `/methodology/${slugMap[key]}`;
+                    const isExpanded = expandedCategory === key;
 
                     return (
-                      <div key={key} className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="text-slate text-xs font-bold tracking-wider uppercase">
-                              {key.replace(/_/g, ' ')}
-                            </span>
-                            <Link
-                              href={methodologyUrl}
-                              title={`View ${key.replace(/_/g, ' ')} methodology`}
-                            >
+                      <div 
+                        key={key} 
+                        className={`transition-all duration-300 rounded-2xl border ${isExpanded ? 'bg-white border-oxblood/20 shadow-lg p-6' : 'bg-white/50 border-transparent p-4 hover:bg-white'}`}
+                      >
+                        <button 
+                          className="w-full text-left"
+                          onClick={() => setExpandedCategory(isExpanded ? null : key)}
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <span className="text-charcoal text-sm font-black tracking-widest uppercase">
+                                {key.replace(/_/g, ' ')}
+                              </span>
                               <Badge
                                 variant="secondary"
-                                className={`px-1.5 py-0 text-[8px] transition-colors ${confidenceColors[detail.confidence]}`}
+                                className={`px-2 py-0 text-[9px] font-black uppercase transition-colors ${confidenceColors[detail.confidence]}`}
                               >
                                 {detail.confidence} confidence
                               </Badge>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <span className="text-oxblood font-black text-lg">
+                                ${detail.annual.toLocaleString()}
+                              </span>
+                              {isExpanded ? <ChevronUp className="w-4 h-4 text-slate/40" /> : <ChevronDown className="w-4 h-4 text-slate/40" />}
+                            </div>
+                          </div>
+                          
+                          <div className="bg-slate/10 h-2.5 overflow-hidden rounded-full mb-2">
+                            <div
+                              className="bg-oxblood h-full transition-all duration-1000 ease-out"
+                              style={{
+                                width: `${(detail.annual / animatedTotal) * 100}%`,
+                              }}
+                            />
+                          </div>
+                        </button>
+
+                        {isExpanded && (
+                          <div className="mt-6 pt-6 border-t border-slate/5 animate-in slide-in-from-top-2 duration-300">
+                            <p className="text-slate text-sm font-medium leading-relaxed mb-4">
+                              Our {key.replace(/_/g, ' ')} model uses <strong>{detail.source}</strong> datasets to project 
+                              localized costs for a {data?.median_year_built}-era property in {data?.county} County.
+                            </p>
+                            <Link href={methodologyUrl}>
+                              <Button variant="outline" size="sm" className="font-bold text-[10px] uppercase tracking-widest">
+                                Read Full Methodology &rarr;
+                              </Button>
                             </Link>
                           </div>
-                          <span className="text-charcoal font-bold">
-                            ${detail.annual.toLocaleString()}
-                          </span>
-                        </div>
-                        <div className="bg-slate/5 h-3 overflow-hidden rounded-full">
-                          <div
-                            className="bg-oxblood h-full transition-all duration-1000 ease-out"
-                            style={{
-                              width: `${(detail.annual / animatedTotal) * 100}%`,
-                            }}
-                          />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate/40 text-[9px]">
-                            Source: {detail.source}
-                          </span>
-                        </div>
+                        )}
                       </div>
                     );
                   })}
+                </div>
+
+                {/* Step 4: The Hook */}
+                <div className="mt-16 rounded-[2.5rem] border-2 border-red-100 bg-red-50 p-10 md:p-16 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-8 opacity-5">
+                    <AlertTriangle size={120} className="text-red-900" />
+                  </div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-8">
+                      <div className="h-4 w-4 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
+                      <h4 className="text-red-900 text-sm font-black uppercase tracking-[0.2em]">Deferred Maintenance Alert</h4>
+                    </div>
+                    <h3 className="text-red-900 text-4xl font-black mb-6 leading-[1.1] tracking-tight">
+                      Skipping routine maintenance on a home like yours costs an average of 3.5x more in emergency repairs.
+                    </h3>
+                    <p className="text-red-800/80 text-xl font-medium leading-relaxed max-w-2xl mb-10">
+                      Based on our {data?.median_year_built}-era building model, unaddressed building envelope issues are projected to escalate into <strong className="text-red-900">${Math.round((data?.costs.maintenance.annual || 3000) * 3.5).toLocaleString()}+</strong> in avoidable restoration claims within 3–5 years.
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                       <div className="bg-red-900/5 border border-red-900/10 rounded-2xl px-6 py-4">
+                          <div className="text-red-900/40 text-[10px] font-black uppercase tracking-widest mb-1">Year 1: Routine</div>
+                          <div className="text-red-900 text-2xl font-black">${data?.costs.maintenance.annual.toLocaleString()}</div>
+                       </div>
+                       <div className="flex items-center text-red-900/20">
+                          <ChevronUp size={32} className="rotate-90" />
+                       </div>
+                       <div className="bg-red-900 text-cream rounded-2xl px-6 py-4 shadow-xl">
+                          <div className="text-cream/60 text-[10px] font-black uppercase tracking-widest mb-1">Year 5: Emergency</div>
+                          <div className="text-cream text-2xl font-black">${Math.round((data?.costs.maintenance.annual || 3000) * 3.5).toLocaleString()}</div>
+                       </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <div className={`space-y-6 ${isEmbed ? 'order-first' : ''}`}>
                 <div className={isEmbed ? '' : 'sticky top-24'}>
-                  <Card className="bg-charcoal text-cream shadow-elevated border-none">
-                    <CardContent className="p-8 text-center">
-                      <h3 className="mb-4 text-2xl font-bold">
-                        Protect Your Investment
-                      </h3>
-                      <p className="text-cream/70 mb-8 text-sm leading-relaxed">
-                        These costs are inevitable, but they don&apos;t have to
-                        be surprises. Our systematic maintenance plans can
-                        reduce your reactive repair risks by up to 60%.
-                      </p>
-                      <Link href="/services/maintenance-subscriptions">
-                        <Button
-                          variant="secondary"
-                          size="lg"
-                          className="w-full font-bold shadow-lg"
-                        >
-                          View Maintenance Plans
-                        </Button>
-                      </Link>
-                      <p className="mt-4 text-[10px] font-bold tracking-widest uppercase opacity-40">
-                        Licensed &bull; Bonded &bull; Insured
-                      </p>
-                    </CardContent>
-                  </Card>
+                  {step === 'result' ? (
+                    /* Step 5: Lead Capture */
+                    <Card className="shadow-2xl border-4 border-oxblood overflow-hidden bg-white rounded-[2rem]">
+                      <div className="bg-oxblood p-5 text-center">
+                        <span className="text-cream text-[10px] font-black tracking-[0.2em] uppercase">Unlock Full Forensic Report</span>
+                      </div>
+                      <CardContent className="p-10">
+                        <h3 className="text-charcoal text-3xl font-black mb-6 leading-tight tracking-tighter">Get Your Personalized Home Cost Report</h3>
+                        <ul className="space-y-4 mb-10">
+                          {[
+                            'Custom maintenance schedule',
+                            'Energy savings recommendations',
+                            'Appliance replacement timeline',
+                            'Comparison to local area averages'
+                          ].map((feat, i) => (
+                            <li key={i} className="flex items-start gap-3 text-sm font-bold text-slate leading-tight">
+                              <div className="bg-green-100 text-green-600 rounded-full p-0.5 mt-0.5">
+                                <CheckCircle2 className="w-4 h-4" />
+                              </div>
+                              {feat}
+                            </li>
+                          ))}
+                        </ul>
+                        <form className="space-y-5" onSubmit={handleLeadSubmit}>
+                          <div>
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate/40 mb-2 px-1">Delivery Email</label>
+                            <input
+                              type="email"
+                              name="email"
+                              required
+                              placeholder="you@example.com"
+                              className="w-full rounded-2xl border-2 border-slate/10 bg-slate-50 px-5 py-4 text-charcoal font-bold outline-none transition-all focus:border-oxblood focus:bg-white"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate/40 mb-2 px-1">Property Type</label>
+                            <select 
+                              name="propertyType"
+                              className="w-full rounded-2xl border-2 border-slate/10 bg-slate-50 px-5 py-4 text-charcoal font-bold outline-none appearance-none transition-all focus:border-oxblood focus:bg-white"
+                            >
+                              <option value="residential">Single-Family Home</option>
+                              <option value="commercial">Commercial Property</option>
+                              <option value="church">Church or Facility</option>
+                            </select>
+                          </div>
+                          <div className="flex items-start gap-3 py-2">
+                            <input type="checkbox" id="consent" required className="mt-1 h-4 w-4 rounded border-slate/20 text-oxblood focus:ring-oxblood" />
+                            <label htmlFor="consent" className="text-[10px] text-slate/50 font-bold leading-normal">
+                              I agree to the <Link href="/privacy" className="underline">privacy policy</Link> and to receive this one-time forensic property report.
+                            </label>
+                          </div>
+                          <Button
+                            variant="primary"
+                            size="xl"
+                            className="w-full font-black uppercase tracking-widest py-8 shadow-xl hover:shadow-oxblood/20"
+                            loading={isSubmitting}
+                          >
+                            Send My Report &rarr;
+                          </Button>
+                        </form>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    /* Step 6: Post-Capture */
+                    <Card className="shadow-2xl border-4 border-green-600 overflow-hidden bg-white text-center rounded-[2rem]">
+                      <div className="bg-green-600 p-5">
+                        <span className="text-cream text-[10px] font-black tracking-[0.2em] uppercase">Report Unlocked</span>
+                      </div>
+                      <CardContent className="p-10">
+                        <div className="w-20 h-20 bg-green-50 rounded-3xl flex items-center justify-center mx-auto mb-8 text-green-600 shadow-inner">
+                          <CheckCircle2 size={40} />
+                        </div>
+                        <h3 className="text-charcoal text-3xl font-black mb-4 tracking-tighter">Analysis Generated</h3>
+                        <p className="text-slate mb-10 text-base font-bold leading-relaxed">
+                          We&apos;ve mapped <strong>{address?.formatted}</strong> against regional benchmarks. Your unique forensic profile is ready.
+                        </p>
+                        <Link href={`/report/${addressHash}`}>
+                          <Button
+                            variant="primary"
+                            size="xl"
+                            className="w-full font-black uppercase tracking-widest py-8 bg-green-600 hover:bg-green-700 border-green-600 shadow-xl"
+                          >
+                            View Full Report
+                          </Button>
+                        </Link>
+                        
+                        <div className="mt-10 pt-10 border-t-2 border-slate/5">
+                          <p className="text-[10px] text-slate/40 font-black uppercase tracking-[0.2em] mb-6">Share Your Results</p>
+                          <div className="flex justify-center gap-6">
+                            <button className="bg-slate-50 p-4 rounded-2xl text-slate/40 hover:text-[#1877F2] hover:bg-white hover:shadow-lg transition-all">
+                              <Facebook size={24} />
+                            </button>
+                            <button className="bg-slate-50 p-4 rounded-2xl text-slate/40 hover:text-[#1DA1F2] hover:bg-white hover:shadow-lg transition-all">
+                              <Twitter size={24} />
+                            </button>
+                            <button className="bg-slate-50 p-4 rounded-2xl text-slate/40 hover:text-[#0A66C2] hover:bg-white hover:shadow-lg transition-all">
+                              <Linkedin size={24} />
+                            </button>
+                            <button className="bg-slate-50 p-4 rounded-2xl text-slate/40 hover:text-oxblood hover:bg-white hover:shadow-lg transition-all">
+                              <Share2 size={24} />
+                            </button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
                 </div>
               </div>
             </div>
