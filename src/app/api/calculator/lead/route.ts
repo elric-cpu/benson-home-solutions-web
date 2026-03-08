@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
         const addressHash = hashArray
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('');
-        
+
         finalAddressHash = addressHash;
 
         const [prop] = await db
@@ -96,7 +96,11 @@ export async function POST(req: NextRequest) {
         email,
         source: body.source || 'cost-calculator',
         propertyAddress: address?.formatted,
-        propertyType: propertyType as 'residential' | 'commercial' | 'church_community' | undefined,
+        propertyType: propertyType as
+          | 'residential'
+          | 'commercial'
+          | 'church_community'
+          | undefined,
         isServiceArea: inServiceArea,
       });
     } catch (hubspotError) {

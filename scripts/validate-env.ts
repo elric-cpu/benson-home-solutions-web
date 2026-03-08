@@ -28,7 +28,7 @@ function validate() {
 
   if (missing.length > 0) {
     console.error('❌ Missing required environment variables:');
-    missing.forEach(m => console.error(`   - ${m}`));
+    missing.forEach((m) => console.error(`   - ${m}`));
     // In production/CI, we want to fail the build
     if (process.env.NODE_ENV === 'production' || process.env.CI) {
       process.exit(1);

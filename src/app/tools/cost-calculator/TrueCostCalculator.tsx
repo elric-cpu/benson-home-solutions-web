@@ -18,7 +18,18 @@ import {
   type ZipData,
 } from '@/lib/calculator-data';
 import { HERO_ASSETS } from '@/lib/constants';
-import { ChevronDown, ChevronUp, Plane, Info, AlertTriangle, CheckCircle2, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  Plane,
+  Info,
+  AlertTriangle,
+  CheckCircle2,
+  Share2,
+  Facebook,
+  Twitter,
+  Linkedin,
+} from 'lucide-react';
 
 type Step = 'input' | 'processing' | 'result' | 'captured';
 
@@ -52,7 +63,7 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
   const handleAddressSelect = async (suggestion: AddressSuggestion) => {
     const s = suggestion;
     setAddress(s);
-    
+
     const zipData = MOCK_ZIP_DATA[s.postcode] || DEFAULT_BENCHMARK;
     setData({ ...zipData, city: s.city || zipData.city });
 
@@ -196,8 +207,8 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
             <div className="mb-12 text-center">
               <div className="relative mx-auto mb-6 h-24 w-24">
                 <div className="border-oxblood/10 absolute inset-0 rounded-full border-4" />
-                <div 
-                  className="border-oxblood absolute inset-0 rounded-full border-4 border-t-transparent animate-spin" 
+                <div
+                  className="border-oxblood absolute inset-0 animate-spin rounded-full border-4 border-t-transparent"
                   style={{ animationDuration: '1.5s' }}
                 />
                 <div className="text-oxblood absolute inset-0 flex items-center justify-center text-2xl font-black tabular-nums">
@@ -215,12 +226,14 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
               {PROGRESS_MESSAGES.map((msg, i) => (
                 <div
                   key={i}
-                  className={`flex items-center gap-4 transition-all duration-500 ${i <= progressStep ? 'opacity-100 scale-100' : 'opacity-20 scale-95'}`}
+                  className={`flex items-center gap-4 transition-all duration-500 ${i <= progressStep ? 'scale-100 opacity-100' : 'scale-95 opacity-20'}`}
                 >
                   <div
-                    className={`h-3 w-3 rounded-full flex-shrink-0 ${i < progressStep ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : i === progressStep ? 'bg-oxblood animate-pulse shadow-[0_0_10px_rgba(76,12,20,0.5)]' : 'bg-slate/20'}`}
+                    className={`h-3 w-3 flex-shrink-0 rounded-full ${i < progressStep ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : i === progressStep ? 'bg-oxblood animate-pulse shadow-[0_0_10px_rgba(76,12,20,0.5)]' : 'bg-slate/20'}`}
                   />
-                  <span className="text-slate font-bold uppercase tracking-wide text-xs">{msg}</span>
+                  <span className="text-slate text-xs font-bold tracking-wide uppercase">
+                    {msg}
+                  </span>
                 </div>
               ))}
             </div>
@@ -239,14 +252,16 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
         {/* Step 3: The Reveal */}
         <Section
           variant="oxblood"
-          className={isEmbed ? 'py-10' : 'text-cream py-20 overflow-hidden relative'}
+          className={
+            isEmbed ? 'py-10' : 'text-cream relative overflow-hidden py-20'
+          }
         >
-          <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none overflow-hidden">
-             <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full border-[40px] border-cream" />
-             <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full border-[40px] border-cream" />
+          <div className="pointer-events-none absolute top-0 left-0 h-full w-full overflow-hidden opacity-5">
+            <div className="border-cream absolute -top-24 -left-24 h-96 w-96 rounded-full border-[40px]" />
+            <div className="border-cream absolute -right-24 -bottom-24 h-96 w-96 rounded-full border-[40px]" />
           </div>
-          
-          <Container size="narrow" className="text-center relative z-10">
+
+          <Container size="narrow" className="relative z-10 text-center">
             {!isEmbed && (
               <Badge
                 variant="secondary"
@@ -258,8 +273,8 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
             <div
               className={
                 isEmbed
-                  ? 'text-cream mb-2 text-5xl font-black tabular-nums tracking-tighter'
-                  : 'text-cream mb-4 text-7xl font-black tabular-nums tracking-tighter md:text-9xl'
+                  ? 'text-cream mb-2 text-5xl font-black tracking-tighter tabular-nums'
+                  : 'text-cream mb-4 text-7xl font-black tracking-tighter tabular-nums md:text-9xl'
               }
             >
               ${animatedTotal.toLocaleString()}
@@ -281,17 +296,17 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
               }
             >
               That&apos;s{' '}
-              <strong className="text-cream underline decoration-cream/30 underline-offset-8">
+              <strong className="text-cream decoration-cream/30 underline underline-offset-8">
                 ${monthlyTotal.toLocaleString()} per month
               </strong>{' '}
               beyond your mortgage.
             </p>
             {!isEmbed && (
-              <div className="text-cream mt-12 inline-flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-8 py-4 backdrop-blur-md shadow-2xl animate-in zoom-in duration-700 delay-1000 fill-mode-both">
-                <div className="bg-cream text-oxblood p-2 rounded-lg">
-                  <Plane className="w-6 h-6 fill-current" />
+              <div className="text-cream animate-in zoom-in fill-mode-both mt-12 inline-flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-8 py-4 shadow-2xl backdrop-blur-md delay-1000 duration-700">
+                <div className="bg-cream text-oxblood rounded-lg p-2">
+                  <Plane className="h-6 w-6 fill-current" />
                 </div>
-                <span className="text-sm md:text-base font-black tracking-tight uppercase">
+                <span className="text-sm font-black tracking-tight uppercase md:text-base">
                   Equivalent to {tripsToHawaii} round-trip flights to Hawaii
                   every year
                 </span>
@@ -309,13 +324,13 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
               className={`grid gap-12 ${isEmbed ? 'grid-cols-1' : 'lg:grid-cols-3'}`}
             >
               <div className={`space-y-8 ${isEmbed ? '' : 'lg:col-span-2'}`}>
-                <div className="flex items-center justify-between mb-4 px-2">
-                  <h3 className="text-charcoal text-2xl font-black uppercase tracking-tight">
+                <div className="mb-4 flex items-center justify-between px-2">
+                  <h3 className="text-charcoal text-2xl font-black tracking-tight uppercase">
                     Forensic Cost Breakdown
                   </h3>
                   {!isEmbed && (
-                    <span className="text-[10px] text-slate/40 font-black uppercase tracking-widest flex items-center gap-1">
-                      <Info className="w-3 h-3" /> Click for Methodology
+                    <span className="text-slate/40 flex items-center gap-1 text-[10px] font-black tracking-widest uppercase">
+                      <Info className="h-3 w-3" /> Click for Methodology
                     </span>
                   )}
                 </div>
@@ -323,7 +338,8 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                   {Object.entries(data?.costs || {}).map(([key, detail]) => {
                     const confidenceColors = {
                       high: 'bg-green-500/10 text-green-700 border-green-500/20',
-                      medium: 'bg-amber-500/10 text-amber-700 border-amber-500/20',
+                      medium:
+                        'bg-amber-500/10 text-amber-700 border-amber-500/20',
                       low: 'bg-red-500/10 text-red-700 border-red-500/20',
                     };
 
@@ -341,15 +357,17 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                     const isExpanded = expandedCategory === key;
 
                     return (
-                      <div 
-                        key={key} 
-                        className={`transition-all duration-300 rounded-2xl border ${isExpanded ? 'bg-white border-oxblood/20 shadow-lg p-6' : 'bg-white/50 border-transparent p-4 hover:bg-white'}`}
+                      <div
+                        key={key}
+                        className={`rounded-2xl border transition-all duration-300 ${isExpanded ? 'border-oxblood/20 bg-white p-6 shadow-lg' : 'border-transparent bg-white/50 p-4 hover:bg-white'}`}
                       >
-                        <button 
+                        <button
                           className="w-full text-left"
-                          onClick={() => setExpandedCategory(isExpanded ? null : key)}
+                          onClick={() =>
+                            setExpandedCategory(isExpanded ? null : key)
+                          }
                         >
-                          <div className="flex items-center justify-between mb-3">
+                          <div className="mb-3 flex items-center justify-between">
                             <div className="flex items-center gap-3">
                               <span className="text-charcoal text-sm font-black tracking-widest uppercase">
                                 {key.replace(/_/g, ' ')}
@@ -362,14 +380,18 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                               </Badge>
                             </div>
                             <div className="flex items-center gap-4">
-                              <span className="text-oxblood font-black text-lg">
+                              <span className="text-oxblood text-lg font-black">
                                 ${detail.annual.toLocaleString()}
                               </span>
-                              {isExpanded ? <ChevronUp className="w-4 h-4 text-slate/40" /> : <ChevronDown className="w-4 h-4 text-slate/40" />}
+                              {isExpanded ? (
+                                <ChevronUp className="text-slate/40 h-4 w-4" />
+                              ) : (
+                                <ChevronDown className="text-slate/40 h-4 w-4" />
+                              )}
                             </div>
                           </div>
-                          
-                          <div className="bg-slate/10 h-2.5 overflow-hidden rounded-full mb-2">
+
+                          <div className="bg-slate/10 mb-2 h-2.5 overflow-hidden rounded-full">
                             <div
                               className="bg-oxblood h-full transition-all duration-1000 ease-out"
                               style={{
@@ -380,13 +402,20 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                         </button>
 
                         {isExpanded && (
-                          <div className="mt-6 pt-6 border-t border-slate/5 animate-in slide-in-from-top-2 duration-300">
-                            <p className="text-slate text-sm font-medium leading-relaxed mb-4">
-                              Our {key.replace(/_/g, ' ')} model uses <strong>{detail.source}</strong> datasets to project 
-                              localized costs for a {data?.median_year_built}-era property in {data?.county} County.
+                          <div className="border-slate/5 animate-in slide-in-from-top-2 mt-6 border-t pt-6 duration-300">
+                            <p className="text-slate mb-4 text-sm leading-relaxed font-medium">
+                              Our {key.replace(/_/g, ' ')} model uses{' '}
+                              <strong>{detail.source}</strong> datasets to
+                              project localized costs for a{' '}
+                              {data?.median_year_built}-era property in{' '}
+                              {data?.county} County.
                             </p>
                             <Link href={methodologyUrl}>
-                              <Button variant="outline" size="sm" className="font-bold text-[10px] uppercase tracking-widest">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-[10px] font-bold tracking-widest uppercase"
+                              >
                                 Read Full Methodology &rarr;
                               </Button>
                             </Link>
@@ -398,33 +427,57 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                 </div>
 
                 {/* Step 4: The Hook */}
-                <div className="mt-16 rounded-[2.5rem] border-2 border-red-100 bg-red-50 p-10 md:p-16 relative overflow-hidden">
+                <div className="relative mt-16 overflow-hidden rounded-[2.5rem] border-2 border-red-100 bg-red-50 p-10 md:p-16">
                   <div className="absolute top-0 right-0 p-8 opacity-5">
                     <AlertTriangle size={120} className="text-red-900" />
                   </div>
                   <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-8">
-                      <div className="h-4 w-4 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
-                      <h4 className="text-red-900 text-sm font-black uppercase tracking-[0.2em]">Deferred Maintenance Alert</h4>
+                    <div className="mb-8 flex items-center gap-3">
+                      <div className="h-4 w-4 animate-pulse rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
+                      <h4 className="text-sm font-black tracking-[0.2em] text-red-900 uppercase">
+                        Deferred Maintenance Alert
+                      </h4>
                     </div>
-                    <h3 className="text-red-900 text-4xl font-black mb-6 leading-[1.1] tracking-tight">
-                      Skipping routine maintenance on a home like yours costs an average of 3.5x more in emergency repairs.
+                    <h3 className="mb-6 text-4xl leading-[1.1] font-black tracking-tight text-red-900">
+                      Skipping routine maintenance on a home like yours costs an
+                      average of 3.5x more in emergency repairs.
                     </h3>
-                    <p className="text-red-800/80 text-xl font-medium leading-relaxed max-w-2xl mb-10">
-                      Based on our {data?.median_year_built}-era building model, unaddressed building envelope issues are projected to escalate into <strong className="text-red-900">${Math.round((data?.costs.maintenance.annual || 3000) * 3.5).toLocaleString()}+</strong> in avoidable restoration claims within 3–5 years.
+                    <p className="mb-10 max-w-2xl text-xl leading-relaxed font-medium text-red-800/80">
+                      Based on our {data?.median_year_built}-era building model,
+                      unaddressed building envelope issues are projected to
+                      escalate into{' '}
+                      <strong className="text-red-900">
+                        $
+                        {Math.round(
+                          (data?.costs.maintenance.annual || 3000) * 3.5,
+                        ).toLocaleString()}
+                        +
+                      </strong>{' '}
+                      in avoidable restoration claims within 3–5 years.
                     </p>
                     <div className="flex flex-wrap gap-4">
-                       <div className="bg-red-900/5 border border-red-900/10 rounded-2xl px-6 py-4">
-                          <div className="text-red-900/40 text-[10px] font-black uppercase tracking-widest mb-1">Year 1: Routine</div>
-                          <div className="text-red-900 text-2xl font-black">${data?.costs.maintenance.annual.toLocaleString()}</div>
-                       </div>
-                       <div className="flex items-center text-red-900/20">
-                          <ChevronUp size={32} className="rotate-90" />
-                       </div>
-                       <div className="bg-red-900 text-cream rounded-2xl px-6 py-4 shadow-xl">
-                          <div className="text-cream/60 text-[10px] font-black uppercase tracking-widest mb-1">Year 5: Emergency</div>
-                          <div className="text-cream text-2xl font-black">${Math.round((data?.costs.maintenance.annual || 3000) * 3.5).toLocaleString()}</div>
-                       </div>
+                      <div className="rounded-2xl border border-red-900/10 bg-red-900/5 px-6 py-4">
+                        <div className="mb-1 text-[10px] font-black tracking-widest text-red-900/40 uppercase">
+                          Year 1: Routine
+                        </div>
+                        <div className="text-2xl font-black text-red-900">
+                          ${data?.costs.maintenance.annual.toLocaleString()}
+                        </div>
+                      </div>
+                      <div className="flex items-center text-red-900/20">
+                        <ChevronUp size={32} className="rotate-90" />
+                      </div>
+                      <div className="text-cream rounded-2xl bg-red-900 px-6 py-4 shadow-xl">
+                        <div className="text-cream/60 mb-1 text-[10px] font-black tracking-widest uppercase">
+                          Year 5: Emergency
+                        </div>
+                        <div className="text-cream text-2xl font-black">
+                          $
+                          {Math.round(
+                            (data?.costs.maintenance.annual || 3000) * 3.5,
+                          ).toLocaleString()}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -434,22 +487,29 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                 <div className={isEmbed ? '' : 'sticky top-24'}>
                   {step === 'result' ? (
                     /* Step 5: Lead Capture */
-                    <Card className="shadow-2xl border-4 border-oxblood overflow-hidden bg-white rounded-[2rem]">
+                    <Card className="border-oxblood overflow-hidden rounded-[2rem] border-4 bg-white shadow-2xl">
                       <div className="bg-oxblood p-5 text-center">
-                        <span className="text-cream text-[10px] font-black tracking-[0.2em] uppercase">Unlock Full Forensic Report</span>
+                        <span className="text-cream text-[10px] font-black tracking-[0.2em] uppercase">
+                          Unlock Full Forensic Report
+                        </span>
                       </div>
                       <CardContent className="p-10">
-                        <h3 className="text-charcoal text-3xl font-black mb-6 leading-tight tracking-tighter">Get Your Personalized Home Cost Report</h3>
-                        <ul className="space-y-4 mb-10">
+                        <h3 className="text-charcoal mb-6 text-3xl leading-tight font-black tracking-tighter">
+                          Get Your Personalized Home Cost Report
+                        </h3>
+                        <ul className="mb-10 space-y-4">
                           {[
                             'Custom maintenance schedule',
                             'Energy savings recommendations',
                             'Appliance replacement timeline',
-                            'Comparison to local area averages'
+                            'Comparison to local area averages',
                           ].map((feat, i) => (
-                            <li key={i} className="flex items-start gap-3 text-sm font-bold text-slate leading-tight">
-                              <div className="bg-green-100 text-green-600 rounded-full p-0.5 mt-0.5">
-                                <CheckCircle2 className="w-4 h-4" />
+                            <li
+                              key={i}
+                              className="text-slate flex items-start gap-3 text-sm leading-tight font-bold"
+                            >
+                              <div className="mt-0.5 rounded-full bg-green-100 p-0.5 text-green-600">
+                                <CheckCircle2 className="h-4 w-4" />
                               </div>
                               {feat}
                             </li>
@@ -457,36 +517,57 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                         </ul>
                         <form className="space-y-5" onSubmit={handleLeadSubmit}>
                           <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate/40 mb-2 px-1">Delivery Email</label>
+                            <label className="text-slate/40 mb-2 block px-1 text-[10px] font-black tracking-widest uppercase">
+                              Delivery Email
+                            </label>
                             <input
                               type="email"
                               name="email"
                               required
                               placeholder="you@example.com"
-                              className="w-full rounded-2xl border-2 border-slate/10 bg-slate-50 px-5 py-4 text-charcoal font-bold outline-none transition-all focus:border-oxblood focus:bg-white"
+                              className="border-slate/10 text-charcoal focus:border-oxblood w-full rounded-2xl border-2 bg-slate-50 px-5 py-4 font-bold transition-all outline-none focus:bg-white"
                             />
                           </div>
                           <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate/40 mb-2 px-1">Property Type</label>
-                            <select 
+                            <label className="text-slate/40 mb-2 block px-1 text-[10px] font-black tracking-widest uppercase">
+                              Property Type
+                            </label>
+                            <select
                               name="propertyType"
-                              className="w-full rounded-2xl border-2 border-slate/10 bg-slate-50 px-5 py-4 text-charcoal font-bold outline-none appearance-none transition-all focus:border-oxblood focus:bg-white"
+                              className="border-slate/10 text-charcoal focus:border-oxblood w-full appearance-none rounded-2xl border-2 bg-slate-50 px-5 py-4 font-bold transition-all outline-none focus:bg-white"
                             >
-                              <option value="residential">Single-Family Home</option>
-                              <option value="commercial">Commercial Property</option>
+                              <option value="residential">
+                                Single-Family Home
+                              </option>
+                              <option value="commercial">
+                                Commercial Property
+                              </option>
                               <option value="church">Church or Facility</option>
                             </select>
                           </div>
                           <div className="flex items-start gap-3 py-2">
-                            <input type="checkbox" id="consent" required className="mt-1 h-4 w-4 rounded border-slate/20 text-oxblood focus:ring-oxblood" />
-                            <label htmlFor="consent" className="text-[10px] text-slate/50 font-bold leading-normal">
-                              I agree to the <Link href="/privacy" className="underline">privacy policy</Link> and to receive this one-time forensic property report.
+                            <input
+                              type="checkbox"
+                              id="consent"
+                              required
+                              className="border-slate/20 text-oxblood focus:ring-oxblood mt-1 h-4 w-4 rounded"
+                            />
+                            <label
+                              htmlFor="consent"
+                              className="text-slate/50 text-[10px] leading-normal font-bold"
+                            >
+                              I agree to the{' '}
+                              <Link href="/privacy" className="underline">
+                                privacy policy
+                              </Link>{' '}
+                              and to receive this one-time forensic property
+                              report.
                             </label>
                           </div>
                           <Button
                             variant="primary"
                             size="xl"
-                            className="w-full font-black uppercase tracking-widest py-8 shadow-xl hover:shadow-oxblood/20"
+                            className="hover:shadow-oxblood/20 w-full py-8 font-black tracking-widest uppercase shadow-xl"
                             loading={isSubmitting}
                           >
                             Send My Report &rarr;
@@ -496,41 +577,49 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                     </Card>
                   ) : (
                     /* Step 6: Post-Capture */
-                    <Card className="shadow-2xl border-4 border-green-600 overflow-hidden bg-white text-center rounded-[2rem]">
+                    <Card className="overflow-hidden rounded-[2rem] border-4 border-green-600 bg-white text-center shadow-2xl">
                       <div className="bg-green-600 p-5">
-                        <span className="text-cream text-[10px] font-black tracking-[0.2em] uppercase">Report Unlocked</span>
+                        <span className="text-cream text-[10px] font-black tracking-[0.2em] uppercase">
+                          Report Unlocked
+                        </span>
                       </div>
                       <CardContent className="p-10">
-                        <div className="w-20 h-20 bg-green-50 rounded-3xl flex items-center justify-center mx-auto mb-8 text-green-600 shadow-inner">
+                        <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-3xl bg-green-50 text-green-600 shadow-inner">
                           <CheckCircle2 size={40} />
                         </div>
-                        <h3 className="text-charcoal text-3xl font-black mb-4 tracking-tighter">Analysis Generated</h3>
-                        <p className="text-slate mb-10 text-base font-bold leading-relaxed">
-                          We&apos;ve mapped <strong>{address?.formatted}</strong> against regional benchmarks. Your unique forensic profile is ready.
+                        <h3 className="text-charcoal mb-4 text-3xl font-black tracking-tighter">
+                          Analysis Generated
+                        </h3>
+                        <p className="text-slate mb-10 text-base leading-relaxed font-bold">
+                          We&apos;ve mapped{' '}
+                          <strong>{address?.formatted}</strong> against regional
+                          benchmarks. Your unique forensic profile is ready.
                         </p>
                         <Link href={`/report/${addressHash}`}>
                           <Button
                             variant="primary"
                             size="xl"
-                            className="w-full font-black uppercase tracking-widest py-8 bg-green-600 hover:bg-green-700 border-green-600 shadow-xl"
+                            className="w-full border-green-600 bg-green-600 py-8 font-black tracking-widest uppercase shadow-xl hover:bg-green-700"
                           >
                             View Full Report
                           </Button>
                         </Link>
-                        
-                        <div className="mt-10 pt-10 border-t-2 border-slate/5">
-                          <p className="text-[10px] text-slate/40 font-black uppercase tracking-[0.2em] mb-6">Share Your Results</p>
+
+                        <div className="border-slate/5 mt-10 border-t-2 pt-10">
+                          <p className="text-slate/40 mb-6 text-[10px] font-black tracking-[0.2em] uppercase">
+                            Share Your Results
+                          </p>
                           <div className="flex justify-center gap-6">
-                            <button className="bg-slate-50 p-4 rounded-2xl text-slate/40 hover:text-[#1877F2] hover:bg-white hover:shadow-lg transition-all">
+                            <button className="text-slate/40 rounded-2xl bg-slate-50 p-4 transition-all hover:bg-white hover:text-[#1877F2] hover:shadow-lg">
                               <Facebook size={24} />
                             </button>
-                            <button className="bg-slate-50 p-4 rounded-2xl text-slate/40 hover:text-[#1DA1F2] hover:bg-white hover:shadow-lg transition-all">
+                            <button className="text-slate/40 rounded-2xl bg-slate-50 p-4 transition-all hover:bg-white hover:text-[#1DA1F2] hover:shadow-lg">
                               <Twitter size={24} />
                             </button>
-                            <button className="bg-slate-50 p-4 rounded-2xl text-slate/40 hover:text-[#0A66C2] hover:bg-white hover:shadow-lg transition-all">
+                            <button className="text-slate/40 rounded-2xl bg-slate-50 p-4 transition-all hover:bg-white hover:text-[#0A66C2] hover:shadow-lg">
                               <Linkedin size={24} />
                             </button>
-                            <button className="bg-slate-50 p-4 rounded-2xl text-slate/40 hover:text-oxblood hover:bg-white hover:shadow-lg transition-all">
+                            <button className="text-slate/40 hover:text-oxblood rounded-2xl bg-slate-50 p-4 transition-all hover:bg-white hover:shadow-lg">
                               <Share2 size={24} />
                             </button>
                           </div>
