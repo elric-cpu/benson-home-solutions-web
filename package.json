@@ -19,12 +19,13 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "dev:genkit": "tsx --watch src/index.ts",
     "seed:pinecone": "tsx scripts/seed-pinecone-from-notion.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.41",
+    "@genkit-ai/google-genai": "1.29.0",
     "@hookform/resolvers": "^3.9.1",
-
     "@next/third-parties": "16.1.6",
     "@notionhq/client": "^5.11.0",
     "@openrouter/ai-sdk-provider": "2.2.3",
@@ -38,6 +39,7 @@
     "ai": "6.0.116",
     "clsx": "~2.1.1",
     "drizzle-orm": "~0.45.1",
+    "genkit": "1.29.0",
     "import-in-the-middle": "^3.0.0",
     "jsonwebtoken": "9.0.3",
     "lucide-react": "0.577.0",
@@ -81,9 +83,11 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@firebase/util",
       "@sentry/cli",
       "es5-ext",
       "esbuild",
+      "protobufjs",
       "sharp",
       "unrs-resolver"
     ],
