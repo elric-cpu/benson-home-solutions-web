@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 import { client } from '@/sanity/lib/client';
@@ -9,6 +10,13 @@ import { ServicesGrid } from '@/components/content/homepage/ServicesGrid';
 import { TrustSignals } from '@/components/content/homepage/TrustSignals';
 import { AreasServed } from '@/components/content/homepage/AreasServed';
 import { ResourcesSection } from '@/components/ui';
+
+export const metadata: Metadata = {
+  title:
+    'Benson Home Solutions | Professional Property Maintenance & Restoration',
+  description:
+    'Licensed general contractor specializing in systematic maintenance, water damage restoration, and remodeling in Oregon. CCB #258533.',
+};
 
 interface Resource {
   title: string;
@@ -223,7 +231,7 @@ export default async function HomePage() {
                 <div className="relative z-10">
                   <div className="mb-6 flex items-center justify-between">
                     <span
-                      className="text-4xl font-black tracking-tighter uppercase opacity-20"
+                      className="text-4xl font-black tracking-tighter uppercase opacity-40"
                       aria-hidden="true"
                     >
                       BHS-2026
@@ -254,7 +262,7 @@ export default async function HomePage() {
                     </div>
                     <div className="border-t border-white/10 pt-4">
                       <p className="text-sm italic opacity-70">
-                        &quot;Benson caught a failing wax ring and blocked
+                        &quot;Benson caught a failing window seal and blocked
                         gutters during our first month. Their systematic
                         oversight saved us at least $8,000 in water damage
                         repairs.&quot;

@@ -49,8 +49,8 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
     'Projecting maintenance risk based on building age...',
   ];
 
-  const handleAddressSelect = async (suggestion: any) => {
-    const s = suggestion as AddressSuggestion;
+  const handleAddressSelect = async (suggestion: AddressSuggestion) => {
+    const s = suggestion;
     setAddress(s);
     
     const zipData = MOCK_ZIP_DATA[s.postcode] || DEFAULT_BENCHMARK;
