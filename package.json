@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "prebuild": "tsx scripts/validate-env.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -64,6 +65,8 @@
     "@eslint/eslintrc": "3.3.4",
     "@lhci/cli": "0.15.1",
     "@playwright/test": "^1.42.1",
+    "@supabase/mcp-server-postgrest": "0.1.0",
+    "@supabase/mcp-server-supabase": "0.7.0",
     "@tailwindcss/postcss": "4.2.1",
     "@types/jsonwebtoken": "9.0.10",
     "@types/node": "^20.0.0",

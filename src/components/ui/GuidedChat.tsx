@@ -248,6 +248,7 @@ export function GuidedChat({
       <Button
         onClick={() => setIsOpen(!isOpen)}
         size="lg"
+        aria-label={isOpen ? 'Close chat' : 'Open chat assistant'}
         className={cn(
           'h-14 w-14 rounded-full shadow-xl transition-all duration-300',
           isOpen

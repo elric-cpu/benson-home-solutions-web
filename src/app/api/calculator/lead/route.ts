@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
 
     // 2. Save Property Search in DB
     let propertyId: string | undefined;
+    let finalAddressHash: string | undefined;
+
     if (address && clientId) {
       try {
         const inServiceAreaMatch = isServiceArea(
@@ -52,6 +54,8 @@ export async function POST(req: NextRequest) {
         const addressHash = hashArray
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('');
+        
+        finalAddressHash = addressHash;
 
         const [prop] = await db
           .insert(properties)
@@ -92,7 +96,7 @@ export async function POST(req: NextRequest) {
         email,
         source: body.source || 'cost-calculator',
         propertyAddress: address?.formatted,
-        propertyType: propertyType as any,
+        propertyType: propertyType as 'residential' | 'commercial' | 'church_community' | undefined,
         isServiceArea: inServiceArea,
       });
     } catch (hubspotError) {
@@ -104,7 +108,7 @@ export async function POST(req: NextRequest) {
         message: 'Lead captured successfully',
         clientId,
         propertyId,
-        addressHash,
+        addressHash: finalAddressHash,
       },
       { status: 200 },
     );

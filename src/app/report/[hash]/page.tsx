@@ -1,12 +1,27 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Container, Section, Button, Card, CardContent, Badge, TrustBar } from '@/components/ui';
-import { BUSINESS } from '@/lib/constants';
+import {
+  Container,
+  Section,
+  Button,
+  Card,
+  CardContent,
+  Badge,
+  TrustBar,
+} from '@/components/ui';
 import { db } from '@/lib/db';
 import { properties } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { CheckCircle2, AlertCircle, Calendar, Zap, Shield, Home, ArrowRight, Download, Printer } from 'lucide-react';
+import {
+  CheckCircle2,
+  Calendar,
+  Zap,
+  Shield,
+  Home,
+  Download,
+  Printer,
+} from 'lucide-react';
 
 interface ReportPageProps {
   params: Promise<{ hash: string }>;
@@ -24,13 +39,22 @@ export async function generateMetadata({ params }: ReportPageProps): Promise<Met
   };
 }
 
+interface PropertyCosts {
+  total: number;
+  breakdown: Record<string, number>;
+}
+
 export default async function ReportPage({ params }: ReportPageProps) {
   const { hash } = await params;
-  const [property] = await db.select().from(properties).where(eq(properties.addressHash, hash)).limit(1);
+  const [property] = await db
+    .select()
+    .from(properties)
+    .where(eq(properties.addressHash, hash))
+    .limit(1);
 
   if (!property) notFound();
 
-  const costs = property.housingData as any;
+  const costs = property.housingData as unknown as PropertyCosts;
   const annualTotal = costs?.total || 0;
   const monthlyTotal = Math.round(annualTotal / 12);
   
