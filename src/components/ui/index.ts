@@ -13,6 +13,5 @@ export { RichHero } from './RichHero';
 export { ResourcesSection, type Resource } from './ResourcesSection';
 export { Input, Textarea, Label, Select } from './Form';
 export { AddressAutocomplete } from './AddressAutocomplete';
-export { ChatWidget } from './ChatWidget';
-export { ChatWidgetWrapper } from './ChatWidgetWrapper';
+export { GuidedChat } from './GuidedChat';
 export * from './TrustBar';

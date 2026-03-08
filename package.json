@@ -22,10 +22,9 @@
     "seed:pinecone": "tsx scripts/seed-pinecone-from-notion.ts"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^3.0.58",
     "@ai-sdk/openai": "^3.0.41",
-    "@ai-sdk/react": "^3.0.118",
-    "@hookform/resolvers": "5.2.2",
+    "@hookform/resolvers": "^3.9.1",
+
     "@next/third-parties": "16.1.6",
     "@notionhq/client": "^5.11.0",
     "@openrouter/ai-sdk-provider": "2.2.3",
@@ -50,7 +49,6 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "7.71.2",
-    "react-markdown": "10.1.0",
     "require-in-the-middle": "^8.0.1",
     "resend": "~6.9.3",
     "sanity": "~5.13.0",
@@ -61,6 +59,7 @@
   "devDependencies": {
     "@axe-core/playwright": "4.11.1",
     "@eslint/eslintrc": "3.3.4",
+    "@lhci/cli": "0.15.1",
     "@playwright/test": "^1.42.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/jsonwebtoken": "9.0.10",

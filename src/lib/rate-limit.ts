@@ -94,9 +94,3 @@ export const FORM_RATE_LIMIT: RateLimitConfig = {
   limit: 3,
   windowSeconds: 300,
 };
-
-/** Chatbot rate limit: 10 requests per 2 minutes */
-export const CHAT_RATE_LIMIT: RateLimitConfig = {
-  limit: 10,
-  windowSeconds: 120,
-};

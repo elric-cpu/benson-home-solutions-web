@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
-import { ChatWidgetWrapper } from '@/components/ui/ChatWidgetWrapper';
+import { GuidedChat } from '@/components/ui';
 import { GoogleAnalytics } from '@/components/analytics/DeferredAnalytics';
 
 export function DeferredComponents() {
   return (
     <>
       <Suspense fallback={null}>
-        <ChatWidgetWrapper />
+        <GuidedChat />
       </Suspense>
       <Suspense fallback={null}>
         <GoogleAnalytics />
