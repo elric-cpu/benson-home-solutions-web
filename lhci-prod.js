@@ -4,11 +4,10 @@ module.exports = {
       url: [
         'https://bensonhomesolutions.com/',
         'https://bensonhomesolutions.com/tools/subscription-recommender',
-        'https://bensonhomesolutions.com/methodology/property-taxes'
+        'https://bensonhomesolutions.com/methodology/property-taxes',
       ],
       numberOfRuns: 1,
-      settings: {
-      },
+      settings: {},
     },
     assert: {
       assertions: {

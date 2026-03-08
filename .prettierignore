@@ -1,5 +1,11 @@
 node_modules
 .next
+.vercel
 out
 public
 *.md
+pnpm-lock.yaml
+package-lock.json
+next-env.d.ts
+next-starter/
+website/

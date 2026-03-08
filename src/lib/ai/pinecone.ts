@@ -9,5 +9,5 @@ export const pinecone = new Pinecone({
 });
 
 export const pineconeIndex = pinecone.Index(
-  process.env.PINECONE_INDEX || 'benson-knowledge'
+  process.env.PINECONE_INDEX || 'benson-knowledge',
 );

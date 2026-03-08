@@ -185,10 +185,10 @@ export default async function HomePage() {
         <Container>
           <div className="flex flex-col items-center gap-12 lg:flex-row">
             <div className="flex-1 space-y-6">
-              <Badge variant="secondary" className="uppercase tracking-widest">
+              <Badge variant="secondary" className="tracking-widest uppercase">
                 AI Powered Recommendations
               </Badge>
-              <h2 className="text-oxblood text-4xl font-black leading-tight md:text-5xl">
+              <h2 className="text-oxblood text-4xl leading-tight font-black md:text-5xl">
                 Get Your Personalized Maintenance Plan
               </h2>
               <p className="text-slate text-xl leading-relaxed opacity-80">
@@ -199,40 +199,69 @@ export default async function HomePage() {
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link href="/tools/subscription-recommender">
-                  <Button variant="primary" size="lg" className="w-full sm:w-auto font-bold">
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="w-full font-bold sm:w-auto"
+                  >
                     Start My Recommendation
                   </Button>
                 </Link>
                 <Link href="/services/maintenance-subscriptions">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full sm:w-auto"
+                  >
                     View Subscription Tiers
                   </Button>
                 </Link>
               </div>
             </div>
             <div className="flex-1">
-              <Card className="bg-oxblood border-none shadow-elevated overflow-hidden text-cream p-8 md:p-12">
+              <Card className="bg-oxblood shadow-elevated text-cream overflow-hidden border-none p-8 md:p-12">
                 <div className="relative z-10">
                   <div className="mb-6 flex items-center justify-between">
-                    <span className="text-4xl font-black opacity-20 uppercase tracking-tighter" aria-hidden="true">BHS-2026</span>
-                    <Badge variant="secondary" className="bg-cream/10 text-cream border-cream/20">Active Analysis</Badge>
+                    <span
+                      className="text-4xl font-black tracking-tighter uppercase opacity-20"
+                      aria-hidden="true"
+                    >
+                      BHS-2026
+                    </span>
+                    <Badge
+                      variant="secondary"
+                      className="bg-cream/10 text-cream border-cream/20"
+                    >
+                      Active Analysis
+                    </Badge>
                   </div>
                   <div className="space-y-6">
                     <div className="space-y-2">
-                      <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
-                        <div className="bg-green-500 h-full w-[85%] animate-pulse" />
+                      <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+                        <div className="h-full w-[85%] animate-pulse bg-green-500" />
                       </div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">Benchmarking Complete</p>
+                      <p className="text-[10px] font-bold tracking-widest uppercase opacity-50">
+                        Benchmarking Complete
+                      </p>
                     </div>
                     <div className="space-y-1">
-                      <h3 className="text-2xl font-bold text-cream">Subscription Estimate</h3>
-                      <div className="text-5xl font-black">$119<span className="text-sm opacity-50 ml-1">/mo</span></div>
+                      <h3 className="text-cream text-2xl font-bold">
+                        Subscription Estimate
+                      </h3>
+                      <div className="text-5xl font-black">
+                        $119<span className="ml-1 text-sm opacity-50">/mo</span>
+                      </div>
                     </div>
-                    <div className="pt-4 border-t border-white/10">
+                    <div className="border-t border-white/10 pt-4">
                       <p className="text-sm italic opacity-70">
-                        &quot;Benson caught a failing wax ring and blocked gutters during our first month. Their systematic oversight saved us at least $8,000 in water damage repairs.&quot;
+                        &quot;Benson caught a failing wax ring and blocked
+                        gutters during our first month. Their systematic
+                        oversight saved us at least $8,000 in water damage
+                        repairs.&quot;
                       </p>
-                      <p className="mt-2 text-xs font-bold uppercase tracking-widest">&mdash; Local Property Owner</p>
+                      <p className="mt-2 text-xs font-bold tracking-widest uppercase">
+                        &mdash; Local Property Owner
+                      </p>
                     </div>
                   </div>
                 </div>

@@ -11,6 +11,7 @@ import {
   TrustBar,
 } from '@/components/ui';
 import { EmergencyActionBar } from '@/components/layout';
+import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
 import { PortableTextRenderer } from '@/components/content/PortableText';
 import Link from 'next/link';
 
@@ -72,6 +73,21 @@ export default async function EmergencyPage() {
 
   return (
     <main>
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', url: BUSINESS.url },
+          { name: 'Emergency Services', url: `${BUSINESS.url}/emergency` },
+        ]}
+      />
+      <ServiceJsonLd
+        name="Emergency Restoration Services"
+        description={
+          page?.metaDescription ||
+          '24/7 emergency water damage restoration and mitigation.'
+        }
+        url={`${BUSINESS.url}/emergency`}
+        image={heroImage}
+      />
       <RichHero
         title={page?.heroHeadline || 'Property Crisis? Call Now.'}
         description={

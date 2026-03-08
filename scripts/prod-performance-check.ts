@@ -3,15 +3,15 @@ import { chromium } from 'playwright';
 const URLS = [
   'https://bensonhomesolutions.com/',
   'https://bensonhomesolutions.com/tools/subscription-recommender',
-  'https://bensonhomesolutions.com/methodology/property-taxes'
+  'https://bensonhomesolutions.com/methodology/property-taxes',
 ];
 
 async function checkPerformance(url: string) {
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  
+
   console.log(`\n--- Auditing: ${url} ---`);
-  
+
   await page.goto(url, { waitUntil: 'networkidle' });
 
   const metrics = await page.evaluate(async () => {

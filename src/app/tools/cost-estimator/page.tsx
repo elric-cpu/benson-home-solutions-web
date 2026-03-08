@@ -45,25 +45,34 @@ export default function CostEstimatorPage() {
       <Section variant="default" spacing="lg">
         <Container size="narrow">
           <div className="prose prose-lg text-slate max-w-none">
-            <h2 className="text-charcoal text-2xl font-bold">How We Calculate Your Estimate</h2>
+            <h2 className="text-charcoal text-2xl font-bold">
+              How We Calculate Your Estimate
+            </h2>
             <p>
-              Unlike generic &quot;ballpark&quot; calculators, our engine is anchored to the March 2026 Producer Price Index (PPI) 
-              and National Association of Home Builders (NAHB) regional modifier tables.
+              Unlike generic &quot;ballpark&quot; calculators, our engine is
+              anchored to the March 2026 Producer Price Index (PPI) and National
+              Association of Home Builders (NAHB) regional modifier tables.
             </p>
-            <div className="bg-cream/50 rounded-xl p-6 border border-oxblood/5">
-              <h3 className="text-oxblood mt-0 font-bold">2026 Market Variables:</h3>
-              <ul className="grid md:grid-cols-2 gap-4 list-none pl-0">
+            <div className="bg-cream/50 border-oxblood/5 rounded-xl border p-6">
+              <h3 className="text-oxblood mt-0 font-bold">
+                2026 Market Variables:
+              </h3>
+              <ul className="grid list-none gap-4 pl-0 md:grid-cols-2">
                 <li className="flex items-center gap-2">
-                  <span className="text-oxblood font-bold">Lumber:</span> 142.3 PPI (Stable)
+                  <span className="text-oxblood font-bold">Lumber:</span> 142.3
+                  PPI (Stable)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-oxblood font-bold">Labor:</span> +3.4% Annual Index
+                  <span className="text-oxblood font-bold">Labor:</span> +3.4%
+                  Annual Index
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-oxblood font-bold">Code:</span> 2026 IRC Updates
+                  <span className="text-oxblood font-bold">Code:</span> 2026 IRC
+                  Updates
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-oxblood font-bold">Region:</span> NW Regional Modifiers
+                  <span className="text-oxblood font-bold">Region:</span> NW
+                  Regional Modifiers
                 </li>
               </ul>
             </div>

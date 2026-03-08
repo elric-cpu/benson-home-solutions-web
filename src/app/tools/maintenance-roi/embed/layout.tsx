@@ -8,9 +8,7 @@ export default function EmbedLayout({
 }) {
   return (
     <html lang="en" className={sourceSans3.variable}>
-      <body className="bg-transparent antialiased">
-        {children}
-      </body>
+      <body className="bg-transparent antialiased">{children}</body>
     </html>
   );
 }
