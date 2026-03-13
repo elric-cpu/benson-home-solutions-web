@@ -113,7 +113,8 @@
 - All jobs follow deterministic, auditable processes
 - Use branded mitigation, rebuild, and authorization packets
 - Every scope of work includes line-item estimates and completion sign-off
-- Photographic evidence and progress notes maintained for insurance and client verification
+- **Forensic Audit Trail:** Every field photo must be timestamped and GPS-verified via the Forensic Documentation Service (CompanyCam integrated).
+- **After-Action Reviews (AARs):** A mandatory 15-minute technical debrief is required after every project completion. Focus on: *What went well? What failed? How do we prevent the failure next time?*
 - Digital recordkeeping with consistent naming conventions and organized file structures
 
 ---
@@ -234,25 +235,10 @@ Benson Home Solutions operates a subscription-based maintenance program segmente
 - **AI-powered content generation** for blog posts and articles
 - **AI-powered lead scoring** for better lead quality
 - **AI-powered customer support** for faster response times
-- **2026-2027 AI features** for continued innovation
-- **2026-2027 web development trends** for staying current
-- **2026-2027 marketing trends** for staying current
-- **2026-2027 SEO trends** for staying current
-- **2026-2027 email marketing trends** for staying current
-- **2026-2027 social media trends** for staying current
-- **2026-2027 video marketing trends** for staying current
-- **2026-2027 content marketing trends** for staying current
-- **2026-2027 AI marketing trends** for staying current
 - **Backlink building strategies** for SEO improvement
 - **Local SEO optimization** for better visibility
 - **Voice search optimization** for better visibility
-- **AI-powered SEO tools** for better SEO
-- **AI-powered content optimization** for better content
-- **AI-powered keyword research** for better keyword selection
-- **AI-powered content creation** for better content
-- **AI-powered content scheduling** for better content publishing
-- **AI-powered content promotion** for better content distribution
-- **AI-powered content analytics** for better content performance
+
 ---
 
 ## 7. Infrastructure & Hosting
@@ -267,3 +253,21 @@ Benson Home Solutions operates a subscription-based maintenance program segmente
 
 - Hostinger Horizons site disconnected to release DNS controls (CDN was blocking A record changes)
 - Domain verified live at `bensonhomesolutions.com`
+
+---
+
+## 8. Operational Performance (2026 Hammer & Grind Standard)
+
+To maintain "Senior Principal" efficiency, the following productivity and leadership models are enforced across all BHS operations.
+
+### Decision Windows & Focused Deep Work
+- **Prime Time (8:00 AM – 10:30 AM):** Dedicated to high-leverage tasks: pricing estimates, complex bid reviews, and strategic hiring. No meetings or non-urgent calls.
+- **Admin Batching (3:30 PM – 4:30 PM):** Group all low-level administrative tasks, scheduling, and routine emails into a single daily block to prevent "Decision Fatigue" (Ref: EP260).
+
+### Scale via Virtual Assistants (VAs)
+- **Admin Offloading:** All routine data entry, CompanyCam-to-Sanity syncing, and initial lead qualification is managed by a dedicated Virtual Assistant ($10/hr).
+- **Follow-Up Automation:** The VA layer is responsible for the "5th+ Touch Point" (Ref: EP261) to ensure no lead is abandoned before a clear decision.
+
+### Peer Accountability & Growth
+- **Mastermind Participation:** BHS leadership maintains active participation in a high-level contractor peer group.
+- **SOP Iteration:** If a failure occurs twice, the existing SOP is considered broken. A new draft must be submitted to the Operations Hub within 24 hours.

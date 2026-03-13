@@ -38,9 +38,9 @@ export const methodologyDetail = defineType({
     }),
     defineField({
       name: 'heroVideo',
-      title: 'Hero Video URL',
-      type: 'url',
-      description: 'Enter a direct MP4 link for the hero background video',
+      title: 'Authority Brief Video (Mux)',
+      type: 'mux.video',
+      description: 'Upload the 60s Senior Principal Methodology Brief here.',
     }),
     defineField({
       name: 'resources',
