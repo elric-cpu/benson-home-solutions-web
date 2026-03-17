@@ -14,6 +14,7 @@ import {
   ServiceJsonLd,
   FAQPageJsonLd,
 } from '@/components/seo/json-ld';
+import { FAQSection } from '@/components/seo/FAQSection';
 
 export const metadata: Metadata = {
   title: 'Bathroom Remodeling & Structural Finish | Benson Home Solutions',
@@ -25,27 +26,27 @@ const faqItems = [
   {
     question: 'How long does a bathroom remodel typically take?',
     answer:
-      'Most standard bathroom remodels take between 3 to 6 weeks, depending on the complexity and scope of work. Projects involving structural changes or custom features may take longer. We provide a detailed timeline during the planning phase.',
+      'Most standard bathroom remodels take between 3 to 6 weeks, depending on the complexity and scope of work. Projects involving structural changes or custom features may take longer. We provide a detailed timeline during the planning phase for homeowners in Albany, Lebanon, and Harney County.',
   },
   {
-    question: 'What is the average cost of a bathroom remodel?',
+    question: 'What is the average cost of a bathroom remodel in Albany, OR?',
     answer:
-      'For a comprehensive bathroom remodel in the Mid-Willamette Valley, costs typically range from $15,000 to $30,000. Factors like fixture selection, tile work, and structural modifications influence the final price. We offer transparent, itemized quotes.',
+      'For a comprehensive bathroom remodel in the Mid-Willamette Valley, costs typically range from $15,000 to $30,000. Factors like fixture selection, custom tile work, and structural modifications influence the final price. We offer transparent, itemized quotes before any work begins.',
   },
   {
     question: 'Do you offer design services?',
     answer:
-      'While we specialize in construction and remodeling, we can collaborate with your preferred interior designer or recommend local design partners to help bring your vision to life.',
+      'While our primary expertise is in structural construction and high-fidelity finishing, we can collaborate with your preferred interior designer or recommend local design partners in Oregon to help bring your vision to life.',
   },
   {
     question: 'How do you ensure waterproofing and prevent leaks?',
     answer:
-      'Our approach to waterproofing is forensic. We use advanced, multi-layer membrane systems and strict installation protocols to create a completely sealed wet-area enclosure, protecting your home from moisture intrusion for decades.',
+      'Our approach to waterproofing is forensic. We use advanced, multi-layer membrane systems and strict installation protocols to create a completely sealed wet-area enclosure, protecting your Oregon home from moisture intrusion for decades.',
   },
   {
     question: 'What kind of warranty do you provide?',
     answer:
-      'Benson Home Solutions offers a robust warranty on all our remodeling work, covering both materials and labor. Specific warranty details are provided in your contract, ensuring your investment is protected.',
+      'Benson Home Solutions offers a robust warranty on all our remodeling work, covering both materials and labor. Specific warranty details are provided in your contract, ensuring your investment is protected by a licensed Oregon CCB (#258533) contractor.',
   },
 ];
 
@@ -162,26 +163,7 @@ export default function BathroomRemodelingPage() {
       </Section>
 
       {/* FAQ */}
-      <Section spacing="lg" variant="cream">
-        <Container size="narrow">
-          <h2 className="mb-10 text-center text-3xl font-bold md:text-4xl">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            {faqItems.map((faq, i) => (
-              <div
-                key={i}
-                className="bg-surface border-border rounded-xl border p-6"
-              >
-                <h3 className="text-charcoal text-lg font-semibold">
-                  {faq.question}
-                </h3>
-                <p className="text-slate mt-2 leading-relaxed">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </Section>
+      <FAQSection items={faqItems} className="bg-cream" />
     </main>
   );
 }

@@ -14,6 +14,7 @@ import {
   ServiceJsonLd,
   FAQPageJsonLd,
 } from '@/components/seo/json-ld';
+import { FAQSection } from '@/components/seo/FAQSection';
 
 export const metadata: Metadata = {
   title: 'Water Damage Restoration | 24/7 Emergency Response',
@@ -71,27 +72,27 @@ const faqItems = [
   {
     question: 'How quickly can you respond to water damage?',
     answer:
-      'We dispatch immediately upon receiving your call. In the Mid-Willamette Valley (Albany, Lebanon, Salem, Corvallis), we are typically on-site within 60 minutes. For Harney County, response times vary but we mobilize the same day.',
+      'We dispatch immediately upon receiving your call. In the Mid-Willamette Valley (Albany, Lebanon, Sweet Home), we are typically on-site within 60 minutes. For Harney County (Burns, Riley, Drewsey), we mobilize the same day. We prioritize active water mitigation to prevent costly secondary damage.',
   },
   {
     question: 'Do you work with insurance companies?',
     answer:
-      'Yes. We provide insurance-aligned documentation from the first moment on-site: timestamped photos, moisture readings, itemized damage reports, and scope-of-work estimates formatted for adjusters. We work with all major carriers.',
+      'Yes. We provide insurance-aligned documentation from the first moment on-site: timestamped photos, moisture readings, itemized damage reports, and scope-of-work estimates formatted for adjusters. We work with all major carriers to ensure your Oregon home repair claims are processed smoothly.',
   },
   {
     question: 'What should I do while waiting for your crew?',
     answer:
-      'If safe to do so: turn off the water source, move valuables to dry areas, and avoid walking on wet carpet (it pushes water deeper into the pad). Do not use household vacuums on standing water. Our dispatcher will walk you through immediate steps on the phone.',
+      'If safe to do so: turn off the water source, move valuables to dry areas, and avoid walking on wet carpet. Do not use household vacuums on standing water. Our local dispatcher will walk you through immediate steps on the phone while our emergency crew routes to your property.',
   },
   {
     question: 'Can water damage cause mold?',
     answer:
-      'Mold can begin colonizing within 24-48 hours of water exposure. That is why rapid extraction and professional drying are critical. We apply antimicrobial treatments as a preventive measure on every water damage job.',
+      'Mold can begin colonizing within 24-48 hours of water exposure. That is why rapid extraction and professional drying are critical. We apply antimicrobial treatments as a preventive measure on every water damage job across the Willamette Valley and Harney County.',
   },
   {
     question: 'Do you handle the full rebuild or just the dry-out?',
     answer:
-      'We handle everything from emergency extraction through complete structural rebuild. Drywall, flooring, insulation, painting, trim — one contractor, one point of contact, one CCB license (258533) covering the entire scope.',
+      'We handle everything from emergency extraction through complete structural rebuild. Drywall, flooring, insulation, painting, trim — one general contractor, one point of contact, one CCB license (258533) covering the entire scope. We do not chain subcontractors, ensuring higher quality control.',
   },
 ];
 
@@ -343,26 +344,7 @@ export default function WaterDamagePage() {
       </Section>
 
       {/* FAQ */}
-      <Section variant="cream" spacing="lg">
-        <Container size="narrow">
-          <h2 className="mb-10 text-center text-3xl font-bold md:text-4xl">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            {faqItems.map((faq, i) => (
-              <div
-                key={i}
-                className="bg-surface border-border rounded-xl border p-6"
-              >
-                <h3 className="text-charcoal text-lg font-semibold">
-                  {faq.question}
-                </h3>
-                <p className="text-slate mt-2 leading-relaxed">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </Section>
+      <FAQSection items={faqItems} className="bg-cream" />
 
       {/* CTA */}
       <Section variant="oxblood" spacing="md">
