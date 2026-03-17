@@ -1,0 +1,18 @@
+[commands.audit]
+description = "Run a full SEO/AEO/GEO audit on a specific URL"
+prompt = """
+Using the Genkit 'getSearchPerformance' tool, analyze the last 30 days for {{url}}.
+Identify:
+1. High-impression, low-click keywords (SEO opportunity).
+2. Questions where we appear in the 'People Also Ask' but not the top snippet (AEO opportunity).
+3. Citations in AI Overviews where competitors are cited but we are not (GEO opportunity).
+Output a structured 'Revenue Growth Plan'.
+"""
+
+[commands.geo-fix]
+description = "Rewrite a content block for better LLM citation"
+prompt = """
+Read the provided file {{file}}. Rewrite the 'Executive Summary' and 'Key Findings' 
+using the 'Information Density' framework. Ensure facts are clearly cited and 
+structured for Generative Engine discovery.
+"""

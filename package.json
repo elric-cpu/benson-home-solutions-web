@@ -49,6 +49,7 @@
     "ai": "6.0.116",
     "clsx": "~2.1.1",
     "drizzle-orm": "~0.45.1",
+    "googleapis": "171.4.0",
     "import-in-the-middle": "^3.0.0",
     "jsonwebtoken": "9.0.3",
     "lucide-react": "0.577.0",

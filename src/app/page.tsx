@@ -16,6 +16,7 @@ import { ServicesGrid } from '@/components/content/homepage/ServicesGrid';
 import { TrustSignals } from '@/components/content/homepage/TrustSignals';
 import { AreasServed } from '@/components/content/homepage/AreasServed';
 import { ResourcesSection } from '@/components/ui';
+import { FAQSection } from '@/components/seo/FAQSection';
 
 export const metadata: Metadata = {
   title:
@@ -327,6 +328,24 @@ export default async function HomePage() {
           </Card>
         </Container>
       </Section>
+
+      {/* High-Density FAQ Section for GEO/AEO */}
+      <FAQSection
+        items={[
+          {
+            question: "What is included in a home maintenance subscription?",
+            answer: "Our maintenance-first subscription programs include seasonal preventative care, comprehensive inspections, gutter cleaning, HVAC filter replacements, and prioritized scheduling for any general home repairs. We focus on catching issues in the Mid-Willamette Valley and Harney County before they become expensive emergencies."
+          },
+          {
+            question: "How much do general contractors charge in Albany, OR?",
+            answer: "General contracting and handyman costs in Albany, Oregon vary by scope. Our preventative maintenance subscriptions offer a predictable monthly rate starting at a transparent baseline, avoiding unexpected high-cost emergency repairs. For standalone projects, we provide clear, upfront scopes and estimates before any work begins."
+          },
+          {
+            question: "Do you provide emergency home repairs in Burns, OR?",
+            answer: "Yes, Benson Home Solutions provides 24/7 emergency response for active water damage, storm damage, and board-ups across Harney County, including Burns, Riley, and Drewsey. We stop the active damage first, then focus on the long-term fix."
+          }
+        ]}
+      />
 
       {/* Final CTA */}
       <Section variant="charcoal" spacing="lg">
