@@ -121,6 +121,7 @@ export async function generateMetadata({
 }
 
 import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+import { FAQSection } from '@/components/seo/FAQSection';
 
 export default async function AreaPage({
   params,
@@ -343,6 +344,26 @@ export default async function AreaPage({
 
       {/* Authoritative Resources */}
       {area?.resources && <ResourcesSection resources={area.resources} />}
+
+      {/* Localized FAQ Section */}
+      <FAQSection
+        className="bg-cream"
+        title={`Frequently Asked Questions in ${city}, OR`}
+        items={[
+          {
+            question: `What is the cost of a general contractor in ${city}, OR?`,
+            answer: `The cost varies depending on the scope of the project. However, Benson Home Solutions provides transparent, itemized estimates for all remodeling and restoration projects in ${city}. For proactive care, our maintenance subscriptions offer a predictable monthly rate to avoid unexpected high-cost emergency repairs.`
+          },
+          {
+            question: `Do you provide emergency home repairs in ${city}?`,
+            answer: `Yes, we provide 24/7 emergency response for active water damage, storm damage, and board-ups in ${city} and across ${county} County. Our local dispatch ensures rapid on-site mitigation to stop active damage.`
+          },
+          {
+            question: `Why should I choose Benson Home Solutions over a local handyman in ${city}?`,
+            answer: `Unlike a standard handyman, Benson Home Solutions is a licensed Oregon General Contractor (CCB #${BUSINESS.license.replace('CCB #', '')}). This means we are legally authorized and fully insured to handle structural changes, major plumbing/electrical routing, and forensic waterproofing. We also provide a complete warranty on all craftsmanship.`
+          }
+        ]}
+      />
 
       {/* JSON-LD */}
       <script
