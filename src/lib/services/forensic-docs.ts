@@ -20,17 +20,34 @@ export interface ForensicAuditLog {
   verifiedAt: string;
 }
 
+interface ForensicPhotoInput {
+  id: string;
+  uri: string;
+  captured_at: string;
+  coordinates?: {
+    lat?: number;
+    lon?: number;
+  };
+  tags?: string[];
+}
+
 /**
  * Validates the forensic integrity of a synced photo.
  * Ensures GPS and Timestamp metadata are present.
  */
-export function validateForensicPhoto(photo: any): ForensicPhoto {
+export function validateForensicPhoto(
+  photo: ForensicPhotoInput,
+): ForensicPhoto {
   if (!photo.coordinates?.lat || !photo.coordinates?.lon) {
-    throw new Error(`Forensic failure: Photo ${photo.id} missing GPS metadata.`);
+    throw new Error(
+      `Forensic failure: Photo ${photo.id} missing GPS metadata.`,
+    );
   }
 
   if (!photo.captured_at) {
-    throw new Error(`Forensic failure: Photo ${photo.id} missing capture timestamp.`);
+    throw new Error(
+      `Forensic failure: Photo ${photo.id} missing capture timestamp.`,
+    );
   }
 
   return {
@@ -48,7 +65,12 @@ export function validateForensicPhoto(photo: any): ForensicPhoto {
 /**
  * Syncs a forensic photo to the internal property record.
  */
-export async function syncForensicPhoto(projectId: string, photo: ForensicPhoto): Promise<void> {
+export async function syncForensicPhoto(
+  projectId: string,
+  photo: ForensicPhoto,
+): Promise<void> {
   // Logic to update Supabase or Sanity with the verified forensic record
-  console.log(`[Forensic Sync] Project: ${projectId}, Photo: ${photo.id} Verified at ${photo.capturedAt}`);
+  console.warn(
+    `[Forensic Sync] Project: ${projectId}, Photo: ${photo.id} Verified at ${photo.capturedAt}`,
+  );
 }

@@ -1,0 +1,8 @@
+.git
+.hostinger
+.next/cache
+.venv
+GenAI_Agents-main.zip
+genai_agents_temp
+node_modules
+user_uploads

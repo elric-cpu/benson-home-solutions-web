@@ -3,7 +3,13 @@ import { Suspense } from 'react';
 import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 import { client } from '@/sanity/lib/client';
 import { LocalBusinessJsonLd } from '@/components/seo/json-ld';
-import { Container, Section, Button, Card, Badge } from '@/components/ui';
+import {
+  Container,
+  Section,
+  Card,
+  Badge,
+  buttonClassName,
+} from '@/components/ui';
 import Link from 'next/link';
 import { HeroSection } from '@/components/content/homepage/HeroSection';
 import { ServicesGrid } from '@/components/content/homepage/ServicesGrid';
@@ -13,9 +19,9 @@ import { ResourcesSection } from '@/components/ui';
 
 export const metadata: Metadata = {
   title:
-    'Benson Home Solutions | Professional Property Maintenance & Restoration',
+    'Oregon Property Repairs, Restoration & Maintenance | Benson Home Solutions',
   description:
-    'Licensed general contractor specializing in systematic maintenance, water damage restoration, and remodeling in Oregon. CCB #258533.',
+    'Licensed Oregon contractor for water damage restoration, maintenance plans, inspection repairs, and remodeling across the Mid-Willamette Valley and Harney County. CCB #258533.',
 };
 
 interface Resource {
@@ -113,12 +119,25 @@ export default async function HomePage() {
     })) || FALLBACK_SERVICES;
 
   const trustSignals = page?.trustSignals || [
-    { label: 'Licensed & Bonded', detail: BUSINESS.license },
-    { label: 'Fully Insured', detail: 'Liability & Workers\u2019 Comp' },
-    { label: 'Locally Owned', detail: BUSINESS.experience + ' Experience' },
     {
-      label: BUSINESS.rating + ' Rating',
-      detail: BUSINESS.projects + ' Projects Completed',
+      label: BUSINESS.license,
+      detail: 'Verify our Oregon contractor record',
+      href: BUSINESS.ccb,
+    },
+    {
+      label: '24/7 Emergency Response',
+      detail: `Call ${BUSINESS.afterhoursPhone} when damage is active`,
+      href: '/emergency',
+    },
+    {
+      label: 'Mid-Valley + Harney County',
+      detail: 'Service coverage for homes, churches, and facilities',
+      href: '/areas',
+    },
+    {
+      label: 'Reviews & Project Proof',
+      detail: `${BUSINESS.projects} documented jobs and customer feedback`,
+      href: '/reviews',
     },
   ];
 
@@ -147,40 +166,37 @@ export default async function HomePage() {
         <Container size="narrow">
           <div className="prose prose-lg text-slate max-w-none">
             <h2 className="text-charcoal mb-8 text-center text-3xl font-bold">
-              The Benson Standard
+              Why Property Owners Call Benson
             </h2>
             <div className="not-prose grid grid-cols-1 gap-8 md:grid-cols-3">
               <div className="text-center">
                 <div className="mb-3 text-4xl">🛠️</div>
                 <h3 className="text-charcoal mb-2 text-lg font-bold">
-                  Proactive Oversight
+                  Clear Scopes Before Work Starts
                 </h3>
                 <p className="text-slate text-sm leading-relaxed">
-                  Most damage is preventable. Our maintenance programs identify
-                  risks like failing seals or blocked drainage before they turn
-                  into $10,000 insurance claims.
+                  We inspect the issue, document what we find, and explain the
+                  repair path in plain language before the job moves forward.
                 </p>
               </div>
               <div className="text-center">
                 <div className="mb-3 text-4xl">📄</div>
                 <h3 className="text-charcoal mb-2 text-lg font-bold">
-                  Board-Ready Records
+                  Documentation That Holds Up
                 </h3>
                 <p className="text-slate text-sm leading-relaxed">
-                  We provide full photo documentation and moisture mapping for
-                  every job. Whether it’s for an adjuster or a facility board,
-                  our records stand up to scrutiny.
+                  Moisture readings, progress photos, and written notes make it
+                  easier to work with adjusters, property managers, and boards.
                 </p>
               </div>
               <div className="text-center">
                 <div className="mb-3 text-4xl">🚒</div>
                 <h3 className="text-charcoal mb-2 text-lg font-bold">
-                  60-Minute Response
+                  Emergency First, Long-Term Fix Second
                 </h3>
                 <p className="text-slate text-sm leading-relaxed">
-                  When a pipe bursts, every minute counts. Our emergency crews
-                  are mobilized and on-site within an hour in the Mid-Willamette
-                  Valley, 24/7.
+                  We stop active damage fast, then handle the cleanup, rebuild,
+                  and follow-through needed to get the property stable again.
                 </p>
               </div>
             </div>
@@ -188,78 +204,66 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* Subscription Recommender CTA */}
+      {/* Maintenance planning CTA */}
       <Section variant="cream" spacing="lg">
         <Container>
           <div className="flex flex-col items-center gap-12 lg:flex-row">
             <div className="flex-1 space-y-6">
               <Badge variant="secondary" className="tracking-widest uppercase">
-                AI Powered Recommendations
+                Planning Tool
               </Badge>
               <h2 className="text-oxblood text-4xl leading-tight font-black md:text-5xl">
-                Get Your Personalized Maintenance Plan
+                Build a Maintenance Plan Before Damage Gets Expensive
               </h2>
               <p className="text-slate text-xl leading-relaxed opacity-80">
-                Identify predictable property failures and receive a customized
-                oversight plan in under 60 seconds. Our AI analyzes your
-                property age, size, and location to recommend the perfect
-                subscription tier.
+                Use our planning tool to map recurring upkeep, likely risk
+                points, and the service tier that fits your property. It is a
+                practical starting point for owners who want a clearer plan
+                before scheduling work.
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
-                <Link href="/tools/subscription-recommender">
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    className="w-full font-bold sm:w-auto"
-                  >
-                    Start My Recommendation
-                  </Button>
+                <Link
+                  href="/tools/subscription-recommender"
+                  className={buttonClassName({
+                    variant: 'primary',
+                    size: 'lg',
+                    className: 'w-full font-bold sm:w-auto',
+                  })}
+                >
+                  Start the Planning Tool
                 </Link>
-                <Link href="/services/maintenance-subscriptions">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full sm:w-auto"
-                  >
-                    View Subscription Tiers
-                  </Button>
+                <Link
+                  href="/services/maintenance-subscriptions"
+                  className={buttonClassName({
+                    variant: 'outline',
+                    size: 'lg',
+                    className: 'w-full sm:w-auto',
+                  })}
+                >
+                  Compare Maintenance Plans
                 </Link>
               </div>
             </div>
             <div className="flex-1">
               <Card className="bg-oxblood shadow-elevated text-cream overflow-hidden border-none p-8 md:p-12">
                 <div className="relative z-10">
-                  <div className="mb-6 flex items-center justify-between">
-                    <span
-                      className="text-4xl font-black tracking-tighter uppercase opacity-40"
-                      aria-hidden="true"
-                    >
-                      BHS-2026
-                    </span>
-                    <Badge
-                      variant="secondary"
-                      className="bg-cream/10 text-cream border-cream/20"
-                    >
-                      Active Analysis
-                    </Badge>
-                  </div>
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
-                        <div className="h-full w-[85%] animate-pulse bg-green-500" />
-                      </div>
-                      <p className="text-[10px] font-bold tracking-widest uppercase opacity-50">
-                        Benchmarking Complete
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <h3 className="text-cream text-2xl font-bold">
-                        Subscription Estimate
-                      </h3>
-                      <div className="text-5xl font-black">
-                        $119<span className="ml-1 text-sm opacity-50">/mo</span>
-                      </div>
-                    </div>
+                  <Badge
+                    variant="secondary"
+                    className="bg-cream/10 text-cream border-cream/20 mb-6"
+                  >
+                    What you get
+                  </Badge>
+                  <div className="space-y-4">
+                    <h3 className="text-cream text-2xl font-bold">
+                      A practical first-pass scope
+                    </h3>
+                    <ul className="space-y-3 text-sm leading-relaxed text-white/80">
+                      <li>
+                        Recommended maintenance tier for your property type
+                      </li>
+                      <li>Likely trouble spots based on age, size, and use</li>
+                      <li>Budget guidance you can review before calling</li>
+                    </ul>
                     <div className="border-t border-white/10 pt-4">
                       <p className="text-sm italic opacity-70">
                         &quot;Benson caught a failing window seal and blocked
@@ -304,15 +308,20 @@ export default async function HomePage() {
               24/7. Don&apos;t wait&nbsp;&mdash; call our emergency line now.
             </p>
             <div className="mt-6 flex flex-col justify-center gap-4 sm:flex-row">
-              <a href={`tel:${BUSINESS.afterhoursPhone}`}>
-                <Button variant="emergency" size="lg">
-                  Emergency: {BUSINESS.afterhoursPhone}
-                </Button>
+              <a
+                href={`tel:${BUSINESS.afterhoursPhone}`}
+                className={buttonClassName({
+                  variant: 'emergency',
+                  size: 'lg',
+                })}
+              >
+                Emergency: {BUSINESS.afterhoursPhone}
               </a>
-              <Link href="/emergency">
-                <Button variant="outline" size="lg">
-                  Learn More
-                </Button>
+              <Link
+                href="/emergency"
+                className={buttonClassName({ variant: 'outline', size: 'lg' })}
+              >
+                Learn More
               </Link>
             </div>
           </Card>
@@ -327,14 +336,19 @@ export default async function HomePage() {
               Ready to Protect Your Property?
             </h2>
             <p className="text-cream/80 mt-4 text-lg">
-              Contact us today for a free, no-obligation quote. We&apos;ll
-              assess your needs and provide a clear, upfront estimate.
+              Tell us what is going on at the property and we&apos;ll help you
+              decide whether you need emergency response, a repair scope, or a
+              maintenance plan.
             </p>
             <div className="mt-8">
-              <Link href="/contact">
-                <Button variant="secondary" size="lg">
-                  Request a Quote
-                </Button>
+              <Link
+                href="/contact"
+                className={buttonClassName({
+                  variant: 'secondary',
+                  size: 'lg',
+                })}
+              >
+                Request a Quote
               </Link>
             </div>
           </div>

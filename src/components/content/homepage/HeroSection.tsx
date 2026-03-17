@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Button, RichHero } from '@/components/ui';
-import { HERO_ASSETS, HERO_VIDEOS } from '@/lib/constants';
+import { RichHero, buttonClassName } from '@/components/ui';
+import { BUSINESS, HERO_ASSETS } from '@/lib/constants';
 
 interface HeroSectionProps {
   headline?: string | React.ReactNode;
@@ -8,44 +8,59 @@ interface HeroSectionProps {
   video?: string;
 }
 
-export function HeroSection({
-  headline,
-  description,
-  video,
-}: HeroSectionProps) {
+export function HeroSection({ headline, description }: HeroSectionProps) {
   return (
     <RichHero
       title={
         headline || (
           <>
-            Property Protection
+            Oregon Property Repairs,
             <br className="hidden sm:inline" />
-            Built on Reliability
+            Restoration, and Maintenance
           </>
         )
       }
       description={
         description ||
-        'We don’t just fix damage; we prevent it. From local maintenance programs to 24/7 emergency restoration, Benson Home Solutions provides the professional oversight your property deserves. Licensed, bonded, and ready to work.'
+        'Benson Home Solutions handles water damage, inspection repairs, remodels, and recurring maintenance for homes, churches, and commercial properties across the Mid-Willamette Valley and Harney County. You get clear scopes, documented work, and crews that show up ready to solve the problem.'
       }
       backgroundImage={HERO_ASSETS.homepage}
-      videoBackground={video || HERO_VIDEOS.homepage}
-      badge="Mid-Willamette Valley | CCB #258533"
+      badge="Mid-Willamette Valley + Harney County | CCB #258533"
     >
-      <Link href="/tools/cost-calculator">
-        <Button size="lg" variant="secondary">
-          Calculate True Home Cost
-        </Button>
+      <Link
+        href="/contact"
+        className={buttonClassName({ size: 'lg', variant: 'secondary' })}
+      >
+        Request an Estimate
       </Link>
-      <Link href="/contact">
-        <Button
-          variant="outline"
-          size="lg"
-          className="text-cream border-cream/20 hover:bg-cream hover:text-oxblood bg-white/10"
-        >
-          Request a Quote
-        </Button>
+      <a
+        href={`tel:${BUSINESS.afterhoursPhone}`}
+        className={buttonClassName({ size: 'lg', variant: 'emergency' })}
+      >
+        24/7 Emergency: {BUSINESS.afterhoursPhone}
+      </a>
+      <Link
+        href="/services"
+        className={buttonClassName({
+          size: 'lg',
+          variant: 'outline',
+          className:
+            'text-cream border-cream/20 hover:bg-cream hover:text-oxblood bg-white/10',
+        })}
+      >
+        Browse Services
       </Link>
+      <div className="text-cream/90 grid w-full gap-3 text-sm sm:grid-cols-3">
+        <div className="rounded-lg border border-white/15 bg-black/20 px-4 py-3 backdrop-blur-sm">
+          Water damage, mold, and emergency dry-out crews
+        </div>
+        <div className="rounded-lg border border-white/15 bg-black/20 px-4 py-3 backdrop-blur-sm">
+          Maintenance plans for homes, churches, and commercial buildings
+        </div>
+        <div className="rounded-lg border border-white/15 bg-black/20 px-4 py-3 backdrop-blur-sm">
+          Licensed Oregon contractor with photo-documented scopes and repairs
+        </div>
+      </div>
     </RichHero>
   );
 }

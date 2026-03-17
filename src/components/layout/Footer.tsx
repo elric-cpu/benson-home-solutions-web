@@ -10,18 +10,29 @@ const footerLinks = {
     },
     { name: 'Water Damage Restoration', href: '/services/water-damage' },
     { name: 'Emergency Response', href: '/emergency' },
-    { name: 'Remodeling & Restoration', href: '/services/remodeling' },
-    { name: 'All Services', href: '/' },
+    { name: 'Kitchen & Bath Remodeling', href: '/services/remodeling' },
+    { name: 'Commercial & Facility Care', href: '/services/commercial' },
+    { name: 'Windows & Doors', href: '/services/windows-doors' },
+    { name: 'Structural Sitework', href: '/services/sitework' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
     { name: 'Our Methodology', href: '/methodology' },
+    { name: 'Project Gallery', href: '/projects' },
+    { name: 'Trade Insights Blog', href: '/blog' },
+    { name: 'Knowledge Base & FAQ', href: '/faq' },
     { name: 'Contact Us', href: '/contact' },
   ],
-  areas: SERVICE_AREAS.midWillametteValley.map((city) => ({
-    name: city,
-    href: `/areas/${city.toLowerCase().replace(' ', '-')}`,
-  })),
+  areas: [
+    ...SERVICE_AREAS.midWillametteValley.map((city) => ({
+      name: city,
+      href: `/areas/${city.toLowerCase().replace(' ', '-')}`,
+    })),
+    ...SERVICE_AREAS.harneyCounty.map((city) => ({
+      name: city,
+      href: `/areas/${city.toLowerCase().replace(' ', '-')}`,
+    })),
+  ],
 };
 
 export function Footer() {

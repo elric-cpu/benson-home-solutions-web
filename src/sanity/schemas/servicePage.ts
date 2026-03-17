@@ -26,6 +26,15 @@ export const servicePage = defineType({
       validation: (r) => r.max(160),
     }),
     defineField({
+      name: 'answerFirstSummary',
+      title: 'Answer-First Summary (AEO)',
+      type: 'text',
+      rows: 3,
+      description:
+        'A 2-3 sentence direct answer to the primary question for Answer Engine Optimization. Max 300 characters.',
+      validation: (r) => r.max(300),
+    }),
+    defineField({
       name: 'heroImage',
       title: 'Hero Image',
       type: 'image',

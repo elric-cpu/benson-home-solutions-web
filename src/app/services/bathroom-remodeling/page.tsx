@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: 'Bathroom Remodeling & Structural Finish | Benson Home Solutions',
   description:
-    'High-fidelity bathroom remodeling in Oregon. We handle full-scope reconstruction, waterproofing, and high-end finishing. Licensed CCB #258533.',
+    'Professional bathroom remodeling in the Mid-Willamette Valley. We prioritize waterproofing, high-fidelity tile work, and structural integrity. Licensed CCB #258533.',
 };
 
 const faqItems = [

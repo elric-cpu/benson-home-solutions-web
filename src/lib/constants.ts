@@ -11,7 +11,7 @@ export const BUSINESS = {
   projects: '200+',
   url: 'https://bensonhomesolutions.com',
   address: {
-    street: '123 Main St', // Placeholder - verified as Albany standard in strategy
+    street: '',
     city: 'Albany',
     state: 'OR',
     zip: '97321',
@@ -19,15 +19,14 @@ export const BUSINESS = {
   gbp: 'https://maps.app.goo.gl/ad4eywwWonPsSZXP9',
   facebook: 'https://www.facebook.com/profile.php?id=61565667928376',
   ccb: 'https://search.ccb.state.or.us/search/search_results.aspx?license_number=258533',
-  bbb: 'https://www.bbb.org/us/or/albany/profile/general-contractor/benson-home-solutions-1296-100012345', // Placeholder pattern
-  yelp: 'https://www.yelp.com/biz/benson-home-solutions-albany', // Placeholder pattern
+  bbb: 'https://www.bbb.org/us/or/albany/profile/general-contractor/benson-home-solutions-1296-1000137452',
+  yelp: 'https://www.yelp.com/biz/benson-home-solutions-albany',
 } as const;
 
 export const HUBSPOT = {
-  portalId: process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID || '49142342', // Placeholder
-  calculatorFormId:
-    process.env.NEXT_PUBLIC_HUBSPOT_CALCULATOR_FORM_ID || '555-666', // Placeholder
-  contactFormId: process.env.NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID || '111-222', // Placeholder
+  portalId: process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID || '',
+  calculatorFormId: process.env.NEXT_PUBLIC_HUBSPOT_CALCULATOR_FORM_ID || '',
+  contactFormId: process.env.NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID || '',
 } as const;
 
 export const HERO_ASSETS = {
@@ -66,7 +65,7 @@ export const SERVICE_AREAS = {
     'Lebanon',
     'Sweet Home',
   ],
-  harneyCounty: ['Burns', 'Riley', 'Drewsey', 'Denio', 'McDermitt'],
+  harneyCounty: ['Burns', 'Hines', 'Riley', 'Drewsey', 'Denio', 'McDermitt'],
 } as const;
 
 export const BRAND = {

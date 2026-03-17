@@ -45,11 +45,6 @@ export async function generateMetadata({
   };
 }
 
-interface PropertyCosts {
-  total: number;
-  breakdown: Record<string, number>;
-}
-
 export default async function ReportPage({ params }: ReportPageProps) {
   const { hash } = await params;
   const [property] = await db
@@ -60,12 +55,21 @@ export default async function ReportPage({ params }: ReportPageProps) {
 
   if (!property) notFound();
 
-  const costs = property.housingData as unknown as PropertyCosts;
+  const costs = property.housingData as unknown as {
+    total: number;
+    breakdown: Record<string, number>;
+    sqft?: number;
+    yearBuilt?: number;
+    floodZone?: string;
+  };
   const annualTotal = costs?.total || 0;
   const monthlyTotal = Math.round(annualTotal / 12);
+  const sqft = costs?.sqft || 2000;
+  const yearBuilt = costs?.yearBuilt || 1990;
+  const floodZone = costs?.floodZone || 'X';
 
   // Logic-based insights
-  const propertyAge = new Date().getFullYear() - (property.yearBuilt || 1990);
+  const propertyAge = new Date().getFullYear() - yearBuilt;
   const isAging = propertyAge > 25;
   const needsSealing = propertyAge > 15;
 
@@ -184,25 +188,21 @@ export default async function ReportPage({ params }: ReportPageProps) {
                       <span className="text-xs font-bold tracking-widest uppercase opacity-40">
                         Year Built
                       </span>
-                      <span className="font-black">
-                        {property.yearBuilt || 'N/A'}
-                      </span>
+                      <span className="font-black">{yearBuilt}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold tracking-widest uppercase opacity-40">
                         Square Feet
                       </span>
                       <span className="font-black">
-                        {property.sqft?.toLocaleString() || 'N/A'}
+                        {sqft?.toLocaleString() || 'N/A'}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold tracking-widest uppercase opacity-40">
                         Flood Zone
                       </span>
-                      <span className="font-black">
-                        {property.floodZone || 'X'}
-                      </span>
+                      <span className="font-black">{floodZone}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -256,8 +256,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
                 </div>
                 <div className="prose prose-slate max-w-none">
                   <p className="text-slate/80 text-lg leading-relaxed font-medium">
-                    Your property, constructed in {property.yearBuilt}, has
-                    reached a{' '}
+                    Your property, constructed in {yearBuilt}, has reached a{' '}
                     {isAging
                       ? 'critical aging threshold'
                       : 'mature stable phase'}

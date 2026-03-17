@@ -13,6 +13,37 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
+export function buttonClassName({
+  variant = 'primary',
+  size = 'md',
+  className,
+}: Pick<ButtonProps, 'variant' | 'size' | 'className'>) {
+  return cn(
+    'focus-visible:ring-oxblood/50 inline-flex items-center justify-center rounded-lg font-semibold transition-all focus-visible:ring-2 focus-visible:outline-none active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
+    {
+      'bg-oxblood text-cream hover:bg-oxblood/90 shadow-sm':
+        variant === 'primary',
+      'bg-cream text-oxblood border-oxblood/20 hover:bg-oxblood/5 border':
+        variant === 'secondary',
+      'border-oxblood text-oxblood hover:bg-oxblood hover:text-cream border-2 bg-transparent':
+        variant === 'outline',
+      'text-oxblood hover:bg-oxblood/10': variant === 'ghost',
+      'bg-red-700 text-white shadow-md shadow-red-900/20 hover:bg-red-800':
+        variant === 'emergency',
+      'text-oxblood h-auto p-0 underline-offset-4 hover:underline':
+        variant === 'link',
+    },
+    {
+      'h-8 px-3 text-sm': size === 'sm',
+      'h-10 px-5 text-base': size === 'md',
+      'h-12 px-8 text-lg': size === 'lg',
+      'h-14 px-10 text-xl': size === 'xl',
+      'h-10 w-10 p-0': size === 'icon',
+    },
+    className,
+  );
+}
+
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -29,30 +60,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={loading || props.disabled}
-        className={cn(
-          'focus-visible:ring-oxblood/50 inline-flex items-center justify-center rounded-lg font-semibold transition-all focus-visible:ring-2 focus-visible:outline-none active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
-          {
-            'bg-oxblood text-cream hover:bg-oxblood/90 shadow-sm':
-              variant === 'primary',
-            'bg-cream text-oxblood border-oxblood/20 hover:bg-oxblood/5 border':
-              variant === 'secondary',
-            'border-oxblood text-oxblood hover:bg-oxblood hover:text-cream border-2 bg-transparent':
-              variant === 'outline',
-            'text-oxblood hover:bg-oxblood/10': variant === 'ghost',
-            'bg-red-700 text-white shadow-md shadow-red-900/20 hover:bg-red-800':
-              variant === 'emergency',
-            'text-oxblood h-auto p-0 underline-offset-4 hover:underline':
-              variant === 'link',
-          },
-          {
-            'h-8 px-3 text-sm': size === 'sm',
-            'h-10 px-5 text-base': size === 'md',
-            'h-12 px-8 text-lg': size === 'lg',
-            'h-14 px-10 text-xl': size === 'xl',
-            'h-10 w-10 p-0': size === 'icon',
-          },
-          className,
-        )}
+        className={buttonClassName({ variant, size, className })}
         {...props}
       >
         {loading && (

@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
 
   // --- Next.js 15: Performance & Optimization ---
   experimental: {
+    outputFileTracingRoot: process.cwd(),
     optimizePackageImports: [
       'lucide-react',
       '@ai-sdk/react',
@@ -40,15 +41,28 @@ const nextConfig: NextConfig = {
   },
 };
 
+const hasSentryReleaseConfig = Boolean(
+  process.env.SENTRY_AUTH_TOKEN &&
+  process.env.SENTRY_ORG &&
+  process.env.SENTRY_PROJECT,
+);
+
 // Sentry configuration options
 const sentryConfig = {
   hideSourceMaps: true,
   tunnelRoute: '/monitoring-tunnel',
+  ...(hasSentryReleaseConfig
+    ? {
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+      }
+    : {}),
 
   // --- TURBOPACK COMPATIBILITY FIXES ---
   disableServerWebpackPlugin: true,
   disableClientWebpackPlugin: true,
-  useRunAfterProductionCompileHook: true,
+  useRunAfterProductionCompileHook: hasSentryReleaseConfig,
 
   // --- VERSION 10 CONFIG ---
   _experimental: {
@@ -56,7 +70,7 @@ const sentryConfig = {
   },
 
   sourcemaps: {
-    deleteSourcemapsAfterUpload: true,
+    deleteSourcemapsAfterUpload: hasSentryReleaseConfig,
   },
 };
 

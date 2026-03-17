@@ -59,6 +59,8 @@ export const properties = pgTable('properties', {
   dataCompleteness: integer('data_completeness').default(0),
   agreementStatus: text('agreement_status').default('none'),
   notionPageId: varchar('notion_page_id', { length: 255 }),
+  yearBuilt: integer('year_built'),
+  sqft: integer('sqft'),
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -193,6 +195,62 @@ export const subscriptionLeads = pgTable('subscription_leads', {
   plan: varchar('plan', { length: 100 }),
   propertyType: varchar('property_type', { length: 50 }),
   source: varchar('source', { length: 100 }).default('website-subscription'),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/**
+ * iGUIDE Projects — link to 3D spatial data.
+ */
+export const iguideProjects = pgTable('iguide_projects', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  propertyId: uuid('property_id')
+    .references(() => properties.id)
+    .notNull(),
+  viewId: varchar('view_id', { length: 255 }).notNull().unique(), // iGUIDE External ID
+  externalUrl: text('external_url'),
+  totalInteriorAreaMm2: numeric('total_interior_area_mm2'),
+  measurementStandard: varchar('measurement_standard', { length: 100 }), // e.g., 'ANSI Z765-2021'
+  constructionMultiplier: numeric('construction_multiplier').default('0.92'), // Net-to-Gross buffer
+  lastSyncedAt: timestamp('last_synced_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/**
+ * Property Floors — hierarchical spatial grouping.
+ */
+export const propertyFloors = pgTable('property_floors', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  iguideProjectId: uuid('iguide_project_id')
+    .references(() => iguideProjects.id)
+    .notNull(),
+  floorName: varchar('floor_name', { length: 255 }).notNull(),
+  level: integer('level').default(0),
+  isBelowGrade: boolean('is_below_grade').default(false),
+  areaMm2: numeric('area_mm2'),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/**
+ * Property Rooms — individual forensic units.
+ */
+export const propertyRooms = pgTable('property_rooms', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  floorId: uuid('floor_id')
+    .references(() => propertyFloors.id)
+    .notNull(),
+  roomName: varchar('room_name', { length: 255 }).notNull(),
+  roomType: varchar('room_type', { length: 100 }), // e.g., 'Kitchen', 'Bedroom'
+  widthMm: numeric('width_mm'),
+  lengthMm: numeric('length_mm'),
+  areaMm2: numeric('area_mm2'),
+  panoId: varchar('pano_id', { length: 255 }), // iGUIDE Pano ID for "Teleport"
+  isP0Room: boolean('is_p0_room').default(false), // SEO/AEO flag
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),

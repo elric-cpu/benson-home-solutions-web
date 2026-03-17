@@ -3,6 +3,7 @@ import { Container, Section } from '@/components/ui';
 interface Signal {
   label: string;
   detail: string;
+  href?: string;
 }
 
 interface TrustSignalsProps {
@@ -16,9 +17,18 @@ export function TrustSignals({ signals }: TrustSignalsProps) {
         <div className="grid grid-cols-2 gap-6 text-center md:grid-cols-4">
           {signals.map((signal) => (
             <div key={signal.label}>
-              <div className="text-cream text-lg font-semibold">
-                {signal.label}
-              </div>
+              {signal.href ? (
+                <a
+                  href={signal.href}
+                  className="text-cream inline-block text-lg font-semibold underline-offset-4 hover:underline"
+                >
+                  {signal.label}
+                </a>
+              ) : (
+                <div className="text-cream text-lg font-semibold">
+                  {signal.label}
+                </div>
+              )}
               <div className="text-cream/70 mt-1 text-sm">{signal.detail}</div>
             </div>
           ))}

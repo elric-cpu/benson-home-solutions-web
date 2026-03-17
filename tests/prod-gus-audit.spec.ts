@@ -1,11 +1,8 @@
+/* eslint-disable no-console */
 import { test, expect } from '@playwright/test';
 
 test('Gus Production Chat Audit', async ({ page }) => {
-  // Use Vercel URL to bypass potential DNS propagation issues
-  const PROD_URL =
-    'https://benson-home-solutions-kdtv9oh5n-elric-bensons-projects.vercel.app';
-
-  await page.goto(PROD_URL, { waitUntil: 'networkidle' });
+  await page.goto('/', { waitUntil: 'networkidle' });
 
   // Wait for hydration
   await page.waitForTimeout(2000);
@@ -53,7 +50,13 @@ test('Gus Production Chat Audit', async ({ page }) => {
   await page.keyboard.press('Enter');
 
   // Wait for response bubble
-  const responseBubble = page.getByTestId('chat-message').nth(2);
+  const messages = page.getByTestId('chat-message');
+  console.log('Chat messages found:', await messages.count());
+  // 0: "Ask Gus (AI)"
+  // 1: Welcome message
+  // 2: User message
+  // 3: AI response
+  const responseBubble = messages.nth(3);
   await expect(responseBubble).toBeVisible({ timeout: 20000 });
 
   const initialText = await responseBubble.innerText();

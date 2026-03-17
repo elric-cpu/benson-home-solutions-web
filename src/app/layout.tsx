@@ -6,6 +6,7 @@ import { sourceSans3 } from '@/lib/fonts';
 import { Header, Footer, MobileActionBar } from '@/components/layout';
 import { DeferredComponents } from '@/components/layout/DeferredComponents';
 import { OrganizationJsonLd } from '@/components/seo/json-ld';
+import { ChatBubble } from '@/components/chatbot/ChatBubble';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -54,9 +55,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  other: {
-    'date-modified': new Date().toISOString(),
-  },
   icons: {
     icon: '/favicon.svg',
   },
@@ -92,6 +90,7 @@ export default function RootLayout({
           <MobileActionBar />
         </Suspense>
         <DeferredComponents />
+        <ChatBubble />
         <SpeedInsights />
         <Analytics />
       </body>

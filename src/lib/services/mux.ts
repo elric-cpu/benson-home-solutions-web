@@ -8,6 +8,11 @@ export interface MuxPlaybackMetadata {
   policy: 'public' | 'signed';
 }
 
+export interface MuxAssetMetadata {
+  id: string;
+  status: 'ready';
+}
+
 /**
  * Generates a signed playback ID for gated methodology content.
  * Note: In a real implementation, this would use the Mux SDK and private keys.
@@ -15,7 +20,7 @@ export interface MuxPlaybackMetadata {
  */
 export async function getSignedPlaybackId(
   playbackId: string,
-  token?: string
+  _token?: string,
 ): Promise<string> {
   const isGated = process.env.MUX_GATED_CONTENT === 'true';
 
@@ -32,7 +37,9 @@ export async function getSignedPlaybackId(
 /**
  * Fetches asset metadata from Sanity/Mux.
  */
-export async function getMuxAssetMetadata(assetId: string): Promise<any> {
+export async function getMuxAssetMetadata(
+  assetId: string,
+): Promise<MuxAssetMetadata> {
   // Logic to interface with Mux Asset API
   return { id: assetId, status: 'ready' };
 }

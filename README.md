@@ -35,15 +35,15 @@ A production-grade Next.js application for Benson Home Solutions, a general cont
 
 ### Setup
 1. Clone the repository.
-2. Install dependencies: `npm install`
+2. Install dependencies: `pnpm install`
 3. Copy `.env.example` to `.env.local` and fill in required keys.
-4. Run development server: `npm run dev`
+4. Run development server: `pnpm dev`
 
 ### Core Scripts
-- `npm run build`: Production build with type checking and linting.
-- `npm run lint`: ESLint code quality audit.
-- `npm run test`: Playwright E2E and accessibility testing.
-- `npx tsx scripts/seed-ops-manual.ts`: Index the Notion Operations Manual into Pinecone.
+- `pnpm build`: Production build with type checking and linting.
+- `pnpm lint`: ESLint code quality audit.
+- `pnpm test`: Playwright E2E and accessibility testing.
+- `pnpm seed:pinecone`: Index the Notion knowledge base into Pinecone.
 
 ## ⚖️ Compliance & Standards
 - CCB License: #258533
