@@ -12,7 +12,7 @@ export const optimizeSiteFlow = ai.defineFlow(
   },
   async (siteUrl) => {
     // Step 1: Get data from the tool
-    const performanceData = await ai.runTool(getSearchPerformance, { siteUrl });
+    const performanceData = await getSearchPerformance({ siteUrl });
 
     // Step 2: Gemini analyzes data for SEO/AEO/GEO gaps
     const response = await ai.generate({
