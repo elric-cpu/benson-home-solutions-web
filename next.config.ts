@@ -4,10 +4,10 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: 'standalone',
+  outputFileTracingRoot: process.cwd(),
 
   // --- Next.js 15: Performance & Optimization ---
   experimental: {
-    outputFileTracingRoot: process.cwd(),
     optimizePackageImports: [
       'lucide-react',
       '@ai-sdk/react',
