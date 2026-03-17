@@ -18,6 +18,34 @@ export const metadata: Metadata = {
     'Systematic preventive maintenance for homes, commercial buildings, and churches in Oregon. Stop the cycle of reactive repairs. Licensed CCB #258533.',
 };
 
+const faqItems = [
+  {
+    question: 'What is included in a preventative maintenance subscription?',
+    answer:
+      'Our subscriptions provide systematic oversight of your property. This includes seasonal gutter cleaning, HVAC filter changes, forensic roof and envelope inspections, plumbing leak checks, and prioritized 24/7 emergency response for Oregon homeowners and businesses.',
+  },
+  {
+    question: 'How much does a home maintenance subscription cost?',
+    answer:
+      'Pricing is transparent and based on property size, age, and location in the Mid-Willamette Valley or Harney County. Subscriptions typically start around $150 to $250 per month. This predictable cost helps you avoid five-figure emergency restoration claims down the road.',
+  },
+  {
+    question: 'Are subscriptions available for commercial properties or HOAs?',
+    answer:
+      'Yes, we offer tailored proactive maintenance plans for commercial buildings, churches, and Homeowner Associations (HOAs) in Albany, Lebanon, and Harney County. We provide board-ready logs and documentation for every service visit.',
+  },
+  {
+    question: 'What happens if you find a major issue during an inspection?',
+    answer:
+      'If we identify a failing seal, active leak, or structural concern, we immediately document it with photos and provide a transparent, itemized quote for the repair. As a licensed Oregon General Contractor (CCB #258533), we can handle the full repair scope.',
+  },
+  {
+    question: 'Do I get priority service during emergencies?',
+    answer:
+      'Absolutely. All subscription members receive priority routing for our 24/7 emergency services. If a storm hits the Willamette Valley or a pipe bursts, our crews respond to our members first.',
+  },
+];
+
 export default function MaintenanceSubscriptionsPage() {
   const breadcrumbs = [
     { name: 'Home', url: BUSINESS.url },
@@ -36,6 +64,7 @@ export default function MaintenanceSubscriptionsPage() {
         description="Systematic preventive maintenance and professional oversight programs for Oregon property owners."
         url={`${BUSINESS.url}/services/maintenance-subscriptions`}
       />
+      <FAQPageJsonLd questions={faqItems} />
 
       <Section variant="cream" spacing="lg">
         <Container>
@@ -147,6 +176,9 @@ export default function MaintenanceSubscriptionsPage() {
           </div>
         </Container>
       </Section>
+
+      {/* FAQ */}
+      <FAQSection items={faqItems} className="bg-cream" />
     </main>
   );
 }

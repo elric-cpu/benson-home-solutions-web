@@ -14,6 +14,7 @@ import {
   ServiceJsonLd,
   FAQPageJsonLd,
 } from '@/components/seo/json-ld';
+import { FAQSection } from '@/components/seo/FAQSection';
 
 export const metadata: Metadata = {
   title: 'Kitchen Remodeling & Reconstruction | Benson Home Solutions',
@@ -25,27 +26,27 @@ const faqItems = [
   {
     question: 'How long does a typical kitchen remodel take?',
     answer:
-      'The timeline for a kitchen remodel can vary significantly based on the scope. A minor refresh might take 2-4 weeks, while a full structural reconstruction with layout changes could take 8-12 weeks or more. We provide a detailed project schedule during our consultation.',
+      'The timeline for a kitchen remodel can vary significantly based on the scope. A minor refresh might take 2-4 weeks, while a full structural reconstruction with layout changes could take 8-12 weeks or more. We provide a detailed project schedule during our consultation for Mid-Willamette Valley homeowners.',
   },
   {
-    question: 'What is the average cost of a kitchen remodel?',
+    question: 'What is the average cost of a kitchen remodel in Albany, OR?',
     answer:
-      'Kitchen remodeling costs in the Mid-Willamette Valley typically range from $25,000 to $45,000 for a comprehensive project, but can go higher for high-end finishes or extensive structural changes. We provide transparent, itemized estimates.',
+      'Kitchen remodeling costs in Albany and the surrounding Mid-Willamette Valley typically range from $25,000 to $45,000 for a comprehensive project, but can go higher for high-end finishes or extensive structural changes. We provide transparent, itemized estimates so you know exactly what to expect.',
   },
   {
-    question: 'Do you handle permits and inspections?',
+    question: 'Do you handle permits and inspections for Oregon homes?',
     answer:
-      'Yes, Benson Home Solutions manages all necessary permits and coordinates with local building inspectors. Our team ensures all work meets current building codes and safety standards.',
+      'Yes, Benson Home Solutions manages all necessary permits and coordinates with local building inspectors across Linn, Benton, and Harney Counties. Our team ensures all work meets current Oregon building codes and safety standards.',
   },
   {
     question: 'Can you help with kitchen design?',
     answer:
-      'While we are primarily a construction company, we work closely with trusted local designers and architects. We can integrate seamlessly with your chosen design professionals or recommend partners who align with your vision.',
+      'While our primary expertise lies in structural precision and construction, we work closely with trusted local designers and architects. We can integrate seamlessly with your chosen design professionals or recommend local partners who align with your vision.',
   },
   {
     question: 'What kind of warranty do you offer?',
     answer:
-      'We stand behind our work with a comprehensive warranty on all craftsmanship. Specific details are outlined in your project contract, ensuring your peace of mind long after completion.',
+      'As a licensed Oregon CCB (#258533) contractor, we stand behind our work with a comprehensive warranty on all craftsmanship. Specific details are outlined in your project contract, ensuring your peace of mind long after completion.',
   },
 ];
 
@@ -184,26 +185,7 @@ export default function KitchenRemodelingPage() {
       </Section>
 
       {/* FAQ */}
-      <Section spacing="lg" variant="cream">
-        <Container size="narrow">
-          <h2 className="mb-10 text-center text-3xl font-bold md:text-4xl">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            {faqItems.map((faq, i) => (
-              <div
-                key={i}
-                className="bg-surface border-border rounded-xl border p-6"
-              >
-                <h3 className="text-charcoal text-lg font-semibold">
-                  {faq.question}
-                </h3>
-                <p className="text-slate mt-2 leading-relaxed">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </Section>
+      <FAQSection items={faqItems} className="bg-cream" />
 
       {/* The Benson Standard */}
       <Section variant="charcoal" spacing="lg">
