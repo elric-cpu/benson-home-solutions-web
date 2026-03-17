@@ -9,7 +9,12 @@ import {
   CardContent,
 } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
-import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
+import {
+  BreadcrumbJsonLd,
+  ServiceJsonLd,
+  FAQPageJsonLd,
+} from '@/components/seo/json-ld';
+import { FAQSection } from '@/components/seo/FAQSection';
 import { SubscriptionSelector } from '@/components/content/subscription/SubscriptionSelector';
 
 export const metadata: Metadata = {
