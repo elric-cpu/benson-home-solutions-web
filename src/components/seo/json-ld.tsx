@@ -20,6 +20,19 @@ export function LocalBusinessJsonLd() {
     ...SERVICE_AREAS.midWillametteValley,
     ...SERVICE_AREAS.harneyCounty,
   ];
+  const hasVerifiedStreetAddress =
+    BUSINESS.address.street.trim().length > 0 &&
+    !/123 Main St/i.test(BUSINESS.address.street);
+  const address = {
+    '@type': 'PostalAddress',
+    ...(hasVerifiedStreetAddress
+      ? { streetAddress: BUSINESS.address.street }
+      : {}),
+    addressLocality: BUSINESS.address.city,
+    addressRegion: BUSINESS.address.state,
+    postalCode: BUSINESS.address.zip,
+    addressCountry: 'US',
+  };
 
   return (
     <JsonLdScript
@@ -30,17 +43,10 @@ export function LocalBusinessJsonLd() {
         url: BUSINESS.url,
         telephone: BUSINESS.phone,
         email: BUSINESS.email,
-        logo: `${BUSINESS.url}/logo.png`,
+        logo: `${BUSINESS.url}/favicon.svg`,
         image: HERO_ASSETS.homepage,
         priceRange: '$$',
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: BUSINESS.address.street,
-          addressLocality: BUSINESS.address.city,
-          addressRegion: BUSINESS.address.state,
-          postalCode: BUSINESS.address.zip,
-          addressCountry: 'US',
-        },
+        address,
         founder: {
           '@type': 'Person',
           name: BUSINESS.owner,
@@ -53,12 +59,6 @@ export function LocalBusinessJsonLd() {
             name: 'Oregon',
           },
         })),
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: '4.9',
-          bestRating: '5',
-          ratingCount: '200',
-        },
         hasCredential: {
           '@type': 'EducationalOccupationalCredential',
           credentialCategory: 'license',
@@ -89,8 +89,7 @@ export function LocalBusinessJsonLd() {
           BUSINESS.ccb,
           BUSINESS.bbb,
           BUSINESS.yelp,
-        ],
-        dateModified: new Date().toISOString(),
+        ].filter(Boolean),
       }}
     />
   );
@@ -98,6 +97,20 @@ export function LocalBusinessJsonLd() {
 
 /** Organization schema — providing global brand authority. */
 export function OrganizationJsonLd() {
+  const hasVerifiedStreetAddress =
+    BUSINESS.address.street.trim().length > 0 &&
+    !/123 Main St/i.test(BUSINESS.address.street);
+  const address = {
+    '@type': 'PostalAddress',
+    ...(hasVerifiedStreetAddress
+      ? { streetAddress: BUSINESS.address.street }
+      : {}),
+    addressLocality: BUSINESS.address.city,
+    addressRegion: BUSINESS.address.state,
+    postalCode: BUSINESS.address.zip,
+    addressCountry: 'US',
+  };
+
   return (
     <JsonLdScript
       data={{
@@ -105,15 +118,8 @@ export function OrganizationJsonLd() {
         '@type': 'Organization',
         name: BUSINESS.name,
         url: BUSINESS.url,
-        logo: `${BUSINESS.url}/logo.png`,
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: BUSINESS.address.street,
-          addressLocality: BUSINESS.address.city,
-          addressRegion: BUSINESS.address.state,
-          postalCode: BUSINESS.address.zip,
-          addressCountry: 'US',
-        },
+        logo: `${BUSINESS.url}/favicon.svg`,
+        address,
         contactPoint: {
           '@type': 'ContactPoint',
           telephone: BUSINESS.phone,
@@ -127,7 +133,7 @@ export function OrganizationJsonLd() {
           BUSINESS.ccb,
           BUSINESS.bbb,
           BUSINESS.yelp,
-        ],
+        ].filter(Boolean),
       }}
     />
   );
@@ -169,7 +175,7 @@ export function ArticleJsonLd({
           name: BUSINESS.name,
           logo: {
             '@type': 'ImageObject',
-            url: `${BUSINESS.url}/logo.png`,
+            url: `${BUSINESS.url}/favicon.svg`,
           },
         },
         mainEntityOfPage: {

@@ -15,18 +15,14 @@ export interface SignatureRequest {
  * Initiates a signature request via PandaDoc (or DocuSign).
  * Returns the document provider ID and the signing URL.
  */
-export async function createSignatureRequest(data: SignatureRequest) {
+export async function createSignatureRequest(_data: SignatureRequest) {
   const provider = process.env.SIGNATURE_PROVIDER || 'pandadoc';
   const apiKey = process.env.SIGNATURE_API_KEY;
 
   if (!apiKey) {
-    console.warn(
-      `[Signature] Missing ${provider.toUpperCase()}_API_KEY. Using mock link.`,
+    throw new Error(
+      `[Signature] Missing SIGNATURE_API_KEY for provider "${provider}".`,
     );
-    return {
-      providerId: `mock-${Date.now()}`,
-      signingUrl: `https://bensonhomesolutions.com/agreements/sign/${data.agreementId}?v=${data.version}`,
-    };
   }
 
   // Real integration logic for PandaDoc/DocuSign would go here

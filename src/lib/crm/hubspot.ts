@@ -5,6 +5,10 @@
  * @see https://developers.hubspot.com/docs/api/crm/contacts
  */
 
+import { readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+
 export interface HubSpotLeadData {
   email: string;
   firstName?: string;
@@ -18,6 +22,17 @@ export interface HubSpotLeadData {
   isServiceArea?: boolean;
 }
 
+function getHubSpotTokenFromCliConfig(): string | null {
+  try {
+    const configPath = join(homedir(), '.hscli', 'config.yml');
+    const config = readFileSync(configPath, 'utf8');
+    const match = config.match(/accessToken:\s*>-\s*\n\s*([A-Za-z0-9._-]+)/m);
+    return match?.[1] || null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Syncs a lead to HubSpot CRM.
  * Implementation uses the Contacts API (Create/Update by email).
@@ -26,10 +41,13 @@ export interface HubSpotLeadData {
  * @returns The HubSpot API response or null on failure
  */
 export async function syncLeadToHubSpot(data: HubSpotLeadData) {
-  const accessToken = process.env.HUBSPOT_ACCESS_TOKEN;
+  const accessToken =
+    process.env.HUBSPOT_ACCESS_TOKEN || getHubSpotTokenFromCliConfig();
 
   if (!accessToken) {
-    console.warn('[CRM:HubSpot] Missing HUBSPOT_ACCESS_TOKEN. Sync skipped.');
+    console.warn(
+      '[CRM:HubSpot] Missing HUBSPOT_ACCESS_TOKEN and no authenticated hs CLI token was found. Sync skipped.',
+    );
     return null;
   }
 

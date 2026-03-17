@@ -1,17 +1,20 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import eslintConfigPrettier from 'eslint-config-prettier';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import nextPlugin from '@next/eslint-plugin-next';
+import reactHooks from 'eslint-plugin-react-hooks';
+import tseslint from 'typescript-eslint';
 
 const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  ...tseslint.configs.recommended,
+  {
+    plugins: {
+      '@next/next': nextPlugin,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
+    },
+  },
+  reactHooks.configs.flat.recommended,
   {
     rules: {
       '@typescript-eslint/no-unused-vars': [
@@ -52,6 +55,7 @@ const eslintConfig = [
       'next-env.d.ts',
       'next-starter/**',
       'website/**',
+      'genai_agents_temp/**',
     ],
   },
   eslintConfigPrettier,

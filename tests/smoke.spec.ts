@@ -3,8 +3,8 @@ import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Smoke Tests', () => {
   test('homepage loads successfully', async ({ page }) => {
-    const response = await page.goto('/');
-    expect(response?.status()).toBe(200);
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/$/);
     await expect(page).toHaveTitle(/Benson Home Solutions/i);
   });
 

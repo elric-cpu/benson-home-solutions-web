@@ -2,6 +2,14 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Contact Page Rebuild', () => {
   test.beforeEach(async ({ page }) => {
+    await page.route('**/api/contact', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ message: 'Message sent successfully' }),
+      });
+    });
+
     await page.goto('/contact');
   });
 
@@ -13,7 +21,9 @@ test.describe('Contact Page Rebuild', () => {
   });
 
   test('should display emergency banner', async ({ page }) => {
-    const banner = page.getByRole('alert');
+    const banner = page
+      .getByRole('alert')
+      .filter({ hasText: /24\/7 EMERGENCY\? CALL/i });
     await expect(banner).toBeVisible();
     await expect(banner).toContainText(/Emergency/i);
     await expect(banner).toContainText(/541/);

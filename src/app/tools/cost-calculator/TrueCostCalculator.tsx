@@ -29,7 +29,9 @@ import {
   Facebook,
   Twitter,
   Linkedin,
+  Map as MapIcon,
 } from 'lucide-react';
+import { InteractiveViewer } from '@/components/iguide/InteractiveViewer';
 
 type Step = 'input' | 'processing' | 'result' | 'captured';
 
@@ -52,6 +54,8 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [addressHash, setAddressHash] = useState<string | null>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [isIGuideLinked, setIsIGuideLinked] = useState(false);
+  const [verifiedSqft, setVerifiedSqft] = useState<number | null>(null);
 
   const PROGRESS_MESSAGES = [
     'Checking property tax records via Census Bureau...',
@@ -64,10 +68,62 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
     const s = suggestion;
     setAddress(s);
 
-    const zipData = MOCK_ZIP_DATA[s.postcode] || DEFAULT_BENCHMARK;
-    setData({ ...zipData, city: s.city || zipData.city });
+    const zipData = { ...(MOCK_ZIP_DATA[s.postcode] || DEFAULT_BENCHMARK) };
+
+    // Apply Harney County Labor Premium (1.6x labor costs due to travel/remoteness)
+    const isHarney =
+      s.county?.toLowerCase().includes('harney') ||
+      zipData.county?.toLowerCase().includes('harney');
+
+    if (isHarney) {
+      zipData.costs = {
+        ...zipData.costs,
+        maintenance: {
+          ...zipData.costs.maintenance,
+          annual: Math.round(zipData.costs.maintenance.annual * 1.6),
+          source: 'Benson Harney-Adjusted Model (2x Labor)',
+        },
+        deferred_maintenance_risk: {
+          ...zipData.costs.deferred_maintenance_risk,
+          annual: Math.round(
+            zipData.costs.deferred_maintenance_risk.annual * 1.6,
+          ),
+          source: 'Benson Harney-Adjusted Model (2x Labor)',
+        },
+      };
+    }
+
+    setData({
+      ...zipData,
+      city: s.city || zipData.city,
+      county: s.county || zipData.county,
+    });
 
     setStep('processing');
+  };
+
+  const linkIGuide = () => {
+    // Simulated iGUIDE link - in production, this would open a modal or fetch based on address
+    const mockVerifiedSqft = 2850;
+    setVerifiedSqft(mockVerifiedSqft);
+    setIsIGuideLinked(true);
+
+    if (data) {
+      const benchmarkSqft = 2000; // Typical benchmark
+      const ratio = mockVerifiedSqft / benchmarkSqft;
+
+      setData({
+        ...data,
+        costs: {
+          ...data.costs,
+          maintenance: {
+            ...data.costs.maintenance,
+            annual: Math.round(data.costs.maintenance.annual * ratio),
+            source: 'Benson Spatial Verified (iGUIDE)',
+          },
+        },
+      });
+    }
   };
 
   const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -116,12 +172,12 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
         setProgressStep((prev) => {
           if (prev >= messagesCount - 1) {
             clearInterval(interval);
-            setTimeout(() => setStep('result'), 1200); // Wait a bit for effect
+            setTimeout(() => setStep('result'), 600); // Shortened from 1200
             return prev;
           }
           return prev + 1;
         });
-      }, 1000);
+      }, 500); // Shortened from 1000
       return () => clearInterval(interval);
     }
   }, [step, PROGRESS_MESSAGES.length]);
@@ -334,6 +390,50 @@ export function TrueCostCalculator({ isEmbed = false }: { isEmbed?: boolean }) {
                     </span>
                   )}
                 </div>
+
+                {/* iGUIDE Integration Point */}
+                {!isEmbed && (
+                  <div className="mb-8">
+                    {!isIGuideLinked ? (
+                      <div className="bg-maroon/5 border-maroon/10 hover:bg-maroon/10 rounded-3xl border-2 p-8 text-center transition-all">
+                        <div className="bg-maroon/10 text-maroon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl">
+                          <MapIcon className="h-8 w-8" />
+                        </div>
+                        <h4 className="text-charcoal mb-2 text-lg font-black uppercase">
+                          Verify with 3D Spatial Data
+                        </h4>
+                        <p className="text-slate/60 mb-6 text-sm font-medium">
+                          Do you have an iGUIDE tour for this property? Link it
+                          now to override benchmarks with mm-accurate
+                          measurements and unlock forensic visual proof.
+                        </p>
+                        <Button
+                          onClick={linkIGuide}
+                          variant="outline"
+                          className="border-maroon text-maroon hover:bg-maroon hover:text-cream border-2 font-black tracking-widest uppercase"
+                        >
+                          Link My iGUIDE View
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        <div className="flex items-center justify-between px-2">
+                          <Badge className="border-emerald-500/20 bg-emerald-500/10 px-4 py-1.5 font-black text-emerald-700 uppercase">
+                            Spatial Data Linked: {verifiedSqft} SQFT Verified
+                          </Badge>
+                          <span className="text-slate/40 text-[10px] font-black tracking-widest uppercase">
+                            Source: RESO-Compliant iGUIDE Scan
+                          </span>
+                        </div>
+                        <InteractiveViewer
+                          viewId="test-property-123"
+                          propertyName={address?.formatted}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div className="space-y-4">
                   {Object.entries(data?.costs || {}).map(([key, detail]) => {
                     const confidenceColors = {

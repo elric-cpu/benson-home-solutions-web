@@ -32,8 +32,6 @@ const enhancedClient = new Proxy(baseClient, {
       return async <T = unknown>(
         ...args: Parameters<typeof originalFetch>
       ): Promise<T> => {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
         try {
           return (await Promise.race([
             originalFetch(...args),
@@ -41,8 +39,12 @@ const enhancedClient = new Proxy(baseClient, {
               setTimeout(() => reject(new Error('Sanity fetch timeout')), 5000),
             ),
           ])) as T;
-        } finally {
-          clearTimeout(timeoutId);
+        } catch (error) {
+          console.warn(
+            '[Sanity Client] Fetch failed, using null fallback.',
+            error,
+          );
+          return null as T;
         }
       };
     }

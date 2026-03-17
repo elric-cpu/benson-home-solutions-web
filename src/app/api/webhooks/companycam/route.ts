@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { validateForensicPhoto, syncForensicPhoto } from '@/lib/services/forensic-docs';
+import {
+  validateForensicPhoto,
+  syncForensicPhoto,
+} from '@/lib/services/forensic-docs';
 
 /**
  * CompanyCam Webhook Handler (2026 Senior Principal Standard)
@@ -35,7 +38,7 @@ export async function POST(req: NextRequest) {
       await syncForensicPhoto(payload.project_id, verifiedPhoto);
     } catch (error) {
       console.error('Forensic Validation Failure:', error);
-      // We still return 200 to CompanyCam to acknowledge receipt, 
+      // We still return 200 to CompanyCam to acknowledge receipt,
       // but we log the forensic failure for internal audit.
     }
   }

@@ -1,4 +1,4 @@
-export { Button, type ButtonProps } from './Button';
+export { Button, buttonClassName, type ButtonProps } from './Button';
 export {
   Card,
   CardHeader,
@@ -13,5 +13,6 @@ export { RichHero } from './RichHero';
 export { ResourcesSection, type Resource } from './ResourcesSection';
 export { Input, Textarea, Label, Select } from './Form';
 export { AddressAutocomplete } from './AddressAutocomplete';
+export { AIChat } from './AIChat';
 export { GuidedChat } from './GuidedChat';
 export * from './TrustBar';

@@ -29,6 +29,24 @@ export const MARCH_2026_ANCHORS = {
       luxury: 3.2,
     },
   },
+  HOME_THEATER: {
+    base_per_sqft: 145,
+    grades: {
+      economy: 1.0,
+      standard: 1.6,
+      premium: 2.8,
+      luxury: 4.5,
+    },
+  },
+  OUTDOOR_LIVING: {
+    base_per_sqft: 95,
+    grades: {
+      economy: 1.0,
+      standard: 1.4,
+      premium: 2.2,
+      luxury: 3.5,
+    },
+  },
   APPLIANCE_INSTALL: {
     dishwasher: 175,
     range: 150,
@@ -42,7 +60,7 @@ export const MARCH_2026_ANCHORS = {
  * Calculates a high-fidelity ballpark estimate.
  */
 export function calculateRemodelEstimate(
-  type: 'KITCHEN' | 'BATH',
+  type: 'KITCHEN' | 'BATH' | 'HOME_THEATER' | 'OUTDOOR_LIVING',
   vars: EstimatingVariables,
 ): { low: number; high: number; formula: string } {
   const anchor = MARCH_2026_ANCHORS[type];

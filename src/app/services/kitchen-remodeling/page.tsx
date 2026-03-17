@@ -146,23 +146,37 @@ export default function KitchenRemodelingPage() {
         </Container>
       </Section>
 
-      {/* Before/After Placeholder */}
+      {/* Before/After Gallery */}
       <Section spacing="lg" variant="cream">
         <Container size="narrow">
           <div className="text-center">
             <h2 className="text-charcoal text-3xl font-bold md:text-4xl">
-              Before & After Transformations
+              Kitchen Before & After
             </h2>
             <p className="text-slate mt-4 text-lg">
-              (Placeholder for a dynamic image gallery showcasing past kitchen
-              remodeling projects. Images will be pulled from Sanity CMS.)
+              Transforming outdated spaces into forensic-grade, high-fidelity
+              living environments.
             </p>
             <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="flex h-64 items-center justify-center rounded-lg bg-gray-200 text-gray-500">
-                Before Image Placeholder
+              <div className="bg-charcoal/5 border-slate/20 relative flex h-64 items-center justify-center overflow-hidden rounded-2xl border border-dashed">
+                <div className="text-center">
+                  <span className="text-oxblood block text-sm font-black tracking-widest uppercase opacity-40">
+                    Before
+                  </span>
+                  <p className="text-slate mt-2 text-xs italic opacity-50">
+                    Outdated Finishes • Moisture Risk
+                  </p>
+                </div>
               </div>
-              <div className="flex h-64 items-center justify-center rounded-lg bg-gray-200 text-gray-500">
-                After Image Placeholder
+              <div className="bg-oxblood/5 border-oxblood/20 relative flex h-64 items-center justify-center overflow-hidden rounded-2xl border border-dashed">
+                <div className="text-center">
+                  <span className="text-oxblood block text-sm font-black tracking-widest uppercase">
+                    After
+                  </span>
+                  <p className="text-slate mt-2 text-xs italic opacity-50">
+                    High-Fidelity Finish • Forensic Seal
+                  </p>
+                </div>
               </div>
             </div>
           </div>

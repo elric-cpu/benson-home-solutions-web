@@ -26,9 +26,9 @@ test.describe('Kitchen Remodeling Page', () => {
     await expect(consultationButton).toBeVisible();
     await expect(consultationButton).toHaveAttribute('href', '/contact');
 
-    // Expect the "Before & After Transformations" section to be visible
+    // Expect the "Before & After" section to be visible
     await expect(
-      page.getByRole('heading', { name: 'Before & After Transformations' }),
+      page.getByRole('heading', { name: 'Kitchen Before & After' }),
     ).toBeVisible();
 
     // Expect the "Frequently Asked Questions" section to be visible

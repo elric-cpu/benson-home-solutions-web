@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
-import { GuidedChat } from '@/components/ui';
+import { AIChat } from '@/components/ui';
 import { GoogleAnalytics } from '@/components/analytics/DeferredAnalytics';
 
 export function DeferredComponents() {
@@ -12,7 +12,7 @@ export function DeferredComponents() {
   return (
     <>
       <Suspense fallback={null}>
-        <GuidedChat
+        <AIChat
           key={isEmergencyPage ? 'emergency' : 'start'}
           autoOpen={isEmergencyPage}
           initialNode={isEmergencyPage ? 'emergency' : 'start'}

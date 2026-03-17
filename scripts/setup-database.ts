@@ -60,7 +60,10 @@ async function setupDatabase() {
         notion_page_id varchar(255),
         created_at timestamp with time zone DEFAULT now() NOT NULL,
         updated_at timestamp with time zone DEFAULT now() NOT NULL,
-        enriched_at timestamp with time zone
+        enriched_at timestamp with time zone,
+        service_area_match boolean DEFAULT false,
+        year_built integer,
+        sqft integer
       );
     `;
 
@@ -98,6 +101,7 @@ async function setupDatabase() {
         signed_at timestamp with time zone,
         signed_by_client text,
         signed_by_benson text,
+        version_hash text,
         created_at timestamp with time zone DEFAULT now() NOT NULL
       );
     `;

@@ -3,6 +3,7 @@ export interface ZipData {
   state: string;
   zip: string;
   county: string;
+  median_year_built: number;
   costs: {
     property_tax: {
       annual: number;
@@ -47,6 +48,7 @@ export const DEFAULT_BENCHMARK: ZipData = {
   state: 'OR',
   zip: '00000',
   county: 'Unknown',
+  median_year_built: 1978,
   costs: {
     property_tax: { annual: 3500, confidence: 'medium', source: 'Census ACS' },
     insurance: { annual: 1200, confidence: 'medium', source: 'NAIC' },
@@ -72,6 +74,7 @@ export const MOCK_ZIP_DATA: Record<string, ZipData> = {
     state: 'OR',
     zip: '97321',
     county: 'Linn',
+    median_year_built: 1965,
     costs: {
       property_tax: {
         annual: 3100,
@@ -93,6 +96,70 @@ export const MOCK_ZIP_DATA: Record<string, ZipData> = {
       },
       appliance_reserve: {
         annual: 750,
+        confidence: 'medium',
+        source: 'Market Rates',
+      },
+    },
+  },
+  '97720': {
+    city: 'Burns',
+    state: 'OR',
+    zip: '97720',
+    county: 'Harney',
+    median_year_built: 1968,
+    costs: {
+      property_tax: {
+        annual: 2400,
+        confidence: 'high',
+        source: 'Harney County Assessor',
+      },
+      insurance: { annual: 1100, confidence: 'high', source: 'Local Agent' },
+      maintenance: {
+        annual: 7200, // 4500 * 1.6
+        confidence: 'high',
+        source: 'Benson Harney-Adjusted Model (2x Labor)',
+      },
+      energy: { annual: 2800, confidence: 'high', source: 'OTECC' },
+      utilities: { annual: 1400, confidence: 'high', source: 'City of Burns' },
+      deferred_maintenance_risk: {
+        annual: 4800, // 3000 * 1.6
+        confidence: 'medium',
+        source: 'Benson Harney-Adjusted Model (2x Labor)',
+      },
+      appliance_reserve: {
+        annual: 900,
+        confidence: 'medium',
+        source: 'Market Rates',
+      },
+    },
+  },
+  '97758': {
+    city: 'Riley',
+    state: 'OR',
+    zip: '97758',
+    county: 'Harney',
+    median_year_built: 1955,
+    costs: {
+      property_tax: {
+        annual: 1800,
+        confidence: 'medium',
+        source: 'Harney County Assessor',
+      },
+      insurance: { annual: 1300, confidence: 'medium', source: 'Local Agent' },
+      maintenance: {
+        annual: 7200,
+        confidence: 'high',
+        source: 'Benson Harney-Adjusted Model (2x Labor)',
+      },
+      energy: { annual: 3200, confidence: 'medium', source: 'OTECC' },
+      utilities: { annual: 1200, confidence: 'low', source: 'Regional Avg' },
+      deferred_maintenance_risk: {
+        annual: 5500,
+        confidence: 'medium',
+        source: 'Benson Harney-Adjusted Model (2x Labor)',
+      },
+      appliance_reserve: {
+        annual: 1000,
         confidence: 'medium',
         source: 'Market Rates',
       },
