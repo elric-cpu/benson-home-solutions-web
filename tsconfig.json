@@ -43,6 +43,8 @@
     "scripts",
     "tests",
     "next-starter",
-    "website"
+    "website",
+    "benson-genkit-backend",
+    "genai_agents_temp"
   ]
 }
