@@ -8,7 +8,7 @@ export const getSearchPerformance = ai.defineTool(
   {
     name: "getSearchPerformance",
     description: "Fetches search queries, impressions, and CTR from Google Search Console for a specific site.",
-    schema: z.object({
+    inputSchema: z.object({
       siteUrl: z.string().describe("The URL of the property in GSC (e.g., https://example.com/)"),
       days: z.number().default(30).describe("Number of days of data to look back"),
     }),

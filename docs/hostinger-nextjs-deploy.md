@@ -75,25 +75,20 @@ The repo's build validation currently requires:
 
 Optional but currently referenced by app code:
 
-- `OPENROUTER_API_KEY`
-- `GEOAPIFY_API_KEY`
-- `NEXT_PUBLIC_GEOAPIFY_API_KEY`
+- `GOOGLE_GENAI_API_KEY`
+- `GOOGLE_MAPS_API_KEY`
+- `GCS_BUCKET_NAME`
+
+Optional but currently referenced by app code:
+
 - `NEXT_PUBLIC_SENTRY_DSN`
 - `GA4_API_SECRET`
 - `GA4_MEASUREMENT_ID`
 - `NOTION_API_KEY`
 - `NOTION_DB_*`
 - `HUD_API_TOKEN`
-- `COMPANYCAM_WEBHOOK_TOKEN`
 - `BHS_WEBHOOK_SECRET`
-- `NOTION_WEBHOOK_SECRET`
-- `SUPABASE_WEBHOOK_SECRET`
 - `ADMIN_SECRET`
-- `GUMLOOP_*`
-- `SIGNATURE_PROVIDER`
-- `SIGNATURE_API_KEY`
-- `IGUIDE_*`
-- `METABASE_*`
 
 Use [`.env.hostinger.example`](/home/elricenson/website_builds/benson-home-solutions-web/.env.hostinger.example) as the transfer checklist.
 

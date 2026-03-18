@@ -12,33 +12,24 @@ const CORE_RUNTIME_VARS = [
   'NEXT_PUBLIC_SANITY_DATASET',
   'SANITY_API_TOKEN',
   'DATABASE_URL',
-  'PINECONE_API_KEY',
-  'PINECONE_INDEX',
-  'RESEND_API_KEY',
+  'GOOGLE_GENAI_API_KEY',
+  'GOOGLE_MAPS_API_KEY',
+  'GCS_BUCKET_NAME',
 ];
 
 const OPTIONAL_VARS = [
   {
-    name: 'OPENROUTER_API_KEY',
-    reason: 'AI recommendation routes will be unavailable without it.',
-  },
-  {
-    name: 'GEOAPIFY_API_KEY',
-    reason: 'Server geocoding will fall back to Census when it is missing.',
-  },
-  {
-    name: 'NEXT_PUBLIC_GEOAPIFY_API_KEY',
-    reason:
-      'Client address autocomplete will fall back to OpenStreetMap/Census.',
-  },
-  {
     name: 'NEXT_PUBLIC_SENTRY_DSN',
     reason: 'Sentry monitoring stays disabled until a real DSN is configured.',
+  },
+  {
+    name: 'RESEND_API_KEY',
+    reason: 'Transactional emails will be disabled.',
   },
 ];
 
 function validate() {
-  console.log('🔍 Validating environment configuration...');
+  console.log('🔍 Validating environment configuration (Gcloud Native)...');
   const missingCore = [];
   const optionalMissing = [];
   const shouldFail =

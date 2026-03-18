@@ -1,31 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { propertyAuditFlow } from '@/lib/genkit';
 
-export const runtime = 'nodejs';
-
 /**
- * POST /api/ai/audit
- * Triggers Genkit's propertyAuditFlow to generate a health scorecard.
+ * Benson Home Solutions - Property Health Audit API
  */
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const { description } = await req.json();
+    const { description } = await request.json();
+    if (!description) return NextResponse.json({ error: 'Description required' }, { status: 400 });
 
-    if (!description) {
-      return NextResponse.json(
-        { error: 'Property description is required' },
-        { status: 400 },
-      );
-    }
-
-    const result = await propertyAuditFlow.run(description);
-
+    const result = await propertyAuditFlow(description);
     return NextResponse.json(result);
-  } catch (error) {
-    console.error('Property Audit Error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate property audit' },
-      { status: 500 },
-    );
+  } catch (error: any) {
+    console.error('[Audit API] Error:', error);
+    return NextResponse.json({ error: 'Audit failed' }, { status: 500 });
   }
 }

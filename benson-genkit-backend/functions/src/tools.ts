@@ -8,7 +8,7 @@ export const getPricingTool = ai.defineTool(
   {
     name: "getServicePricing",
     description: "Looks up estimated pricing for Benson Home Solutions services.",
-    schema: z.object({
+    inputSchema: z.object({
       serviceType: z.string().describe("The service type (e.g., kitchen, bathroom, roofing)"),
     }),
   },
@@ -34,7 +34,7 @@ export const checkServiceAreaTool = ai.defineTool(
   {
     name: "checkServiceArea",
     description: "Checks if a specific zip code or city is within Benson Home Solutions' service area.",
-    schema: z.object({
+    inputSchema: z.object({
       location: z.string().describe("The city or zip code to check"),
     }),
   },
