@@ -1,16 +1,19 @@
 import { genkit, z } from "genkit";
 import { gemini15Flash } from "@genkit-ai/googleai";
+import { onFlow, noAuth } from "@genkit-ai/firebase/functions";
 import { getPricingTool, checkServiceAreaTool } from "../tools";
 
 const ai = genkit({});
 
-export const supportFlow = ai.defineFlow(
+export const supportFlow = onFlow(
+  ai,
   {
     name: "supportAgent",
     inputSchema: z.string(),
     outputSchema: z.string(),
+    authPolicy: noAuth(),
   },
-  async (query: string) => {
+  async (query) => {
     const response = await ai.generate({
       model: gemini15Flash,
       prompt: `You are a helpful customer support agent for Benson Home Solutions. 

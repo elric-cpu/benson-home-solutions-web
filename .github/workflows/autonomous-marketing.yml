@@ -1,0 +1,57 @@
+name: Autonomous Marketing & Website Maintenance
+
+on:
+  schedule:
+    # Run at 2:00 AM every Monday and Thursday
+    - cron: '0 2 * * 1,4'
+  workflow_dispatch:
+    inputs:
+      goal:
+        description: 'Goal for the ideation run'
+        required: true
+        default: 'Generate fresh high-converting ideas for this month'
+
+jobs:
+  run-autonomous-marketing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: ./benson-genkit-backend/functions
+
+      - name: Run Marketing Ideation Flow
+        run: |
+          npx genkit flow:run departmentIdeationFlow '{"department": "marketing", "goal": "${{ github.event.inputs.goal || 'Generate seasonal marketing campaigns' }}"}'
+        working-directory: ./benson-genkit-backend/functions
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Run Branding Ideation Flow
+        run: |
+          npx genkit flow:run departmentIdeationFlow '{"department": "branding", "goal": "${{ github.event.inputs.goal || 'Enhance local brand presence' }}"}'
+        working-directory: ./benson-genkit-backend/functions
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Run Lead Gen Ideation Flow
+        run: |
+          npx genkit flow:run departmentIdeationFlow '{"department": "leadGen", "goal": "${{ github.event.inputs.goal || 'Optimize conversion funnels' }}"}'
+        working-directory: ./benson-genkit-backend/functions
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Run Website Maintenance Flow
+        run: |
+          npx genkit flow:run websiteMaintenanceFlow
+        working-directory: ./benson-genkit-backend/functions
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

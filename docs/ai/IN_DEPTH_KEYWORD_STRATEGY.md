@@ -84,7 +84,7 @@ Create a dedicated `/faq` page and inject FAQ Schema across all service pages.
 
 ### C. Local Authority Signals (Citations)
 Ensure the name, address, and phone number (NAP) are exactly identical across the website, Google Business Profile, and local directories (Yelp, Houzz).
-*   **Primary NAP:** 183 S. Harney Ave, Burns, OR 97720 | 541-321-5115 (or designated local numbers).
+*   **Primary NAP:** 183 S. Harney Ave, Burns, OR 97720 | (541) 321-5115 (or designated local numbers).
 
 ---
 

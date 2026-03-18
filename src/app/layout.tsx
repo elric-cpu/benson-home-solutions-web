@@ -1,98 +1,48 @@
-import type { Metadata, Viewport } from 'next';
-import { Suspense } from 'react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/next';
-import { sourceSans3 } from '@/lib/fonts';
-import { Header, Footer, MobileActionBar } from '@/components/layout';
-import { DeferredComponents } from '@/components/layout/DeferredComponents';
-import { OrganizationJsonLd } from '@/components/seo/json-ld';
-import { ChatBubble } from '@/components/chatbot/ChatBubble';
+import type { Metadata } from 'next';
 import './globals.css';
+import { AIChat } from '@/components/AIChat';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://bensonhomesolutions.com'),
-  title: {
-    default: 'Oregon Contractor CCB #258533 | Benson Home Solutions',
-    template: '%s | Benson Home Solutions',
-  },
-  description:
-    'Licensed Oregon General Contractor (CCB #258533) specializing in property maintenance subscriptions, emergency water damage restoration, and commercial facility management in the Mid-Willamette Valley.',
-  keywords: [
-    'Oregon General Contractor',
-    'Property Maintenance Subscriptions',
-    'Water Damage Restoration Albany OR',
-    'Emergency Mitigation Services',
-    'Commercial Facility Management',
-    'Benson Home Solutions',
-  ],
-  authors: [
-    { name: 'Benson Home Solutions', url: 'https://bensonhomesolutions.com' },
-  ],
-  creator: 'Benson Home Solutions',
-  publisher: 'Benson Home Solutions',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    siteName: 'Benson Home Solutions',
-    title: 'Oregon Contractor CCB #258533 | Benson Home Solutions',
-    description:
-      'Licensed Oregon General Contractor specializing in maintenance subscriptions and emergency restoration.',
-    url: 'https://bensonhomesolutions.com',
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  icons: {
-    icon: '/favicon.svg',
-  },
-  alternates: {
-    canonical: '/',
-  },
+  title: 'Benson Home Solutions | Maintenance-First General Contractor',
+  description: 'Oregon CCB #258533. Specialized home maintenance and restoration for the Mid-Willamette Valley and Harney County.',
 };
 
-export const viewport: Viewport = {
-  themeColor: '#4C0C14',
-  width: 'device-width',
-  initialScale: 1,
-};
-
+/**
+ * Root Layout - Rebuild V1 (2026)
+ * Strict maintainability: Keep under 450 lines.
+ */
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className={sourceSans3.variable}>
-      <body className="flex min-h-screen flex-col antialiased">
-        <OrganizationJsonLd />
-        <a href="#main-content" className="skip-nav">
-          Skip to main content
-        </a>
-        <Header />
-        <main id="main-content" className="flex-1">
-          {children}
-        </main>
-        <Footer />
-        <Suspense fallback={null}>
-          <MobileActionBar />
-        </Suspense>
-        <DeferredComponents />
-        <ChatBubble />
-        <SpeedInsights />
-        <Analytics />
+    <html lang="en">
+      <body className="bg-cream text-maroon font-calibri antialiased">
+        <header className="border-b border-maroon/10 py-4 bg-white/50 backdrop-blur-md sticky top-0 z-40">
+          <div className="container mx-auto px-4 flex justify-between items-center">
+            <h1 className="text-2xl font-bold tracking-tight">Benson Home Solutions</h1>
+            <nav>
+              <ul className="flex space-x-6 font-bold uppercase text-xs tracking-widest">
+                <li><a href="/" className="hover:text-maroon/70">Home</a></li>
+                <li><a href="/calculator" className="hover:text-maroon/70">Calculator</a></li>
+                <li><a href="/maintenance" className="hover:text-maroon/70">Plans</a></li>
+              </ul>
+            </nav>
+          </div>
+        </header>
+        <main min-h-screen>{children}</main>
+        <footer className="bg-maroon text-cream py-12 mt-24">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-2xl font-bold mb-4">Benson Home Solutions</h2>
+            <p className="opacity-80">Oregon CCB #258533</p>
+            <div className="mt-8 text-sm space-y-2 opacity-60 font-medium">
+              <p>Mid-Willamette Valley: Albany, Lebanon, Sweet Home, Corvallis</p>
+              <p>Harney County: Burns, Riley, Drewsey, Hines</p>
+            </div>
+          </div>
+        </footer>
+        <AIChat />
       </body>
     </html>
   );

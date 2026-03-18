@@ -1,3 +1,0 @@
-[submodule ".gemini/skills/google-genai-skills"]
-	path = .gemini/skills/google-genai-skills
-	url = https://github.com/cnemri/google-genai-skills.git

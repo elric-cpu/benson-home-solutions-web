@@ -1,94 +1,46 @@
-import { forwardRef, type ButtonHTMLAttributes } from 'react';
+import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?:
-    | 'primary'
-    | 'secondary'
-    | 'outline'
-    | 'ghost'
-    | 'emergency'
-    | 'link';
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'icon';
   loading?: boolean;
 }
 
-export function buttonClassName({
-  variant = 'primary',
-  size = 'md',
-  className,
-}: Pick<ButtonProps, 'variant' | 'size' | 'className'>) {
-  return cn(
-    'focus-visible:ring-oxblood/50 inline-flex items-center justify-center rounded-lg font-semibold transition-all focus-visible:ring-2 focus-visible:outline-none active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
-    {
-      'bg-oxblood text-cream hover:bg-oxblood/90 shadow-sm':
-        variant === 'primary',
-      'bg-cream text-oxblood border-oxblood/20 hover:bg-oxblood/5 border':
-        variant === 'secondary',
-      'border-oxblood text-oxblood hover:bg-oxblood hover:text-cream border-2 bg-transparent':
-        variant === 'outline',
-      'text-oxblood hover:bg-oxblood/10': variant === 'ghost',
-      'bg-red-700 text-white shadow-md shadow-red-900/20 hover:bg-red-800':
-        variant === 'emergency',
-      'text-oxblood h-auto p-0 underline-offset-4 hover:underline':
-        variant === 'link',
-    },
-    {
-      'h-8 px-3 text-sm': size === 'sm',
-      'h-10 px-5 text-base': size === 'md',
-      'h-12 px-8 text-lg': size === 'lg',
-      'h-14 px-10 text-xl': size === 'xl',
-      'h-10 w-10 p-0': size === 'icon',
-    },
-    className,
-  );
-}
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = 'primary', size = 'md', loading, children, disabled, ...props }, ref) => {
+    const variants = {
+      primary: 'bg-maroon text-cream hover:bg-maroon/90 shadow-lg shadow-maroon/20',
+      secondary: 'bg-cream text-maroon hover:bg-cream/90 border border-maroon/10',
+      outline: 'border-2 border-maroon text-maroon hover:bg-maroon hover:text-cream',
+      ghost: 'text-maroon hover:bg-maroon/5',
+      danger: 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-600/20',
+    };
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant = 'primary',
-      size = 'md',
-      loading,
-      children,
-      ...props
-    },
-    ref,
-  ) => {
+    const sizes = {
+      sm: 'px-3 py-1.5 text-xs',
+      md: 'px-6 py-3 text-sm',
+      lg: 'px-8 py-4 text-base',
+      xl: 'px-10 py-5 text-lg',
+      icon: 'p-2',
+    };
+
     return (
       <button
         ref={ref}
-        disabled={loading || props.disabled}
-        className={buttonClassName({ variant, size, className })}
+        disabled={disabled || loading}
+        className={cn(
+          'inline-flex items-center justify-center rounded-2xl font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none',
+          variants[variant],
+          sizes[size],
+          className
+        )}
         {...props}
       >
-        {loading && (
-          <svg
-            className="mr-3 -ml-1 h-5 w-5 animate-spin text-current"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-        )}
-        {children}
+        {loading ? <span className="animate-pulse">Analyzing...</span> : children}
       </button>
     );
-  },
+  }
 );
 Button.displayName = 'Button';
 
