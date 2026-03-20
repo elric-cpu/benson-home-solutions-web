@@ -23,6 +23,7 @@ export async function getSearchConsoleClient() {
   const authClient = await getAuthClient();
   return google.webmasters({
     version: 'v3',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     auth: authClient as any,
   });
 }

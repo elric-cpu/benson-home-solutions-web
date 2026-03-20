@@ -19,10 +19,10 @@ export const logger = winston.createLogger({
   ],
 });
 
-export const logError = (error: Error, metadata?: any) => {
+export const logError = (error: Error, metadata?: Record<string, unknown>) => {
   logger.error(error.message, { ...metadata, stack: error.stack });
 };
 
-export const logInfo = (message: string, metadata?: any) => {
+export const logInfo = (message: string, metadata?: Record<string, unknown>) => {
   logger.info(message, metadata);
 };

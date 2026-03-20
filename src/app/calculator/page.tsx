@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 import { Calculator, MapPin, Loader2, AlertCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export default function CalculatorPage() {
   const [address, setAddress] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [result, setResult] = useState<{ total: number; breakdown: any } | null>(null);
+  const [result, setResult] = useState<{ total: number; breakdown: Record<string, number> } | null>(null);
 
   const handleCalculate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +66,7 @@ export default function CalculatorPage() {
             </div>
             
             <div className="grid gap-4">
-              {Object.entries(result.breakdown).map(([key, val]: [string, any]) => (
+              {Object.entries(result.breakdown).map(([key, val]: [string, number]) => (
                 <div key={key} className="flex justify-between items-center p-4 bg-cream/20 rounded-xl border border-maroon/5">
                   <span className="font-black uppercase text-sm tracking-tight">{key}</span>
                   <span className="font-bold text-lg">${val.toLocaleString()}</span>

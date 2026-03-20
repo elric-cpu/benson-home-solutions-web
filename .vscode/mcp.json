@@ -4,5 +4,14 @@
       "url": "https://mcp.sentry.dev/mcp/benson-home-solutions/javascript-nextjs",
       "type": "http"
     }
+  },
+  "mcpServers": {
+    "vercel": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://mcp-vercel.vercel.app"
+      ]
+    }
   }
 }
