@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import './globals.css';
 import { AIChat } from '@/components/AIChat';
 
@@ -24,9 +25,9 @@ export default function RootLayout({
             <h1 className="text-2xl font-bold tracking-tight">Benson Home Solutions</h1>
             <nav>
               <ul className="flex space-x-6 font-bold uppercase text-xs tracking-widest">
-                <li><a href="/" className="hover:text-maroon/70">Home</a></li>
-                <li><a href="/calculator" className="hover:text-maroon/70">Calculator</a></li>
-                <li><a href="/maintenance" className="hover:text-maroon/70">Plans</a></li>
+                <li><Link href="/" className="hover:text-maroon/70">Home</Link></li>
+                <li><Link href="/calculator" className="hover:text-maroon/70">Calculator</Link></li>
+                <li><Link href="/maintenance" className="hover:text-maroon/70">Plans</Link></li>
               </ul>
             </nav>
           </div>

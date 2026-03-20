@@ -51,7 +51,7 @@ export function AIChat() {
           return next;
         });
       }
-    } catch (err) {
+    } catch {
       setMessages(prev => [...prev, { role: 'model', content: 'Gus is temporarily offline. Call 541-555-0199.' }]);
     } finally {
       setIsLoading(false);

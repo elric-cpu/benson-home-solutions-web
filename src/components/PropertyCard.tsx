@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Shield, AlertTriangle, CheckCircle, Loader2 } from 'lucide-react';
+import { Shield, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
 import { Button } from './ui/Button';
 
@@ -12,6 +12,7 @@ interface PropertyCardProps {
 
 export function PropertyCard({ address, initialDescription = '' }: PropertyCardProps) {
   const [description, setDescription] = useState(initialDescription);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [audit, setAudit] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +26,7 @@ export function PropertyCard({ address, initialDescription = '' }: PropertyCardP
       });
       const data = await res.json();
       setAudit(data);
-    } catch (err) {
+    } catch {
       console.error('Audit failed');
     } finally {
       setLoading(false);

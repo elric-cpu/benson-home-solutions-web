@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     const result = await propertyAuditFlow(description);
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[Audit API] Error:', error);
     return NextResponse.json({ error: 'Audit failed' }, { status: 500 });
   }

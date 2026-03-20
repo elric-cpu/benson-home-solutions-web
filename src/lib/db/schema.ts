@@ -4,9 +4,7 @@ import {
   timestamp,
   uuid,
   varchar,
-  integer,
   numeric,
-  boolean,
   jsonb,
 } from 'drizzle-orm/pg-core';
 
@@ -62,7 +60,21 @@ export const serviceLogs = pgTable('service_logs', {
   completedAt: timestamp('completed_at', { withTimezone: true }).defaultNow(),
 });
 
+export const marketingAssets = pgTable('marketing_assets', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  topic: varchar('topic', { length: 255 }).notNull(),
+  assetType: varchar('asset_type', { length: 50 }).notNull(),
+  contentDraft: text('content_draft'),
+  seoStrategy: jsonb('seo_strategy'),
+  multimediaAssets: jsonb('multimedia_assets'),
+  outreachCampaign: jsonb('outreach_campaign'),
+  developerCode: text('developer_code'),
+  status: varchar('status', { length: 50 }).default('draft'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+});
+
 export type Lead = typeof leads.$inferSelect;
 export type Property = typeof properties.$inferSelect;
 export type MaintenancePlan = typeof maintenancePlans.$inferSelect;
 export type ServiceLog = typeof serviceLogs.$inferSelect;
+export type MarketingAsset = typeof marketingAssets.$inferSelect;
