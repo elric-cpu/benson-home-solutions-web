@@ -1,6 +1,16 @@
 {
   "version": 1,
   "skills": {
+    "ab-test-setup": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "9c96cb82a1d348a3ceee6fb8d61e876bc02a452fce14d3b746f1419accbf3ad8"
+    },
+    "ad-creative": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "5d8f869c7e683e4d4fc7aa7a2b0d370b0ad54a81d9cffb48736ffc47759b3f4d"
+    },
     "ai-seo": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
@@ -10,6 +20,11 @@
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "computedHash": "1ad3893d31e5df78cb4b4e16801f49acbdf82daed5f775748859ca7dc638d6d0"
+    },
+    "async-pr-review": {
+      "source": "google-gemini/gemini-cli",
+      "sourceType": "github",
+      "computedHash": "dcc615c935adf7e8d9f7e6639dad245219f7bb60197d7e6fd691c863a6c91996"
     },
     "audit-website": {
       "source": "squirrelscan/skills",
@@ -21,20 +36,70 @@
       "sourceType": "github",
       "computedHash": "efddfd0efbd0e7b5075c5a66ff91a706ac506c88c7b5ddd7fd45a351cb3fe3af"
     },
+    "churn-prevention": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "ce389baf7e32cc942143503ecba7068784ca2c790460824c1e5a306d83d1283f"
+    },
+    "code-reviewer": {
+      "source": "google-gemini/gemini-cli",
+      "sourceType": "github",
+      "computedHash": "270f0dd1d4c15a798bad5253a309cdc2056fe5322f99ba06ca22ce50581adc02"
+    },
+    "cold-email": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "6b2c73ca8ee9f2104958476078f50f92ac61ab1b63880762b52816c968a6fea6"
+    },
     "competitor-alternatives": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "computedHash": "bbaf0d378114c7f1581ec63218c9061da983afc1e30887af69ba6ce7ce9cd4c1"
+    },
+    "content-strategy": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "be124f3733b037fb8d859f275454ecd1c590759ef9ab184bea35ba1a0a38e14c"
+    },
+    "copy-editing": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "3c6241215420e69b36814270a47413b2de9593b5516f5942b7481092f6c63382"
     },
     "copywriting": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "computedHash": "2e83eda2221e97166172a0798e9b0379e34080595e107e2fc0cf580e9b3bbf7b"
     },
+    "developing-genkit-dart": {
+      "source": "genkit-ai/skills",
+      "sourceType": "github",
+      "computedHash": "efb996c6300472acebd7a0f0934d7bd3984600a48f821e19ad82fd6d11f7fe9f"
+    },
+    "developing-genkit-js": {
+      "source": "genkit-ai/skills",
+      "sourceType": "github",
+      "computedHash": "3e09c0258b269a48146071a23d46ce3e19e3d2004c645d13e64e45aa5b867a92"
+    },
+    "docs-changelog": {
+      "source": "google-gemini/gemini-cli",
+      "sourceType": "github",
+      "computedHash": "65f5a4ac203d3a1e0c565783c24cda1a0c55f2735f39f4d5e0ea66fb52e55fad"
+    },
+    "docs-writer": {
+      "source": "google-gemini/gemini-cli",
+      "sourceType": "github",
+      "computedHash": "6425e83122b85649bbc5dcdc3c21260b5d7b9fcc81f7330a42de9eccf8c24df8"
+    },
     "elevenlabs-tts": {
       "source": "inferen-sh/skills",
       "sourceType": "github",
       "computedHash": "d4f43c5fa865590bf0b8f70994b1901022ce21cba1f45ff373bf60ed96a5433c"
+    },
+    "email-sequence": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "2b313030c852960ea6dbc2d39484fbe32bc9ab231ddfd458baafacf19c5f9c25"
     },
     "executing-plans": {
       "source": "obra/superpowers",
@@ -51,6 +116,36 @@
       "sourceType": "github",
       "computedHash": "de49a0fd426d4710fc05b2759244588c6f5b5014d9cd9331a0d54dc655f023bc"
     },
+    "gemini-api-dev": {
+      "source": "google-gemini/gemini-skill",
+      "sourceType": "github",
+      "computedHash": "a1bc395530ba9116a4509e27321eaf7cc81c5f93aa80a4778ad6f915180b4f2c"
+    },
+    "gemini-interactions-api": {
+      "source": "google-gemini/gemini-skill",
+      "sourceType": "github",
+      "computedHash": "f0d51f45c0075be383a0891d239865223cab6cad63d88fde8f859e70c161ed34"
+    },
+    "gemini-live-api-dev": {
+      "source": "google-gemini/gemini-skill",
+      "sourceType": "github",
+      "computedHash": "cf4ef3b9c9a331f0507357d78fb570b4bdee3010dfd2fb40b3ee3b25269fd3c1"
+    },
+    "github-issue-creator": {
+      "source": "google-gemini/gemini-cli",
+      "sourceType": "github",
+      "computedHash": "2a068668fe2779ff0eda899f7c3bab9b97070c9abaac7a222557042deac32c7e"
+    },
+    "launch-strategy": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "5d74a25820c4f36d58dd90bafa2f3bfe0350806b699d6a16d2afad53ec7a02fe"
+    },
+    "lead-magnets": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "b71ffc7be2d96e4887ccedf457d02c395f78e68723dab59bd8d6a2a9959ec6c4"
+    },
     "marketing-ideas": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
@@ -66,10 +161,55 @@
       "sourceType": "github",
       "computedHash": "515ba75178bd44875812d9a560bdf14651f86709f89cf1d4f209638e879807f3"
     },
+    "onboarding-cro": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "9d935c024e0768c8b805852fbf9419c2e8c56be2b9e62e89d43a390008bd1229"
+    },
     "page-cro": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "computedHash": "9505748dba2319487b285f8ab8c1e5417fce38a512d596e1c9e2e87b34b196e1"
+    },
+    "paid-ads": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "74be53d9e279bafaf1f53e2612cbba0d9e4750df4116496732d877782f0c3a48"
+    },
+    "paywall-upgrade-cro": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "f3955bea72dc22cf5b8e2387ee310a519302ab02518498e045055b1b9bd62a0f"
+    },
+    "pirate-skill": {
+      "source": "google-gemini/gemini-cli",
+      "sourceType": "github",
+      "computedHash": "92ca72eb748be50dffc8704cf47648e29cf40a8b214732e32820b2d8c58a79c4"
+    },
+    "popup-cro": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "5b97d79f11192e1fff0b6797629ccdd7515c82f57d1502b761e58679df2b56e5"
+    },
+    "pr-address-comments": {
+      "source": "google-gemini/gemini-cli",
+      "sourceType": "github",
+      "computedHash": "59177731ef4efc1e86ec02287357660a4ab9f42392fada0e5e6f5e0c58d597de"
+    },
+    "pr-creator": {
+      "source": "google-gemini/gemini-cli",
+      "sourceType": "github",
+      "computedHash": "fcf4cb453f7108048631bf089ffcc426f2c00601fd97d7784b805de24eb4aa4d"
+    },
+    "pricing-strategy": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "4312095789cc328883428b1f9bd61549ca44b376aeda8d62bb977efad017e594"
+    },
+    "product-marketing-context": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "21dd05f970ba54406d7405f92240853f809d0fed09ef6ca2a9204abcdd21548a"
     },
     "programmatic-seo": {
       "source": "coreyhaines31/marketingskills",
@@ -80,6 +220,16 @@
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "computedHash": "b04bb503500f180280fea269ccdf6f512862413ffa1c872605104cdb5d15bf9e"
+    },
+    "revops": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "d6efa402972662f23d8b052c8f4c79d1e9b9c0a4d9bebf11468462c6d682f0db"
+    },
+    "sales-enablement": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "aaba13bea7b98c41225a1893d90778ef53044642c3099e42876434f8f3712622"
     },
     "schema-markup": {
       "source": "coreyhaines31/marketingskills",
@@ -101,10 +251,35 @@
       "sourceType": "github",
       "computedHash": "56f90ba46b36563bb5461feb8462aed9283e74dfc4cdac2a98c42c4bc86a95be"
     },
+    "signup-flow-cro": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "8c4b9ce342ccb721eed9a4c1eb0d1ea647e5f1a77db8609509181c62636acf61"
+    },
+    "site-architecture": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "4cdfd1ba49925184462a7524586a5ec0b127668498e7bf2972ef0d4c112e9585"
+    },
+    "social-content": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "85ffbc05cf88939ba3ff643a315928185af16181470349dfbaad2880047c9900"
+    },
+    "string-reviewer": {
+      "source": "google-gemini/gemini-cli",
+      "sourceType": "github",
+      "computedHash": "c35cf9023e66fd09229252b75e495acae55932de84c7fd35c5ce248745938390"
+    },
     "subagent-driven-development": {
       "source": "obra/superpowers",
       "sourceType": "github",
       "computedHash": "a197f8e5fba5ea59013e1adbaa90dd42db35de8f074feca200c8038de584a83b"
+    },
+    "vertex-ai-api-dev": {
+      "source": "google-gemini/gemini-skill",
+      "sourceType": "github",
+      "computedHash": "050cf4e9a14ebc86120007c59ea5dd0cf3924037b8a78871d960e0d05a4bac17"
     }
   }
 }

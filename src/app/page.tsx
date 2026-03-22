@@ -5,6 +5,11 @@ import { FAQSection } from '@/components/content/FAQSection';
 import { Quote, CheckCircle2 } from 'lucide-react';
 import { BUSINESS } from '@/lib/constants';
 
+export const metadata = {
+  title: 'Benson Home Solutions | Proactive Home Maintenance in Oregon',
+  description: 'Forensic home maintenance for the Mid-Willamette Valley and Harney County. Stop reacting to leaks and start maintaining with our monthly protection plans.',
+};
+
 /**
  * Benson Home Solutions Home Page - Rebuild V1 (2026)
  * Answer-First SEO Strategy.

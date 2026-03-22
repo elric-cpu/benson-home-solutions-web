@@ -1,2 +1,2 @@
-import { redirect } from 'next/navigation';
-export default function KeizerRedirect() { redirect('/areas/salem'); }
+import { permanentRedirect } from 'next/navigation';
+export default function KeizerRedirect() { permanentRedirect('/areas/salem'); }
