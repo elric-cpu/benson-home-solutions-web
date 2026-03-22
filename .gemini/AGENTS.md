@@ -173,3 +173,99 @@ This document identifies every specialist role needed to execute the full-scope 
 5. **Optimization & Testing** — QA specialist, Performance testing, CRO baseline
 6. **Launch & Monitor** — Go live with monitoring dashboards active
 7. **Post-Launch CRO** (Ongoing) — A/B testing, content iteration, backlink campaigns
+
+---
+
+## Skill-to-Agent Mapping
+
+To ensure specialists execute tasks at an expert level, the following installed CLI skills are explicitly mapped to their respective Agents.
+
+**1. Agent 01 — Hank Rourke (Technical SEO)**
+*   `seo-audit`
+*   `audit-website`
+*   `site-architecture`
+
+**2. Agent 02 — Priya Deshmukh (Schema)**
+*   `schema-markup`
+
+**3. Agent 03 — Silas Crowley (AEO/GEO)**
+*   `ai-seo`
+*   `seo-geo`
+
+**4. Agent 04 — Tessa “Tess” Malloy (Keywords & Strategy)**
+*   `programmatic-seo`
+*   `competitor-alternatives`
+*   `content-strategy`
+*   `marketing-ideas`
+
+**5. Agent 05 — Vince Calder (Backlinks & Off-page)**
+*   `local-marketing`
+*   `lead-magnets`
+*   `referral-program`
+*   `cold-email`
+
+**6. Agent 06 — Marisol “Mari” Vega (UX/UI)**
+*   `form-cro`
+*   `popup-cro`
+
+**7. Agent 07 — Cole Brennan (Frontend & Performance)**
+*   `next-best-practices` (Global)
+*   `hostinger-website-deploy`
+
+**8. Agent 08 — Dmitri “Dima” Volkov (Backend/Full-stack)**
+*   `hostinger-domain-dns`
+*   `hostinger-go-live`
+*   `hostinger-mcp-setup`
+*   `hostinger-deploy-and-test`
+
+**9. Agent 09 — Jae Park (AI Engineer)**
+*   `developing-genkit-js`
+*   `developing-genkit-dart`
+*   `gemini-api-dev` (Global)
+*   `gemini-interactions-api` (Global)
+*   `gemini-live-api-dev` (Global)
+*   `vertex-ai-api-dev` (Global)
+*   `elevenlabs-tts`
+
+**10. Agent 10 — Ray Dawson (Copywriter)**
+*   `copywriting`
+*   `copy-editing`
+*   `string-reviewer`
+*   `pirate-skill`
+*   `social-content`
+*   `email-sequence`
+*   `docs-writer`
+
+**11. Agent 11 — Brooke Halstead (Visuals & Photo)**
+*   `ad-creative`
+
+**12. Agent 12 — Gideon Shaw (QA/Testing)**
+*   `code-reviewer`
+*   `async-pr-review`
+*   `pr-address-comments`
+
+**13. Agent 13 — Naomi Chen (Analytics/CRO)**
+*   `analytics-tracking`
+*   `page-cro`
+*   `onboarding-cro`
+*   `signup-flow-cro`
+*   `paywall-upgrade-cro`
+*   `ab-test-setup`
+*   `churn-prevention`
+*   `pricing-strategy`
+*   `marketing-psychology`
+*   `revops`
+
+**14. Agent 14 — Elias Mercer (PM/Tech Lead)**
+*   `subagent-driven-development`
+*   `executing-plans`
+*   `brainstorming`
+*   `self-improving-agent`
+*   `github-issue-creator`
+*   `pr-creator`
+*   `docs-changelog`
+*   `product-marketing-context`
+*   `sales-enablement`
+*   `launch-strategy`
+*   `paid-ads`
+*   `free-tool-strategy`
