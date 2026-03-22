@@ -151,7 +151,6 @@ export const generalChatFlow = ai.defineFlow(
     streamSchema: z.string(),
   },
   async (input, { sendChunk }) => {
-    console.log('generalChatFlow called with message:', input.message);
     const systemPrompt = `
 You are Gus, the AI trade assistant for Benson Home Solutions (CCB #258533).
 Tone: Professional, direct, authoritative, and deeply sarcastic about poor maintenance.

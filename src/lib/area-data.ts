@@ -1,0 +1,182 @@
+export interface AreaData {
+  slug: string;
+  city: string;
+  county: string;
+  region: 'midWillametteValley' | 'harneyCounty';
+  title: string;
+  description: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  heroDescription: string;
+  protectionTitle: string;
+  protectionDescription: string;
+  protectionFeatures: string[];
+  localCommunities: string[];
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+}
+
+export const AREA_DATA: Record<string, AreaData> = {
+  albany: {
+    slug: 'albany',
+    city: 'Albany',
+    county: 'Linn',
+    region: 'midWillametteValley',
+    title: 'Albany Oregon Home Maintenance | Benson Home Solutions',
+    description: 'Professional forensic home maintenance and emergency restoration in Albany, Oregon. Licensed contractor (CCB #258533) serving Linn and Benton Counties.',
+    heroTitle: 'Albany\'s Forensic',
+    heroSubtitle: 'Property Experts.',
+    heroDescription: 'Protecting Albany\'s residential and commercial assets with building science and precision maintenance.',
+    protectionTitle: 'Linn County Protection',
+    protectionDescription: 'Albany properties face unique moisture challenges. Our forensic audits and maintenance plans are engineered to stop rot before it starts.',
+    protectionFeatures: ['Rapid Emergency Response', 'Monthly Protection Plans', 'Board-Ready Documentation', 'Forensic Audit Technology'],
+    localCommunities: ['Albany', 'Millersburg', 'Tangest', 'Jefferson', 'Lebanon', 'Sweet Home'],
+    coordinates: { lat: 44.6365, lng: -123.1059 }
+  },
+  lebanon: {
+    slug: 'lebanon',
+    city: 'Lebanon',
+    county: 'Linn',
+    region: 'midWillametteValley',
+    title: 'Lebanon Oregon Home Maintenance | Benson Home Solutions',
+    description: 'Professional property maintenance and emergency restoration in Lebanon, Oregon. Licensed contractor (CCB #258533) serving East Linn County.',
+    heroTitle: 'Lebanon\'s Trusted',
+    heroSubtitle: 'Maintenance Force.',
+    heroDescription: 'Dedicated property care for Lebanon and East Linn County. From seasonal prep to emergency response.',
+    protectionTitle: 'East Linn Asset Care',
+    protectionDescription: 'Lebanon homes require specialized attention to prevent moisture intrusion and structural decay in the Valley climate.',
+    protectionFeatures: ['Moisture Intrusion Audits', 'Gutter & Roof Defense', 'Local Emergency Teams', 'Subscription Maintenance'],
+    localCommunities: ['Lebanon', 'Sweet Home', 'Sodaville', 'Waterloo', 'Brownsville'],
+    coordinates: { lat: 44.5365, lng: -122.9073 }
+  },
+  'sweet-home': {
+    slug: 'sweet-home',
+    city: 'Sweet Home',
+    county: 'Linn',
+    region: 'midWillametteValley',
+    title: 'Sweet Home Oregon Property Care | Benson Home Solutions',
+    description: 'Specialized home maintenance and restoration in Sweet Home, Oregon. High-standard property protection for the Gateway to the Santiam.',
+    heroTitle: 'Sweet Home\'s',
+    heroSubtitle: 'Guardian Teams.',
+    heroDescription: 'Protecting properties at the edge of the Cascades with forensic accuracy and local expertise.',
+    protectionTitle: 'Santiam Valley Resilience',
+    protectionDescription: 'Sweet Home properties face diverse conditions. Our maintenance programs are designed for the unique challenges of the Santiam area.',
+    protectionFeatures: ['Cascade Edge Protection', 'Rapid Storm Response', 'Wildfire Defensible Space', 'Forensic Leak Detection'],
+    localCommunities: ['Sweet Home', 'Foster', 'Cascadia', 'Lebanon', 'Crawfordsville'],
+    coordinates: { lat: 44.3976, lng: -122.7362 }
+  },
+  burns: {
+    slug: 'burns',
+    city: 'Burns',
+    county: 'Harney',
+    region: 'harneyCounty',
+    title: 'Burns & Harney County Maintenance | Benson Home Solutions',
+    description: 'High-desert property maintenance and winterization in Burns and Harney County. Forensic audits for wildfire hardening and extreme temperature protection. CCB #258533.',
+    heroTitle: 'High Desert',
+    heroSubtitle: 'Asset Protection.',
+    heroDescription: 'From the freezes of Drewsey to the summer heat of Burns, we provide the specialized high-desert maintenance required to preserve your property.',
+    protectionTitle: 'Extreme Climate Strategy',
+    protectionDescription: 'Harney County properties face extreme temperature swings and wildfire risk. Our forensic approach focuses on thermal efficiency, winterization, and wildfire hardening.',
+    protectionFeatures: ['Wildfire Hardening Audits', 'Deep Freeze Winterization', 'Commercial Asset Management', 'Ecclesiastical Preservation'],
+    localCommunities: ['Burns', 'Hines', 'Riley', 'Drewsey', 'Denio', 'McDermitt'],
+    coordinates: { lat: 43.5863, lng: -119.0544 }
+  },
+  hines: {
+    slug: 'hines',
+    city: 'Hines',
+    county: 'Harney',
+    region: 'harneyCounty',
+    title: 'Hines Oregon High-Desert Maintenance | Benson Home Solutions',
+    description: 'Expert property maintenance and winterization in Hines, Oregon. Specialized forensic audits and extreme temperature protection.',
+    heroTitle: 'Hines\'s High',
+    heroSubtitle: 'Desert Guardians.',
+    heroDescription: 'Dedicated property care for Hines residential and commercial assets in the heart of Harney County.',
+    protectionTitle: 'Harney Resilience',
+    protectionDescription: 'Hines properties face intense summer heat and deep winter freezes. Our forensic approach ensures long-term asset survival.',
+    protectionFeatures: ['Deep Freeze Protection', 'Wildfire Hardening', 'Forensic Moisture Audits', 'Local Service Priority'],
+    localCommunities: ['Hines', 'Burns', 'Riley', 'Crane'],
+    coordinates: { lat: 43.5613, lng: -119.0835 }
+  },
+  riley: {
+    slug: 'riley',
+    city: 'Riley',
+    county: 'Harney',
+    region: 'harneyCounty',
+    title: 'Riley Oregon Remote Asset Protection | Benson Home Solutions',
+    description: 'Expert property maintenance for remote Harney County assets in Riley, Oregon. Specialized deep-freeze protection and wildfire hardening.',
+    heroTitle: 'Riley\'s Remote',
+    heroSubtitle: 'Property Sentinels.',
+    heroDescription: 'Ensuring the integrity of remote Harney County properties through specialized high-desert forensic maintenance.',
+    protectionTitle: 'Remote Asset Integrity',
+    protectionDescription: 'In Riley, distance and weather are the primary risks. We specialize in autonomous property health and extreme weather resilience.',
+    protectionFeatures: ['Remote Site Monitoring', 'Wildfire Buffer Creation', 'Deep Winter Survival', 'Structural Forensics'],
+    localCommunities: ['Riley', 'Hines', 'Burns', 'Hampton'],
+    coordinates: { lat: 43.5388, lng: -119.5049 }
+  },
+  drewsey: {
+    slug: 'drewsey',
+    city: 'Drewsey',
+    county: 'Harney',
+    region: 'harneyCounty',
+    title: 'Drewsey Oregon Deep Freeze Protection | Benson Home Solutions',
+    description: 'Specialized property care for Drewsey, Oregon. Expert winterization and forensic maintenance for Harney County\'s most extreme conditions.',
+    heroTitle: 'Drewsey\'s Deep',
+    heroSubtitle: 'Freeze Experts.',
+    heroDescription: 'Surviving the Harney County winter requires more than just luck. It requires forensic precision and specialized engineering.',
+    protectionTitle: 'Deep Freeze Resilience',
+    protectionDescription: 'Drewsey properties face some of Oregon\'s coldest temperatures. Our winterization programs are the gold standard for high-desert property survival.',
+    protectionFeatures: ['Extreme Cold Winterization', 'Thermal Envelope Audits', 'Frozen Pipe Mitigation', 'Wildfire Resilience'],
+    localCommunities: ['Drewsey', 'Juntura', 'Burns', 'Crane'],
+    coordinates: { lat: 43.7915, lng: -118.3855 }
+  },
+  corvallis: {
+    slug: 'corvallis',
+    city: 'Corvallis',
+    county: 'Benton',
+    region: 'midWillametteValley',
+    title: 'Corvallis Oregon Property Maintenance | Benson Home Solutions',
+    description: 'Expert home maintenance and restoration in Corvallis, Oregon. Licensed contractor serving Benton County and OSU community.',
+    heroTitle: 'Corvallis\'s Forensic',
+    heroSubtitle: 'Guardians.',
+    heroDescription: 'Providing scientific property care for Corvallis residential and commercial assets.',
+    protectionTitle: 'Benton County Shield',
+    protectionDescription: 'Corvallis properties require specialized maintenance to handle the unique Valley moisture and structural challenges.',
+    protectionFeatures: ['Moisture Control Systems', 'Structural Forensic Audits', 'Emergency Water Extraction', 'Preventative Maintenance'],
+    localCommunities: ['Corvallis', 'Philomath', 'Adair Village', 'Monmouth', 'Independence'],
+    coordinates: { lat: 44.5646, lng: -123.2620 }
+  },
+  keizer: {
+    slug: 'keizer',
+    city: 'Keizer',
+    county: 'Marion',
+    region: 'midWillametteValley',
+    title: 'Keizer Oregon Home Maintenance | Benson Home Solutions',
+    description: 'Professional property care and restoration in Keizer, Oregon. Licensed contractor serving the greater Salem-Keizer area.',
+    heroTitle: 'Keizer\'s Precision',
+    heroSubtitle: 'Contractors.',
+    heroDescription: 'High-standard maintenance and emergency response for Keizer residential properties.',
+    protectionTitle: 'Keizer Community Care',
+    protectionDescription: 'Maintaining the value of Keizer homes through proactive forensic audits and rapid emergency response.',
+    protectionFeatures: ['Local Rapid Response', 'Roof & Gutter Systems', 'Siding Integrity Audits', 'Subscription Maintenance'],
+    localCommunities: ['Keizer', 'Salem', 'Brooks', 'Hayesville', 'Gervais'],
+    coordinates: { lat: 44.9979, lng: -123.0220 }
+  },
+  salem: {
+    slug: 'salem',
+    city: 'Salem',
+    county: 'Marion',
+    region: 'midWillametteValley',
+    title: 'Salem Oregon Home Maintenance | Benson Home Solutions',
+    description: 'Expert home maintenance and emergency restoration in Salem, Oregon. Licensed contractor (CCB #258533) serving the Mid-Willamette Valley.',
+    heroTitle: 'Salem\'s Premier',
+    heroSubtitle: 'Property Experts.',
+    heroDescription: 'Serving the State Capitol and surrounding areas with building science and precision maintenance.',
+    protectionTitle: 'Mid-Valley Integrity',
+    protectionDescription: 'Salem properties face diverse moisture and structural risks. Our forensic approach ensures long-term asset protection.',
+    protectionFeatures: ['Capitol Region Emergency Response', 'Forensic Audit Technology', 'Monthly Protection Plans', 'Commercial Maintenance'],
+    localCommunities: ['Salem', 'Keizer', 'Four Corners', 'West Salem', 'Silverton', 'Dallas'],
+    coordinates: { lat: 44.9429, lng: -123.0351 }
+  }
+};

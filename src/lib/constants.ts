@@ -10,6 +10,6 @@ export const BUSINESS = {
   gbp: 'https://google.com/maps?cid=YOUR_CID_HERE',
 };
 export const SERVICE_AREAS = {
-  midWillametteValley: ['Albany', 'Salem', 'Corvallis', 'Lebanon', 'Philomath'],
-  harneyCounty: ['Burns', 'Hines'],
+  midWillametteValley: ['Albany', 'Salem', 'Corvallis', 'Lebanon', 'Philomath', 'Sweet Home'],
+  harneyCounty: ['Burns', 'Hines', 'Riley', 'Drewsey'],
 };

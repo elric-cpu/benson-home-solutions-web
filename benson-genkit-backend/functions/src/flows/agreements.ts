@@ -1,5 +1,5 @@
 
-import { defineFlow, runFlow } from '@genkit-ai/flow';
+import { defineFlow } from '@genkit-ai/flow';
 import { z } from 'zod';
 import { ai, RecommendationSchema } from '../../lib/genkit';
 
