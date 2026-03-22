@@ -16,18 +16,21 @@ You are an elite SEO, AEO (Answer Engine Optimization), and GEO (Generative Engi
 4. **Iterate:** Monitor GSC for "Impressions" shifts after updates.
 
 ## Gemini Added Memories
+- **Skill Suite:** 26 specialized skills installed for SEO, CRO, Next.js best practices, and marketing psychology.
+- **Self-Improving Agent:** Active hooks in `.gemini/settings.json` allow the agent to learn from all tool uses.
+- **Branch Strategy:** Work on `sprint-1/phase-2` for full feature parity with the live site.
 - **Agent Team Definitions:** Detailed personas and mandates for the 14-specialist team are defined in `.gemini/AGENTS.md`. Refer to this file when assuming specific roles for tasks.
-- Each prompt below is a **self-contained implementation brief** designed to be handed directly to a developer or AI coding assistant.
 
 ## Project Structure
-- **Root:** `/home/elricenson/benson-home-solutions-web`
-- **Framework:** Next.js (App Router)
+- **Root:** `/home/elricbenson/website-builds/benson-home-solutions-web`
+- **Framework:** Next.js 15 (stable)
 - **Database:** Supabase (PostgreSQL) + Drizzle ORM
-- **CMS:** Sanity (Schema in `src/sanity/schemas`)
+- **CMS:** Sanity CMS (Schemas in `src/sanity/schemas`)
 - **Styling:** Tailwind CSS (Vanilla CSS preferred for new components)
 
 ## Key Directives
 - **Framework:** Must use Next.js 15 (stable). Do not upgrade to Next.js 16/canary due to Sentry and build-time incompatibilities.
 - **Security:** Never log or commit secrets. Protect `.env` files.
 - **Tone:** Professional, direct, authoritative (Owner: Elric Benson).
-- **Validation:** Always verify changes with tests and linting.
+- **Validation:** Always verify changes with `squirrel audit` (if available), Lighthouse, tests, and linting.
+- **Accessibility:** Strict adherence to WCAG (labels, ARIA, semantic HTML).

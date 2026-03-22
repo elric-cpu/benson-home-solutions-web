@@ -1,0 +1,5 @@
+description = "Commits and pushes changes automatically to the correct git repository."
+prompt = """
+Analyze the changes in the working directory and automatically run `git add .`, then `git commit -m "[Auto] Update"` (or generate a concise commit message based on the changes), and finally run `git push` to push to the origin remote.
+Do not ask for confirmation if the changes are straightforward. Use the run_shell_command tool to execute the git commands.
+"""
