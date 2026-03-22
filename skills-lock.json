@@ -146,6 +146,11 @@
       "sourceType": "github",
       "computedHash": "b71ffc7be2d96e4887ccedf457d02c395f78e68723dab59bd8d6a2a9959ec6c4"
     },
+    "local-marketing": {
+      "source": "dengineproblem/agents-monorepo",
+      "sourceType": "github",
+      "computedHash": "525d1335c59b39ff33fbf19e4ea4a1f868f7ae009ecdc8336de7a5a7d7ee3991"
+    },
     "marketing-ideas": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
