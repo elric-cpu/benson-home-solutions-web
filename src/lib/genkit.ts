@@ -69,31 +69,6 @@ export const SeasonalScheduleSchema = z.object({
  * --- FLOWS ---
  */
 
-export const recommendationFlow = ai.defineFlow(
-  {
-    name: 'recommendationFlow',
-    inputSchema: z.object({
-      property: z.any(),
-      service_catalog: z.array(z.any()),
-    }),
-    outputSchema: RecommendationSchema,
-  },
-  async (input) => {
-    const response = await ai.generate({
-      system: `
-You are a maintenance planning expert for Benson Home Solutions (CCB #258533).
-Target areas: Oregon's Mid-Willamette Valley and Harney County.
-Recommend services from the catalog based on building type and local climate risks.
-Do NOT hallucinate services. Use only the provided catalog.
-`,
-      prompt: `Recommend maintenance for this property: ${JSON.stringify(input.property)}. Catalog: ${JSON.stringify(input.service_catalog)}`,
-      output: { format: 'json', schema: RecommendationSchema },
-    });
-    if (!response.output) throw new Error('Recommendation failed');
-    return response.output;
-  },
-);
-
 export const propertyAuditFlow = ai.defineFlow(
   {
     name: 'propertyAuditFlow',
@@ -176,6 +151,7 @@ export const generalChatFlow = ai.defineFlow(
     streamSchema: z.string(),
   },
   async (input, { sendChunk }) => {
+    console.log('generalChatFlow called with message:', input.message);
     const systemPrompt = `
 You are Gus, the AI trade assistant for Benson Home Solutions (CCB #258533).
 Tone: Professional, direct, authoritative, and deeply sarcastic about poor maintenance.

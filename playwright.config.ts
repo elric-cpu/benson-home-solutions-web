@@ -18,7 +18,7 @@ export default defineConfig({
     },
   ],
   // Server is started externally in CI
-  webServer: process.env.CI
+    webServer: process.env.CI
     ? undefined
     : {
         command: 'npm run build && npm run start',
