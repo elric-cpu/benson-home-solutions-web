@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Container, Section, Button, Badge, Card } from '@/components/ui';
 import { Building2, Calendar, ShieldAlert, FileText, PieChart, Info, Download } from 'lucide-react';
 import { BUSINESS } from '@/lib/constants';
@@ -16,20 +16,16 @@ const assetCategories = [
 export default function AssetLifecyclePlanner() {
   const [sqFt, setSqFt] = useState(5000);
   const [buildingAge, setBuildingAge] = useState(10);
-  const [annualBudget, setAnnualBudget] = useState(0);
-  const [totalLiability, setTotalLiability] = useState(0);
 
-  useEffect(() => {
-    // Basic calculation: Total cost to replace everything * % of life used
-    const totalReplacement = assetCategories.reduce((acc, cat) => acc + (cat.costPerSqFt * sqFt), 0);
-    const avgLife = assetCategories.reduce((acc, cat) => acc + cat.life, 0) / assetCategories.length;
-    
-    const lifeUsed = Math.min(1, buildingAge / avgLife);
-    const currentLiability = totalReplacement * lifeUsed;
-    
-    setTotalLiability(Math.round(currentLiability));
-    setAnnualBudget(Math.round(totalReplacement / avgLife));
-  }, [sqFt, buildingAge]);
+  // Derived state (replaces useEffect)
+  const totalReplacement = assetCategories.reduce((acc, cat) => acc + (cat.costPerSqFt * sqFt), 0);
+  const avgLife = assetCategories.reduce((acc, cat) => acc + cat.life, 0) / assetCategories.length;
+  
+  const lifeUsed = Math.min(1, buildingAge / avgLife);
+  const currentLiability = totalReplacement * lifeUsed;
+  
+  const totalLiability = Math.round(currentLiability);
+  const annualBudget = Math.round(totalReplacement / avgLife);
 
   return (
     <main>

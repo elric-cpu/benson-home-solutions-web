@@ -91,7 +91,7 @@ const components: PortableTextComponents = {
 };
 
 interface Props {
-  value: any;
+  value: Parameters<typeof SanityPortableText>[0]["value"];
 }
 
 export function PortableTextRenderer({ value }: Props) {

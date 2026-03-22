@@ -17,7 +17,7 @@ export const validateAddressTool = ai.defineTool(
       scopes: ["https://www.googleapis.com/auth/maps-platform.addressvalidation"],
     });
     const authClient = await auth.getClient();
-    google.options({ auth: authClient as any });
+    google.options({ auth: authClient as never });
 
     const response = await addressvalidation.v1.validateAddress({
       requestBody: {
@@ -39,9 +39,9 @@ export const validateAddressTool = ai.defineTool(
       isValid: verdict?.validationGranularity === "SUB_PREMISE" || verdict?.validationGranularity === "PREMISE",
       standardizedAddress: addressDetails?.formattedAddress,
       granularity: verdict?.validationGranularity,
-      hasIncompleteComponents: (verdict as any)?.hasIncompleteComponents,
-      hasUnconfirmedComponents: (verdict as any)?.hasUnconfirmedComponents,
-      hasReplacedComponents: (verdict as any)?.hasReplacedComponents,
+      hasIncompleteComponents: (verdict as Record<string, unknown>)?.hasIncompleteComponents,
+      hasUnconfirmedComponents: (verdict as Record<string, unknown>)?.hasUnconfirmedComponents,
+      hasReplacedComponents: (verdict as Record<string, unknown>)?.hasReplacedComponents,
       uspsData: result.uspsData,
     };
   }

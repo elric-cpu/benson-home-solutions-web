@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Container, Section, Button, Badge, Card } from '@/components/ui';
 import { AlertTriangle, Droplets, TrendingUp, ShieldCheck, Share2 } from 'lucide-react';
@@ -23,20 +23,14 @@ export default function RotRiskSimulator() {
   const [yearsDeferred, setYearsDeferred] = useState(0);
   const [siding, setSiding] = useState(sidingTypes[0]);
   const [location, setLocation] = useState(locations[0]);
-  const [repairCost, setRepairCost] = useState(150);
-  const [restorationCost, setRestorationCost] = useState(1500);
 
-  useEffect(() => {
-    // Base cost $150/yr for maintenance
-    const baseMaint = 150 * (yearsDeferred || 1);
-    
-    // Exponential restoration cost: 1500 * (1.5 ^ years) * risk_multiplier
-    const mult = location.rainfall > 40 ? 1.8 : 1.3;
-    const baseRest = 1500 * Math.pow(mult, yearsDeferred) * siding.risk;
-    
-    setRepairCost(Math.round(baseMaint));
-    setRestorationCost(Math.round(baseRest));
-  }, [yearsDeferred, siding, location]);
+  // Derived state (replaces useEffect)
+  const baseMaint = 150 * (yearsDeferred || 1);
+  const mult = location.rainfall > 40 ? 1.8 : 1.3;
+  const baseRest = 1500 * Math.pow(mult, yearsDeferred) * siding.risk;
+
+  const repairCost = Math.round(baseMaint);
+  const restorationCost = Math.round(baseRest);
 
   const riskScore = Math.min(100, Math.round((yearsDeferred * 15) * siding.risk * (location.rainfall / 30)));
 

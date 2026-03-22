@@ -18,7 +18,7 @@ export const getSearchPerformance = ai.defineTool(
       scopes: ["https://www.googleapis.com/auth/webmasters.readonly"],
     });
     const authClient = await auth.getClient();
-    google.options({ auth: authClient as any });
+    google.options({ auth: authClient as never });
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - input.days);

@@ -21,7 +21,7 @@ export const setupGoogleApisFlow = onFlow(
       scopes: ["https://www.googleapis.com/auth/cloud-platform"],
     });
     const authClient = await auth.getClient();
-    google.options({ auth: authClient as any });
+    google.options({ auth: authClient as never });
 
     const projectId = await auth.getProjectId();
     const servicesToEnable = [
@@ -35,7 +35,7 @@ export const setupGoogleApisFlow = onFlow(
     const enabledServices: string[] = [];
 
     for (const service of servicesToEnable) {
-      console.log(`Checking/Enabling service: ${service}`);
+      console.warn(`Checking/Enabling service: ${service}`);
       await serviceusage.services.enable({
         name: `projects/${projectId}/services/${service}`,
       });

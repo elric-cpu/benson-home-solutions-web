@@ -14,12 +14,12 @@ export const MarketingPipelineResultSchema = z.object({
   topic: z.string(),
   reason: z.string().optional(),
   artifacts: z.object({
-    seo_strategy: z.any().optional(),
-    content_draft: z.any().optional(),
-    editorial_review: z.any().optional(),
-    developer_code: z.any().optional(),
-    multimedia_assets: z.any().optional(),
-    outreach_campaign: z.any().optional(),
+    seo_strategy: z.unknown().optional(),
+    content_draft: z.unknown().optional(),
+    editorial_review: z.unknown().optional(),
+    developer_code: z.unknown().optional(),
+    multimedia_assets: z.unknown().optional(),
+    outreach_campaign: z.unknown().optional(),
   }).optional(),
 });
 
@@ -36,17 +36,17 @@ export const masterMarketingFlow = ai.defineFlow(
   },
   async (input) => {
     try {
-      console.log(`[MasterFlow] Starting pipeline for topic: ${input.topic}`);
+      console.warn(`[MasterFlow] Starting pipeline for topic: ${input.topic}`);
       
       // Step 1: SEO Strategy
-      console.log('[MasterFlow] Running SEO Strategist...');
+      console.warn('[MasterFlow] Running SEO Strategist...');
       const seoStrategy = await seoStrategistFlow({
         topic: input.topic,
         business_goals: input.business_goals
       });
 
       // Step 2: Content Writing
-      console.log('[MasterFlow] Running Content Writer...');
+      console.warn('[MasterFlow] Running Content Writer...');
       const contentDraft = await contentWriterFlow({
         topic: input.topic,
         seo_strategy: seoStrategy,
@@ -54,16 +54,16 @@ export const masterMarketingFlow = ai.defineFlow(
       });
 
       // Step 3: Editorial Review
-      console.log('[MasterFlow] Running Editorial Lead...');
+      console.warn('[MasterFlow] Running Editorial Lead...');
       const editorialReview = await editorialLeadFlow({
         content_draft: contentDraft.content,
-        asset_type: input.asset_type
+        asset_type: input.asset_type as 'guide' | 'checklist' | 'how-to'
       });
 
       if (editorialReview.approval_status === 'Nay') {
-        console.log('[MasterFlow] Pipeline halted: Editorial rejected draft.');
+        console.warn('[MasterFlow] Pipeline halted: Editorial rejected draft.');
         return {
-          status: 'rejected',
+          status: 'rejected' as const,
           topic: input.topic,
           reason: 'Editorial rejection: ' + editorialReview.feedback.join('; '),
           artifacts: {
@@ -74,10 +74,10 @@ export const masterMarketingFlow = ai.defineFlow(
         };
       }
 
-      console.log('[MasterFlow] Editorial approved. Proceeding to fulfillment...');
+      console.warn('[MasterFlow] Editorial approved. Proceeding to fulfillment...');
 
       // Step 4: Fulfillment (Parallel)
-      console.log('[MasterFlow] Running Developer, Multimedia, and Outreach...');
+      console.warn('[MasterFlow] Running Developer, Multimedia, and Outreach...');
       
       const developerCodePromise = input.asset_type === 'interactive_tool' || contentDraft.interactive_tool_logic 
         ? webDeveloperFlow({
@@ -99,9 +99,9 @@ export const masterMarketingFlow = ai.defineFlow(
         })
       ]);
 
-      console.log('[MasterFlow] Pipeline complete.');
+      console.warn('[MasterFlow] Pipeline complete.');
       return {
-        status: 'success',
+        status: 'success' as const,
         topic: input.topic,
         artifacts: {
           seo_strategy: seoStrategy,
@@ -113,12 +113,12 @@ export const masterMarketingFlow = ai.defineFlow(
         }
       };
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('[MasterFlow] Pipeline failed:', err);
       return {
-        status: 'failed',
+        status: 'failed' as const,
         topic: input.topic,
-        reason: err.message
+        reason: err instanceof Error ? err.message : String(err)
       };
     }
   }

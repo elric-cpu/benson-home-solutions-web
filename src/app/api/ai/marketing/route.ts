@@ -29,11 +29,11 @@ export async function GET(req: Request) {
       await db.insert(marketingAssets).values({
         topic: result.topic,
         assetType: assetType,
-        contentDraft: result.artifacts?.content_draft?.content || '',
+        contentDraft: ((result.artifacts?.content_draft as Record<string, unknown>)?.content as string) || '',
         seoStrategy: result.artifacts?.seo_strategy || null,
         multimediaAssets: result.artifacts?.multimedia_assets || null,
         outreachCampaign: result.artifacts?.outreach_campaign || null,
-        developerCode: result.artifacts?.developer_code?.component_code || null,
+        developerCode: ((result.artifacts?.developer_code as Record<string, unknown>)?.component_code as string) || null,
         status: 'approved',
       });
     }
@@ -66,11 +66,11 @@ export async function POST(req: Request) {
       await db.insert(marketingAssets).values({
         topic: result.topic,
         assetType: assetType,
-        contentDraft: result.artifacts?.content_draft?.content || '',
+        contentDraft: ((result.artifacts?.content_draft as Record<string, unknown>)?.content as string) || '',
         seoStrategy: result.artifacts?.seo_strategy || null,
         multimediaAssets: result.artifacts?.multimedia_assets || null,
         outreachCampaign: result.artifacts?.outreach_campaign || null,
-        developerCode: result.artifacts?.developer_code?.component_code || null,
+        developerCode: ((result.artifacts?.developer_code as Record<string, unknown>)?.component_code as string) || null,
         status: 'approved',
       });
     }

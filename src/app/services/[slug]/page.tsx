@@ -13,15 +13,15 @@ interface ServicePageData {
   title: string;
   slug: { current: string };
   metaDescription?: string;
-  heroImage?: any;
+  heroImage?: unknown;
   heroHeadline?: string;
-  content?: any[];
+  content?: unknown[];
   serviceArea?: { title: string; slug: { current: string } }[];
   ctaText?: string;
   ctaLink?: string;
   pricingNote?: string;
   faqItems?: { _id: string; question: string; answer: string }[];
-  relatedServices?: { _id: string; title: string; slug: { current: string }; heroImage?: any }[];
+  relatedServices?: { _id: string; title: string; slug: { current: string }; heroImage?: unknown }[];
 }
 
 const serviceQuery = `*[_type == "servicePage" && slug.current == $slug][0]{
@@ -44,10 +44,15 @@ const serviceQuery = `*[_type == "servicePage" && slug.current == $slug][0]{
 }`;
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<{ slug: { current: string } }[]>(
-    `*[_type == "servicePage" && defined(slug.current)]{ slug }`
-  );
-  return slugs.map((s) => ({ slug: s.slug.current }));
+  try {
+    const slugs = await client.fetch<{ slug: { current: string } }[]>(
+      `*[_type == "servicePage" && defined(slug.current)]{ slug }`
+    );
+    return slugs.map((s) => ({ slug: s.slug.current }));
+  } catch (error) {
+    console.warn('Failed to fetch slugs from Sanity for static generation:', error);
+    return [];
+  }
 }
 
 export async function generateMetadata({
@@ -126,7 +131,8 @@ export default async function ServicePage({
       {service.content && service.content.length > 0 && (
         <Section spacing="md">
           <Container size="narrow">
-            <PortableTextRenderer value={service.content} />
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            <PortableTextRenderer value={service.content as any} />
           </Container>
         </Section>
       )}
@@ -215,7 +221,7 @@ export default async function ServicePage({
                   className="group"
                 >
                   <div className="rounded-xl overflow-hidden bg-surface shadow-card hover:shadow-elevated transition-shadow">
-                    {related.heroImage && (
+                    {!!related.heroImage && (
                       <div className="relative h-40">
                         <Image
                           src={urlForImage(related.heroImage)

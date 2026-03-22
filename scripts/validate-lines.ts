@@ -19,7 +19,11 @@ function walkDir(dir: string, callback: (filePath: string) => void) {
     const dirPath = path.join(dir, f);
     const isDirectory = fs.statSync(dirPath).isDirectory();
     if (IGNORE_DIRS.includes(f)) return;
-    isDirectory ? walkDir(dirPath, callback) : callback(dirPath);
+    if (isDirectory) {
+      walkDir(dirPath, callback);
+    } else {
+      callback(dirPath);
+    }
   });
 }
 
