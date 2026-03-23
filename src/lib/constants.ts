@@ -1,8 +1,8 @@
 export const BUSINESS = {
   name: 'Benson Home Solutions',
   owner: 'Elric Benson',
-  phone: '541-602-0697',
-  afterhoursPhone: '541-602-0697',
+  phone: '541-321-5115',
+  afterhoursPhone: '541-321-5115',
   email: 'elric@bensonhomesolutions.com',
   license: 'CCB #258533',
   url: 'https://bensonhomesolutions.com',
