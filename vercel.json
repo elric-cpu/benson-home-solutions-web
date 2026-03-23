@@ -2,7 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "installCommand": "npm install",
-  "nodejs": "20.x",
   "crons": [
     {
       "path": "/api/ai/marketing",
