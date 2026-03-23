@@ -3,7 +3,7 @@ export const BUSINESS = {
   owner: 'Elric Benson',
   phone: '541-321-5115',
   afterhoursPhone: '541-321-5115',
-  email: 'elric@bensonhomesolutions.com',
+  email: 'Office@bensonhomesolutions.com',
   license: 'CCB #258533',
   url: 'https://bensonhomesolutions.com',
   facebook: 'https://facebook.com/bensonhomesolutions',
