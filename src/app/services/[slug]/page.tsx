@@ -2,66 +2,39 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { client } from '@/sanity/lib/client';
-import { urlForImage } from '@/sanity/lib/image';
+
 import { Button, Container, Section, Badge } from '@/components/ui';
-import { PortableTextRenderer } from '@/components/content/PortableText';
+import { SERVICES_DATA } from '@/lib/services-data';
+
 import { BUSINESS } from '@/lib/constants';
 
-interface ServicePageData {
-  _id: string;
+interface Service {
   title: string;
-  slug: { current: string };
-  metaDescription?: string;
-  heroImage?: unknown;
-  heroHeadline?: string;
-  content?: unknown[];
+  slug: string;
+  metaDescription: string;
+  heroHeadline: string;
+  content: any[];
   serviceArea?: { title: string; slug: { current: string } }[];
+  pricingNote?: string;
   ctaText?: string;
   ctaLink?: string;
-  pricingNote?: string;
-  faqItems?: { _id: string; question: string; answer: string }[];
-  relatedServices?: { _id: string; title: string; slug: { current: string }; heroImage?: unknown }[];
 }
 
-const serviceQuery = `*[_type == "servicePage" && slug.current == $slug][0]{
-  _id,
-  title,
-  slug,
-  metaDescription,
-  heroImage,
-  heroHeadline,
-  content[]{
-    ...,
-    _type == "image" => { ..., asset-> }
-  },
-  serviceArea[]->{ title, slug },
-  ctaText,
-  ctaLink,
-  pricingNote,
-  faqItems[]->{ _id, question, answer },
-  relatedServices[]->{ _id, title, slug, heroImage }
-}`;
+
+
+
 
 export async function generateStaticParams() {
-  try {
-    const slugs = await client.fetch<{ slug: { current: string } }[]>(
-      `*[_type == "servicePage" && defined(slug.current)]{ slug }`
-    );
-    return slugs.map((s) => ({ slug: s.slug.current }));
-  } catch (error) {
-    console.warn('Failed to fetch slugs from Sanity for static generation:', error);
-    return [];
-  }
+  return Object.keys(SERVICES_DATA).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
+  const { slug } = params;
+  const service: Service = SERVICES_DATA[slug];
   if (!service) return {};
   return {
     title: service.title,
@@ -74,10 +47,10 @@ export async function generateMetadata({
 export default async function ServicePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
-  const service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
+  const { slug } = params;
+  const service: Service = SERVICES_DATA[slug];
 
   if (!service) notFound();
 
@@ -103,7 +76,7 @@ export default async function ServicePage({
             )}
             {service.serviceArea && service.serviceArea.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
-                {service.serviceArea.map((area) => (
+                {service.serviceArea.map((area: { title: string; slug: { current: string } }) => (
                   <Badge key={area.slug.current} variant="secondary">
                     {area.title}
                   </Badge>
@@ -114,25 +87,20 @@ export default async function ServicePage({
         </Container>
       </Section>
 
-      {/* Hero Image */}
-      {service.heroImage && (
-        <div className="relative w-full h-64 md:h-96">
-          <Image
-            src={urlForImage(service.heroImage).width(1600).height(600).url()}
-            alt={service.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-      )}
+
 
       {/* Content */}
       {service.content && service.content.length > 0 && (
         <Section spacing="md">
           <Container size="narrow">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            <PortableTextRenderer value={service.content as any} />
+            {
+              service.content.map((block: any, index: number) => {
+                if (block.style === 'h2') {
+                  return <h2 key={index} className="text-2xl md:text-3xl font-bold text-charcoal mt-10 mb-4">{block.children.map((child: any) => child.text).join('')}</h2>
+                }
+                return <p key={index} className="text-slate leading-relaxed mb-4">{block.children.map((child: any) => child.text).join('')}</p>
+              })
+            }
           </Container>
         </Section>
       )}
@@ -153,28 +121,7 @@ export default async function ServicePage({
         </Section>
       )}
 
-      {/* FAQ */}
-      {service.faqItems && service.faqItems.length > 0 && (
-        <Section spacing="md">
-          <Container size="narrow">
-            <h2 className="text-2xl md:text-3xl font-bold mb-8">
-              Frequently Asked Questions
-            </h2>
-            <div className="space-y-6">
-              {service.faqItems.map((faq) => (
-                <div key={faq._id}>
-                  <h3 className="text-lg font-semibold text-charcoal">
-                    {faq.question}
-                  </h3>
-                  <p className="mt-2 text-slate leading-relaxed">
-                    {faq.answer}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Container>
-        </Section>
-      )}
+
 
       {/* CTA */}
       <Section variant="oxblood" spacing="md">
@@ -206,46 +153,7 @@ export default async function ServicePage({
         </Container>
       </Section>
 
-      {/* Related Services */}
-      {service.relatedServices && service.relatedServices.length > 0 && (
-        <Section spacing="md">
-          <Container>
-            <h2 className="text-2xl md:text-3xl font-bold mb-8">
-              Related Services
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {service.relatedServices.map((related) => (
-                <Link
-                  key={related._id}
-                  href={`/services/${related.slug.current}`}
-                  className="group"
-                >
-                  <div className="rounded-xl overflow-hidden bg-surface shadow-card hover:shadow-elevated transition-shadow">
-                    {!!related.heroImage && (
-                      <div className="relative h-40">
-                        <Image
-                          src={urlForImage(related.heroImage)
-                            .width(400)
-                            .height(200)
-                            .url()}
-                          alt={related.title}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="p-4">
-                      <h3 className="font-semibold text-charcoal group-hover:text-oxblood transition-colors">
-                        {related.title}
-                      </h3>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </Container>
-        </Section>
-      )}
+
     </>
   );
 }

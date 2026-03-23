@@ -6,6 +6,7 @@
 - [ ] **Provide Facebook Content**: Please fill in the details in the `.gemini/facebook_content.md` file so I can generate images and videos for your site.
 
 ### 1. ✅ COMPLETED ACTIONS
+- [x] **Programmatic Local SEO**: Deployed dedicated landing pages for each primary service area with LocalBusiness and FAQ schema.
 - [x] **Production Deployment**: Successfully deployed to Vercel via CLI. Production domain `bensonhomesolutions.com` is active.
 - [x] **Contact/Calculator Pipeline**: Full lead-to-CRM sync implemented and deployed.
 - [x] **Audit Layer 2**: `agreement_versions` table and SHA-256 integrity hashing active in production.
