@@ -16,6 +16,16 @@ export interface AreaData {
     lat: number;
     lng: number;
   };
+  caseStudy?: {
+    title: string;
+    description: string;
+    imageUrl: string;
+  };
+  testimonial?: {
+    quote: string;
+    author: string;
+    authorTitle: string;
+  };
 }
 
 export const AREA_DATA: Record<string, AreaData> = {
@@ -33,7 +43,17 @@ export const AREA_DATA: Record<string, AreaData> = {
     protectionDescription: 'Albany properties face unique moisture challenges. Our forensic audits and maintenance plans are engineered to stop rot before it starts.',
     protectionFeatures: ['Rapid Emergency Response', 'Monthly Protection Plans', 'Board-Ready Documentation', 'Forensic Audit Technology'],
     localCommunities: ['Albany', 'Millersburg', 'Tangest', 'Jefferson', 'Lebanon', 'Sweet Home'],
-    coordinates: { lat: 44.6365, lng: -123.1059 }
+    coordinates: { lat: 44.6365, lng: -123.1059 },
+    caseStudy: {
+      title: 'Historic Downtown Albany Restoration',
+      description: 'A complete exterior restoration of a historic downtown Albany building, including window and door replacement, siding repair, and a new roof.',
+      imageUrl: '/images/case-studies/albany-downtown.jpg'
+    },
+    testimonial: {
+      quote: 'Benson Home Solutions saved our historic building. Their attention to detail and craftsmanship is unmatched.',
+      author: 'John Doe',
+      authorTitle: 'President, Albany Historical Society'
+    }
   },
   lebanon: {
     slug: 'lebanon',
@@ -49,7 +69,17 @@ export const AREA_DATA: Record<string, AreaData> = {
     protectionDescription: 'Lebanon homes require specialized attention to prevent moisture intrusion and structural decay in the Valley climate.',
     protectionFeatures: ['Moisture Intrusion Audits', 'Gutter & Roof Defense', 'Local Emergency Teams', 'Subscription Maintenance'],
     localCommunities: ['Lebanon', 'Sweet Home', 'Sodaville', 'Waterloo', 'Brownsville'],
-    coordinates: { lat: 44.5365, lng: -122.9073 }
+    coordinates: { lat: 44.5365, lng: -122.9073 },
+    caseStudy: {
+      title: 'Agricultural Building Restoration',
+      description: 'A complete exterior restoration of a large agricultural building in Lebanon, including a new roof and siding.',
+      imageUrl: '/images/case-studies/lebanon-farm.jpg'
+    },
+    testimonial: {
+      quote: 'Benson Home Solutions did a great job on our barn. They were fast, efficient, and affordable.',
+      author: 'Jane Smith',
+      authorTitle: 'Owner, Smith Family Farms'
+    }
   },
   'sweet-home': {
     slug: 'sweet-home',
@@ -65,7 +95,17 @@ export const AREA_DATA: Record<string, AreaData> = {
     protectionDescription: 'Sweet Home properties face diverse conditions. Our maintenance programs are designed for the unique challenges of the Santiam area.',
     protectionFeatures: ['Cascade Edge Protection', 'Rapid Storm Response', 'Wildfire Defensible Space', 'Forensic Leak Detection'],
     localCommunities: ['Sweet Home', 'Foster', 'Cascadia', 'Lebanon', 'Crawfordsville'],
-    coordinates: { lat: 44.3976, lng: -122.7362 }
+    coordinates: { lat: 44.3976, lng: -122.7362 },
+    caseStudy: {
+      title: 'Mountain Cabin Winterization',
+      description: 'A complete winterization of a mountain cabin in Sweet Home, including insulation, and a new wood stove.',
+      imageUrl: '/images/case-studies/sweet-home-cabin.jpg'
+    },
+    testimonial: {
+      quote: 'Benson Home Solutions made sure our cabin was ready for winter. We couldn\'t be happier with the results.',
+      author: 'Bob Johnson',
+      authorTitle: 'Cabin Owner'
+    }
   },
   burns: {
     slug: 'burns',
@@ -81,7 +121,17 @@ export const AREA_DATA: Record<string, AreaData> = {
     protectionDescription: 'Harney County properties face extreme temperature swings and wildfire risk. Our forensic approach focuses on thermal efficiency, winterization, and wildfire hardening.',
     protectionFeatures: ['Wildfire Hardening Audits', 'Deep Freeze Winterization', 'Commercial Asset Management', 'Ecclesiastical Preservation'],
     localCommunities: ['Burns', 'Hines', 'Riley', 'Drewsey', 'Denio', 'McDermitt'],
-    coordinates: { lat: 43.5863, lng: -119.0544 }
+    coordinates: { lat: 43.5863, lng: -119.0544 },
+    caseStudy: {
+      title: 'Ranch House Wildfire Hardening',
+      description: 'A complete wildfire hardening of a ranch house in Burns, including a new metal roof, fire-resistant siding, and a defensible space.',
+      imageUrl: '/images/case-studies/burns-ranch.jpg'
+    },
+    testimonial: {
+      quote: 'Benson Home Solutions gave us peace of mind. Our ranch is now protected from wildfires.',
+      author: 'Mary Brown',
+      authorTitle: 'Ranch Owner'
+    }
   },
   hines: {
     slug: 'hines',
@@ -97,7 +147,17 @@ export const AREA_DATA: Record<string, AreaData> = {
     protectionDescription: 'Hines properties face intense summer heat and deep winter freezes. Our forensic approach ensures long-term asset survival.',
     protectionFeatures: ['Deep Freeze Protection', 'Wildfire Hardening', 'Forensic Moisture Audits', 'Local Service Priority'],
     localCommunities: ['Hines', 'Burns', 'Riley', 'Crane'],
-    coordinates: { lat: 43.5613, lng: -119.0835 }
+    coordinates: { lat: 43.5613, lng: -119.0835 },
+    caseStudy: {
+      title: 'Commercial Building Winterization',
+      description: 'A complete winterization of a commercial building in Hines, including a new heating system and insulation.',
+      imageUrl: '/images/case-studies/hines-commercial.jpg'
+    },
+    testimonial: {
+      quote: 'Benson Home Solutions helped us save a lot of money on our heating bills. They are the best in the business.',
+      author: 'Tom Williams',
+      authorTitle: 'Business Owner'
+    }
   },
   riley: {
     slug: 'riley',
@@ -113,7 +173,17 @@ export const AREA_DATA: Record<string, AreaData> = {
     protectionDescription: 'In Riley, distance and weather are the primary risks. We specialize in autonomous property health and extreme weather resilience.',
     protectionFeatures: ['Remote Site Monitoring', 'Wildfire Buffer Creation', 'Deep Winter Survival', 'Structural Forensics'],
     localCommunities: ['Riley', 'Hines', 'Burns', 'Hampton'],
-    coordinates: { lat: 43.5388, lng: -119.5049 }
+    coordinates: { lat: 43.5388, lng: -119.5049 },
+    caseStudy: {
+      title: 'Off-Grid Cabin Maintenance',
+      description: 'A complete maintenance of an off-grid cabin in Riley, including solar panel cleaning, and water system inspection.',
+      imageUrl: '/images/case-studies/riley-cabin.jpg'
+    },
+    testimonial: {
+      quote: 'Benson Home Solutions is the only company we trust to take care of our remote cabin.',
+      author: 'Sue Green',
+      authorTitle: 'Cabin Owner'
+    }
   },
   drewsey: {
     slug: 'drewsey',
@@ -129,7 +199,17 @@ export const AREA_DATA: Record<string, AreaData> = {
     protectionDescription: 'Drewsey properties face some of Oregon\'s coldest temperatures. Our winterization programs are the gold standard for high-desert property survival.',
     protectionFeatures: ['Extreme Cold Winterization', 'Thermal Envelope Audits', 'Frozen Pipe Mitigation', 'Wildfire Resilience'],
     localCommunities: ['Drewsey', 'Juntura', 'Burns', 'Crane'],
-    coordinates: { lat: 43.7915, lng: -118.3855 }
+    coordinates: { lat: 43.7915, lng: -118.3855 },
+    caseStudy: {
+      title: 'Historic Hotel Winterization',
+      description: 'A complete winterization of a historic hotel in Drewsey, including a new boiler and insulation.',
+      imageUrl: '/images/case-studies/drewsey-hotel.jpg'
+    },
+    testimonial: {
+      quote: 'Benson Home Solutions helped us preserve a piece of history. We are so grateful for their expertise.',
+      author: 'David Clark',
+      authorTitle: 'Hotel Owner'
+    }
   },
   corvallis: {
     slug: 'corvallis',
@@ -145,7 +225,17 @@ export const AREA_DATA: Record<string, AreaData> = {
     protectionDescription: 'Corvallis properties require specialized maintenance to handle the unique Valley moisture and structural challenges.',
     protectionFeatures: ['Moisture Control Systems', 'Structural Forensic Audits', 'Emergency Water Extraction', 'Preventative Maintenance'],
     localCommunities: ['Corvallis', 'Philomath', 'Adair Village', 'Monmouth', 'Independence'],
-    coordinates: { lat: 44.5646, lng: -123.2620 }
+    coordinates: { lat: 44.5646, lng: -123.2620 },
+    caseStudy: {
+      title: 'OSU Research Facility Maintenance',
+      description: 'A complete maintenance of a research facility at Oregon State University, including HVAC and electrical systems.',
+      imageUrl: '/images/case-studies/corvallis-osu.jpg'
+    },
+    testimonial: {
+      quote: 'Benson Home Solutions is a valuable partner in maintaining our research facilities. They are professional, reliable, and always go the extra mile.',
+      author: 'Dr. Emily Carter',
+      authorTitle: 'Director of Research, OSU'
+    }
   },
   keizer: {
     slug: 'keizer',
@@ -161,7 +251,17 @@ export const AREA_DATA: Record<string, AreaData> = {
     protectionDescription: 'Maintaining the value of Keizer homes through proactive forensic audits and rapid emergency response.',
     protectionFeatures: ['Local Rapid Response', 'Roof & Gutter Systems', 'Siding Integrity Audits', 'Subscription Maintenance'],
     localCommunities: ['Keizer', 'Salem', 'Brooks', 'Hayesville', 'Gervais'],
-    coordinates: { lat: 44.9979, lng: -123.0220 }
+    coordinates: { lat: 44.9979, lng: -123.0220 },
+    caseStudy: {
+      title: 'Retail Storefront Maintenance',
+      description: 'A complete maintenance of a retail storefront in Keizer, including window cleaning, and parking lot maintenance.',
+      imageUrl: '/images/case-studies/keizer-retail.jpg'
+    },
+    testimonial: {
+      quote: 'Benson Home Solutions keeps our storefront looking great. They are a pleasure to work with.',
+      author: 'Laura Davis',
+      authorTitle: 'Store Manager'
+    }
   },
   salem: {
     slug: 'salem',
@@ -177,6 +277,16 @@ export const AREA_DATA: Record<string, AreaData> = {
     protectionDescription: 'Salem properties face diverse moisture and structural risks. Our forensic approach ensures long-term asset protection.',
     protectionFeatures: ['Capitol Region Emergency Response', 'Forensic Audit Technology', 'Monthly Protection Plans', 'Commercial Maintenance'],
     localCommunities: ['Salem', 'Keizer', 'Four Corners', 'West Salem', 'Silverton', 'Dallas'],
-    coordinates: { lat: 44.9429, lng: -123.0351 }
+    coordinates: { lat: 44.9429, lng: -123.0351 },
+    caseStudy: {
+      title: 'State Government Building Maintenance',
+      description: 'A complete maintenance of a state government building in Salem, including HVAC, and plumbing systems.',
+      imageUrl: '/images/case-studies/salem-government.jpg'
+    },
+    testimonial: {
+      quote: 'Benson Home Solutions is a reliable and trustworthy partner. They keep our building running smoothly.',
+      author: 'Mark Johnson',
+      authorTitle: 'Facilities Manager'
+    }
   }
 };

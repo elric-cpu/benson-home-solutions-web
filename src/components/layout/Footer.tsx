@@ -123,7 +123,7 @@ export function Footer() {
             </div>
             <div className="text-sm text-cream/50">
               <a
-                href="http://search.ccb.state.or.us/search/business_details.aspx?id=258533"
+                href="https://search.ccb.state.or.us/search/business_details.aspx?id=258533"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-cream transition-colors underline"

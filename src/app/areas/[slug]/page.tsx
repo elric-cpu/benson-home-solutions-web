@@ -170,6 +170,56 @@ export default async function AreaPage({ params }: Props) {
           </div>
         </Container>
       </Section>
+
+      {area.caseStudy && (
+        <Section variant="cream" spacing="lg">
+          <Container>
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+              <div className="order-last md:order-first">
+                <h2 className="text-4xl font-black uppercase tracking-tight text-oxblood mb-6">
+                  {area.caseStudy.title}
+                </h2>
+                <p className="text-lg text-slate font-medium leading-relaxed mb-8">
+                  {area.caseStudy.description}
+                </p>
+                <Link href="/contact">
+                  <Button variant="secondary">Learn More</Button>
+                </Link>
+              </div>
+              <div>
+                <img
+                  src={area.caseStudy.imageUrl}
+                  alt={area.caseStudy.title}
+                  className="rounded-3xl shadow-xl"
+                />
+              </div>
+            </div>
+          </Container>
+        </Section>
+      )}
+
+      {area.testimonial && (
+        <Section spacing="lg">
+          <Container className="text-center">
+            <h2 className="text-4xl font-black uppercase tracking-tight text-oxblood mb-6">
+              What Our Clients Say
+            </h2>
+            <blockquote className="max-w-3xl mx-auto">
+              <p className="text-2xl font-medium text-slate leading-relaxed">
+                "{area.testimonial.quote}"
+              </p>
+              <footer className="mt-8">
+                <p className="text-xl font-black text-oxblood">
+                  {area.testimonial.author}
+                </p>
+                <p className="text-sm font-medium text-slate">
+                  {area.testimonial.authorTitle}
+                </p>
+              </footer>
+            </blockquote>
+          </Container>
+        </Section>
+      )}
     </main>
   );
 }

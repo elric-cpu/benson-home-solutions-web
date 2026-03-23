@@ -7,16 +7,21 @@ import { CheckCircle2, FileText, Zap, Shield, MapPin, Building2, Home, Church } 
 import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'Maintenance Subscriptions | Proactive Property Care Oregon',
+  title: 'Home Maintenance Subscriptions in Willamette Valley, Oregon',
   description:
-    'Licensed home, commercial, and church maintenance programs. Monthly forensic audits, defined SLAs, and board-ready documentation. Benson Home Solutions serving Salem, Albany, and Burns.',
+    'Benson Home Solutions offers proactive home maintenance subscriptions in the Willamette Valley, including Salem, Albany, and Corvallis. Our programs include monthly forensic audits, defined SLAs, and board-ready documentation.',
   keywords: [
-    'home maintenance subscription Oregon',
-    'commercial property maintenance Salem',
-    'church facility maintenance Oregon',
-    'proactive property care',
-    'forensic home audit',
-    'Benson Home Solutions maintenance',
+    'home maintenance subscription',
+    'preventative home maintenance',
+    'home maintenance plan',
+    'Willamette Valley',
+    'Salem',
+    'Albany',
+    'Corvallis',
+    'Keizer',
+    'Lebanon',
+    'Sweet Home',
+    'Benson Home Solutions',
   ],
 };
 
@@ -30,8 +35,8 @@ export default function MaintenanceSubscriptionsPage() {
             The Maintenance-First Mission
           </Badge>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-cream">
-            Protection, <br />
-            <span className="italic opacity-60">Not Just Repair.</span>
+            Proactive Home <br />
+            <span className="italic opacity-60">Maintenance Subscriptions.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
             Standard property management is reactive. Benson Home Solutions is forensic. Our subscription programs provide the board-ready documentation and monthly oversight required to preserve your asset&apos;s value.
