@@ -6,7 +6,7 @@ export const BUSINESS = {
   email: 'Office@bensonhomesolutions.com',
   license: 'CCB #258533',
   url: 'https://bensonhomesolutions.com',
-  facebook: 'https://facebook.com/bensonhomesolutions',
+  facebook: 'https://www.facebook.com/BensonEnterprisesLLC',
   gbp: 'https://google.com/maps?cid=YOUR_CID_HERE',
 };
 export const SERVICE_AREAS = {
