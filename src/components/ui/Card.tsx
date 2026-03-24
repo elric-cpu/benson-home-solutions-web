@@ -1,36 +1,46 @@
-import * as React from 'react';
-import { cn } from '@/lib/utils';
+import * as React from 'react'
+import { cn } from '@/lib/utils'
 
-const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'outlined'
+  hover?: boolean
+}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant = 'default', hover = false, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('bg-white border-2 border-maroon/5 rounded-[2rem] shadow-xl overflow-hidden', className)}
+      className={cn(
+        'rounded-[2rem] overflow-hidden',
+        variant === 'outlined'
+          ? 'bg-white border-2 border-maroon/10 shadow-sm'
+          : 'bg-white border-2 border-maroon/5 shadow-xl',
+        hover && 'transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl',
+        className
+      )}
       {...props}
     />
   )
-);
-Card.displayName = 'Card';
+)
+Card.displayName = 'Card'
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('p-8 border-b border-maroon/5', className)} {...props} />
   )
-);
-CardHeader.displayName = 'CardHeader';
+)
+CardHeader.displayName = 'CardHeader'
 
 const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h3 ref={ref} className={cn('text-2xl font-black uppercase tracking-tight', className)} {...props} />
   )
-);
-CardTitle.displayName = 'CardTitle';
+)
+CardTitle.displayName = 'CardTitle'
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('p-8', className)} {...props} />
-  )
-);
-CardContent.displayName = 'CardContent';
+  ({ className, ...props }, ref) => <div ref={ref} className={cn('p-8', className)} {...props} />
+)
+CardContent.displayName = 'CardContent'
 
-export { Card, CardHeader, CardTitle, CardContent };
+export { Card, CardHeader, CardTitle, CardContent }

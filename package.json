@@ -33,6 +33,7 @@
     "@googlemaps/addressvalidation": "3.2.1",
     "@next/eslint-plugin-next": "16.2.0",
     "@notionhq/client": "5.13.0",
+    "@portabletext/react": "6.0.3",
     "@sanity/image-url": "^2.0.3",
     "@sanity/vision": "^5.17.1",
     "ai": "6.0.116",
@@ -42,6 +43,7 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "7.0.1",
+    "google-auth-library": "10.6.2",
     "googleapis": "171.4.0",
     "lucide-react": "0.577.0",
     "next": "15.5.12",
@@ -52,6 +54,7 @@
     "sanity": "^5.17.1",
     "tailwind-merge": "~3.5.0",
     "typescript-eslint": "8.57.1",
+    "winston": "3.19.0",
     "zod": "3.25.76"
   },
   "devDependencies": {

@@ -50,20 +50,20 @@ export const masterMarketingFlow = ai.defineFlow(
       const contentDraft = await contentWriterFlow({
         topic: input.topic,
         seo_strategy: seoStrategy,
-        asset_type: input.asset_type
+        asset_type: input.asset_type === 'interactive_tool' ? 'guide' : input.asset_type
       });
 
       // Step 3: Editorial Review
       console.log('[MasterFlow] Running Editorial Lead...');
       const editorialReview = await editorialLeadFlow({
         content_draft: contentDraft.content,
-        asset_type: input.asset_type
+        asset_type: input.asset_type === 'interactive_tool' ? 'guide' : input.asset_type
       });
 
       if (editorialReview.approval_status === 'Nay') {
         console.log('[MasterFlow] Pipeline halted: Editorial rejected draft.');
         return {
-          status: 'rejected',
+          status: 'rejected' as const,
           topic: input.topic,
           reason: 'Editorial rejection: ' + editorialReview.feedback.join('; '),
           artifacts: {
@@ -101,7 +101,7 @@ export const masterMarketingFlow = ai.defineFlow(
 
       console.log('[MasterFlow] Pipeline complete.');
       return {
-        status: 'success',
+        status: 'success' as const,
         topic: input.topic,
         artifacts: {
           seo_strategy: seoStrategy,
@@ -116,7 +116,7 @@ export const masterMarketingFlow = ai.defineFlow(
     } catch (err: any) {
       console.error('[MasterFlow] Pipeline failed:', err);
       return {
-        status: 'failed',
+        status: 'failed' as const,
         topic: input.topic,
         reason: err.message
       };
