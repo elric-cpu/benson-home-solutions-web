@@ -73,8 +73,27 @@ export const marketingAssets = pgTable('marketing_assets', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });
 
+export const catalogItems = pgTable('catalog_items', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  notionId: varchar('notion_id', { length: 100 }).unique(),
+  onebuildId: varchar('onebuild_id', { length: 100 }).unique(),
+  name: varchar('name', { length: 512 }).notNull(),
+  description: text('description'),
+  category1: varchar('category_1', { length: 100 }),
+  category2: varchar('category_2', { length: 100 }),
+  category3: varchar('category_3', { length: 100 }),
+  unitRate: numeric('unit_rate'),
+  materialRate: numeric('material_rate'),
+  laborRate: numeric('labor_rate'),
+  productionRate: numeric('production_rate'),
+  uom: varchar('uom', { length: 50 }),
+  county: varchar('county', { length: 100 }),
+  lastSyncedAt: timestamp('last_synced_at', { withTimezone: true }).defaultNow(),
+});
+
 export type Lead = typeof leads.$inferSelect;
 export type Property = typeof properties.$inferSelect;
 export type MaintenancePlan = typeof maintenancePlans.$inferSelect;
 export type ServiceLog = typeof serviceLogs.$inferSelect;
 export type MarketingAsset = typeof marketingAssets.$inferSelect;
+export type CatalogItem = typeof catalogItems.$inferSelect;

@@ -27,6 +27,10 @@ const faqs: FAQItem[] = [
     question: "How do I save money with proactive care?",
     answer: "According to industry standards (BOMA), proactive maintenance has a 3:1 ROI. By spending a small amount monthly to keep systems in peak condition, you avoid the high cost of emergency repairs, structural restoration, and increased insurance premiums.",
   },
+  {
+    question: "Is Benson Home Solutions a licensed contractor in Oregon?",
+    answer: "Yes. Benson Home Solutions is a fully licensed, bonded, and insured Oregon General Contractor (CCB #258533). We are authorized to perform residential and commercial maintenance, restoration, and remodeling throughout the state, including the Mid-Willamette Valley and Harney County.",
+  },
 ];
 
 export function FAQSection() {

@@ -9,8 +9,13 @@ const auth = new GoogleAuth({
   scopes: [
     'https://www.googleapis.com/auth/cloud-platform',
     'https://www.googleapis.com/auth/webmasters.readonly', // Search Console
+    'https://www.googleapis.com/auth/gmail.send', // Gmail
   ],
 });
+
+export function getGoogleAuth() {
+  return auth;
+}
 
 export async function getAuthClient() {
   return await auth.getClient();

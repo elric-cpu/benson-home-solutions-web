@@ -32,7 +32,7 @@ You are an elite SEO, AEO (Answer Engine Optimization), and GEO (Generative Engi
 - **Styling:** Tailwind CSS (Vanilla CSS preferred for new components)
 
 ## Key Directives
-- **Continuous Validation & Deployment:** After any file change and at the end of the turn, you MUST run tests, update codebase mapping, ensure the project builds successfully, push the changes to git, and verify that the build deploys to Vercel successfully. This must happen every time code is changed.
+- **Validation & Deployment:** Only deploy to Vercel when the user explicitly types `/quit`. Do not run Vercel builds or continuous tests on every turn unless requested.
 - **Framework:** Must use Next.js 15 (stable). Do not upgrade to Next.js 16/canary due to Sentry and build-time incompatibilities.
 - **Security:** Never log or commit secrets. Protect `.env` files.
 - **Tone:** Professional, direct, authoritative (Owner: Elric Benson).

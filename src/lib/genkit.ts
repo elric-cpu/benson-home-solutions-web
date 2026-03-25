@@ -1,5 +1,10 @@
-import { genkit, z } from 'genkit';
+import { genkit, z, tool } from 'genkit';
 import { vertexAI } from '@genkit-ai/google-genai';
+import { db } from '@/lib/db';
+import { leads, properties } from '@/lib/db/schema';
+import { validateAddress } from '@/lib/gcloud/address';
+import { logError, logInfo } from './gcloud/logging';
+import planData from './maintenance-plans.json';
 
 /**
  * Centralized Genkit instance for Benson Home Solutions.
@@ -12,134 +17,141 @@ export const ai = genkit({
 });
 
 /**
- * --- SCHEMAS ---
+ * --- TOOLS ---
  */
 
-export const PropertyAuditSchema = z.object({
-  scorecard: z.object({
-    overall_health: z.number().min(0).max(100),
-    hvac_status: z.string(),
-    roof_status: z.string(),
-    exterior_status: z.string(),
-  }),
-  risk_factors: z.array(z.string()),
-  immediate_actions: z.array(z.string()),
-  long_term_strategy: z.string(),
+const createLeadSchema = z.object({
+  name: z.string().describe("The user's full name."),
+  email: z.string().describe("The user's email address."),
+  phone: z.string().optional().describe("The user's phone number."),
+  address: z.string().optional().describe("The full property address for the service."),
+  service: z.string().describe('The service or plan the user is interested in.'),
+  message: z.string().describe('A summary of the user\'s request and the generated plan details.'),
 });
 
-export const RecommendationSchema = z.object({
-  recommendations: z.array(
-    z.object({
-      service_id: z.string().describe('ID from the provided service catalog'),
-      priority: z.enum(['essential', 'recommended', 'optional']),
-      reasoning: z.string().describe('1-2 sentences explaining WHY this property needs this service'),
-      frequency: z.enum(['monthly', 'quarterly', 'semi-annual', 'annual']),
-      climate_adjustment: z.string().optional().describe('Notes about how local climate affects this service'),
-    }),
-  ),
+export const createLeadTool = tool(
+  {
+    name: 'createLead',
+    description: 'Use this tool AFTER a user has finalized a maintenance plan or requested a quote for a specific project. Collect all required information first.',
+    inputSchema: createLeadSchema,
+    outputSchema: z.string(),
+  },
+  async (input) => {
+    try {
+      logInfo('AI is creating a lead...', input);
+
+      let validatedAddr = null;
+      if (input.address?.trim()) {
+        try {
+          validatedAddr = await validateAddress([input.address.trim()]);
+        } catch (err) {
+          logError(err as Error, { context: 'AI Lead Address Validation' });
+        }
+      }
+
+      const [newLead] = await db.insert(leads).values({
+        name: input.name.trim(),
+        email: input.email.trim().toLowerCase(),
+        phone: input.phone?.trim() || null,
+        serviceType: input.service || 'General Inquiry',
+        message: input.message.trim(),
+        propertyAddress: validatedAddr?.standardizedAddress || input.address || null,
+        status: 'new',
+      }).returning();
+
+      if (validatedAddr && validatedAddr.isDeliverable) {
+        await db.insert(properties).values({
+          leadId: newLead.id,
+          standardizedAddress: validatedAddr.standardizedAddress!,
+          city: validatedAddr.city || null,
+          county: validatedAddr.county || null,
+          lat: validatedAddr.latitude?.toString(),
+          lng: validatedAddr.longitude?.toString(),
+          auditHash: validatedAddr.addressHash,
+        }).onConflictDoNothing();
+      }
+
+      logInfo('AI Lead Captured', { leadId: newLead.id });
+
+      // Asynchronous Enrichment Trigger
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/enrich`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.INTERNAL_API_KEY}`,
+        },
+        body: JSON.stringify({ leadId: newLead.id }),
+      }).catch(err => logError(err as Error, { context: 'AI Enrichment Trigger Failed' }));
+
+      return `Successfully created a lead for ${input.name}. The lead ID is ${newLead.id}. Let the user know we will be in touch within one business day.`;
+    } catch (error) {
+      logError(error as Error, { context: 'AI createLeadTool' });
+      return 'An error occurred while creating the lead. Inform the user and ask them to call 541-321-5115.';
+    }
+  }
+);
+
+const buildMaintenancePlanSchema = z.object({
+    segment: z.enum(['residential', 'commercial', 'church']).describe('The property type.'),
+    addons: z.array(z.string()).describe('A list of optional service IDs to add to the base plan.'),
 });
 
-export const CostEstimationSchema = z.object({
-  estimated_range: z.object({
-    min: z.number(),
-    max: z.number(),
-    currency: z.string().default('USD'),
-  }),
-  breakdown: z.array(
-    z.object({
-      item: z.string(),
-      cost_estimate: z.string(),
-    }),
-  ),
-  caveats: z.array(z.string()),
-  disclaimer: z.string().describe('Standard CCB #258533 disclaimer'),
-});
+const recommendedTierBySegment = {
+  residential: 'standard',
+  commercial: 'plus',
+  church: 'guardian',
+} as const;
 
-export const SeasonalScheduleSchema = z.object({
-  schedule: z.array(
-    z.object({
-      month: z.string(),
-      tasks: z.array(z.string()),
-      urgency: z.enum(['high', 'medium', 'low']),
+type MaintenanceTier = {
+  name: string;
+  price: number;
+  description: string;
+  features: string[];
+};
+
+export const buildMaintenancePlanTool = tool(
+  {
+    name: 'buildMaintenancePlan',
+    description: 'Calculates the monthly cost of a maintenance plan for a given property type and optional add-on services.',
+    inputSchema: buildMaintenancePlanSchema,
+    outputSchema: z.object({
+        planName: z.string(),
+        basePrice: z.number(),
+        addons: z.array(z.object({ name: z.string(), price: z.number() })),
+        totalMonthlyPrice: z.number(),
+        summary: z.string(),
+        // Return the inputs for state synchronization
+        segment: buildMaintenancePlanSchema.shape.segment,
+        addonIds: buildMaintenancePlanSchema.shape.addons,
     }),
-  ),
-});
+  },
+  async ({ segment, addons }) => {
+    const segmentData = planData.segments[segment];
+    const tiersByKey = segmentData.tiers as Record<string, MaintenanceTier>;
+    const recommendedTierKey = recommendedTierBySegment[segment];
+    const recommendedTier = tiersByKey[recommendedTierKey];
+    const basePrice = recommendedTier.price;
+    const addonDetails = addons.map((addonId) => ({
+      name: addonId,
+      price: 0,
+    }));
+    const summary = `The recommended ${segmentData.name} plan is the ${recommendedTier.name} tier at $${basePrice}/month. Custom add-ons are not currently priced in the assistant, so we will confirm any extra scope during your quote.`;
+
+    return {
+        planName: `${segmentData.name} ${recommendedTier.name} Plan`,
+        basePrice,
+        addons: addonDetails,
+        totalMonthlyPrice: basePrice,
+        summary,
+        segment,
+        addonIds: addons,
+    };
+  }
+);
 
 /**
  * --- FLOWS ---
  */
-
-export const propertyAuditFlow = ai.defineFlow(
-  {
-    name: 'propertyAuditFlow',
-    inputSchema: z.string().describe('Property status description'),
-    outputSchema: PropertyAuditSchema,
-  },
-  async (description) => {
-    const response = await ai.generate({
-      system: 'You are Elric Benson (CCB #258533). Analyze the property status and provide a professional, direct audit scorecard.',
-      prompt: `Analyze this property: ${description}`,
-      output: { format: 'json', schema: PropertyAuditSchema },
-    });
-    if (!response.output) throw new Error('Audit failed');
-    return response.output;
-  },
-);
-
-export const costEstimationFlow = ai.defineFlow(
-  {
-    name: 'costEstimationFlow',
-    inputSchema: z.object({
-      project_type: z.string(),
-      details: z.string(),
-    }),
-    outputSchema: CostEstimationSchema,
-  },
-  async (input) => {
-    const response = await ai.generate({
-      system: 'You are a project estimator for Benson Home Solutions. Provide realistic cost ranges for Oregon.',
-      prompt: `Estimate: ${input.project_type} - ${input.details}`,
-      output: { format: 'json', schema: CostEstimationSchema },
-    });
-    if (!response.output) throw new Error('Estimation failed');
-    return response.output;
-  },
-);
-
-export const seasonalSchedulingFlow = ai.defineFlow(
-  {
-    name: 'seasonalSchedulingFlow',
-    inputSchema: z.string().describe('Property type (Residential/Commercial/Church)'),
-    outputSchema: SeasonalScheduleSchema,
-  },
-  async (propertyType) => {
-    const response = await ai.generate({
-      system: 'Generate a 12-month maintenance schedule for an Oregon property. Account for heavy winter rains and dry summers.',
-      prompt: `Create schedule for: ${propertyType}`,
-      output: { format: 'json', schema: SeasonalScheduleSchema },
-    });
-    if (!response.output) throw new Error('Schedule failed');
-    return response.output;
-  },
-);
-
-export const seoSummaryFlow = ai.defineFlow(
-  {
-    name: 'seoSummaryFlow',
-    inputSchema: z.object({
-      title: z.string(),
-      content: z.string(),
-    }),
-    outputSchema: z.string(),
-  },
-  async (input) => {
-    const response = await ai.generate({
-      system: 'You are an SEO expert for Benson Home Solutions. Create a "Zero-Click" Answer-First summary for the given topic. Be direct, authoritative, and mention CCB #258533 if appropriate.',
-      prompt: `Generate a 2-3 sentence Answer-First summary for: ${input.title}. Page content: ${input.content}`,
-    });
-    return response.text;
-  },
-);
 
 export const generalChatFlow = ai.defineFlow(
   {
@@ -152,18 +164,27 @@ export const generalChatFlow = ai.defineFlow(
   },
   async (input, { sendChunk }) => {
     const systemPrompt = `
-You are Gus, the AI trade assistant for Benson Home Solutions (CCB #258533).
-Tone: Professional, direct, authoritative, and deeply sarcastic about poor maintenance.
-Owner: Elric Benson.
-Service area: Mid-Willamette Valley & Harney County.
-"Maintenance isn't an expense, it's an investment in not being homeless."
-If it's an emergency, tell them to call 541-555-0199 immediately.
-Mention CCB #258533 to build trust.
+You are Gus, the AI assistant for Benson Home Solutions (CCB #258533), a company of maintenance specialists. Your voice is that of the owner, Elric Benson: confident, direct, and authoritative. You are a systems-age truth-teller.
+
+**Your Core Belief:** "Maintenance is cheaper than surprise repair." Frame your advice around this philosophy. Nothing lasts forever, and proactive maintenance is the only way to avoid costly emergencies.
+
+**Your Primary Goal:** Help users build a custom monthly maintenance plan.
+
+**Your Process:**
+1.  **Diagnose First:** Start by understanding the user's property. Is it Residential, Commercial, or a Church? Ask investigative questions to understand their needs before you recommend services.
+2.  **Educate & Recommend:** Inform them of the base price for their plan. Explain the value of the included services. Suggest relevant add-ons from the list below, explaining how they prevent future problems.
+3.  **Build the Plan:** Once they've chosen services, use the \`buildMaintenancePlanTool\` to calculate the total cost.
+4.  **Capture the Lead:** Present the final plan. If they're ready, use the \`createLeadTool\` to get them signed up.
+
+**Key Differentiator:** We own specialized tools that most contractors rent, like interior concrete saws and large-scale dehumidifiers. This means the job gets done right the first time. Mention this when relevant.
+
+**Emergency Protocol:** If the user has an active emergency (like a leak), immediately tell them to call the after-hours line at (541) 413-0480. Do not try to build a plan.
 `;
 
     const { stream, response } = await ai.generateStream({
       system: systemPrompt,
       prompt: input.message,
+      tools: [buildMaintenancePlanTool, createLeadTool],
     });
 
     for await (const chunk of stream) {

@@ -6,8 +6,8 @@ import { Quote, CheckCircle2 } from 'lucide-react';
 import { BUSINESS } from '@/lib/constants';
 
 export const metadata = {
-  title: 'Benson Home Solutions | Proactive Home Maintenance in Oregon',
-  description: 'Forensic home maintenance for the Mid-Willamette Valley and Harney County. Stop reacting to leaks and start maintaining with our monthly protection plans.',
+  title: 'Benson Home Solutions | Proactive Home Maintenance in Salem, Oregon',
+  description: 'Stop reacting to expensive home repairs. We are a Salem-based general contractor specializing in proactive maintenance plans for the Mid-Willamette Valley and Harney County.',
 };
 
 /**
@@ -23,22 +23,23 @@ export default function HomePage() {
           <Badge variant="secondary" className="mb-8 uppercase tracking-widest font-black border-oxblood/30 text-oxblood px-4 py-1.5">
             Oregon CCB #258533
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-black mb-8 leading-[1.05] tracking-tight text-oxblood">
-            Stop Reacting to Leaks. <br />
-            <span className="text-oxblood/60 italic">Start Maintaining.</span>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black mb-8 leading-[1.05] tracking-tight text-oxblood">
+            Stop Paying for Emergency Repairs.
+            <br />
+            <span className="text-oxblood/60 italic">Start Investing in Maintenance.</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            We provide proactive, forensic home maintenance for the Mid-Willamette Valley and Harney County. If we aren&apos;t on your property once a month, you aren&apos;t protected.
+          <p className="text-lg md:text-2xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto px-4">
+            {`We're not the contractors you call when a pipe bursts. We're the team you hire to prevent it from ever happening. We own and operate the specialized equipment most contractors rent, ensuring quality control and faster results.`}
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6 mb-8">
-            <Link href="/tools/cost-calculator">
-              <Button size="lg" className="w-full sm:w-auto px-10 py-8 text-lg font-black uppercase tracking-widest shadow-xl shadow-oxblood/20">
-                True Cost Calculator
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8 px-4">
+            <Link href="/tools/cost-calculator" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full px-10 py-7 text-base md:text-lg font-black uppercase tracking-widest shadow-xl shadow-oxblood/20 active:scale-95 transition-transform">
+                Calculate Your Risk
               </Button>
             </Link>
-            <Link href="/services/maintenance-subscriptions">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto px-10 py-8 text-lg font-black uppercase tracking-widest border-2 border-oxblood text-oxblood hover:bg-oxblood hover:text-cream">
-                View Plans
+            <Link href="/plans" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full px-10 py-7 text-base md:text-lg font-black uppercase tracking-widest border-2 border-oxblood text-oxblood hover:bg-oxblood hover:text-cream active:scale-95 transition-transform">
+                Explore Maintenance Plans
               </Button>
             </Link>
           </div>
@@ -50,7 +51,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <span>Join 150+ Protected Properties</span>
+            <span>Trusted by 150+ Property Owners in Oregon</span>
           </div>
         </Container>
       </Section>
@@ -62,24 +63,48 @@ export default function HomePage() {
             <div className="group">
               <div className="h-2 w-12 bg-oxblood mb-6 group-hover:w-full transition-all duration-500" />
               <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Forensic Audits</h3>
-              <p className="text-slate font-medium leading-relaxed">
-                We find moisture, heat loss, and structural decay before they become insurance claims. Standard inspections are visual; we are forensic.
+              <p className="text-slate font-medium leading-relaxed mb-6">
+                A standard home inspection is visual. We use thermal cameras, moisture meters, and pressure tests to find problems before they&apos;re visible to the naked eye.
               </p>
+              <Link href="/contact?service=audit" className="text-xs font-black uppercase tracking-widest text-oxblood border-b-2 border-oxblood pb-1 hover:opacity-70 transition-opacity">
+                Request a Forensic Audit &rarr;
+              </Link>
             </div>
             <div className="group">
               <div className="h-2 w-12 bg-oxblood mb-6 group-hover:w-full transition-all duration-500" />
-              <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Valley Protection</h3>
-              <p className="text-slate font-medium leading-relaxed">
-                Specifically engineered for the Mid-Willamette Valley climate. Gutters, drainage, and building envelopes optimized for Oregon rain.
+              <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Engineered for Oregon</h3>
+              <p className="text-slate font-medium leading-relaxed mb-6">
+                From the wet winters of the Willamette Valley to the dry summers of Harney County, our maintenance plans are designed for Oregon&apos;s unique climate.
               </p>
+              <Link href="/areas" className="text-xs font-black uppercase tracking-widest text-oxblood border-b-2 border-oxblood pb-1 hover:opacity-70 transition-opacity">
+                View Service Areas &rarr;
+              </Link>
             </div>
             <div className="group">
               <div className="h-2 w-12 bg-oxblood mb-6 group-hover:w-full transition-all duration-500" />
-              <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">High Desert Prep</h3>
-              <p className="text-slate font-medium leading-relaxed">
-                Harney County winterization and wildfire hardening. We protect properties from Burns to Drewsey against extreme climate swings.
+              <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Data-Driven Repairs</h3>
+              <p className="text-slate font-medium leading-relaxed mb-6">
+                We don&apos;t guess. We provide you with a detailed report of our findings, so you can make informed decisions about your property.
               </p>
+              <Link href="/methodology" className="text-xs font-black uppercase tracking-widest text-oxblood border-b-2 border-oxblood pb-1 hover:opacity-70 transition-opacity">
+                Our Methodology &rarr;
+              </Link>
             </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Audit CTA Section */}
+      <Section variant="cream" spacing="sm" className="border-y border-oxblood/5">
+        <Container>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 py-4">
+            <div className="text-center md:text-left">
+              <h4 className="text-xl font-black uppercase tracking-tight text-oxblood">An $800 inspection now can save you $15,000 later.</h4>
+              <p className="text-slate font-medium text-sm">The average cost of non-weather-related water damage repair is over $15,000. Our forensic audits start at $800.</p>
+            </div>
+            <Link href="/contact?service=audit">
+              <Button className="font-black uppercase tracking-widest px-8">Schedule Your Audit</Button>
+            </Link>
           </div>
         </Container>
       </Section>
@@ -92,14 +117,14 @@ export default function HomePage() {
         <Container size="narrow" className="text-center">
           <Quote className="w-16 h-16 text-oxblood/20 mx-auto mb-8" />
           <blockquote className="text-3xl md:text-4xl font-black italic text-oxblood mb-8 leading-tight tracking-tight">
-            &ldquo;A visual home inspection is like checking the oil with the engine off. We go forensic because you can&apos;t protect what you can&apos;t see.&rdquo;
+            {`"A visual inspection just tells you what's already broken. I'd rather tell you what's about to break. That's the difference between a $500 fix and a $25,000 renovation."`}
           </blockquote>
           <div className="flex flex-col items-center">
             <div className="font-black text-xl uppercase tracking-widest text-oxblood mb-1">
               {BUSINESS.owner}
             </div>
             <div className="text-oxblood/60 font-bold uppercase tracking-widest text-xs">
-              Founder & Master Inspector
+              Founder & General Contractor
             </div>
           </div>
         </Container>
@@ -110,10 +135,10 @@ export default function HomePage() {
         <Container>
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-oxblood mb-4">
-              Monthly Protection Plans
+              Choose Your Maintenance Plan
             </h2>
             <p className="text-xl text-slate font-medium max-w-2xl mx-auto">
-              Proactive, board-ready maintenance for every type of property.
+              Proactive maintenance plans for homeowners, commercial properties, and churches.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -125,19 +150,19 @@ export default function HomePage() {
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Monthly Forensic Audit</span>
+                    <span className="font-medium text-slate">Quarterly Forensic Audit</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Gutter & Drainage Clearing</span>
+                    <span className="font-medium text-slate">Gutter, Drainage & HVAC Checks</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">HVAC & Plumbing Health Checks</span>
+                    <span className="font-medium text-slate">Priority Scheduling for Repairs</span>
                   </li>
                 </ul>
-                <Link href="/services/maintenance-subscriptions">
-                  <Button className="w-full font-black uppercase tracking-widest">Plan Details</Button>
+                <Link href="/plans">
+                  <Button className="w-full font-black uppercase tracking-widest">View Residential Plans</Button>
                 </Link>
               </CardContent>
             </Card>
@@ -154,40 +179,40 @@ export default function HomePage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-cream shrink-0 mt-1" />
-                    <span className="font-medium">Priority 4hr Emergency SLA</span>
+                    <span className="font-medium">4-Hour Emergency Response SLA</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-cream shrink-0 mt-1" />
-                    <span className="font-medium">Lifecycle Expense Mapping</span>
+                    <span className="font-medium">Capital Expense Forecasting</span>
                   </li>
                 </ul>
-                <Link href="/services/maintenance-subscriptions">
-                  <Button variant="secondary" className="w-full font-black uppercase tracking-widest">Plan Details</Button>
+                <Link href="/plans">
+                  <Button variant="secondary" className="w-full font-black uppercase tracking-widest">View Commercial Plans</Button>
                 </Link>
               </CardContent>
             </Card>
 
             <Card hover className="bg-cream/30">
               <CardHeader>
-                <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood">Churches</h3>
+                <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood">Churches & Non-Profits</h3>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Historical Asset Preservation</span>
+                    <span className="font-medium text-slate">Historic Building Preservation</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Facility Budget Planning</span>
+                    <span className="font-medium text-slate">Facility Budget & Grant Support</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Volunteer Support Systems</span>
+                    <span className="font-medium text-slate">Volunteer Coordination & Training</span>
                   </li>
                 </ul>
-                <Link href="/services/maintenance-subscriptions">
-                  <Button className="w-full font-black uppercase tracking-widest">Plan Details</Button>
+                <Link href="/plans">
+                  <Button className="w-full font-black uppercase tracking-widest">View Facility Plans</Button>
                 </Link>
               </CardContent>
             </Card>

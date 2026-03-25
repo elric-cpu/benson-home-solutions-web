@@ -5,17 +5,17 @@ import { Phone, Mail } from 'lucide-react';
 
 const footerNav = {
   services: [
-    { name: 'Residential Maintenance', href: '/services/maintenance-subscriptions' },
-    { name: 'Commercial Services', href: '/services/maintenance-subscriptions' },
+    { name: 'Residential Maintenance', href: '/plans' },
+    { name: 'Commercial Services', href: '/plans' },
     { name: 'Emergency Repairs', href: '/emergency' },
-    { name: 'Church & Non-Profit', href: '/services/maintenance-subscriptions' },
-    { name: 'All Services', href: '/services' },
+    { name: 'Church & Non-Profit', href: '/plans' },
+    { name: 'All Plans', href: '/plans' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
     { name: 'Our Methodology', href: '/methodology' },
-    { name: 'Projects', href: '/projects' },
-    { name: 'Blog', href: '/blog' },
+    { name: 'Service Areas', href: '/areas' },
+    { name: 'Emergency Response', href: '/emergency' },
     { name: 'Contact', href: '/contact' },
   ],
   resources: [

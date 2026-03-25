@@ -18,7 +18,8 @@
     "test:selenium": "node scripts/run-selenium.js",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "genkit:dev": "genkit develop"
+    "genkit:dev": "genkit develop",
+    "mcp:notion": "tsx src/lib/mcp/notion-server.ts"
   },
   "dependencies": {
     "@eslint/eslintrc": "3.3.5",
@@ -31,6 +32,7 @@
     "@google-cloud/storage": "7.19.0",
     "@google-cloud/vertexai": "1.10.0",
     "@googlemaps/addressvalidation": "3.2.1",
+    "@modelcontextprotocol/sdk": "1.27.1",
     "@next/eslint-plugin-next": "16.2.0",
     "@notionhq/client": "5.13.0",
     "ai": "6.0.116",
@@ -46,6 +48,7 @@
     "postgres": "3.4.8",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "schema-dts": "2.0.0",
     "tailwind-merge": "~3.5.0",
     "typescript-eslint": "8.57.1",
     "zod": "3.25.76"

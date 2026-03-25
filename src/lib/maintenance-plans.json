@@ -1,0 +1,121 @@
+{
+  "segments": {
+    "residential": {
+      "name": "Residential",
+      "tiers": {
+        "essential": {
+          "name": "Essential",
+          "price": 125,
+          "description": "The foundational protection for your home. We handle the critical preventative maintenance so you can avoid common, costly emergencies.",
+          "features": [
+            "Annual Forensic Audit of Exterior & Crawlspace",
+            "Gutter & Downspout Clearing (2x/year)",
+            "Drainage & Sump Pump Check (2x/year)",
+            "Priority Scheduling for All Repairs"
+          ]
+        },
+        "standard": {
+          "name": "Standard",
+          "price": 250,
+          "description": "Our most popular plan. Comprehensive interior and exterior maintenance to protect your home's value and prevent long-term decay.",
+          "features": [
+            "All Essential Plan Features",
+            "Semi-Annual Full Forensic Audit (Interior & Exterior)",
+            "HVAC & Plumbing Health Checks",
+            "Smoke & CO Detector Battery Replacement",
+            "Annual Attic & Insulation Inspection"
+          ]
+        },
+        "premium": {
+          "name": "Premium",
+          "price": 475,
+          "description": "Complete peace of mind. Full-service maintenance for homeowners who want to 'set it and forget it'.",
+          "features": [
+            "All Standard Plan Features",
+            "Quarterly Full Forensic Audits",
+            "Winterization/De-Winterization Included",
+            "Yard & Debris Maintenance (Quarterly)",
+            "24/7 Emergency Phone Support"
+          ]
+        }
+      }
+    },
+    "commercial": {
+      "name": "Commercial",
+      "tiers": {
+        "core": {
+          "name": "Core",
+          "price": 450,
+          "description": "Protect your asset and your tenants. This plan covers the critical systems that prevent business disruption and liability.",
+          "features": [
+            "Quarterly Forensic Audits (Common Areas & Roof)",
+            "Annual HVAC & Fire Suppression System Checks",
+            "Parking Lot & Walkway Safety Inspections",
+            "Board-Ready Digital Asset Reports"
+          ]
+        },
+        "plus": {
+          "name": "Plus",
+          "price": 850,
+          "description": "Comprehensive maintenance for property managers and boards who need to mitigate risk and forecast expenses.",
+          "features": [
+            "All Core Plan Features",
+            "4-Hour Emergency Response SLA",
+            "Lifecycle Expense Mapping & Capital Planning",
+            "Tenant Move-In/Move-Out Prep",
+            "Monthly Exterior Condition Assessments"
+          ]
+        },
+        "custom": {
+          "name": "Custom",
+          "price": 0,
+          "description": "For portfolios or properties with unique needs. We'll build a custom maintenance scope and SLA for you.",
+          "features": [
+            "Fully Customized Scope of Work",
+            "Dedicated Account Manager",
+            "Multi-Property Discounts",
+            "Integration with Your Management Software"
+          ]
+        }
+      }
+    },
+    "church": {
+      "name": "Churches",
+      "tiers": {
+        "stewardship": {
+          "name": "Stewardship",
+          "price": 350,
+          "description": "Preserve your historic assets and protect your congregation. This plan focuses on safety and long-term preservation.",
+          "features": [
+            "Annual Historical Asset Preservation Audit",
+            "Safety & Egress Pathway Inspections",
+            "Plumbing & Electrical Systems Check",
+            "Facility Budget & Grant Support"
+          ]
+        },
+        "guardian": {
+          "name": "Guardian",
+          "price": 650,
+          "description": "Comprehensive care for your facilities, allowing your staff and volunteers to focus on ministry.",
+          "features": [
+            "All Stewardship Plan Features",
+            "Volunteer Coordination & Training for Minor Repairs",
+            "Event Setup & Teardown Support (4x/year)",
+            "Grounds & Landscaping Maintenance Coordination"
+          ]
+        },
+        "custom": {
+          "name": "Custom",
+          "price": 0,
+          "description": "For campuses with multiple buildings or unique needs, we can create a custom plan.",
+          "features": [
+            "Fully Customized Maintenance Plan",
+            "Capital Campaign & Fundraising Support",
+            "Historic Landmark Compliance Assistance",
+            "On-Call Facility Support"
+          ]
+        }
+      }
+    }
+  }
+}

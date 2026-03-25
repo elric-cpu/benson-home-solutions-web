@@ -22,6 +22,13 @@
       "when": 1773623251405,
       "tag": "0002_glossy_marten_broadcloak",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1774327960888,
+      "tag": "0003_broken_quicksilver",
+      "breakpoints": true
     }
   ]
 }

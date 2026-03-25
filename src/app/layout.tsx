@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { sourceSans3 } from '@/lib/fonts';
 import { Header } from '@/components/layout';
 import { Footer } from '@/components/layout';
-import { BUSINESS } from '@/lib/constants';
+import { getOrganizationSchema } from '@/lib/schema/organization';
 import './globals.css';
 import { AIChat } from '@/components/AIChat';
 
@@ -50,45 +50,12 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-/**
- * Root Layout - Rebuild V1 (2026)
- * Strict maintainability: Keep under 450 lines.
- */
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'HomeAndConstructionBusiness',
-    name: BUSINESS.name,
-    url: 'https://bensonhomesolutions.com',
-    logo: 'https://bensonhomesolutions.com/favicon.svg',
-    contactPoint: {
-      '@type': 'ContactPoint',
-      telephone: BUSINESS.phone,
-      contactType: 'customer service',
-      areaServed: 'US',
-      availableLanguage: 'en',
-    },
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Albany',
-      addressRegion: 'OR',
-      postalCode: '97321',
-      addressCountry: 'US',
-    },
-    sameAs: [
-      'https://maps.app.goo.gl/ad4eywwWonPsSZXP9',
-      'https://www.facebook.com/profile.php?id=61565667928376',
-      'https://search.ccb.state.or.us/search/search_results.aspx?license_number=258533',
-      'https://www.bbb.org/us/or/albany/profile/general-contractor/benson-home-solutions-1296-1000137452',
-      'https://www.yelp.com/biz/benson-home-solutions-albany',
-    ],
-    priceRange: '$$',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2000',
-  };
+  const organizationSchema = getOrganizationSchema();
 
   return (
     <html lang="en" className={sourceSans3.variable}>
@@ -99,7 +66,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col antialiased bg-cream text-charcoal">
-        <a href="#main-content" className="skip-nav">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:text-black focus:z-50 focus:top-0 focus:left-0">
           Skip to main content
         </a>
         <Header />

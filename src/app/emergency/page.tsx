@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Container, Section, Button, Badge } from '@/components/ui';
+import { Container, Section, Button, Badge, Card, CardContent } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
-import { ShieldAlert, Clock, Droplets, Wind } from 'lucide-react';
+import { ShieldAlert, Phone, Droplets, Wind, Zap } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: '24/7 Emergency Response | Benson Home Solutions',
   description:
-    'Rapid forensic emergency response for water damage, storm damage, and structural failures in the Mid-Willamette Valley. Call (541) 413-0480 for immediate dispatch.',
+    'Water damage, storm damage, or structural failure in the Mid-Willamette Valley? Call (541) 413-0480 for immediate, expert help. We stop the damage and start the recovery.',
 };
 
 export default function EmergencyPage() {
@@ -17,68 +17,104 @@ export default function EmergencyPage() {
         <div className="absolute top-0 right-0 w-1/3 h-full bg-red-600/10 skew-x-12 transform origin-top-right" />
         <Container className="text-center relative z-10">
           <Badge className="mb-6 bg-red-600 text-white border-none px-4 py-2 uppercase tracking-widest font-black flex items-center gap-2 mx-auto w-fit animate-pulse">
-            <ShieldAlert className="w-4 h-4" /> Critical Response Team
+            <ShieldAlert className="w-4 h-4" /> Urgent Response Team
           </Badge>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-cream">
-            24/7 Forensic <br />
-            <span className="italic opacity-60">Emergency Dispatch.</span>
+            Stay Calm. <br />
+            <span className="italic opacity-60">We&apos;re on the way.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
-            When disaster strikes, every minute counts. We provide immediate forensic stabilization to stop the damage and protect your property from secondary failure.
+            If you have an active emergency, call us immediately. We don&apos;t use an answering service. You&apos;ll speak directly to a contractor who can dispatch a team to your property, day or night.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <a href={`tel:${BUSINESS.afterhoursPhone}`}>
               <Button size="lg" className="w-full sm:w-auto px-10 py-8 text-xl font-black uppercase tracking-widest bg-red-600 text-white border-none hover:bg-red-700 shadow-2xl shadow-red-900/50">
-                Call {BUSINESS.afterhoursPhone}
+                <Phone className="w-6 h-6 mr-3" /> Call Now: {BUSINESS.afterhoursPhone}
               </Button>
             </a>
           </div>
         </Container>
       </Section>
+      
+      <Section spacing="lg">
+        <Container>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-oxblood mb-4">
+              What to Do Right Now
+            </h2>
+            <p className="text-xl text-slate font-medium max-w-2xl mx-auto">
+              Follow these steps while our team is on the way to minimize damage.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card>
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">1. Shut Off the Source</h3>
+                <p className="text-slate font-medium leading-relaxed">If you have a leak, shut off the main water valve to your property. For storm damage, stay away from broken windows and damaged electrical lines.</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">2. Move Valuables</h3>
+                <p className="text-slate font-medium leading-relaxed">If it&apos;s safe to do so, move any electronics, furniture, and personal belongings away from the affected area to prevent further damage.</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">3. Call Your Insurance</h3>
+                <p className="text-slate font-medium leading-relaxed">Once the immediate danger is stabilized, contact your insurance company to inform them of the situation. We can provide them with any documentation they need.</p>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      </Section>
 
-      <Section spacing="md">
+      <Section variant="cream" spacing="md">
         <Container>
           <div className="grid md:grid-cols-3 gap-12">
-            <div className="p-8 border-2 border-oxblood/5 rounded-3xl hover:border-red-600/20 transition-all">
-              <div className="mb-6 text-red-600"><Clock className="w-10 h-10" /></div>
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">4hr Response SLA</h3>
-              <p className="text-slate font-medium leading-relaxed">
-                Guaranteed on-site response within 4 hours for subscription members. We prioritize our partners when the Valley floods.
-              </p>
-            </div>
-            <div className="p-8 border-2 border-oxblood/5 rounded-3xl hover:border-red-600/20 transition-all">
+            <div className="p-8">
               <div className="mb-6 text-red-600"><Droplets className="w-10 h-10" /></div>
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Flood & Leak Stop</h3>
+              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Stop the Damage, Fast</h3>
               <p className="text-slate font-medium leading-relaxed">
-                Emergency extraction and source isolation. We stop the water before it compromises your structural framing.
+                We use commercial-grade equipment to extract water, dry out structures, and prevent the secondary damage that happens within the first 24 hours.
               </p>
             </div>
-            <div className="p-8 border-2 border-oxblood/5 rounded-3xl hover:border-red-600/20 transition-all">
+            <div className="p-8">
               <div className="mb-6 text-red-600"><Wind className="w-10 h-10" /></div>
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Storm Board-Up</h3>
+              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Secure Your Property</h3>
               <p className="text-slate font-medium leading-relaxed">
-                Immediate window, door, and roof stabilization following storm or impact damage to prevent unauthorized entry and moisture intrusion.
+                Our team provides immediate board-up services for windows, doors, and roofs to protect your property from the elements and prevent unauthorized access.
+              </p>
+            </div>
+            <div className="p-8">
+              <div className="mb-6 text-red-600"><Zap className="w-10 h-10" /></div>
+              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">A Clear Path to Recovery</h3>
+              <p className="text-slate font-medium leading-relaxed">
+                Once the situation is stable, we provide a clear, data-backed plan for restoration. No guesswork, just a straightforward path to getting your property back to normal.
               </p>
             </div>
           </div>
         </Container>
       </Section>
 
-      <Section variant="cream" spacing="lg">
+      <Section spacing="lg">
         <Container size="narrow" className="text-center">
           <h2 className="text-4xl font-black uppercase tracking-tight text-oxblood mb-8">
-            Why Wait for Business Hours?
+            Don&apos;t Have an Emergency? Let&apos;s Keep It That Way.
           </h2>
           <p className="text-xl text-slate font-medium leading-relaxed mb-12">
-            Secondary damage—like mold growth and structural shifting—begins in as little as 24 hours. A late response can double the cost of your insurance claim.
+            The best way to handle an emergency is to prevent it from ever happening. Our maintenance plans are designed to identify and fix potential disasters before they strike.
           </p>
-          <div className="bg-oxblood p-10 rounded-3xl text-cream flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-left">
-              <div className="text-xs font-black uppercase tracking-widest opacity-60 mb-1">Direct Emergency Line</div>
-              <div className="text-3xl font-black italic">{BUSINESS.afterhoursPhone}</div>
-            </div>
-            <Link href="/services/maintenance-subscriptions">
-              <Button variant="secondary" className="font-black uppercase tracking-widest px-8">View Priority Plans</Button>
+          <div className="flex flex-col sm:flex-row justify-center gap-6">
+            <Link href="/plans">
+              <Button size="lg" className="w-full sm:w-auto px-10 py-7 text-lg font-black uppercase tracking-widest">
+                Explore Our Plans
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto px-10 py-7 text-lg font-black uppercase tracking-widest border-2 border-oxblood text-oxblood">
+                Request a Consultation
+              </Button>
             </Link>
           </div>
         </Container>

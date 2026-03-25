@@ -1,7 +1,7 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: 'https://bensonhomesolutions.com',
-  generateRobotsTxt: true,
+  generateRobotsTxt: false,
   exclude: ['/studio/*', '/api/*'],
   generateIndexSitemap: false,
   changefreq: 'weekly',

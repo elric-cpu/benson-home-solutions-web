@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -5,6 +6,7 @@ import { Container, Section, Button, Badge } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
 import { MapPin, ShieldCheck } from 'lucide-react';
 import { AREA_DATA } from '@/lib/area-data';
+import { BreadcrumbJsonLd } from '@/components/seo/BreadcrumbJsonLd';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -110,6 +112,13 @@ export default async function AreaPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', item: '/' },
+          { name: 'Service Areas', item: '/areas' },
+          { name: area.city, item: `/areas/${slug}` },
+        ]}
+      />
 
       <Section variant="oxblood" spacing="lg">
         <Container className="text-center">
@@ -187,9 +196,11 @@ export default async function AreaPage({ params }: Props) {
                 </Link>
               </div>
               <div>
-                <img
+                <Image
                   src={area.caseStudy.imageUrl}
                   alt={area.caseStudy.title}
+                  width={800}
+                  height={600}
                   className="rounded-3xl shadow-xl"
                 />
               </div>
@@ -206,7 +217,7 @@ export default async function AreaPage({ params }: Props) {
             </h2>
             <blockquote className="max-w-3xl mx-auto">
               <p className="text-2xl font-medium text-slate leading-relaxed">
-                "{area.testimonial.quote}"
+                &ldquo;{area.testimonial.quote}&rdquo;
               </p>
               <footer className="mt-8">
                 <p className="text-xl font-black text-oxblood">
@@ -220,6 +231,29 @@ export default async function AreaPage({ params }: Props) {
           </Container>
         </Section>
       )}
+
+      {/* Internal Linking: Related Services */}
+      <Section variant="cream" spacing="md" className="border-t border-oxblood/5">
+        <Container>
+          <div className="text-center mb-12">
+            <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood">Available Services in {area.city}</h3>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { name: 'Water Damage Restoration', href: `/areas/${slug}/water-damage-repair` },
+              { name: 'Proactive Maintenance', href: `/areas/${slug}/proactive-maintenance` },
+              { name: 'Emergency Restoration', href: `/areas/${slug}/emergency-restoration` },
+              { name: 'Remodeling', href: `/areas/${slug}/remodeling` },
+            ].map((service) => (
+              <Link key={service.href} href={service.href}>
+                <Button variant="outline" className="w-full text-xs font-black uppercase tracking-widest border-oxblood/20 text-oxblood hover:bg-oxblood hover:text-cream">
+                  {service.name}
+                </Button>
+              </Link>
+            ))}
+          </div>
+        </Container>
+      </Section>
     </main>
   );
 }

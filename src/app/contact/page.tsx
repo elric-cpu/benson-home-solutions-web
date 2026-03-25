@@ -15,19 +15,20 @@ interface FormData {
   name: string;
   email: string;
   phone: string;
+  address: string;
   service: string;
   message: string;
+  honeypot: string; // Anti-spam
 }
 
 const serviceOptions = [
-  'Residential Maintenance',
-  'Commercial Services',
-  'Church & Non-Profit',
-  'Emergency Repairs',
-  'Remodeling',
-  'Water Damage Restoration',
-  'General Inquiry',
-  'Other',
+  'Residential Maintenance Plan',
+  'Commercial Maintenance Plan',
+  'Church & Non-Profit Maintenance Plan',
+  'Forensic Audit & Inspection',
+  'Water Damage or Restoration',
+  'Remodeling Inquiry',
+  'General Question',
 ];
 
 export default function ContactPage() {
@@ -35,11 +36,14 @@ export default function ContactPage() {
     name: '',
     email: '',
     phone: '',
+    address: '',
     service: '',
     message: '',
+    honeypot: '',
   });
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [submittedName, setSubmittedName] = useState('');
 
   const handleChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -47,8 +51,11 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (formData.honeypot) return; // Silent fail for bots
+
     setStatus('submitting');
     setErrorMessage('');
+    setSubmittedName(formData.name);
 
     try {
       const res = await fetch('/api/contact', {
@@ -63,7 +70,7 @@ export default function ContactPage() {
       }
 
       setStatus('success');
-      setFormData({ name: '', email: '', phone: '', service: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', address: '', service: '', message: '', honeypot: '' });
     } catch (err) {
       setStatus('error');
       setErrorMessage(
@@ -78,10 +85,10 @@ export default function ContactPage() {
         <Container>
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-black text-oxblood leading-tight uppercase tracking-tight">
-              Request Your Property Audit
+              Let&apos;s Talk About Your Property
             </h1>
             <p className="mt-4 text-lg font-medium text-slate leading-relaxed">
-              Stop reacting to damage. Schedule a forensic audit to identify risks before they become expensive repairs, or reach out directly.
+              {`Whether you're ready for a maintenance plan, need a specific repair, or just have a question, we're here to help. Fill out the form below, and we'll get back to you within one business day.`}
             </p>
           </div>
         </Container>
@@ -97,17 +104,17 @@ export default function ContactPage() {
                   <div className="flex justify-center mb-4">
                     <CheckCircle2 className="w-12 h-12 text-green-600" />
                   </div>
-                  <h2 className="text-2xl font-bold text-charcoal">
+                  <h2 className="text-2xl font-bold text-charcoal uppercase tracking-tight">
                     Message Sent!
                   </h2>
-                  <p className="mt-2 text-slate">
-                    Thanks for reaching out. We&apos;ll get back to you within
-                    one business day.
+                  <p className="mt-2 text-slate font-medium">
+                    Thanks, {submittedName.split(' ')[0]}. We&apos;ve received your message and will get back to you within one business day. If this is an emergency, please call our 24/7 line at {BUSINESS.afterhoursPhone}.
                   </p>
-                  <div className="mt-6">
+                  <div className="mt-8">
                     <Button
                       variant="outline"
                       onClick={() => setStatus('idle')}
+                      className="font-black uppercase tracking-widest"
                     >
                       Send Another Message
                     </Button>
@@ -115,222 +122,101 @@ export default function ContactPage() {
                 </Card>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Honeypot */}
+                  <input type="text" name="honeypot" className="hidden" value={formData.honeypot} onChange={(e) => handleChange('honeypot', e.target.value)} />
+
                   {/* Name */}
                   <div>
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-charcoal mb-1"
-                    >
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      required
-                      value={formData.name}
-                      onChange={(e) => handleChange('name', e.target.value)}
-                      className="w-full rounded-lg border border-border px-4 py-2.5 text-charcoal bg-surface focus:border-oxblood focus:ring-1 focus:ring-oxblood transition-colors"
-                      placeholder="Your name"
-                    />
+                    <label htmlFor="name" className="block text-xs font-black uppercase tracking-widest text-oxblood/60 mb-2">Full Name *</label>
+                    <input type="text" id="name" required value={formData.name} onChange={(e) => handleChange('name', e.target.value)} className="w-full rounded-xl border-2 border-oxblood/10 px-4 py-3 text-oxblood bg-white focus:border-oxblood focus:ring-0 transition-colors font-bold" placeholder="Your Name" />
                   </div>
 
                   {/* Email + Phone */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-charcoal mb-1"
-                      >
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => handleChange('email', e.target.value)}
-                        className="w-full rounded-lg border border-border px-4 py-2.5 text-charcoal bg-surface focus:border-oxblood focus:ring-1 focus:ring-oxblood transition-colors"
-                        placeholder="you@example.com"
-                      />
+                      <label htmlFor="email" className="block text-xs font-black uppercase tracking-widest text-oxblood/60 mb-2">Email *</label>
+                      <input type="email" id="email" required value={formData.email} onChange={(e) => handleChange('email', e.target.value)} className="w-full rounded-xl border-2 border-oxblood/10 px-4 py-3 text-oxblood bg-white focus:border-oxblood focus:ring-0 transition-colors font-bold" placeholder="you@email.com" />
                     </div>
                     <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium text-charcoal mb-1"
-                      >
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        value={formData.phone}
-                        onChange={(e) => handleChange('phone', e.target.value)}
-                        className="w-full rounded-lg border border-border px-4 py-2.5 text-charcoal bg-surface focus:border-oxblood focus:ring-1 focus:ring-oxblood transition-colors"
-                        placeholder="(541) 000-0000"
-                      />
+                      <label htmlFor="phone" className="block text-xs font-black uppercase tracking-widest text-oxblood/60 mb-2">Phone</label>
+                      <input type="tel" id="phone" value={formData.phone} onChange={(e) => handleChange('phone', e.target.value)} className="w-full rounded-xl border-2 border-oxblood/10 px-4 py-3 text-oxblood bg-white focus:border-oxblood focus:ring-0 transition-colors font-bold" placeholder="(541) 555-1234" />
                     </div>
+                  </div>
+
+                  {/* Property Address */}
+                  <div>
+                    <label htmlFor="address" className="block text-xs font-black uppercase tracking-widest text-oxblood/60 mb-2">Property Address</label>
+                      <input type="text" id="address" value={formData.address} onChange={(e) => handleChange('address', e.target.value)} className="w-full rounded-xl border-2 border-oxblood/10 px-4 py-3 text-oxblood bg-white focus:border-oxblood focus:ring-0 transition-colors font-bold" placeholder="123 Main St, Salem, OR" />
+                    <p className="mt-2 text-[10px] font-bold text-oxblood/40 uppercase tracking-widest">
+                      Providing an address allows us to research your property&apos;s history before we talk, saving you time.
+                    </p>
                   </div>
 
                   {/* Service Interest */}
                   <div>
-                    <label
-                      htmlFor="service"
-                      className="block text-sm font-medium text-charcoal mb-1"
-                    >
-                      Service Interest
-                    </label>
-                    <select
-                      id="service"
-                      value={formData.service}
-                      onChange={(e) => handleChange('service', e.target.value)}
-                      className="w-full rounded-lg border border-border px-4 py-2.5 text-charcoal bg-surface focus:border-oxblood focus:ring-1 focus:ring-oxblood transition-colors"
-                    >
-                      <option value="">Select a service...</option>
-                      {serviceOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
+                    <label htmlFor="service" className="block text-xs font-black uppercase tracking-widest text-oxblood/60 mb-2">I&apos;m Interested In...</label>
+                    <select id="service" value={formData.service} onChange={(e) => handleChange('service', e.target.value)} className="w-full rounded-xl border-2 border-oxblood/10 px-4 py-3 text-oxblood bg-white focus:border-oxblood focus:ring-0 transition-colors font-bold appearance-none">
+                      <option value="">Please select one...</option>
+                      {serviceOptions.map((opt) => (<option key={opt} value={opt}>{opt}</option>))}
                     </select>
                   </div>
 
                   {/* Message */}
                   <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-charcoal mb-1"
-                    >
-                      Message *
-                    </label>
-                    <textarea
-                      id="message"
-                      required
-                      rows={5}
-                      value={formData.message}
-                      onChange={(e) => handleChange('message', e.target.value)}
-                      className="w-full rounded-lg border border-border px-4 py-2.5 text-charcoal bg-surface focus:border-oxblood focus:ring-1 focus:ring-oxblood transition-colors resize-y"
-                      placeholder="Tell us about your project or question..."
-                    />
+                    <label htmlFor="message" className="block text-xs font-black uppercase tracking-widest text-oxblood/60 mb-2">Your Message *</label>
+                    <textarea id="message" required rows={4} value={formData.message} onChange={(e) => handleChange('message', e.target.value)} className="w-full rounded-xl border-2 border-oxblood/10 px-4 py-3 text-oxblood bg-white focus:border-oxblood focus:ring-0 transition-colors font-bold resize-y" placeholder="Tell us about your project or problem..."></textarea>
                   </div>
 
-                  {/* Error */}
-                  {status === 'error' && (
-                    <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800">
-                      {errorMessage}
-                    </div>
-                  )}
+                  {status === 'error' && (<div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800">{errorMessage}</div>)}
 
-                  {/* Submit */}
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={status === 'submitting'}
-                    className="w-full sm:w-auto font-black uppercase tracking-widest px-8"
-                  >
-                    {status === 'submitting' ? 'Sending...' : 'Get My Free Audit'}
+                  <Button type="submit" size="lg" disabled={status === 'submitting'} className="w-full sm:w-auto font-black uppercase tracking-widest px-8">
+                    {status === 'submitting' ? 'Sending...' : 'Send Message'}
                   </Button>
                 </form>
               )}
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
-              <Card variant="outlined" className="p-6">
-                <h3 className="text-lg font-semibold text-charcoal mb-4">
-                  Contact Information
-                </h3>
-                <div className="space-y-3 text-sm">
-                  <div>
-                    <div className="font-medium text-charcoal">Phone</div>
-                    <a
-                      href={`tel:${BUSINESS.phone}`}
-                      className="text-oxblood hover:text-oxblood/80 transition-colors"
-                    >
-                      {BUSINESS.phone}
-                    </a>
-                  </div>
-                  <div>
-                    <div className="font-medium text-charcoal">
-                      After-Hours Emergency
-                    </div>
-                    <a
-                      href={`tel:${BUSINESS.afterhoursPhone}`}
-                      className="text-oxblood hover:text-oxblood/80 transition-colors"
-                    >
-                      {BUSINESS.afterhoursPhone}
-                    </a>
-                  </div>
-                  <div>
-                    <div className="font-medium text-charcoal">Email</div>
-                    <a
-                      href={`mailto:${BUSINESS.email}`}
-                      className="text-oxblood hover:text-oxblood/80 transition-colors"
-                    >
-                      {BUSINESS.email}
-                    </a>
-                  </div>
-                  <div>
-                    <div className="font-medium text-charcoal">License</div>
-                    <span className="text-slate">{BUSINESS.license}</span>
-                  </div>
-                </div>
+            <div className="space-y-8">
+              <Card variant="outlined" className="p-8">
+                <h3 className="text-xl font-black text-charcoal mb-6 uppercase tracking-tight">What to Expect</h3>
+                <ol className="list-decimal list-inside space-y-4 text-sm text-slate font-medium">
+                  <li>A team member will review your message.</li>
+                  <li>We&apos;ll call you to discuss your needs in detail.</li>
+                  <li>We&apos;ll schedule a site visit if necessary.</li>
+                  <li>You&apos;ll receive a clear, data-backed proposal.</li>
+                </ol>
               </Card>
 
-              <Card variant="outlined" className="p-6 border-oxblood/20 bg-cream">
+              <Card variant="outlined" className="p-8 border-oxblood/20 bg-cream">
                 <h3 className="text-lg font-semibold text-charcoal mb-2 flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-oxblood" /> Emergency?
+                  <AlertTriangle className="w-5 h-5 text-oxblood" /> Have an Emergency?
                 </h3>
                 <p className="text-sm text-slate mb-4">
-                  For urgent repairs, call our after-hours emergency line
-                  immediately.
+                  For urgent issues like water or storm damage, call our 24/7 emergency line for immediate help.
                 </p>
                 <a href={`tel:${BUSINESS.afterhoursPhone}`}>
-                  <Button variant="emergency" size="sm" className="w-full">
-                    {BUSINESS.afterhoursPhone}
+                  <Button variant="emergency" className="w-full font-bold">
+                    Call Our 24/7 Line
                   </Button>
                 </a>
               </Card>
 
               <Card variant="outlined" className="p-6">
                 <h3 className="text-lg font-semibold text-charcoal mb-2">
-                  Service Areas
+                  Our Service Areas
                 </h3>
                 <p className="text-sm text-slate">
-                  We serve Albany, Lebanon, Sweet Home, Salem, Corvallis, and
-                  surrounding communities in the Mid-Willamette Valley, plus
-                  Harney County.
+                  We proudly serve the Mid-Willamette Valley and Harney County.
                 </p>
-                <Link
-                  href="/areas"
-                  className="text-sm text-oxblood font-medium hover:text-oxblood/80 transition-colors mt-2 inline-block"
-                >
-                  View all areas &rarr;
+                <Link href="/areas" className="text-sm text-oxblood font-medium hover:text-oxblood/80 transition-colors mt-2 inline-block">
+                  View Service Area Map &rarr;
                 </Link>
               </Card>
             </div>
           </div>
         </Container>
       </Section>
-
-      {/* JSON-LD LocalBusiness */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'HomeAndConstructionBusiness',
-            name: BUSINESS.name,
-            telephone: BUSINESS.phone,
-            email: BUSINESS.email,
-            url: BUSINESS.url,
-            areaServed: {
-              '@type': 'State',
-              name: 'Oregon',
-            },
-            sameAs: [BUSINESS.facebook, BUSINESS.gbp],
-          }),
-        }}
-      />
     </>
   );
 }
