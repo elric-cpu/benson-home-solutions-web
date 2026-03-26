@@ -71,8 +71,14 @@ async function getNrelEnergyData(lon: number, lat: number): Promise<object | nul
  */
 export async function POST(request: NextRequest) {
   // 1. Security Check
+  const internalApiKey = process.env.INTERNAL_API_KEY;
+  if (!internalApiKey) {
+    logError(new Error('INTERNAL_API_KEY is not set.'), { context: 'Enrichment API' });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+
   const authHeader = request.headers.get('Authorization');
-  if (authHeader !== `Bearer ${process.env.INTERNAL_API_KEY}`) {
+  if (authHeader !== `Bearer ${internalApiKey}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

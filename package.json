@@ -13,13 +13,14 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "postbuild": "next-sitemap",
+    "postbuild": "echo 'Using App Router sitemap.ts'",
     "test": "playwright test",
     "test:selenium": "node scripts/run-selenium.js",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "genkit:dev": "genkit develop",
-    "mcp:notion": "tsx src/lib/mcp/notion-server.ts"
+    "mcp:notion": "tsx src/lib/mcp/notion-server.ts",
+    "lhci:prod": "lhci autorun --chrome-flags='--no-sandbox'"
   },
   "dependencies": {
     "@eslint/eslintrc": "3.3.5",
@@ -43,7 +44,9 @@
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "7.0.1",
     "googleapis": "171.4.0",
+    "gray-matter": "4.0.3",
     "lucide-react": "0.577.0",
+    "marked": "17.0.5",
     "next": "16.2.1",
     "postgres": "3.4.8",
     "react": "19.2.4",
@@ -55,6 +58,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.1",
+    "@lhci/cli": "^0.13.0",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "4.2.1",
     "@types/react": "19.2.14",
@@ -68,7 +72,6 @@
     "selenium-webdriver": "^4.29.0",
     "tailwindcss": "^4.2.1",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "vercel": "50.34.2"
+    "typescript": "^5.9.3"
   }
 }

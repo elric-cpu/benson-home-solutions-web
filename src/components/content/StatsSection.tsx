@@ -24,7 +24,7 @@ const stats = [
   {
     label: 'Customer Rating',
     value: '4.9/5',
-    description: 'Based on 200+ forensic audits and restoration projects.',
+    description: 'Based on maintenance, restoration, and repair work across Oregon properties.',
     icon: Star,
   },
 ];

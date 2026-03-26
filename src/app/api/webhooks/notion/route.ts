@@ -1,4 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
+
+/**
+ * Verify Notion Webhook Signature
+ * @see https://developers.notion.com/docs/webhooks#signature-verification
+ */
+function verifyNotionSignature(req: NextRequest, bodyStr: string): boolean {
+  const secret = process.env.NOTION_WEBHOOK_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[Notion Webhook] NOTION_WEBHOOK_SECRET not set, bypassing signature validation in development.');
+      return true;
+    }
+    return false;
+  }
+
+  const signature = req.headers.get('x-notion-signature');
+  const timestamp = req.headers.get('x-notion-request-timestamp');
+  if (!signature || !timestamp) return false;
+
+  // Replay Protection: Check if the request is within a 5-minute window
+  const requestTimestampMs = parseInt(timestamp, 10);
+  const nowMs = Date.now();
+  const fiveMinutesMs = 5 * 60 * 1000;
+
+  if (isNaN(requestTimestampMs) || Math.abs(nowMs - requestTimestampMs) > fiveMinutesMs) {
+    console.error('[Notion Webhook] Stale or invalid timestamp');
+    return false;
+  }
+
+  const hmac = crypto.createHmac('sha256', secret);
+  hmac.update(`${timestamp}${bodyStr}`);
+  const calculatedSignature = hmac.digest('hex');
+  const signatureBuffer = Buffer.from(signature.replace('sha256=', ''));
+  const calculatedSignatureBuffer = Buffer.from(calculatedSignature);
+
+  if (signatureBuffer.length !== calculatedSignatureBuffer.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(
+    signatureBuffer,
+    calculatedSignatureBuffer
+  );
+}
 
 /**
  * Notion Webhook Handler
@@ -9,7 +54,14 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 export async function POST(req: NextRequest) {
   try {
-    const payload = await req.json();
+    const bodyStr = await req.text();
+    
+    if (!verifyNotionSignature(req, bodyStr)) {
+      console.error('[Notion Webhook] Invalid signature');
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const payload = JSON.parse(bodyStr);
 
     console.log('[Notion Webhook] Received event:', {
       id: payload.id,
@@ -34,9 +86,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (error: unknown) {
     console.error('[Notion Webhook] Error processing request:', error);
-    const details = error instanceof Error ? error.message : 'Unknown error';
+    // DO NOT leak error details to the caller
     return NextResponse.json(
-      { error: 'Internal Server Error', details },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

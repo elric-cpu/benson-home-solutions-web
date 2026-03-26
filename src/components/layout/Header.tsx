@@ -7,11 +7,12 @@ import { BUSINESS } from '@/lib/constants';
 import { MobileNav } from './MobileNav';
 
 const navigation = [
+  { name: 'Repairs', href: '/contact' },
   { name: 'Plans', href: '/plans' },
+  { name: 'Blog', href: '/blog' },
   { name: 'Emergency', href: '/emergency' },
-  { name: 'Methodology', href: '/methodology' },
+  { name: 'How We Work', href: '/methodology' },
   { name: 'Areas', href: '/areas' },
-  { name: 'Contact', href: '/contact' },
 ];
 
 export function Header() {
@@ -63,7 +64,7 @@ export function Header() {
             href="/contact"
             className="bg-cream hover:bg-white text-oxblood font-bold px-5 py-2 rounded-lg shadow-lg transition-all text-sm"
           >
-            Get a Quote
+            Start a Repair Request
           </Link>
           
           <button 

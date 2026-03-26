@@ -30,7 +30,7 @@ export const masterMarketingFlow = ai.defineFlow(
       topic: z.string(),
       business_goals: z.string(),
       asset_type: z.enum(['guide', 'checklist', 'how-to', 'interactive_tool']).default('guide'),
-      target_url: z.string().default('https://bensonhomesolutions.com/new-asset'),
+      target_url: z.string().default('https://www.bensonhomesolutions.com/new-asset'),
     }),
     outputSchema: MarketingPipelineResultSchema,
   },

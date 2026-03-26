@@ -2,12 +2,16 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { Container, Section, Button } from '@/components/ui';
 import { CheckCircle2 } from 'lucide-react';
-import { SERVICE_AREAS, SERVICES } from '@/lib/constants';
+import { SERVICES } from '@/lib/constants';
+import { AREA_DATA } from '@/lib/area-data';
 import { notFound } from 'next/navigation';
 
 // --- Data Management ---
 
-const ALL_CITIES = [...SERVICE_AREAS.midWillametteValley, ...SERVICE_AREAS.harneyCounty];
+const ALL_CITIES = Object.values(AREA_DATA).map((area) => area.city);
+const AREA_BY_SLUG = Object.fromEntries(
+  Object.values(AREA_DATA).map((area) => [area.slug, area]),
+);
 
 const toSlug = (text: string) => text.toLowerCase().replace(/ /g, '-');
 const toTitleCase = (text: string) => text.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
@@ -33,43 +37,64 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { city: citySlug, service: serviceSlug } = await params;
-  const city = toTitleCase(citySlug);
+  const area = AREA_BY_SLUG[citySlug];
+  const city = area?.city ?? toTitleCase(citySlug);
   const serviceInfo = SERVICES[serviceSlug as keyof typeof SERVICES];
 
-  if (!serviceInfo || !ALL_CITIES.map(toSlug).includes(citySlug)) {
+  if (!serviceInfo || !area) {
     return {};
   }
 
-  const title = `${serviceInfo.title} in ${city}, Oregon | Benson Home Solutions`;
+  const title = `${serviceInfo.title} | ${city}, OR`;
   const description = serviceInfo.description.replace(/\[City\]/g, city);
   const keywords = serviceInfo.keywords.map(k => k.replace(/\[City\]/g, city));
+  const url = `https://www.bensonhomesolutions.com/areas/${citySlug}/${serviceSlug}`;
 
-  return { title, description, keywords };
+  return {
+    title,
+    description,
+    keywords,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      images: ['/opengraph-image'],
+    },
+  };
 }
 
 export default async function ServiceCityPage({ params }: Props) {
   const { city: citySlug, service: serviceSlug } = await params;
-  
-  const city = toTitleCase(citySlug);
+  const area = AREA_BY_SLUG[citySlug];
   const service = SERVICES[serviceSlug as keyof typeof SERVICES];
+  const city = area?.city ?? toTitleCase(citySlug);
+  const sameRegionCities = Object.values(AREA_DATA)
+    .filter((item) => item.slug !== citySlug && item.region === area?.region)
+    .slice(0, 4);
+  const relatedServices = Object.entries(SERVICES).filter(([slug]) => slug !== serviceSlug).slice(0, 3);
 
-  if (!service || !ALL_CITIES.map(toSlug).includes(citySlug)) {
+  if (!service || !area) {
     notFound();
   }
 
+  const serviceDescription = service.description.replace(/\[City\]/g, city);
+
   return (
-    <main>
+    <>
       <Section variant="cream" spacing="lg">
         <Container className="text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-8 leading-tight tracking-tight text-oxblood">
             {service.title} in {city}, Oregon
           </h1>
           <p className="text-lg md:text-xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            {service.description} As a licensed local contractor (CCB #258533), we provide expert, data-driven solutions for your {city} property.
+            {serviceDescription} As a licensed Oregon contractor (CCB #258533), we provide practical scopes, clear communication, and solid repair work for {city} properties.
           </p>
           <Link href="/contact">
             <Button size="lg" className="px-10 py-7 text-lg font-black uppercase tracking-widest">
-              Get a Quote for Your {city} Project
+              Start Your {city} Project
             </Button>
           </Link>
         </Container>
@@ -93,8 +118,8 @@ export default async function ServiceCityPage({ params }: Props) {
             <div className="flex items-start gap-6">
               <CheckCircle2 className="w-8 h-8 text-oxblood shrink-0 mt-1" />
               <div>
-                <h3 className="text-xl font-black uppercase tracking-tight text-oxblood mb-2">Data-Driven Approach</h3>
-                <p className="text-slate font-medium">We use forensic tools, not guesswork. This ensures we identify the root cause of the problem for a long-lasting solution.</p>
+                <h3 className="text-xl font-black uppercase tracking-tight text-oxblood mb-2">Root-Cause Repair</h3>
+                <p className="text-slate font-medium">We use field measurements, photos, and direct jobsite experience to scope the repair correctly and keep it from turning into repeat work.</p>
               </div>
             </div>
             <div className="flex items-start gap-6">
@@ -121,6 +146,65 @@ export default async function ServiceCityPage({ params }: Props) {
           </div>
         </Container>
       </Section>
-    </main>
+
+      <Section variant="cream" spacing="md">
+        <Container>
+          <div className="grid gap-10 md:grid-cols-2">
+            <div>
+              <h2 className="mb-5 text-2xl font-black uppercase tracking-tight text-oxblood">
+                Related Services in {city}
+              </h2>
+              <div className="space-y-3">
+                {relatedServices.map(([slug, relatedService]) => (
+                  <Link
+                    key={slug}
+                    href={`/areas/${citySlug}/${slug}`}
+                    className="block rounded-2xl border border-oxblood/10 bg-white px-5 py-4 font-medium text-slate transition-colors hover:border-oxblood hover:text-oxblood"
+                  >
+                    <div className="text-sm font-black uppercase tracking-widest text-oxblood">
+                      {relatedService.title}
+                    </div>
+                    <div className="mt-1 text-sm">
+                      {relatedService.description.replace(/\[City\]/g, city)}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 className="mb-5 text-2xl font-black uppercase tracking-tight text-oxblood">
+                Nearby Service Areas
+              </h2>
+              <div className="space-y-3">
+                {sameRegionCities.map((nearbyArea) => {
+                  const nearbySlug = nearbyArea.slug;
+                  return (
+                    <Link
+                      key={nearbySlug}
+                      href={`/areas/${nearbySlug}/${serviceSlug}`}
+                      className="block rounded-2xl border border-oxblood/10 bg-white px-5 py-4 font-medium text-slate transition-colors hover:border-oxblood hover:text-oxblood"
+                    >
+                      <div className="text-sm font-black uppercase tracking-widest text-oxblood">
+                        {service.title} in {nearbyArea.city}
+                      </div>
+                      <div className="mt-1 text-sm">
+                        See how we handle this scope for nearby owners and managers.
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          <div className="mt-10 text-center">
+            <Link href={`/areas/${citySlug}`}>
+              <Button variant="outline" className="border-2 border-oxblood text-oxblood">
+                See All {city} Service Options
+              </Button>
+            </Link>
+          </div>
+        </Container>
+      </Section>
+    </>
   );
 }

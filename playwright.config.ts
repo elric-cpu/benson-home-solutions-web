@@ -17,11 +17,10 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  // Server is started externally in CI
-    webServer: process.env.CI
+  webServer: process.env.CI
     ? undefined
     : {
-        command: 'npm run build && npm run start',
+        command: 'pnpm build && node .next/standalone/server.js',
         url: 'http://localhost:3000',
         reuseExistingServer: !process.env.CI,
         timeout: 300 * 1000,

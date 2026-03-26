@@ -5,24 +5,27 @@ import { Phone, Mail } from 'lucide-react';
 
 const footerNav = {
   services: [
-    { name: 'Residential Maintenance', href: '/plans' },
-    { name: 'Commercial Services', href: '/plans' },
+    { name: 'Inspection Repairs', href: '/contact' },
+    { name: 'Water & Mold Work', href: '/emergency' },
+    { name: 'Property Preservation', href: '/contact' },
+    { name: 'Energy & Weatherization', href: '/contact' },
     { name: 'Emergency Repairs', href: '/emergency' },
-    { name: 'Church & Non-Profit', href: '/plans' },
     { name: 'All Plans', href: '/plans' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
-    { name: 'Our Methodology', href: '/methodology' },
+    { name: 'How We Work', href: '/methodology' },
     { name: 'Service Areas', href: '/areas' },
     { name: 'Emergency Response', href: '/emergency' },
     { name: 'Contact', href: '/contact' },
+    { name: 'Privacy Policy', href: '/privacy' },
   ],
   resources: [
     { name: 'FAQ', href: '/#faq' },
-    { name: 'Maintenance Tools', href: '/tools/cost-calculator' },
+    { name: 'True Cost Builder', href: '/tools/project-builder' },
+    { name: 'Rot Risk Calculator', href: '/tools/cost-calculator' },
+    { name: 'Asset Reserve Planner', href: '/tools/cost-estimator' },
     { name: 'Areas We Serve', href: '/areas' },
-    { name: 'Emergency Service', href: '/emergency' },
   ],
 };
 
@@ -38,8 +41,8 @@ export function Footer() {
                 {BUSINESS.name}
               </Link>
               <p className="mt-3 text-sm text-cream/70 leading-relaxed">
-                Professional property care and forensic maintenance services for the
-                Mid-Willamette Valley and Harney County. Licensed, bonded, and insured.
+                Post-inspection repairs, water damage restoration, property preservation,
+                maintenance, and weatherization for the Mid-Willamette Valley and Harney County.
               </p>
               <div className="mt-4 space-y-3 text-sm">
                 <a

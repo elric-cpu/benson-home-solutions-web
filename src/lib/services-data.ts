@@ -23,7 +23,7 @@ export const SERVICES_DATA: Record<string, ServiceDefinition> = {
   'mold-remediation': {
     slug: 'mold-remediation',
     title: 'Mold Remediation',
-    shortDesc: 'Scientific mold removal and moisture control.',
+    shortDesc: 'Mold mitigation and moisture control.',
   },
   'roof-maintenance': {
     slug: 'roof-maintenance',
@@ -33,7 +33,7 @@ export const SERVICES_DATA: Record<string, ServiceDefinition> = {
   'maintenance-subscriptions': {
     slug: 'maintenance-subscriptions',
     title: 'Home Maintenance Subscriptions',
-    shortDesc: 'Monthly data-backed property care.',
+    shortDesc: 'Recurring property care and priority response.',
   },
   'windows-doors': {
     slug: 'windows-doors',
@@ -48,11 +48,11 @@ export const SERVICES_DATA: Record<string, ServiceDefinition> = {
   'tenant-services': {
     slug: 'tenant-services',
     title: 'Tenant Improvements',
-    shortDesc: 'Professional commercial facility services.',
+    shortDesc: 'Commercial turnover and facility correction work.',
   },
   'demolition': {
     slug: 'demolition',
     title: 'Demolition Services',
-    shortDesc: 'Controlled, forensic demolition.',
+    shortDesc: 'Controlled selective and full-scope demolition.',
   },
 };

@@ -4,7 +4,7 @@ const storage = new Storage();
 
 /**
  * Gcloud Storage Client (Benson Native)
- * Handles all project visual and audit asset storage.
+ * Handles all project visual and field documentation asset storage.
  */
 export const bucket = storage.bucket(process.env.GCS_BUCKET_NAME || '');
 

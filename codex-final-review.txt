@@ -1,0 +1,21 @@
+Please review all the recent security, SEO, and feature additions we've made to this Next.js project.
+
+Specifically, review these files:
+- src/app/api/contact/route.ts
+- src/app/api/chat/route.ts
+- src/app/api/enrich/route.ts
+- src/app/api/ai/marketing/route.ts
+- src/app/api/ops/seo-watchdog/route.ts
+- src/app/api/webhooks/notion/route.ts
+- src/lib/genkit.ts
+- src/lib/db/schema.ts
+- src/app/sitemap.ts
+- src/app/tools/project-builder/client.tsx
+
+Critique the implementation. Look for:
+1. Missing edge cases in the rate limiting maps (e.g., memory leaks over time).
+2. React dependency array warnings or unoptimized renders in `project-builder/client.tsx`.
+3. Missed error handling or security flaws in the APIs.
+4. Any remaining SEO or sitemap issues.
+
+Provide your critique and suggest specific optimizations. Please just do the review and return the findings.

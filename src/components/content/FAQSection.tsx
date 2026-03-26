@@ -9,23 +9,23 @@ interface FAQItem {
 const faqs: FAQItem[] = [
   {
     question: "What is a 'Maintenance-First' subscription?",
-    answer: "A 'Maintenance-First' subscription is a proactive property care program where Benson Home Solutions performs regular (typically monthly) forensic audits of your property. Instead of waiting for a leak or failure, we identify and fix small issues before they become expensive insurance claims.",
+    answer: "It is a recurring service plan built around property upkeep, seasonal checks, minor correction work, and priority response. The goal is simple: handle problems early while the fix is still small.",
   },
   {
     question: "Why do I need monthly property protection in Oregon?",
     answer: "The Mid-Willamette Valley's high rainfall and humidity make properties susceptible to mold, rot, and drainage failures. Regular monthly checks ensure building envelopes are intact and gutters/drainage systems are functioning correctly, preventing thousands of dollars in water damage.",
   },
   {
-    question: "How is a 'Forensic Audit' different from a standard home inspection?",
-    answer: "Standard inspections are primarily visual and occur during property transfers. Our forensic audits use moisture meters, thermal imaging, and building-science metrics to detect hidden decay, heat loss, and structural vulnerabilities that visual inspections miss.",
+    question: 'Do you do post-inspection and lender-required repairs?',
+    answer: 'Yes. We handle buyer repair lists, seller pre-listing corrections, FHA and VA repair items, appraisal-required corrections, and documentation-heavy scopes where the work needs to be clear and defensible.',
   },
   {
     question: "Do you serve Harney County for property maintenance?",
     answer: "Yes. We provide specialized high-desert maintenance for properties from Burns to Drewsey, focusing on winterization, wildfire hardening, and extreme temperature protection for residential and commercial assets.",
   },
   {
-    question: "How do I save money with proactive care?",
-    answer: "According to industry standards (BOMA), proactive maintenance has a 3:1 ROI. By spending a small amount monthly to keep systems in peak condition, you avoid the high cost of emergency repairs, structural restoration, and increased insurance premiums.",
+    question: 'What kind of repair and mitigation work do you handle?',
+    answer: 'Common scopes include water damage restoration, mold mitigation, leak-source repairs, lock changes, board-ups, property preservation, air sealing, attic insulation, and general correction work tied to inspection or lender requirements.',
   },
   {
     question: "Is Benson Home Solutions a licensed contractor in Oregon?",
@@ -77,7 +77,7 @@ export function FAQSection() {
             href={`tel:${BUSINESS.phone}`}
             className="inline-flex items-center justify-center h-12 px-8 text-sm font-black uppercase tracking-widest rounded-xl bg-oxblood text-cream hover:bg-oxblood/90 transition-all"
           >
-            Call our Office
+            Call the Office
           </a>
         </div>
       </Container>

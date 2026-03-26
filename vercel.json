@@ -1,11 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "installCommand": "npm install",
+  "installCommand": "pnpm install",
   "crons": [
     {
       "path": "/api/ai/marketing",
       "schedule": "0 2 * * 1,4"
+    },
+    {
+      "path": "/api/ops/seo-watchdog",
+      "schedule": "0 9 * * *"
     }
   ]
 }

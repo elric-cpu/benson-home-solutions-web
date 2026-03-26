@@ -27,7 +27,7 @@ export default function AssetLifecyclePlanner() {
   const annualBudget = Math.round(totalReplacement / avgLife);
 
   return (
-    <main>
+    <>
       <Section variant="charcoal" spacing="lg">
         <Container className="text-center">
           <Badge className="mb-6 bg-cream/10 text-cream border-cream/20 px-4 py-1.5 uppercase tracking-widest font-black">
@@ -39,6 +39,9 @@ export default function AssetLifecyclePlanner() {
           </h1>
           <p className="text-xl text-cream/80 max-w-2xl mx-auto font-medium">
             {`This tool helps you answer the question: "How much should we be setting aside for building maintenance?" Stop reacting to expensive emergencies and start planning for the future.`}
+          </p>
+          <p className="mt-6 max-w-3xl mx-auto text-base font-medium leading-relaxed text-cream/70">
+            Use this estimator as a directional reserve-planning tool for churches, schools, nonprofits, and commercial properties. It gives decision-makers a first-pass view of replacement exposure across major building systems.
           </p>
         </Container>
       </Section>
@@ -52,31 +55,35 @@ export default function AssetLifecyclePlanner() {
                 
                 <div className="space-y-8">
                   <div>
-                    <label className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-4">
+                    <label htmlFor="asset-square-footage" className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-4">
                       Square Footage: {sqFt.toLocaleString()} sq. ft.
                     </label>
                     <input
+                      id="asset-square-footage"
                       type="range"
                       min="1000"
                       max="50000"
                       step="500"
                       value={sqFt}
                       onChange={(e) => setSqFt(parseInt(e.target.value))}
+                      aria-label="Square footage"
                       className="w-full h-3 bg-oxblood/10 rounded-lg appearance-none cursor-pointer accent-oxblood"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-4">
+                    <label htmlFor="asset-building-age" className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-4">
                       Average Age of Building Systems: {buildingAge} Years
                     </label>
                     <input
+                      id="asset-building-age"
                       type="range"
                       min="0"
                       max="50"
                       step="1"
                       value={buildingAge}
                       onChange={(e) => setBuildingAge(parseInt(e.target.value))}
+                      aria-label="Average age of building systems"
                       className="w-full h-3 bg-oxblood/10 rounded-lg appearance-none cursor-pointer accent-oxblood"
                     />
                   </div>
@@ -152,16 +159,47 @@ export default function AssetLifecyclePlanner() {
             <Info className="w-12 h-12 text-oxblood/20 mx-auto mb-6" />
             <h3 className="text-3xl font-black uppercase tracking-tight text-oxblood mb-6">A Note from Elric Benson for Board Members</h3>
             <p className="text-slate font-medium leading-relaxed mb-8">
-              {`"Your fiduciary duty is to protect the assets of your organization. This tool gives you a starting point, but a true capital expenditure plan requires a forensic audit. We provide the hard data you need to make fiscally responsible decisions and protect your property for the long term."`}
+              {`"This gives you a starting point. If you need a real scope, we can walk the property, document the risk, and build a repair and reserve plan you can actually use."`}
             </p>
-            <Link href="/contact?service=audit">
+            <Link href="/contact?service=Maintenance Plan">
               <Button size="lg" className="font-black uppercase tracking-widest">
-                Schedule a Forensic Audit
+                Request a Building Scope
               </Button>
             </Link>
           </div>
         </Container>
       </Section>
-    </main>
+
+      <Section spacing="md">
+        <Container>
+          <div className="grid gap-8 md:grid-cols-2">
+            <Card className="p-8">
+              <h2 className="text-2xl font-black uppercase tracking-tight text-oxblood">
+                What is included
+              </h2>
+              <ul className="mt-5 space-y-3 text-sm font-medium leading-relaxed text-slate">
+                <li>Roofing, HVAC, siding and envelope systems, windows and doors, and plumbing infrastructure.</li>
+                <li>Directional replacement exposure based on square footage and average system age.</li>
+                <li>A simple annual reserve target to support budget conversations.</li>
+                <li>A next-major-expense signal to show when reactive costs are likely to arrive.</li>
+              </ul>
+            </Card>
+            <Card className="p-8">
+              <h2 className="text-2xl font-black uppercase tracking-tight text-oxblood">
+                How to use this estimator
+              </h2>
+              <p className="mt-5 text-sm font-medium leading-relaxed text-slate">
+                This is not a reserve study and not a contractor proposal. It is a planning model built to show boards and facilities teams how system age and square footage create maintenance liability. When you need a real scope, we pair site documentation with an actionable repair and reserve plan.
+              </p>
+              <div className="mt-6">
+                <Link href="/methodology" className="text-sm font-black uppercase tracking-widest text-oxblood">
+                  See how we document real scopes
+                </Link>
+              </div>
+            </Card>
+          </div>
+        </Container>
+      </Section>
+    </>
   );
 }

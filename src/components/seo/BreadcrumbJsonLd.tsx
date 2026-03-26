@@ -11,7 +11,7 @@ export function BreadcrumbJsonLd({ items }: { items: BreadcrumbItem[] }) {
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: item.item.startsWith('http') ? item.item : `https://bensonhomesolutions.com${item.item}`,
+      item: item.item.startsWith('http') ? item.item : `https://www.bensonhomesolutions.com${item.item}`,
     })),
   };
 

@@ -1,9 +1,9 @@
 import { chromium } from 'playwright';
 
 const URLS = [
-  'https://bensonhomesolutions.com/',
-  'https://bensonhomesolutions.com/tools/subscription-recommender',
-  'https://bensonhomesolutions.com/methodology/property-taxes',
+  'https://www.bensonhomesolutions.com/',
+  'https://www.bensonhomesolutions.com/tools/subscription-recommender',
+  'https://www.bensonhomesolutions.com/methodology/property-taxes',
 ];
 
 async function checkPerformance(url: string) {

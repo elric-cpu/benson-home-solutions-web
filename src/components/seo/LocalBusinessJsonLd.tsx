@@ -4,12 +4,13 @@ export function LocalBusinessJsonLd() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'HomeAndConstructionBusiness',
+    '@id': `${BUSINESS.url}/#organization`,
     name: BUSINESS.name,
-    image: 'https://bensonhomesolutions.com/images/generated/hero-exterior.png',
-    url: 'https://bensonhomesolutions.com',
+    image: `${BUSINESS.url}/opengraph-image`,
+    url: BUSINESS.url,
     telephone: BUSINESS.phone,
     email: BUSINESS.email,
-    description: 'Licensed Oregon contractor for home maintenance, emergency restoration, & remodeling.',
+    description: 'Licensed Oregon contractor for post-inspection repairs, water damage restoration, mold mitigation, maintenance, property preservation, and weatherization.',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '2283 NW Skyline Dr',
@@ -33,11 +34,9 @@ export function LocalBusinessJsonLd() {
     ],
     priceRange: '$$',
     sameAs: [
-      'https://maps.app.goo.gl/ad4eywwWonPsSZXP9',
-      'https://www.facebook.com/profile.php?id=61565667928376',
+      BUSINESS.gbp,
+      BUSINESS.facebook,
       'https://search.ccb.state.or.us/search/search_results.aspx?license_number=258533',
-      'https://www.bbb.org/us/or/albany/profile/general-contractor/benson-home-solutions-1296-1000137452',
-      'https://www.yelp.com/biz/benson-home-solutions-albany',
     ],
   };
 

@@ -1,0 +1,9 @@
+We are currently building out the `src/app/tools/project-builder/client.tsx` tool, which queries the `1build` costs database.
+A recent code review highlighted a React race condition in the search `useEffect`. Specifically, the debounced fetch request doesn't cancel in-flight requests, leading to stale results overwriting newer ones if the user types quickly.
+
+Please update `src/app/tools/project-builder/client.tsx` to:
+1. Use an `AbortController` to cancel any pending `fetch` request when the `useEffect` cleans up (i.e., when the user types a new character before the previous request finishes).
+2. Ensure you catch the `AbortError` so it doesn't pollute the console.
+3. Verify that `setResults` is only called if the request wasn't aborted.
+
+Apply this fix directly to the file.

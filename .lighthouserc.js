@@ -4,7 +4,9 @@ module.exports = {
   ci: {
     collect: {
       url: ['http://localhost:3000/'],
-      startServerCommand: '', // Server started externally in CI
+      startServerCommand: 'node .next/standalone/server.js',
+      startServerReadyPattern: 'Ready in',
+      startServerTimeout: 120000,
       numberOfRuns: 1,
       settings: {
         preset: 'desktop',

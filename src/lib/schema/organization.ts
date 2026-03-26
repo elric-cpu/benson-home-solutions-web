@@ -1,5 +1,5 @@
 import { HomeAndConstructionBusiness, WithContext } from 'schema-dts';
-import { BUSINESS } from '@/lib/constants';
+import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 
 /**
  * Generates the complete, spec-compliant JSON-LD for the
@@ -7,20 +7,26 @@ import { BUSINESS } from '@/lib/constants';
  * @returns The JSON-LD script content for the organization.
  */
 export function getOrganizationSchema(): WithContext<HomeAndConstructionBusiness> {
+  const allCities = [...SERVICE_AREAS.midWillametteValley, ...SERVICE_AREAS.harneyCounty];
+
   return {
     '@context': 'https://schema.org',
     '@type': 'HomeAndConstructionBusiness',
-    '@id': 'https://bensonhomesolutions.com/#organization',
+    '@id': 'https://www.bensonhomesolutions.com/#organization',
     name: BUSINESS.name,
-    url: 'https://bensonhomesolutions.com',
-    logo: 'https://bensonhomesolutions.com/favicon.svg',
-    image: 'https://bensonhomesolutions.com/og-image.jpg', // Replace with a real image URL
+    url: BUSINESS.url,
+    logo: `${BUSINESS.url}/favicon.svg`,
+    image: `${BUSINESS.url}/opengraph-image`,
     telephone: `+1-${BUSINESS.phone.replace(/[^0-9]/g, '')}`,
     email: BUSINESS.email,
+    description:
+      'Licensed Oregon contractor for post-inspection repairs, water damage restoration, mold mitigation, maintenance, property preservation, and weatherization.',
     address: {
       '@type': 'PostalAddress',
+      streetAddress: 'Service area business',
       addressLocality: 'Albany',
       addressRegion: 'OR',
+      postalCode: '97321',
       addressCountry: 'US',
     },
     geo: {
@@ -28,26 +34,16 @@ export function getOrganizationSchema(): WithContext<HomeAndConstructionBusiness
       latitude: 44.6366,   // Corrected for Albany, OR
       longitude: -123.105, // Corrected for Albany, OR
     },
-    areaServed: [
-      { '@type': 'City', 'name': 'Salem' },
-      { '@type': 'City', 'name': 'Keizer' },
-      { '@type': 'City', 'name': 'Corvallis' },
-      { '@type': 'City', 'name': 'Albany' },
-      { '@type': 'City', 'name': 'Lebanon' },
-      { '@type': 'City', 'name': 'Sweet Home' },
-      { '@type': 'City', 'name': 'Burns' }
-    ],
+    areaServed: allCities.map((name) => ({ '@type': 'City', name })),
     hasCredential: {
       '@type': 'EducationalOccupationalCredential',
       credentialCategory: 'license',
       name: `Oregon ${BUSINESS.license}`,
     },
     sameAs: [
-        'https://maps.app.goo.gl/ad4eywwWonPsSZXP9',
-        'https://www.facebook.com/profile.php?id=61565667928376',
+        BUSINESS.gbp,
+        BUSINESS.facebook,
         'https://search.ccb.state.or.us/search/search_results.aspx?license_number=258533',
-        'https://www.bbb.org/us/or/albany/profile/general-contractor/benson-home-solutions-1296-1000137452',
-        'https://www.yelp.com/biz/benson-home-solutions-albany',
     ],
     openingHoursSpecification: [
       {

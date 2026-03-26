@@ -6,22 +6,32 @@ import { SERVICE_AREAS } from '@/lib/constants';
 import { ShieldCheck, Ruler, Map, Scale } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'About Benson Home Solutions | A Message from Elric Benson',
+  title: 'About Benson Home Solutions',
   description:
-    'Meet Elric Benson, a licensed Oregon contractor (CCB #258533) with a passion for proactive property care. Learn about our maintenance-first philosophy.',
+    'Meet Elric Benson and learn why Benson Home Solutions focuses on repairs, restoration, maintenance, and practical property protection across Oregon.',
   keywords: [
     'Benson Home Solutions about',
     'Elric Benson Oregon contractor',
-    'maintenance-first philosophy',
+    'post inspection repair contractor',
     'licensed Oregon contractor CCB 258533',
-    'Salem Oregon property care',
-    'Burns Oregon property care',
+    'property preservation Oregon',
+    'water damage restoration Oregon',
   ],
+  alternates: {
+    canonical: '/about',
+  },
+  openGraph: {
+    title: 'About Benson Home Solutions',
+    description:
+      'Meet Elric Benson and learn why Benson Home Solutions focuses on repairs, restoration, maintenance, and practical property protection across Oregon.',
+    url: 'https://www.bensonhomesolutions.com/about',
+    images: ['/opengraph-image'],
+  },
 };
 
 export default function AboutPage() {
   return (
-    <main>
+    <>
       {/* Hero Section */}
       <Section variant="cream" spacing="lg">
         <Container className="text-center">
@@ -29,11 +39,19 @@ export default function AboutPage() {
             A Note from Our Founder
           </Badge>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-oxblood">
-            I got tired of <br />
-            <span className="italic text-oxblood/60">fixing preventable problems.</span>
+            I got tired of seeing <br />
+            <span className="italic text-oxblood/60">small problems turn into rebuilds.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            After a decade in construction, I saw the same story over and over: a small, hidden issue like a clogged gutter or a pinhole leak turning into a $30,000 restoration project. I started Benson Home Solutions to get property owners out of that expensive, reactive cycle.
+            I started Benson Home Solutions to handle the work people actually need done:
+            post-inspection repairs, lender-required corrections, water and mold problems,
+            lock changes, board-ups, weatherization, and the maintenance that keeps
+            properties out of trouble.
+          </p>
+          <p className="mx-auto max-w-3xl text-base font-medium leading-relaxed text-slate">
+            We are not trying to turn every property into a remodel. Most calls come in
+            because something needs to be corrected, documented, secured, dried out,
+            tightened up, or kept from failing again. That is the lane we stay in.
           </p>
         </Container>
       </Section>
@@ -48,6 +66,7 @@ export default function AboutPage() {
                 alt="Elric Benson, Founder of Benson Home Solutions"
                 width={400}
                 height={500}
+                priority
                 className="rounded-3xl object-cover shadow-2xl"
               />
             </div>
@@ -56,7 +75,13 @@ export default function AboutPage() {
                 Elric Benson
               </h2>
               <p className="text-slate font-medium leading-relaxed mb-6">
-                {"I'm a licensed general contractor (CCB #258533) with over 15 years of experience in the field. I'm not a salesman; I'm a builder. My team and I use the same tools and techniques on your property that we'd use on our own. We don't believe in quick fixes or cutting corners. We believe in doing the job right, the first time."}
+                {"I'm a licensed Oregon contractor (CCB #258533). Most of our work starts because something failed, something showed up on a report, or somebody needs the job documented clearly. We show up, figure out what actually needs to happen, and get it done without turning a simple scope into a sales presentation."}
+              </p>
+              <p className="text-slate font-medium leading-relaxed mb-6">
+                We work for homeowners, sellers, buyers, lenders, churches, facilities teams,
+                and property managers who need a contractor that can actually clear the list.
+                That means practical scopes, straight answers, and repair work that respects
+                budgets, timelines, and the actual condition of the property.
               </p>
               <div className="bg-oxblood p-8 rounded-2xl text-cream">
                 <h3 className="text-xl font-black uppercase tracking-tight mb-6">Our Core Standards</h3>
@@ -71,15 +96,15 @@ export default function AboutPage() {
                   <li className="flex gap-4">
                     <Ruler className="w-5 h-5 shrink-0 text-cream/60" />
                     <div>
-                      <div className="font-black uppercase tracking-widest text-xs mb-1">Forensic Precision</div>
-                      <div className="text-cream/80 text-sm">We use thermal imaging, moisture meters, and other specialized tools to find problems you can&apos;t see.</div>
+                      <div className="font-black uppercase tracking-widest text-xs mb-1">Specialized Diagnostics</div>
+                      <div className="text-cream/80 text-sm">Moisture meters, thermal tools, and jobsite documentation help us scope repairs correctly the first time.</div>
                     </div>
                   </li>
                   <li className="flex gap-4">
                     <Scale className="w-5 h-5 shrink-0 text-cream/60" />
                     <div>
                       <div className="font-black uppercase tracking-widest text-xs mb-1">Total Transparency</div>
-                      <div className="text-cream/80 text-sm">We provide detailed, data-backed reports after every visit. No jargon, just facts.</div>
+                      <div className="text-cream/80 text-sm">You get direct explanations, clear scopes, and documentation that helps owners, lenders, and insurers understand the work.</div>
                     </div>
                   </li>
                 </ul>
@@ -153,22 +178,56 @@ export default function AboutPage() {
           </div>
           
           <div className="max-w-3xl mx-auto border-t border-oxblood/10 pt-16">
-            <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-8">Ready to Switch to Proactive Maintenance?</h3>
+            <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-8">Need a Contractor Who Can Clear the Scope?</h3>
+            <p className="mx-auto mb-8 max-w-2xl text-base font-medium leading-relaxed text-slate">
+              If the issue started with an inspection report, a lender condition, active moisture,
+              deferred maintenance, or a vacancy problem, we know how to sort the scope, document
+              the work, and move it to completion.
+            </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
-              <Link href="/plans">
+              <Link href="/contact?service=Inspection Repairs">
                 <Button size="lg" className="w-full sm:w-auto px-10 py-7 text-base md:text-lg font-black uppercase tracking-widest shadow-xl shadow-oxblood/20">
-                  Explore Our Plans
+                  Start a Repair Request
                 </Button>
               </Link>
               <Link href="/contact">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto px-10 py-7 text-base md:text-lg font-black uppercase tracking-widest border-2 border-oxblood text-oxblood">
-                  Request a Consultation
+                  Call or Text the Office
                 </Button>
               </Link>
             </div>
           </div>
         </Container>
       </Section>
-    </main>
+
+      <Section variant="cream" spacing="md">
+        <Container className="max-w-4xl">
+          <div className="grid gap-8 md:grid-cols-2">
+            <div>
+              <h3 className="mb-4 text-2xl font-black uppercase tracking-tight text-oxblood">
+                Why People Call Us
+              </h3>
+              <ul className="space-y-3 text-sm font-medium leading-relaxed text-slate">
+                <li>Inspection reports need real corrections, not vague promises.</li>
+                <li>Water or mold problems need mitigation plus repair follow-through.</li>
+                <li>Vacant properties need board-ups, lock work, and ongoing preservation.</li>
+                <li>Older homes need air sealing, insulation, and envelope work that makes sense.</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-4 text-2xl font-black uppercase tracking-tight text-oxblood">
+                What We Do Not Do
+              </h3>
+              <ul className="space-y-3 text-sm font-medium leading-relaxed text-slate">
+                <li>We do not market ourselves as home inspectors.</li>
+                <li>We do not bury small repair scopes inside oversized remodel pitches.</li>
+                <li>We do not rely on stock answers when the property needs documentation and a field decision.</li>
+                <li>We do not leave owners guessing about what actually has to happen next.</li>
+              </ul>
+            </div>
+          </div>
+        </Container>
+      </Section>
+    </>
   );
 }

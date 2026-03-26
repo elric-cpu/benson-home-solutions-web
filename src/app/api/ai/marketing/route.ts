@@ -21,7 +21,7 @@ export async function GET(req: Request) {
       topic,
       business_goals: businessGoals,
       asset_type: assetType,
-      target_url: 'https://bensonhomesolutions.com/winter-checklist',
+      target_url: 'https://www.bensonhomesolutions.com/winter-checklist',
     });
 
     if (result.status === 'success') {
@@ -45,8 +45,13 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) {
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+
   const authHeader = req.headers.get('authorization');
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -58,7 +63,7 @@ export async function POST(req: Request) {
       topic: body.topic,
       business_goals: body.business_goals,
       asset_type: assetType,
-      target_url: body.target_url || 'https://bensonhomesolutions.com/new-asset',
+      target_url: body.target_url || 'https://www.bensonhomesolutions.com/new-asset',
     });
 
     if (result.status === 'success') {

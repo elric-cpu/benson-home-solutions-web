@@ -1,19 +1,17 @@
 'use client';
 
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Button, Card, CardContent, CardHeader } from '@/components/ui';
 import { CheckCircle2 } from 'lucide-react';
-import planData from '@/lib/maintenance-plans.json';
+import {
+  getTier,
+  getTierEntries,
+  getSegmentData,
+  recommendedTierBySegment,
+  type Segment,
+} from '@/lib/maintenance-pricing';
 
-export type Segment = 'residential' | 'commercial' | 'church';
-
-type TierKey = string;
-type TierData = {
-  name: string;
-  price: number;
-  description: string;
-  features: string[];
-};
+export type { Segment } from '@/lib/maintenance-pricing';
 
 interface PlanBuilderProps {
   segment: Segment;
@@ -22,18 +20,11 @@ interface PlanBuilderProps {
   setAddons: Dispatch<SetStateAction<Set<string>>>;
 }
 
-const recommendedTierBySegment: Record<Segment, TierKey> = {
-  residential: 'standard',
-  commercial: 'plus',
-  church: 'guardian',
-};
-
 export function PlanBuilder({ segment, addons, setSegment, setAddons: _setAddons }: PlanBuilderProps) {
-  const segmentData = planData.segments[segment];
-  const tiersByKey = segmentData.tiers as Record<string, TierData>;
-  const tiers = Object.values(tiersByKey);
-  const defaultTierKey = recommendedTierBySegment[segment];
-  const selectedTier = tiersByKey[defaultTierKey] ?? tiers[0];
+  const segmentData = getSegmentData(segment);
+  const tiers = getTierEntries(segment);
+  const [selectedTierKey, setSelectedTierKey] = useState(recommendedTierBySegment[segment]);
+  const selectedTier = getTier(segment, selectedTierKey);
   const total = selectedTier.price;
 
   return (
@@ -43,13 +34,13 @@ export function PlanBuilder({ segment, addons, setSegment, setAddons: _setAddons
         <div>
           <h2 className="text-xl font-bold mb-3">1. Select Your Property Type</h2>
           <div className="grid grid-cols-3 gap-2">
-            {(Object.keys(planData.segments) as Segment[]).map(segKey => (
+            {(['residential', 'commercial', 'church'] as Segment[]).map(segKey => (
               <Button 
                 key={segKey}
                 variant={segment === segKey ? 'primary' : 'outline'}
                 onClick={() => setSegment(segKey)}
               >
-                {planData.segments[segKey].name}
+                {getSegmentData(segKey).name}
               </Button>
             ))}
           </div>
@@ -59,13 +50,17 @@ export function PlanBuilder({ segment, addons, setSegment, setAddons: _setAddons
           <h2 className="text-xl font-bold mb-3">2. Compare Recommended Tiers</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {tiers.map((tier) => (
-              <Card key={tier.name} className="transition-all hover:shadow-md">
+              <Card
+                key={tier.name}
+                className={`transition-all hover:shadow-md cursor-pointer ${selectedTier.key === tier.key ? 'ring-2 ring-oxblood' : ''}`}
+              >
                 <CardContent className="p-4 flex items-center gap-4">
                   <CheckCircle2 className="w-8 h-8 text-oxblood" />
-                  <div>
+                  <button type="button" onClick={() => setSelectedTierKey(tier.key)} className="text-left">
                     <h3 className="font-bold">{tier.name}</h3>
                     <p className="text-sm text-slate-600">${tier.price}/mo</p>
-                  </div>
+                    <p className="mt-2 text-sm text-slate-600">{tier.description}</p>
+                  </button>
                 </CardContent>
               </Card>
             ))}
@@ -94,7 +89,7 @@ export function PlanBuilder({ segment, addons, setSegment, setAddons: _setAddons
                 ))}
                 {addons.size > 0 && (
                   <p className="text-sm text-slate-500">
-                    Custom add-ons are temporarily unavailable in this builder. Contact us for a tailored quote.
+                    Custom add-ons are not priced in this builder yet. We will scope those separately so the quote stays honest.
                   </p>
                 )}
               </div>

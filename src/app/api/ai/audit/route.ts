@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // import { propertyAuditFlow } from '@/lib/genkit';
 
 /**
- * Benson Home Solutions - Property Health Audit API
+ * Benson Home Solutions - Property risk assessment API
  */
 export async function POST(request: NextRequest) {
   try {
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, message: "Endpoint is temporarily disabled." });
 
   } catch (error: unknown) {
-    console.error('[Audit API] Error:', error);
-    return NextResponse.json({ error: 'Audit failed' }, { status: 500 });
+    console.error('[Assessment API] Error:', error);
+    return NextResponse.json({ error: 'Assessment failed' }, { status: 500 });
   }
 }

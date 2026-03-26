@@ -7,29 +7,36 @@ import './globals.css';
 import { AIChat } from '@/components/AIChat';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://bensonhomesolutions.com'),
+  metadataBase: new URL('https://www.bensonhomesolutions.com'),
   title: {
-    default: 'Benson Home Solutions | Licensed Oregon Contractor',
+    default: 'Benson Home Solutions | Repairs, Restoration, and Maintenance',
     template: '%s | Benson Home Solutions',
   },
   description:
-    'Licensed Oregon contractor for home maintenance, emergency restoration, & remodeling. Serving the Mid-Willamette Valley & Harney County. CCB #258533.',
+    'Licensed Oregon contractor for post-inspection repairs, water damage restoration, mold mitigation, maintenance, property preservation, and weatherization. Serving the Mid-Willamette Valley and Harney County.',
   keywords: [
     'Oregon contractor',
-    'home maintenance Salem Oregon',
+    'post inspection repairs Oregon',
+    'lender required repairs Oregon',
     'water damage restoration',
-    'emergency restoration Oregon',
+    'mold mitigation Oregon',
     'licensed contractor CCB 258533',
     'Benson Home Solutions',
   ],
   authors: [{ name: 'Benson Home Solutions' }],
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
     siteName: 'Benson Home Solutions',
-    url: 'https://bensonhomesolutions.com',
-    title: 'Benson Home Solutions | Licensed Oregon Contractor',
+    url: 'https://www.bensonhomesolutions.com',
+    title: 'Benson Home Solutions | Repairs, Restoration, and Maintenance',
     description: 'Licensed, bonded, and insured Oregon contractor serving the Mid-Willamette Valley and Harney County.',
+    images: ['/opengraph-image'],
   },
   robots: {
     index: true,

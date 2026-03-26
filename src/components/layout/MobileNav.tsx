@@ -68,7 +68,7 @@ export function MobileNav({ isOpen, onClose, navigation }: MobileNavProps) {
               onClick={onClose}
               className="block w-full text-center px-5 py-4 text-lg font-bold rounded-xl bg-white text-oxblood hover:bg-cream transition-colors"
             >
-              Get a Quote
+              Start a Repair Request
             </Link>
           </div>
         </nav>

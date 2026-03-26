@@ -8,7 +8,7 @@
           "price": 125,
           "description": "The foundational protection for your home. We handle the critical preventative maintenance so you can avoid common, costly emergencies.",
           "features": [
-            "Annual Forensic Audit of Exterior & Crawlspace",
+            "Annual exterior and crawlspace condition check",
             "Gutter & Downspout Clearing (2x/year)",
             "Drainage & Sump Pump Check (2x/year)",
             "Priority Scheduling for All Repairs"
@@ -20,7 +20,7 @@
           "description": "Our most popular plan. Comprehensive interior and exterior maintenance to protect your home's value and prevent long-term decay.",
           "features": [
             "All Essential Plan Features",
-            "Semi-Annual Full Forensic Audit (Interior & Exterior)",
+            "Semi-annual full interior and exterior review",
             "HVAC & Plumbing Health Checks",
             "Smoke & CO Detector Battery Replacement",
             "Annual Attic & Insulation Inspection"
@@ -32,7 +32,7 @@
           "description": "Complete peace of mind. Full-service maintenance for homeowners who want to 'set it and forget it'.",
           "features": [
             "All Standard Plan Features",
-            "Quarterly Full Forensic Audits",
+            "Quarterly full property reviews",
             "Winterization/De-Winterization Included",
             "Yard & Debris Maintenance (Quarterly)",
             "24/7 Emergency Phone Support"
@@ -48,7 +48,7 @@
           "price": 450,
           "description": "Protect your asset and your tenants. This plan covers the critical systems that prevent business disruption and liability.",
           "features": [
-            "Quarterly Forensic Audits (Common Areas & Roof)",
+            "Quarterly common-area and roof reviews",
             "Annual HVAC & Fire Suppression System Checks",
             "Parking Lot & Walkway Safety Inspections",
             "Board-Ready Digital Asset Reports"
@@ -87,7 +87,7 @@
           "price": 350,
           "description": "Preserve your historic assets and protect your congregation. This plan focuses on safety and long-term preservation.",
           "features": [
-            "Annual Historical Asset Preservation Audit",
+            "Annual historic asset preservation review",
             "Safety & Egress Pathway Inspections",
             "Plumbing & Electrical Systems Check",
             "Facility Budget & Grant Support"

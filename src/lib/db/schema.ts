@@ -6,6 +6,7 @@ import {
   varchar,
   numeric,
   jsonb,
+  index,
 } from 'drizzle-orm/pg-core';
 
 /**
@@ -25,6 +26,10 @@ export const leads = pgTable('leads', {
   status: varchar('status', { length: 50 }).default('new'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+}, (table) => {
+  return {
+    emailCreatedAtIdx: index('email_created_at_idx').on(table.email, table.createdAt),
+  };
 });
 
 export const properties = pgTable('properties', {
@@ -38,6 +43,10 @@ export const properties = pgTable('properties', {
   metadata: jsonb('metadata'), // RSMeans, Year Built, Sqft
   auditHash: text('audit_hash'), // SHA-256 for integrity
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+}, (table) => {
+  return {
+    leadIdIdx: index('property_lead_id_idx').on(table.leadId),
+  };
 });
 
 export const maintenancePlans = pgTable('maintenance_plans', {

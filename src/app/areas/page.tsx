@@ -5,8 +5,18 @@ import { SERVICE_AREAS, SERVICES } from '@/lib/constants';
 import { MapPin } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Service Areas | Benson Home Solutions',
-  description: 'We proudly serve communities across Oregon, from the Mid-Willamette Valley to Harney County. Find your city and see the expert, local services we offer.',
+  title: 'Service Areas',
+  description: 'We serve communities across the Mid-Willamette Valley and Harney County with repairs, restoration, maintenance, and weatherization services.',
+  alternates: {
+    canonical: '/areas',
+  },
+  openGraph: {
+    title: 'Benson Home Solutions Service Areas',
+    description:
+      'Communities across the Mid-Willamette Valley and Harney County where we handle repairs, restoration, maintenance, and weatherization work.',
+    url: 'https://www.bensonhomesolutions.com/areas',
+    images: ['/opengraph-image'],
+  },
 };
 
 const toSlug = (text: string) => text.toLowerCase().replace(/ /g, '-');
@@ -18,14 +28,14 @@ export default function ServiceAreasPage() {
   ];
 
   return (
-    <main>
+    <>
       <Section variant="cream" spacing="lg">
         <Container className="text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-8 leading-tight tracking-tight text-oxblood">
             Serving Communities Across Oregon
           </h1>
           <p className="text-lg md:text-xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            We are proud to provide expert, data-driven contracting and maintenance services to our neighbors. Our methods are tailored to the unique challenges of Oregon&apos;s diverse climates.
+            Find your city and see the repair, restoration, maintenance, and preservation work we provide there.
           </p>
         </Container>
       </Section>
@@ -52,7 +62,7 @@ export default function ServiceAreasPage() {
                               href={`/areas/${toSlug(city)}/${slug}`}
                               className="font-medium text-slate hover:text-oxblood transition-colors border-b border-dotted hover:border-solid hover:border-oxblood"
                             >
-                              {service.title}
+                              {service.title} in {city}
                             </Link>
                           </li>
                         ))}
@@ -65,6 +75,6 @@ export default function ServiceAreasPage() {
           ))}
         </Container>
       </Section>
-    </main>
+    </>
   );
 }

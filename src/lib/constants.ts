@@ -3,42 +3,57 @@ export const BUSINESS = {
   owner: 'Elric Benson',
   phone: '541-321-5115',
   afterhoursPhone: '541-413-0480',
-  email: 'Office@bensonhomesolutions.com',
+  email: 'office@bensonhomesolutions.com',
   license: 'CCB #258533',
-  url: 'https://bensonhomesolutions.com',
+  url: 'https://www.bensonhomesolutions.com',
   facebook: 'https://www.facebook.com/profile.php?id=61565667928376',
   gbp: 'https://maps.app.goo.gl/ad4eywwWonPsSZXP9',
 };
 
 export const SERVICE_AREAS = {
-  midWillametteValley: ['Albany', 'Salem', 'Corvallis', 'Lebanon', 'Philomath', 'Sweet Home'],
+  midWillametteValley: ['Albany', 'Salem', 'Keizer', 'Corvallis', 'Lebanon', 'Sweet Home'],
   harneyCounty: ['Burns', 'Hines', 'Riley', 'Drewsey'],
-};
+} as const;
 
 export const SERVICES = {
-  'proactive-maintenance': {
-    title: 'Proactive Maintenance',
-    description: 'Our maintenance plans are designed to address the common issues faced by property owners in [City], like moisture intrusion from heavy rainfall and seasonal wear.',
-    keywords: ['proactive maintenance [City]', 'home maintenance plan [City]', 'property maintenance [City]']
+  'inspection-repairs': {
+    title: 'Inspection Repairs',
+    description:
+      'We handle FHA, VA, appraisal-required, and buyer-requested repair work in [City], with clear scopes, documentation, and contractor-grade follow-through.',
+    keywords: ['post inspection repairs [City]', 'FHA repairs [City]', 'VA lender repairs [City]'],
   },
-  'remodeling': {
-    title: 'Remodeling',
-    description: 'From kitchens and bathrooms to full home renovations, we deliver high-quality craftsmanship with transparent pricing for [City] homeowners.',
-    keywords: ['remodeling contractor [City]', 'kitchen remodeling [City]', 'bathroom remodeling [City]']
+  'property-preservation': {
+    title: 'Property Preservation',
+    description:
+      'From vacancy turns and board-ups to lock changes, winterization, and recurring site checks, we keep [City] properties secure and serviceable.',
+    keywords: ['property preservation [City]', 'vacant property maintenance [City]', 'board up services [City]'],
   },
-  'emergency-restoration': {
-    title: 'Emergency Restoration',
-    description: 'When disaster strikes, our [City]-based team is ready to respond immediately to mitigate damage from storms, floods, or fire and begin the restoration process.',
-    keywords: ['emergency restoration [City]', 'disaster cleanup [City]', 'storm damage repair [City]']
+  'water-mold-moisture': {
+    title: 'Water, Mold & Moisture Repairs',
+    description:
+      'We dry out, mitigate, document, and repair water damage, mold issues, and moisture-driven failures in [City] before they spread further.',
+    keywords: ['water damage restoration [City]', 'mold mitigation [City]', 'moisture repair contractor [City]'],
   },
-  'water-damage-repair': {
-    title: 'Water Damage Repair',
-    description: 'We specialize in water damage repair in [City], using forensic tools to find hidden moisture and prevent the long-term effects of rot and mold.',
-    keywords: ['water damage repair [City]', 'flood damage cleanup [City]', 'leak repair [City]']
+  'energy-weatherization': {
+    title: 'Energy & Weatherization',
+    description:
+      'We help [City] property owners tighten the envelope, improve comfort, and handle air sealing, attic insulation, and weatherization work that actually lasts.',
+    keywords: ['air sealing [City]', 'attic insulation [City]', 'weatherization contractor [City]'],
   },
-  'dry-rot-repair': {
-    title: 'Dry Rot Repair',
-    description: 'As a leading expert in dry rot repair in [City], we understand how to properly remediate rot caused by the Willamette Valley climate and protect your structure.',
-    keywords: ['dry rot repair [City]', 'wood rot repair [City]', 'structural repair [City]']
+  'windows-doors-site-repair': {
+    title: 'Windows, Doors & Site Repairs',
+    description:
+      'We take care of window and door replacements, lock work, selective demolition, drainage fixes, and site repairs for [City] homes and facilities.',
+    keywords: ['window replacement [City]', 'door replacement [City]', 'site repairs [City]'],
   },
-};
+  'emergency-response': {
+    title: 'Emergency Response',
+    description:
+      'When a leak, storm, break-in, or structural problem hits in [City], we secure the property, document the damage, and start the repair path fast.',
+    keywords: ['emergency repair [City]', 'board up service [City]', 'urgent water damage help [City]'],
+  },
+} as const;
+
+export const MAX_ATTACHMENT_SIZE_BYTES = 3.75 * 1024 * 1024;
+
+export const PANDADOC_API_KEY = process.env.PANDADOC_API_KEY;

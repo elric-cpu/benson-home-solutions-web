@@ -34,11 +34,11 @@ export default function RotRiskSimulator() {
   const riskScore = Math.min(100, Math.round((yearsDeferred * 15) * siding.risk * (location.rainfall / 30)));
 
   return (
-    <main>
+    <>
       <Section variant="cream" spacing="lg">
         <Container className="text-center">
           <Badge variant="secondary" className="mb-6 uppercase tracking-widest font-black border-oxblood/30 text-oxblood px-4 py-1.5">
-            A Benson Home Solutions Tool
+            Methodology Tool Reviewed by Elric Benson
           </Badge>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-oxblood">
             The Oregon <br />
@@ -46,6 +46,9 @@ export default function RotRiskSimulator() {
           </h1>
           <p className="text-xl text-oxblood/80 max-w-2xl mx-auto font-medium">
             A small leak can rot out a wall in a single season. Use this tool to understand your property&apos;s real-world risk, and how much it could cost if left unchecked.
+          </p>
+          <p className="mt-6 max-w-3xl mx-auto text-base font-medium leading-relaxed text-slate">
+            This calculator is designed for answer-first research. It gives Oregon property owners a directional estimate based on deferred maintenance, moisture exposure, and cladding risk so you can understand what drives price before you request a scope.
           </p>
         </Container>
       </Section>
@@ -58,16 +61,18 @@ export default function RotRiskSimulator() {
               
               <div className="space-y-8">
                 <div>
-                  <label className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-4">
+                  <label htmlFor="years-deferred" className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-4">
                     Years of Deferred Maintenance: {yearsDeferred}
                   </label>
                   <input
+                    id="years-deferred"
                     type="range"
                     min="0"
                     max="10"
                     step="1"
                     value={yearsDeferred}
                     onChange={(e) => setYearsDeferred(parseInt(e.target.value))}
+                    aria-label="Years of deferred maintenance"
                     className="w-full h-3 bg-oxblood/10 rounded-lg appearance-none cursor-pointer accent-oxblood"
                   />
                   <div className="flex justify-between mt-2 text-[10px] font-bold text-oxblood/40 uppercase">
@@ -78,8 +83,9 @@ export default function RotRiskSimulator() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-2">Location</label>
+                    <label htmlFor="risk-location" className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-2">Location</label>
                     <select 
+                      id="risk-location"
                       className="w-full p-3 bg-cream border-2 border-oxblood/10 rounded-xl font-bold text-oxblood outline-none focus:border-oxblood"
                       onChange={(e) => setLocation(locations.find(l => l.name === e.target.value) || locations[0])}
                     >
@@ -87,8 +93,9 @@ export default function RotRiskSimulator() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-2">Siding</label>
+                    <label htmlFor="risk-siding" className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-2">Siding</label>
                     <select 
+                      id="risk-siding"
                       className="w-full p-3 bg-cream border-2 border-oxblood/10 rounded-xl font-bold text-oxblood outline-none focus:border-oxblood"
                       onChange={(e) => setSiding(sidingTypes.find(s => s.name === e.target.value) || sidingTypes[0])}
                     >
@@ -129,14 +136,14 @@ export default function RotRiskSimulator() {
                     {riskScore < 20 
                       ? "Your risk is low, but in Oregon, it's never zero. A maintenance plan is your best defense."
                       : riskScore < 60
-                      ? "This is a serious risk. At this stage, there's a high probability of hidden moisture that needs to be addressed."
-                      : "This is a critical situation. Your property is likely sustaining damage right now. I recommend a forensic audit immediately."
+                      ? "This is a serious risk. At this stage, there is a good chance moisture is already moving where it should not."
+                      : "This is a critical situation. Your property is likely sustaining damage right now. Call and get the repair path started immediately."
                     }
                   </p>
                   <div className="flex gap-4">
-                    <Link href="/contact" className="flex-1">
+                    <Link href="/contact?service=Water Damage / Mold / Moisture" className="flex-1">
                       <Button variant="secondary" className="w-full font-black uppercase tracking-widest">
-                        Schedule a Forensic Audit
+                        Request Moisture Repair Help
                       </Button>
                     </Link>
                   </div>
@@ -151,7 +158,7 @@ export default function RotRiskSimulator() {
         <Container size="narrow" className="text-center">
           <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-6">Don&apos;t Wait for the Stain</h3>
           <p className="text-slate font-medium leading-relaxed mb-8">
-            By the time you see evidence of dry rot on a wall, the structural damage behind it is already significant. We find the moisture before it becomes a problem. That&apos;s the difference between a simple repair and a major restoration.
+            By the time you see staining or decay on the surface, the wall has usually been taking damage for a while. The right move is to find the source, dry what can be saved, and repair what cannot.
           </p>
           <Link href="/plans">
             <Button size="lg" className="font-black uppercase tracking-widest">
@@ -160,6 +167,37 @@ export default function RotRiskSimulator() {
           </Link>
         </Container>
       </Section>
-    </main>
+
+      <Section spacing="md">
+        <Container>
+          <div className="grid gap-8 md:grid-cols-2">
+            <Card className="p-8">
+              <h2 className="text-2xl font-black uppercase tracking-tight text-oxblood">
+                What affects the estimate
+              </h2>
+              <ul className="mt-5 space-y-3 text-sm font-medium leading-relaxed text-slate">
+                <li>Years deferred increase the exposure window for moisture to move behind finishes.</li>
+                <li>Wet Oregon climates compound the cost of waiting faster than dry interior markets.</li>
+                <li>Siding type changes how quickly water intrusion turns into rot and replacement work.</li>
+                <li>The estimate compares early correction cost with later restoration pressure.</li>
+              </ul>
+            </Card>
+            <Card className="p-8">
+              <h2 className="text-2xl font-black uppercase tracking-tight text-oxblood">
+                How the methodology works
+              </h2>
+              <p className="mt-5 text-sm font-medium leading-relaxed text-slate">
+                The calculator uses a simple directional model: proactive maintenance starts with a base correction cost, while delayed restoration compounds based on moisture-heavy climates and more vulnerable cladding. It is not a bid. It is a planning tool to show why timing and building envelope conditions drive price.
+              </p>
+              <div className="mt-6">
+                <Link href="/methodology" className="text-sm font-black uppercase tracking-widest text-oxblood">
+                  See the field process behind the estimate
+                </Link>
+              </div>
+            </Card>
+          </div>
+        </Container>
+      </Section>
+    </>
   );
 }

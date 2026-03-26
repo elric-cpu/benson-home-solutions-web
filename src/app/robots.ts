@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/studio/'],
+        disallow: ['/api/', '/studio/', '/tools/*.rsc', '/tools/*.segments'],
       },
       {
         userAgent: 'GPTBot',
@@ -33,6 +33,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
       }
     ],
-    sitemap: 'https://bensonhomesolutions.com/sitemap.xml',
+    sitemap: 'https://www.bensonhomesolutions.com/sitemap.xml',
   };
 }

@@ -15,7 +15,7 @@ export function ServiceJsonLd({ name, description, url, image }: ServiceJsonLdPr
     provider: {
       '@type': 'HomeAndConstructionBusiness',
       name: 'Benson Home Solutions',
-      url: 'https://bensonhomesolutions.com',
+      url: 'https://www.bensonhomesolutions.com',
     },
     serviceType: name,
     areaServed: [
@@ -40,7 +40,7 @@ export function ServiceJsonLd({ name, description, url, image }: ServiceJsonLdPr
         name: 'Burns',
       },
     ],
-    image: image || 'https://bensonhomesolutions.com/favicon.svg',
+    image: image || 'https://www.bensonhomesolutions.com/favicon.svg',
   };
 
   return (

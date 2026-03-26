@@ -107,7 +107,7 @@ function ChatPanel({ setSegment, setAddons }: AIChatProps) {
       <div ref={scrollRef} className="flex-grow overflow-y-auto p-4 space-y-4 bg-cream/10 text-sm">
         {messages.length === 0 && (
           <div className="bg-white p-3 rounded-lg border border-maroon/20">
-            I can build you a custom maintenance plan. Is your property residential, commercial, or a church?
+            I can quote exact maintenance plan pricing and help you choose the right plan. Is the property residential, commercial, or a church facility?
           </div>
         )}
         {messages.map((m, i) => (
@@ -120,13 +120,22 @@ function ChatPanel({ setSegment, setAddons }: AIChatProps) {
         )}
       </div>
       <form onSubmit={handleSubmit} className="p-4 border-t border-maroon/10 flex gap-2">
+        <label htmlFor="ai-chat-input" className="sr-only">
+          Message Benson Home Solutions plan assistant
+        </label>
         <input
+          id="ai-chat-input"
           value={input}
           onChange={e => setInput(e.target.value)}
           placeholder="Your message..."
           className="flex-1 border border-maroon/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-maroon"
         />
-        <button type="submit" disabled={isLoading} className="bg-maroon text-cream p-2 rounded-lg disabled:opacity-50">
+        <button
+          type="submit"
+          disabled={isLoading}
+          aria-label="Send message"
+          className="bg-maroon text-cream p-2 rounded-lg disabled:opacity-50"
+        >
           <Send size={18} />
         </button>
       </form>
@@ -147,7 +156,11 @@ export function AIChat({ variant = 'widget', setSegment, setAddons }: AIChatProp
       {isOpen ? (
         <div className="w-80 sm:w-96 h-[600px]">
           <div className="absolute top-0 right-0 p-2 z-10">
-              <button onClick={() => setIsOpen(false)} className="bg-maroon text-cream rounded-full p-1">
+              <button
+                onClick={() => setIsOpen(false)}
+                aria-label="Close chat"
+                className="bg-maroon text-cream rounded-full p-1"
+              >
                 <X size={20} />
               </button>
           </div>
@@ -156,6 +169,7 @@ export function AIChat({ variant = 'widget', setSegment, setAddons }: AIChatProp
       ) : (
         <button
           onClick={() => setIsOpen(true)}
+          aria-label="Open chat assistant"
           className="bg-maroon text-cream p-4 rounded-full shadow-xl hover:scale-105 transition"
         >
           <MessageSquare size={24} />

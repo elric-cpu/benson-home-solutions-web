@@ -5,14 +5,24 @@ import { BUSINESS } from '@/lib/constants';
 import { ShieldAlert, Phone, Droplets, Wind, Zap } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: '24/7 Emergency Response | Benson Home Solutions',
+  title: 'Emergency Response',
   description:
-    'Water damage, storm damage, or structural failure in the Mid-Willamette Valley? Call (541) 413-0480 for immediate, expert help. We stop the damage and start the recovery.',
+    'Water damage, storm damage, break-ins, or urgent property failures in the Mid-Willamette Valley or Harney County? Call (541) 413-0480 now.',
+  alternates: {
+    canonical: '/emergency',
+  },
+  openGraph: {
+    title: '24/7 Emergency Response | Benson Home Solutions',
+    description:
+      'Water damage, storm damage, break-ins, or urgent property failures in the Mid-Willamette Valley or Harney County? Call now.',
+    url: 'https://www.bensonhomesolutions.com/emergency',
+    images: ['/opengraph-image'],
+  },
 };
 
 export default function EmergencyPage() {
   return (
-    <main>
+    <>
       <Section variant="oxblood" spacing="lg" className="relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-red-600/10 skew-x-12 transform origin-top-right" />
         <Container className="text-center relative z-10">
@@ -24,7 +34,7 @@ export default function EmergencyPage() {
             <span className="italic opacity-60">We&apos;re on the way.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
-            If you have an active emergency, call us immediately. We don&apos;t use an answering service. You&apos;ll speak directly to a contractor who can dispatch a team to your property, day or night.
+            If there is active damage or the property needs to be secured, call now. No form wall, no answering service, no waiting around for a callback.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <a href={`tel:${BUSINESS.afterhoursPhone}`}>
@@ -90,7 +100,7 @@ export default function EmergencyPage() {
               <div className="mb-6 text-red-600"><Zap className="w-10 h-10" /></div>
               <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">A Clear Path to Recovery</h3>
               <p className="text-slate font-medium leading-relaxed">
-                Once the situation is stable, we provide a clear, data-backed plan for restoration. No guesswork, just a straightforward path to getting your property back to normal.
+                Once the site is stable, we document the issue, build the scope, and move the job from emergency response into repair and rebuild.
               </p>
             </div>
           </div>
@@ -103,7 +113,7 @@ export default function EmergencyPage() {
             Don&apos;t Have an Emergency? Let&apos;s Keep It That Way.
           </h2>
           <p className="text-xl text-slate font-medium leading-relaxed mb-12">
-            The best way to handle an emergency is to prevent it from ever happening. Our maintenance plans are designed to identify and fix potential disasters before they strike.
+            Maintenance is still cheaper than surprise damage. If the property is stable today, that is the right time to set up recurring upkeep.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link href="/plans">
@@ -119,6 +129,6 @@ export default function EmergencyPage() {
           </div>
         </Container>
       </Section>
-    </main>
+    </>
   );
 }

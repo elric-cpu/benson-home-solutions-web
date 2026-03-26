@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://bensonhomesolutions.com',
+  siteUrl: 'https://www.bensonhomesolutions.com',
   generateRobotsTxt: false,
   exclude: ['/studio/*', '/api/*'],
   generateIndexSitemap: false,
@@ -14,7 +14,7 @@ module.exports = {
         disallow: ['/api/', '/studio/'],
       },
     ],
-    additionalSitemaps: ['https://bensonhomesolutions.com/sitemap.xml'],
+    additionalSitemaps: ['https://www.bensonhomesolutions.com/sitemap.xml'],
   },
   transform: async (config, path) => {
     if (path === '/') return { loc: path, changefreq: 'daily', priority: 1.0 };
