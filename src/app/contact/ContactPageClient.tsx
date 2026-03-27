@@ -1,5 +1,5 @@
 import { BUSINESS } from '@/lib/constants';
-import { CheckCircle2, AlertTriangle } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { Button, Container, Section, Card } from '@/components/ui';
 import Script from 'next/script';
 import { useContactForm } from './useContactForm';
