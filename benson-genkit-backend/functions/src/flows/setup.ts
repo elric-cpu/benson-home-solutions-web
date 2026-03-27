@@ -1,14 +1,14 @@
-import { genkit, z } from "genkit";
-import { onFlow, noAuth } from "@genkit-ai/firebase/functions";
-import { google } from "googleapis";
+import { genkit, z } from 'genkit';
+import { onFlow, noAuth } from '@genkit-ai/firebase/functions';
+import { google } from 'googleapis';
 
 const ai = genkit({});
-const serviceusage = google.serviceusage("v1");
+const serviceusage = google.serviceusage('v1');
 
 export const setupGoogleApisFlow = onFlow(
   ai,
   {
-    name: "setupGoogleApisFlow",
+    name: 'setupGoogleApisFlow',
     inputSchema: z.void(),
     outputSchema: z.object({
       status: z.string(),
@@ -18,18 +18,18 @@ export const setupGoogleApisFlow = onFlow(
   },
   async () => {
     const auth = new google.auth.GoogleAuth({
-      scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+      scopes: ['https://www.googleapis.com/auth/cloud-platform'],
     });
     const authClient = await auth.getClient();
     google.options({ auth: authClient as never });
 
     const projectId = await auth.getProjectId();
     const servicesToEnable = [
-      "addressvalidation.googleapis.com",
-      "searchconsole.googleapis.com",
-      "maps-backend.googleapis.com",
-      "geocoding-backend.googleapis.com",
-      "aiplatform.googleapis.com",
+      'addressvalidation.googleapis.com',
+      'searchconsole.googleapis.com',
+      'maps-backend.googleapis.com',
+      'geocoding-backend.googleapis.com',
+      'aiplatform.googleapis.com',
     ];
 
     const enabledServices: string[] = [];
@@ -43,8 +43,8 @@ export const setupGoogleApisFlow = onFlow(
     }
 
     return {
-      status: "All required Google APIs have been verified/enabled.",
+      status: 'All required Google APIs have been verified/enabled.',
       enabledServices,
     };
-  }
+  },
 );

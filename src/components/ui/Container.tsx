@@ -13,10 +13,10 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
         'mx-auto w-full px-4 md:px-6 lg:px-8',
         size === 'default' && 'max-w-7xl',
         size === 'narrow' && 'max-w-3xl',
-        className
+        className,
       )}
       {...props}
     />
-  )
+  ),
 );
 Container.displayName = 'Container';

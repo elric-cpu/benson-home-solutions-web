@@ -12,8 +12,13 @@ const recipientSchema = z.object({
 export async function POST(request: Request) {
   const internalApiKey = process.env.INTERNAL_API_KEY;
   if (!internalApiKey) {
-    logError(new Error('INTERNAL_API_KEY is not set.'), { context: 'Agreements Recommend API' });
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    logError(new Error('INTERNAL_API_KEY is not set.'), {
+      context: 'Agreements Recommend API',
+    });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 
   const authHeader = request.headers.get('Authorization');
@@ -34,7 +39,7 @@ export async function POST(request: Request) {
       },
       {
         status: 400,
-      }
+      },
     );
   }
 
@@ -43,6 +48,7 @@ export async function POST(request: Request) {
   // selections and CRM data.
   const documentData = {
     name: 'Maintenance Agreement',
+    template_uuid: process.env.PANDADOC_TEMPLATE_UUID || 'mock-template-uuid',
     recipients: [
       {
         email: requestBody.email,
@@ -51,6 +57,8 @@ export async function POST(request: Request) {
         role: 'Client',
       },
     ],
+    tokens: [],
+    metadata: {},
     // Add other document details here.
   };
 
@@ -66,7 +74,7 @@ export async function POST(request: Request) {
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }

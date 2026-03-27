@@ -40,7 +40,7 @@ export const SERVICES_DATA: Record<string, ServiceDefinition> = {
     title: 'Windows & Doors',
     shortDesc: 'Precision building envelope installations.',
   },
-  'sitework': {
+  sitework: {
     slug: 'sitework',
     title: 'Sitework & Drainage',
     shortDesc: 'Site analysis and water management.',
@@ -50,7 +50,7 @@ export const SERVICES_DATA: Record<string, ServiceDefinition> = {
     title: 'Tenant Improvements',
     shortDesc: 'Commercial turnover and facility correction work.',
   },
-  'demolition': {
+  demolition: {
     slug: 'demolition',
     title: 'Demolition Services',
     shortDesc: 'Controlled selective and full-scope demolition.',

@@ -35,23 +35,29 @@ export default function AboutPage() {
       {/* Hero Section */}
       <Section variant="cream" spacing="lg">
         <Container className="text-center">
-          <Badge variant="secondary" className="mb-6 uppercase tracking-widest font-black border-oxblood/30 text-oxblood px-4 py-1.5">
+          <Badge
+            variant="secondary"
+            className="border-oxblood/30 text-oxblood mb-6 px-4 py-1.5 font-black tracking-widest uppercase"
+          >
             A Note from Our Founder
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-oxblood">
+          <h1 className="text-oxblood mb-8 text-5xl leading-tight font-black tracking-tight md:text-7xl">
             I got tired of seeing <br />
-            <span className="italic text-oxblood/60">small problems turn into rebuilds.</span>
+            <span className="text-oxblood/60 italic">
+              small problems turn into rebuilds.
+            </span>
           </h1>
-          <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            I started Benson Home Solutions to handle the work people actually need done:
-            post-inspection repairs, lender-required corrections, water and mold problems,
-            lock changes, board-ups, weatherization, and the maintenance that keeps
-            properties out of trouble.
+          <p className="text-oxblood/80 mx-auto mb-12 max-w-3xl text-xl leading-relaxed font-medium md:text-2xl">
+            I started Benson Home Solutions to handle the work people actually
+            need done: post-inspection repairs, lender-required corrections,
+            water and mold problems, lock changes, board-ups, weatherization,
+            and the maintenance that keeps properties out of trouble.
           </p>
-          <p className="mx-auto max-w-3xl text-base font-medium leading-relaxed text-slate">
-            We are not trying to turn every property into a remodel. Most calls come in
-            because something needs to be corrected, documented, secured, dried out,
-            tightened up, or kept from failing again. That is the lane we stay in.
+          <p className="text-slate mx-auto max-w-3xl text-base leading-relaxed font-medium">
+            We are not trying to turn every property into a remodel. Most calls
+            come in because something needs to be corrected, documented,
+            secured, dried out, tightened up, or kept from failing again. That
+            is the lane we stay in.
           </p>
         </Container>
       </Section>
@@ -59,7 +65,7 @@ export default function AboutPage() {
       {/* Bio Section */}
       <Section spacing="md">
         <Container>
-          <div className="grid md:grid-cols-3 gap-12 items-center">
+          <div className="grid items-center gap-12 md:grid-cols-3">
             <div className="md:col-span-1">
               <Image
                 src="/images/elric-benson.jpg"
@@ -71,40 +77,62 @@ export default function AboutPage() {
               />
             </div>
             <div className="md:col-span-2">
-              <h2 className="text-4xl font-black uppercase tracking-tight text-oxblood mb-6">
+              <h2 className="text-oxblood mb-6 text-4xl font-black tracking-tight uppercase">
                 Elric Benson
               </h2>
-              <p className="text-slate font-medium leading-relaxed mb-6">
-                {"I'm a licensed Oregon contractor (CCB #258533). Most of our work starts because something failed, something showed up on a report, or somebody needs the job documented clearly. We show up, figure out what actually needs to happen, and get it done without turning a simple scope into a sales presentation."}
+              <p className="text-slate mb-6 leading-relaxed font-medium">
+                {
+                  "I'm a licensed Oregon contractor (CCB #258533). Most of our work starts because something failed, something showed up on a report, or somebody needs the job documented clearly. We show up, figure out what actually needs to happen, and get it done without turning a simple scope into a sales presentation."
+                }
               </p>
-              <p className="text-slate font-medium leading-relaxed mb-6">
-                We work for homeowners, sellers, buyers, lenders, churches, facilities teams,
-                and property managers who need a contractor that can actually clear the list.
-                That means practical scopes, straight answers, and repair work that respects
-                budgets, timelines, and the actual condition of the property.
+              <p className="text-slate mb-6 leading-relaxed font-medium">
+                We work for homeowners, sellers, buyers, lenders, churches,
+                facilities teams, and property managers who need a contractor
+                that can actually clear the list. That means practical scopes,
+                straight answers, and repair work that respects budgets,
+                timelines, and the actual condition of the property.
               </p>
-              <div className="bg-oxblood p-8 rounded-2xl text-cream">
-                <h3 className="text-xl font-black uppercase tracking-tight mb-6">Our Core Standards</h3>
+              <div className="bg-oxblood text-cream rounded-2xl p-8">
+                <h3 className="mb-6 text-xl font-black tracking-tight uppercase">
+                  Our Core Standards
+                </h3>
                 <ul className="space-y-5">
                   <li className="flex gap-4">
-                    <ShieldCheck className="w-5 h-5 shrink-0 text-cream/60" />
+                    <ShieldCheck className="text-cream/60 h-5 w-5 shrink-0" />
                     <div>
-                      <div className="font-black uppercase tracking-widest text-xs mb-1">Fully Licensed & Insured</div>
-                      <div className="text-cream/80 text-sm">We are fully licensed (CCB #258533), bonded, and insured for your protection.</div>
+                      <div className="mb-1 text-xs font-black tracking-widest uppercase">
+                        Fully Licensed & Insured
+                      </div>
+                      <div className="text-cream/80 text-sm">
+                        We are fully licensed (CCB #258533), bonded, and insured
+                        for your protection.
+                      </div>
                     </div>
                   </li>
                   <li className="flex gap-4">
-                    <Ruler className="w-5 h-5 shrink-0 text-cream/60" />
+                    <Ruler className="text-cream/60 h-5 w-5 shrink-0" />
                     <div>
-                      <div className="font-black uppercase tracking-widest text-xs mb-1">Specialized Diagnostics</div>
-                      <div className="text-cream/80 text-sm">Moisture meters, thermal tools, and jobsite documentation help us scope repairs correctly the first time.</div>
+                      <div className="mb-1 text-xs font-black tracking-widest uppercase">
+                        Specialized Diagnostics
+                      </div>
+                      <div className="text-cream/80 text-sm">
+                        Moisture meters, thermal tools, and jobsite
+                        documentation help us scope repairs correctly the first
+                        time.
+                      </div>
                     </div>
                   </li>
                   <li className="flex gap-4">
-                    <Scale className="w-5 h-5 shrink-0 text-cream/60" />
+                    <Scale className="text-cream/60 h-5 w-5 shrink-0" />
                     <div>
-                      <div className="font-black uppercase tracking-widest text-xs mb-1">Total Transparency</div>
-                      <div className="text-cream/80 text-sm">You get direct explanations, clear scopes, and documentation that helps owners, lenders, and insurers understand the work.</div>
+                      <div className="mb-1 text-xs font-black tracking-widest uppercase">
+                        Total Transparency
+                      </div>
+                      <div className="text-cream/80 text-sm">
+                        You get direct explanations, clear scopes, and
+                        documentation that helps owners, lenders, and insurers
+                        understand the work.
+                      </div>
                     </div>
                   </li>
                 </ul>
@@ -117,41 +145,56 @@ export default function AboutPage() {
       {/* Dual Region Section */}
       <Section variant="cream" spacing="lg">
         <Container>
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-oxblood mb-4">
+          <div className="mb-16 text-center">
+            <h2 className="text-oxblood mb-4 text-4xl font-black tracking-tight uppercase md:text-5xl">
               Proudly Serving Oregon
             </h2>
-            <p className="text-xl text-slate font-medium max-w-2xl mx-auto">
-              Our methods are tailored to the unique challenges of Oregon&apos;s climates.
+            <p className="text-slate mx-auto max-w-2xl text-xl font-medium">
+              Our methods are tailored to the unique challenges of Oregon&apos;s
+              climates.
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-surface p-10 rounded-2xl border border-oxblood/5 shadow-xl">
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4 flex items-center gap-3">
-                <Map className="w-6 h-6" /> The Mid-Willamette Valley
+
+          <div className="grid gap-8 md:grid-cols-2">
+            <div className="bg-surface border-oxblood/5 rounded-2xl border p-10 shadow-xl">
+              <h3 className="text-oxblood mb-4 flex items-center gap-3 text-2xl font-black tracking-tight uppercase">
+                <Map className="h-6 w-6" /> The Mid-Willamette Valley
               </h3>
-              <p className="text-slate font-medium mb-6 leading-relaxed">
-                In the Valley, our focus is on managing moisture to prevent rot and mold.
+              <p className="text-slate mb-6 leading-relaxed font-medium">
+                In the Valley, our focus is on managing moisture to prevent rot
+                and mold.
               </p>
               <div className="flex flex-wrap gap-2">
-                {SERVICE_AREAS.midWillametteValley.slice(0, 5).map(city => (
-                  <span key={city} className="px-3 py-1 bg-oxblood/5 rounded-full text-[10px] font-bold uppercase tracking-widest text-oxblood">{city}</span>
+                {SERVICE_AREAS.midWillametteValley.slice(0, 5).map((city) => (
+                  <span
+                    key={city}
+                    className="bg-oxblood/5 text-oxblood rounded-full px-3 py-1 text-[10px] font-bold tracking-widest uppercase"
+                  >
+                    {city}
+                  </span>
                 ))}
-                <span className="px-3 py-1 bg-oxblood/5 rounded-full text-[10px] font-bold uppercase tracking-widest text-oxblood">+ More</span>
+                <span className="bg-oxblood/5 text-oxblood rounded-full px-3 py-1 text-[10px] font-bold tracking-widest uppercase">
+                  + More
+                </span>
               </div>
             </div>
 
-            <div className="bg-surface p-10 rounded-2xl border border-oxblood/5 shadow-xl">
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4 flex items-center gap-3">
-                <Map className="w-6 h-6" /> The High Desert
+            <div className="bg-surface border-oxblood/5 rounded-2xl border p-10 shadow-xl">
+              <h3 className="text-oxblood mb-4 flex items-center gap-3 text-2xl font-black tracking-tight uppercase">
+                <Map className="h-6 w-6" /> The High Desert
               </h3>
-              <p className="text-slate font-medium mb-6 leading-relaxed">
-                In Harney County, we focus on winterization and wildfire protection.
+              <p className="text-slate mb-6 leading-relaxed font-medium">
+                In Harney County, we focus on winterization and wildfire
+                protection.
               </p>
               <div className="flex flex-wrap gap-2">
-                {SERVICE_AREAS.harneyCounty.map(city => (
-                  <span key={city} className="px-3 py-1 bg-oxblood/5 rounded-full text-[10px] font-bold uppercase tracking-widest text-oxblood">{city}</span>
+                {SERVICE_AREAS.harneyCounty.map((city) => (
+                  <span
+                    key={city}
+                    className="bg-oxblood/5 text-oxblood rounded-full px-3 py-1 text-[10px] font-bold tracking-widest uppercase"
+                  >
+                    {city}
+                  </span>
                 ))}
               </div>
             </div>
@@ -162,36 +205,55 @@ export default function AboutPage() {
       {/* Trust & Stats */}
       <Section spacing="lg">
         <Container className="text-center">
-          <div className="grid md:grid-cols-3 gap-12 mb-16">
+          <div className="mb-16 grid gap-12 md:grid-cols-3">
             <div>
-              <div className="text-5xl font-black text-oxblood mb-2">15+</div>
-              <div className="text-xs uppercase font-bold tracking-widest text-slate opacity-60">Years of In-The-Field <br />Experience</div>
+              <div className="text-oxblood mb-2 text-5xl font-black">15+</div>
+              <div className="text-slate text-xs font-bold tracking-widest uppercase opacity-60">
+                Years of In-The-Field <br />
+                Experience
+              </div>
             </div>
             <div>
-              <div className="text-5xl font-black text-oxblood mb-2">200+</div>
-              <div className="text-xs uppercase font-bold tracking-widest text-slate opacity-60">Properties Protected in <br />Oregon</div>
+              <div className="text-oxblood mb-2 text-5xl font-black">200+</div>
+              <div className="text-slate text-xs font-bold tracking-widest uppercase opacity-60">
+                Properties Protected in <br />
+                Oregon
+              </div>
             </div>
             <div>
-              <div className="text-5xl font-black text-oxblood mb-2">4.9/5</div>
-              <div className="text-xs uppercase font-bold tracking-widest text-slate opacity-60">Average Client <br />Rating</div>
+              <div className="text-oxblood mb-2 text-5xl font-black">4.9/5</div>
+              <div className="text-slate text-xs font-bold tracking-widest uppercase opacity-60">
+                Average Client <br />
+                Rating
+              </div>
             </div>
           </div>
-          
-          <div className="max-w-3xl mx-auto border-t border-oxblood/10 pt-16">
-            <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-8">Need a Contractor Who Can Clear the Scope?</h3>
-            <p className="mx-auto mb-8 max-w-2xl text-base font-medium leading-relaxed text-slate">
-              If the issue started with an inspection report, a lender condition, active moisture,
-              deferred maintenance, or a vacancy problem, we know how to sort the scope, document
-              the work, and move it to completion.
+
+          <div className="border-oxblood/10 mx-auto max-w-3xl border-t pt-16">
+            <h3 className="text-oxblood mb-8 text-2xl font-black tracking-tight uppercase">
+              Need a Contractor Who Can Clear the Scope?
+            </h3>
+            <p className="text-slate mx-auto mb-8 max-w-2xl text-base leading-relaxed font-medium">
+              If the issue started with an inspection report, a lender
+              condition, active moisture, deferred maintenance, or a vacancy
+              problem, we know how to sort the scope, document the work, and
+              move it to completion.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-6">
+            <div className="flex flex-col justify-center gap-6 sm:flex-row">
               <Link href="/contact?service=Inspection Repairs">
-                <Button size="lg" className="w-full sm:w-auto px-10 py-7 text-base md:text-lg font-black uppercase tracking-widest shadow-xl shadow-oxblood/20">
+                <Button
+                  size="lg"
+                  className="shadow-oxblood/20 w-full px-10 py-7 text-base font-black tracking-widest uppercase shadow-xl sm:w-auto md:text-lg"
+                >
                   Start a Repair Request
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto px-10 py-7 text-base md:text-lg font-black uppercase tracking-widest border-2 border-oxblood text-oxblood">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-oxblood text-oxblood w-full border-2 px-10 py-7 text-base font-black tracking-widest uppercase sm:w-auto md:text-lg"
+                >
                   Call or Text the Office
                 </Button>
               </Link>
@@ -204,25 +266,45 @@ export default function AboutPage() {
         <Container className="max-w-4xl">
           <div className="grid gap-8 md:grid-cols-2">
             <div>
-              <h3 className="mb-4 text-2xl font-black uppercase tracking-tight text-oxblood">
+              <h3 className="text-oxblood mb-4 text-2xl font-black tracking-tight uppercase">
                 Why People Call Us
               </h3>
-              <ul className="space-y-3 text-sm font-medium leading-relaxed text-slate">
-                <li>Inspection reports need real corrections, not vague promises.</li>
-                <li>Water or mold problems need mitigation plus repair follow-through.</li>
-                <li>Vacant properties need board-ups, lock work, and ongoing preservation.</li>
-                <li>Older homes need air sealing, insulation, and envelope work that makes sense.</li>
+              <ul className="text-slate space-y-3 text-sm leading-relaxed font-medium">
+                <li>
+                  Inspection reports need real corrections, not vague promises.
+                </li>
+                <li>
+                  Water or mold problems need mitigation plus repair
+                  follow-through.
+                </li>
+                <li>
+                  Vacant properties need board-ups, lock work, and ongoing
+                  preservation.
+                </li>
+                <li>
+                  Older homes need air sealing, insulation, and envelope work
+                  that makes sense.
+                </li>
               </ul>
             </div>
             <div>
-              <h3 className="mb-4 text-2xl font-black uppercase tracking-tight text-oxblood">
+              <h3 className="text-oxblood mb-4 text-2xl font-black tracking-tight uppercase">
                 What We Do Not Do
               </h3>
-              <ul className="space-y-3 text-sm font-medium leading-relaxed text-slate">
+              <ul className="text-slate space-y-3 text-sm leading-relaxed font-medium">
                 <li>We do not market ourselves as home inspectors.</li>
-                <li>We do not bury small repair scopes inside oversized remodel pitches.</li>
-                <li>We do not rely on stock answers when the property needs documentation and a field decision.</li>
-                <li>We do not leave owners guessing about what actually has to happen next.</li>
+                <li>
+                  We do not bury small repair scopes inside oversized remodel
+                  pitches.
+                </li>
+                <li>
+                  We do not rely on stock answers when the property needs
+                  documentation and a field decision.
+                </li>
+                <li>
+                  We do not leave owners guessing about what actually has to
+                  happen next.
+                </li>
               </ul>
             </div>
           </div>

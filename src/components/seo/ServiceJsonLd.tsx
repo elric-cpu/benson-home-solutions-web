@@ -1,3 +1,5 @@
+import Script from 'next/script';
+
 interface ServiceJsonLdProps {
   name: string;
   description: string;
@@ -5,7 +7,12 @@ interface ServiceJsonLdProps {
   image?: string;
 }
 
-export function ServiceJsonLd({ name, description, url, image }: ServiceJsonLdProps) {
+export function ServiceJsonLd({
+  name,
+  description,
+  url,
+  image,
+}: ServiceJsonLdProps) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -44,7 +51,8 @@ export function ServiceJsonLd({ name, description, url, image }: ServiceJsonLdPr
   };
 
   return (
-    <script
+    <Script
+      id="service-json-ld"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />

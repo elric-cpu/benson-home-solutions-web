@@ -14,10 +14,16 @@ export async function POST(request: NextRequest) {
 
     // Basic validation
     if (search && typeof search !== 'string') {
-      return NextResponse.json({ error: 'Invalid search query.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid search query.' },
+        { status: 400 },
+      );
     }
     if (category && typeof category !== 'string') {
-      return NextResponse.json({ error: 'Invalid category filter.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid category filter.' },
+        { status: 400 },
+      );
     }
 
     // Build the query dynamically
@@ -32,7 +38,7 @@ export async function POST(request: NextRequest) {
       const categoryCondition = or(
         ilike(catalogItems.category1, `%${category}%`),
         ilike(catalogItems.category2, `%${category}%`),
-        ilike(catalogItems.category3, `%${category}%`)
+        ilike(catalogItems.category3, `%${category}%`),
       );
       conditions.push(categoryCondition);
     }
@@ -44,12 +50,11 @@ export async function POST(request: NextRequest) {
     const services = await query.limit(100); // Add a reasonable limit
 
     return NextResponse.json(services, { status: 200 });
-
   } catch (error) {
     console.error('[Service API Error]', error);
     return NextResponse.json(
       { error: 'An error occurred while fetching services. Please try again.' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

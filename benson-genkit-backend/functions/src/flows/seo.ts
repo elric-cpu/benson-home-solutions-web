@@ -1,14 +1,14 @@
-import { genkit, z } from "genkit";
-import { gemini15Flash } from "@genkit-ai/googleai";
-import { onFlow, noAuth } from "@genkit-ai/firebase/functions";
-import { getSearchPerformance } from "../gscTool";
+import { genkit, z } from 'genkit';
+import { gemini15Flash } from '@genkit-ai/googleai';
+import { onFlow, noAuth } from '@genkit-ai/firebase/functions';
+import { getSearchPerformance } from '../gscTool';
 
 const ai = genkit({});
 
 export const optimizeSiteFlow = onFlow(
   ai,
   {
-    name: "optimizeSiteFlow",
+    name: 'optimizeSiteFlow',
     inputSchema: z.string(), // The Site URL
     outputSchema: z.string(),
     authPolicy: noAuth(),
@@ -48,5 +48,5 @@ export const optimizeSiteFlow = onFlow(
     });
 
     return response.text;
-  }
+  },
 );

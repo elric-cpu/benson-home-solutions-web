@@ -20,46 +20,65 @@ interface PlanBuilderProps {
   setAddons: Dispatch<SetStateAction<Set<string>>>;
 }
 
-export function PlanBuilder({ segment, addons, setSegment, setAddons: _setAddons }: PlanBuilderProps) {
+export function PlanBuilder({
+  segment,
+  addons,
+  setSegment,
+  setAddons: _setAddons,
+}: PlanBuilderProps) {
   const segmentData = getSegmentData(segment);
   const tiers = getTierEntries(segment);
-  const [selectedTierKey, setSelectedTierKey] = useState(recommendedTierBySegment[segment]);
+  const [selectedTierKey, setSelectedTierKey] = useState(
+    recommendedTierBySegment[segment],
+  );
   const selectedTier = getTier(segment, selectedTierKey);
   const total = selectedTier.price;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+    <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
       {/* Plan Selection */}
-      <div className="lg:col-span-2 space-y-6">
+      <div className="space-y-6 lg:col-span-2">
         <div>
-          <h2 className="text-xl font-bold mb-3">1. Select Your Property Type</h2>
+          <h2 className="mb-3 text-xl font-bold">
+            1. Select Your Property Type
+          </h2>
           <div className="grid grid-cols-3 gap-2">
-            {(['residential', 'commercial', 'church'] as Segment[]).map(segKey => (
-              <Button 
-                key={segKey}
-                variant={segment === segKey ? 'primary' : 'outline'}
-                onClick={() => setSegment(segKey)}
-              >
-                {getSegmentData(segKey).name}
-              </Button>
-            ))}
+            {(['residential', 'commercial', 'church'] as Segment[]).map(
+              (segKey) => (
+                <Button
+                  key={segKey}
+                  variant={segment === segKey ? 'primary' : 'outline'}
+                  onClick={() => setSegment(segKey)}
+                >
+                  {getSegmentData(segKey).name}
+                </Button>
+              ),
+            )}
           </div>
         </div>
 
         <div>
-          <h2 className="text-xl font-bold mb-3">2. Compare Recommended Tiers</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <h2 className="mb-3 text-xl font-bold">
+            2. Compare Recommended Tiers
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {tiers.map((tier) => (
               <Card
                 key={tier.name}
-                className={`transition-all hover:shadow-md cursor-pointer ${selectedTier.key === tier.key ? 'ring-2 ring-oxblood' : ''}`}
+                className={`cursor-pointer transition-all hover:shadow-md ${selectedTier.key === tier.key ? 'ring-oxblood ring-2' : ''}`}
               >
-                <CardContent className="p-4 flex items-center gap-4">
-                  <CheckCircle2 className="w-8 h-8 text-oxblood" />
-                  <button type="button" onClick={() => setSelectedTierKey(tier.key)} className="text-left">
+                <CardContent className="flex items-center gap-4 p-4">
+                  <CheckCircle2 className="text-oxblood h-8 w-8" />
+                  <button
+                    type="button"
+                    onClick={() => setSelectedTierKey(tier.key)}
+                    className="text-left"
+                  >
                     <h3 className="font-bold">{tier.name}</h3>
                     <p className="text-sm text-slate-600">${tier.price}/mo</p>
-                    <p className="mt-2 text-sm text-slate-600">{tier.description}</p>
+                    <p className="mt-2 text-sm text-slate-600">
+                      {tier.description}
+                    </p>
                   </button>
                 </CardContent>
               </Card>
@@ -69,38 +88,53 @@ export function PlanBuilder({ segment, addons, setSegment, setAddons: _setAddons
       </div>
 
       {/* Summary Card */}
-      <div className="lg:col-span-1 sticky top-24">
+      <div className="sticky top-24 lg:col-span-1">
         <Card className="bg-cream/50">
           <CardHeader>
-            <h3 className="text-2xl font-black text-oxblood">{segmentData.name} Recommended Plan</h3>
+            <h3 className="text-oxblood text-2xl font-black">
+              {segmentData.name} Recommended Plan
+            </h3>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex justify-between items-baseline">
+              <div className="flex items-baseline justify-between">
                 <span className="font-semibold">{selectedTier.name}</span>
-                <span className="font-bold text-lg">${selectedTier.price}/mo</span>
+                <span className="text-lg font-bold">
+                  ${selectedTier.price}/mo
+                </span>
               </div>
-              <div className="border-t border-oxblood/20 pt-4 space-y-2">
-                <h4 className="font-semibold mb-2">Included Highlights</h4>
+              <div className="border-oxblood/20 space-y-2 border-t pt-4">
+                <h4 className="mb-2 font-semibold">Included Highlights</h4>
                 {selectedTier.features.map((feature) => (
-                  <div key={feature} className="flex justify-between items-center text-sm">
+                  <div
+                    key={feature}
+                    className="flex items-center justify-between text-sm"
+                  >
                     <span>{feature}</span>
                   </div>
                 ))}
                 {addons.size > 0 && (
                   <p className="text-sm text-slate-500">
-                    Custom add-ons are not priced in this builder yet. We will scope those separately so the quote stays honest.
+                    Custom add-ons are not priced in this builder yet. We will
+                    scope those separately so the quote stays honest.
                   </p>
                 )}
               </div>
-              <div className="border-t-2 border-oxblood/50 pt-4 mt-4">
-                <div className="flex justify-between items-baseline">
-                  <span className="font-bold text-lg uppercase">Total Monthly</span>
-                  <span className="font-black text-3xl text-oxblood">${total}</span>
+              <div className="border-oxblood/50 mt-4 border-t-2 pt-4">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-lg font-bold uppercase">
+                    Total Monthly
+                  </span>
+                  <span className="text-oxblood text-3xl font-black">
+                    ${total}
+                  </span>
                 </div>
               </div>
             </div>
-            <Button size="lg" className="w-full mt-6 font-black uppercase tracking-widest">
+            <Button
+              size="lg"
+              className="mt-6 w-full font-black tracking-widest uppercase"
+            >
               Finalize Plan & Get Quote
             </Button>
           </CardContent>

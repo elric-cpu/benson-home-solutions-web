@@ -9,7 +9,8 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'true-cost-of-deferred-maintenance-in-oregon',
-    title: 'The True Cost of Deferred Maintenance in Oregon: A Data-Driven Analysis',
+    title:
+      'The True Cost of Deferred Maintenance in Oregon: A Data-Driven Analysis',
     date: '2026-03-25',
     author: 'Elric Benson',
     content: `# The True Cost of Deferred Maintenance in Oregon: A Data-Driven Analysis

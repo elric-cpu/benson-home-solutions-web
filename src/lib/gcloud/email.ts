@@ -35,8 +35,13 @@ export async function sendLeadNotification(lead: {
     }
     return chunks.join('\n');
   };
-  const attachment = lead.attachment && lead.attachment.data && lead.attachment.name ? lead.attachment : undefined;
-  const attachmentNote = attachment?.name ? `<p><strong>Attachment:</strong> ${attachment.name}</p>` : '';
+  const attachment =
+    lead.attachment && lead.attachment.data && lead.attachment.name
+      ? lead.attachment
+      : undefined;
+  const attachmentNote = attachment?.name
+    ? `<p><strong>Attachment:</strong> ${attachment.name}</p>`
+    : '';
   const htmlParts = [
     `<h2>New Website Lead</h2>`,
     `<p><strong>Name:</strong> ${lead.name}</p>`,
@@ -69,7 +74,7 @@ export async function sendLeadNotification(lead: {
       `Content-Disposition: attachment; filename="${attachment.name}"`,
       'Content-Transfer-Encoding: base64',
       '',
-      chunkString(attachment.data, 76)
+      chunkString(attachment.data, 76),
     );
   }
   messageParts.push(`--${boundary}--`);

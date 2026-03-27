@@ -1,7 +1,14 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { Camera, ClipboardCheck, Droplets, Ruler, Thermometer, Zap } from 'lucide-react'
-import { Badge, Button, Container, Section } from '@/components/ui'
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import {
+  Camera,
+  ClipboardCheck,
+  Droplets,
+  Ruler,
+  Thermometer,
+  Zap,
+} from 'lucide-react';
+import { Badge, Button, Container, Section } from '@/components/ui';
 
 export const metadata: Metadata = {
   title: 'How We Work',
@@ -17,7 +24,7 @@ export const metadata: Metadata = {
     url: 'https://www.bensonhomesolutions.com/methodology',
     images: ['/opengraph-image'],
   },
-}
+};
 
 export default function MethodologyPage() {
   const steps = [
@@ -41,24 +48,24 @@ export default function MethodologyPage() {
       desc: 'We fix the cause, not just the stain, crack, or symptom. That is how water, mold, envelope, and compliance issues stay fixed.',
       icon: Zap,
     },
-  ]
+  ];
 
   return (
     <>
       <Section variant="oxblood" spacing="lg">
         <Container className="text-center">
-          <Badge className="mb-6 bg-cream/10 px-4 py-1.5 font-black uppercase tracking-widest text-cream border-cream/20">
+          <Badge className="bg-cream/10 text-cream border-cream/20 mb-6 px-4 py-1.5 font-black tracking-widest uppercase">
             How We Work
           </Badge>
-          <h1 className="mb-8 text-5xl font-black leading-tight tracking-tight text-cream md:text-7xl">
+          <h1 className="text-cream mb-8 text-5xl leading-tight font-black tracking-tight md:text-7xl">
             We Don&apos;t Guess.
             <br />
-            <span className="opacity-60 italic">We Measure.</span>
+            <span className="italic opacity-60">We Measure.</span>
           </h1>
-          <p className="mx-auto mb-12 max-w-3xl text-xl font-medium leading-relaxed text-cream/80 md:text-2xl">
-            We are not selling inspections. We are using real measurements and field
-            documentation to scope repairs, protect properties, and keep small failures
-            from turning into expensive rebuilds.
+          <p className="text-cream/80 mx-auto mb-12 max-w-3xl text-xl leading-relaxed font-medium md:text-2xl">
+            We are not selling inspections. We are using real measurements and
+            field documentation to scope repairs, protect properties, and keep
+            small failures from turning into expensive rebuilds.
           </p>
         </Container>
       </Section>
@@ -67,14 +74,19 @@ export default function MethodologyPage() {
         <Container>
           <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((step) => (
-              <div key={step.title} className="group flex flex-col items-center text-center">
-                <div className="mb-8 rounded-full bg-oxblood/5 p-6 transition-all duration-300 group-hover:bg-oxblood group-hover:text-cream">
+              <div
+                key={step.title}
+                className="group flex flex-col items-center text-center"
+              >
+                <div className="bg-oxblood/5 group-hover:bg-oxblood group-hover:text-cream mb-8 rounded-full p-6 transition-all duration-300">
                   <step.icon className="h-12 w-12" />
                 </div>
-                <h3 className="mb-4 text-2xl font-black uppercase tracking-tight text-oxblood">
+                <h3 className="text-oxblood mb-4 text-2xl font-black tracking-tight uppercase">
                   {step.title}
                 </h3>
-                <p className="font-medium leading-relaxed text-slate">{step.desc}</p>
+                <p className="text-slate leading-relaxed font-medium">
+                  {step.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -84,43 +96,43 @@ export default function MethodologyPage() {
       <Section variant="cream" spacing="lg">
         <Container>
           <div className="mb-16 text-center">
-            <h2 className="mb-4 text-4xl font-black uppercase tracking-tight text-oxblood md:text-5xl">
+            <h2 className="text-oxblood mb-4 text-4xl font-black tracking-tight uppercase md:text-5xl">
               The Tools We Use
             </h2>
-            <p className="mx-auto max-w-2xl text-xl font-medium text-slate">
-              We own and operate specialized equipment so the job can move without waiting
-              on someone else&apos;s rental calendar.
+            <p className="text-slate mx-auto max-w-2xl text-xl font-medium">
+              We own and operate specialized equipment so the job can move
+              without waiting on someone else&apos;s rental calendar.
             </p>
           </div>
           <div className="grid gap-8 text-center md:grid-cols-3">
-            <div className="rounded-2xl border border-oxblood/10 bg-surface p-8 shadow-lg">
-              <Thermometer className="mx-auto mb-4 h-10 w-10 text-oxblood" />
-              <h3 className="mb-2 text-xl font-black uppercase tracking-tight text-oxblood">
+            <div className="border-oxblood/10 bg-surface rounded-2xl border p-8 shadow-lg">
+              <Thermometer className="text-oxblood mx-auto mb-4 h-10 w-10" />
+              <h3 className="text-oxblood mb-2 text-xl font-black tracking-tight uppercase">
                 Thermal Imaging
               </h3>
-              <p className="text-sm font-medium text-slate">
-                Helps us trace heat loss, missing insulation, and moisture movement before
-                we open up more than we need to.
+              <p className="text-slate text-sm font-medium">
+                Helps us trace heat loss, missing insulation, and moisture
+                movement before we open up more than we need to.
               </p>
             </div>
-            <div className="rounded-2xl border border-oxblood/10 bg-surface p-8 shadow-lg">
-              <Droplets className="mx-auto mb-4 h-10 w-10 text-oxblood" />
-              <h3 className="mb-2 text-xl font-black uppercase tracking-tight text-oxblood">
+            <div className="border-oxblood/10 bg-surface rounded-2xl border p-8 shadow-lg">
+              <Droplets className="text-oxblood mx-auto mb-4 h-10 w-10" />
+              <h3 className="text-oxblood mb-2 text-xl font-black tracking-tight uppercase">
                 Moisture Meters
               </h3>
-              <p className="text-sm font-medium text-slate">
-                Shows whether framing and finishes are dry enough to save, dry enough to
-                close up, or still at risk.
+              <p className="text-slate text-sm font-medium">
+                Shows whether framing and finishes are dry enough to save, dry
+                enough to close up, or still at risk.
               </p>
             </div>
-            <div className="rounded-2xl border border-oxblood/10 bg-surface p-8 shadow-lg">
-              <Camera className="mx-auto mb-4 h-10 w-10 text-oxblood" />
-              <h3 className="mb-2 text-xl font-black uppercase tracking-tight text-oxblood">
+            <div className="border-oxblood/10 bg-surface rounded-2xl border p-8 shadow-lg">
+              <Camera className="text-oxblood mx-auto mb-4 h-10 w-10" />
+              <h3 className="text-oxblood mb-2 text-xl font-black tracking-tight uppercase">
                 Borescope Cameras
               </h3>
-              <p className="text-sm font-medium text-slate">
-                Lets us verify cavity conditions without turning a small repair into
-                unnecessary demolition.
+              <p className="text-slate text-sm font-medium">
+                Lets us verify cavity conditions without turning a small repair
+                into unnecessary demolition.
               </p>
             </div>
           </div>
@@ -132,44 +144,47 @@ export default function MethodologyPage() {
           <div className="mb-10 grid gap-4 md:grid-cols-2">
             <Link
               href="/tools/cost-calculator"
-              className="rounded-2xl border border-oxblood/10 bg-cream px-5 py-5 text-left transition-colors hover:border-oxblood"
+              className="border-oxblood/10 bg-cream hover:border-oxblood rounded-2xl border px-5 py-5 text-left transition-colors"
             >
-              <div className="text-xs font-black uppercase tracking-widest text-oxblood/60">
+              <div className="text-oxblood/60 text-xs font-black tracking-widest uppercase">
                 Tool
               </div>
-              <div className="mt-2 text-xl font-black tracking-tight text-oxblood">
+              <div className="text-oxblood mt-2 text-xl font-black tracking-tight">
                 Dry rot cost calculator
               </div>
-              <p className="mt-2 text-sm font-medium leading-relaxed text-slate">
-                See how climate, siding type, and delayed maintenance increase repair cost.
+              <p className="text-slate mt-2 text-sm leading-relaxed font-medium">
+                See how climate, siding type, and delayed maintenance increase
+                repair cost.
               </p>
             </Link>
             <Link
               href="/tools/cost-estimator"
-              className="rounded-2xl border border-oxblood/10 bg-cream px-5 py-5 text-left transition-colors hover:border-oxblood"
+              className="border-oxblood/10 bg-cream hover:border-oxblood rounded-2xl border px-5 py-5 text-left transition-colors"
             >
-              <div className="text-xs font-black uppercase tracking-widest text-oxblood/60">
+              <div className="text-oxblood/60 text-xs font-black tracking-widest uppercase">
                 Tool
               </div>
-              <div className="mt-2 text-xl font-black tracking-tight text-oxblood">
+              <div className="text-oxblood mt-2 text-xl font-black tracking-tight">
                 Building reserve estimator
               </div>
-              <p className="mt-2 text-sm font-medium leading-relaxed text-slate">
-                Model reserve pressure for roofs, siding, HVAC, windows, and plumbing systems.
+              <p className="text-slate mt-2 text-sm leading-relaxed font-medium">
+                Model reserve pressure for roofs, siding, HVAC, windows, and
+                plumbing systems.
               </p>
             </Link>
           </div>
-          <h2 className="mb-6 text-4xl font-black uppercase tracking-tight text-oxblood">
+          <h2 className="text-oxblood mb-6 text-4xl font-black tracking-tight uppercase">
             Ready to Scope the Repair?
           </h2>
-          <p className="mb-12 text-xl font-medium text-slate">
-            Send the repair list, the lender notes, or the photos from the damage.
-            We&apos;ll turn it into a practical plan and get the work moving.
+          <p className="text-slate mb-12 text-xl font-medium">
+            Send the repair list, the lender notes, or the photos from the
+            damage. We&apos;ll turn it into a practical plan and get the work
+            moving.
           </p>
           <Link href="/contact?service=Inspection Repairs">
             <Button
               size="lg"
-              className="px-12 py-8 text-lg font-black uppercase tracking-widest shadow-xl shadow-oxblood/20"
+              className="shadow-oxblood/20 px-12 py-8 text-lg font-black tracking-widest uppercase shadow-xl"
             >
               Start Your Repair Scope
             </Button>
@@ -177,5 +192,5 @@ export default function MethodologyPage() {
         </Container>
       </Section>
     </>
-  )
+  );
 }

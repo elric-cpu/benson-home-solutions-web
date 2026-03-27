@@ -1,5 +1,5 @@
-import type { Metadata } from 'next'
-import ContactPageClient from './ContactPageClient'
+import type { Metadata } from 'next';
+import ContactPageClient from './ContactPageClient';
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     url: 'https://www.bensonhomesolutions.com/contact',
     images: ['/opengraph-image'],
   },
-}
+};
 
 export default function ContactPage() {
-  return <ContactPageClient />
+  return <ContactPageClient />;
 }

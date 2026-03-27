@@ -8,7 +8,8 @@ export const metadata = {
     canonical: '/tools/cost-estimator',
   },
   openGraph: {
-    title: '10-Year Building Reserve and Maintenance Cost Estimator | Benson Home Solutions',
+    title:
+      '10-Year Building Reserve and Maintenance Cost Estimator | Benson Home Solutions',
     description:
       'Estimate reserve needs and maintenance liability for commercial and nonprofit properties, with methodology and planning context.',
     url: 'https://www.bensonhomesolutions.com/tools/cost-estimator',

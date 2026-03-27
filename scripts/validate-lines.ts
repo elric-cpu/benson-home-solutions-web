@@ -45,4 +45,3 @@ if (failures.length > 0) {
 } else {
   console.info('[GIDEON - PASS] All files within maintenance limits.');
 }
-

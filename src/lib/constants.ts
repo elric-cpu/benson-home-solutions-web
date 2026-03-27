@@ -11,7 +11,14 @@ export const BUSINESS = {
 };
 
 export const SERVICE_AREAS = {
-  midWillametteValley: ['Albany', 'Salem', 'Keizer', 'Corvallis', 'Lebanon', 'Sweet Home'],
+  midWillametteValley: [
+    'Albany',
+    'Salem',
+    'Keizer',
+    'Corvallis',
+    'Lebanon',
+    'Sweet Home',
+  ],
   harneyCounty: ['Burns', 'Hines', 'Riley', 'Drewsey'],
 } as const;
 
@@ -20,37 +27,61 @@ export const SERVICES = {
     title: 'Inspection Repairs',
     description:
       'We handle FHA, VA, appraisal-required, and buyer-requested repair work in [City], with clear scopes, documentation, and contractor-grade follow-through.',
-    keywords: ['post inspection repairs [City]', 'FHA repairs [City]', 'VA lender repairs [City]'],
+    keywords: [
+      'post inspection repairs [City]',
+      'FHA repairs [City]',
+      'VA lender repairs [City]',
+    ],
   },
   'property-preservation': {
     title: 'Property Preservation',
     description:
       'From vacancy turns and board-ups to lock changes, winterization, and recurring site checks, we keep [City] properties secure and serviceable.',
-    keywords: ['property preservation [City]', 'vacant property maintenance [City]', 'board up services [City]'],
+    keywords: [
+      'property preservation [City]',
+      'vacant property maintenance [City]',
+      'board up services [City]',
+    ],
   },
   'water-mold-moisture': {
     title: 'Water, Mold & Moisture Repairs',
     description:
       'We dry out, mitigate, document, and repair water damage, mold issues, and moisture-driven failures in [City] before they spread further.',
-    keywords: ['water damage restoration [City]', 'mold mitigation [City]', 'moisture repair contractor [City]'],
+    keywords: [
+      'water damage restoration [City]',
+      'mold mitigation [City]',
+      'moisture repair contractor [City]',
+    ],
   },
   'energy-weatherization': {
     title: 'Energy & Weatherization',
     description:
       'We help [City] property owners tighten the envelope, improve comfort, and handle air sealing, attic insulation, and weatherization work that actually lasts.',
-    keywords: ['air sealing [City]', 'attic insulation [City]', 'weatherization contractor [City]'],
+    keywords: [
+      'air sealing [City]',
+      'attic insulation [City]',
+      'weatherization contractor [City]',
+    ],
   },
   'windows-doors-site-repair': {
     title: 'Windows, Doors & Site Repairs',
     description:
       'We take care of window and door replacements, lock work, selective demolition, drainage fixes, and site repairs for [City] homes and facilities.',
-    keywords: ['window replacement [City]', 'door replacement [City]', 'site repairs [City]'],
+    keywords: [
+      'window replacement [City]',
+      'door replacement [City]',
+      'site repairs [City]',
+    ],
   },
   'emergency-response': {
     title: 'Emergency Response',
     description:
       'When a leak, storm, break-in, or structural problem hits in [City], we secure the property, document the damage, and start the repair path fast.',
-    keywords: ['emergency repair [City]', 'board up service [City]', 'urgent water damage help [City]'],
+    keywords: [
+      'emergency repair [City]',
+      'board up service [City]',
+      'urgent water damage help [City]',
+    ],
   },
 } as const;
 

@@ -28,17 +28,44 @@ export function routeError(errorType: string, message: string) {
 
   if (message.includes('SEO') || message.includes('crawl')) agentId = 1;
   if (message.includes('schema') || message.includes('JSON-LD')) agentId = 2;
-  if (message.includes('AEO') || message.includes('GEO') || message.includes('answer')) agentId = 3;
-  if (message.includes('UI') || message.includes('layout') || message.includes('CSS')) agentId = 6;
+  if (
+    message.includes('AEO') ||
+    message.includes('GEO') ||
+    message.includes('answer')
+  )
+    agentId = 3;
+  if (
+    message.includes('UI') ||
+    message.includes('layout') ||
+    message.includes('CSS')
+  )
+    agentId = 6;
   if (message.includes('performance') || message.includes('CWV')) agentId = 7;
-  if (message.includes('backend') || message.includes('DB') || message.includes('API')) agentId = 8;
-  if (message.includes('AI') || message.includes('Gus') || message.includes('Genkit')) agentId = 9;
-  if (message.includes('test') || message.includes('QA') || message.includes('fail')) agentId = 12;
+  if (
+    message.includes('backend') ||
+    message.includes('DB') ||
+    message.includes('API')
+  )
+    agentId = 8;
+  if (
+    message.includes('AI') ||
+    message.includes('Gus') ||
+    message.includes('Genkit')
+  )
+    agentId = 9;
+  if (
+    message.includes('test') ||
+    message.includes('QA') ||
+    message.includes('fail')
+  )
+    agentId = 12;
 
   const agent = AGENTS[agentId];
   console.error(`[AGENT ROUTER] Error: ${message}`);
-  console.info(`[AGENT ASSIGNED] ${agent.name} (${agent.specialty}) is investigating this ${errorType}.`);
-  
+  console.info(
+    `[AGENT ASSIGNED] ${agent.name} (${agent.specialty}) is investigating this ${errorType}.`,
+  );
+
   return agent;
 }
 

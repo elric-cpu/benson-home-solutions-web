@@ -25,6 +25,8 @@ export async function validateAddress(addressLines: string[]) {
     latitude: result.geocode?.location?.latitude,
     longitude: result.geocode?.location?.longitude,
     isDeliverable: result.verdict?.validationGranularity === 'PREMISE',
-    addressHash: Buffer.from(result.address?.formattedAddress || '').toString('base64'),
+    addressHash: Buffer.from(result.address?.formattedAddress || '').toString(
+      'base64',
+    ),
   };
 }

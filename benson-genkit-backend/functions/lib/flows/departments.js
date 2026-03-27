@@ -1,63 +1,110 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.websiteMaintenanceFlow = exports.productionFlow = exports.departmentIdeationFlow = void 0;
-const genkit_1 = require("genkit");
-const googleai_1 = require("@genkit-ai/googleai");
-const functions_1 = require("@genkit-ai/firebase/functions");
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.websiteMaintenanceFlow =
+  exports.productionFlow =
+  exports.departmentIdeationFlow =
+    void 0;
+const genkit_1 = require('genkit');
+const googleai_1 = require('@genkit-ai/googleai');
+const functions_1 = require('@genkit-ai/firebase/functions');
 const ai = (0, genkit_1.genkit)({});
 const IdeaSchema = genkit_1.z.object({
-    title: genkit_1.z.string(),
-    description: genkit_1.z.string(),
-    agentPersona: genkit_1.z.string()
+  title: genkit_1.z.string(),
+  description: genkit_1.z.string(),
+  agentPersona: genkit_1.z.string(),
 });
 const ManagerDecisionSchema = genkit_1.z.object({
-    decisions: genkit_1.z.array(genkit_1.z.object({
-        ideaTitle: genkit_1.z.string(),
-        status: genkit_1.z.enum(["YAY", "NAY"]),
-        reason: genkit_1.z.string()
-    }))
+  decisions: genkit_1.z.array(
+    genkit_1.z.object({
+      ideaTitle: genkit_1.z.string(),
+      status: genkit_1.z.enum(['YAY', 'NAY']),
+      reason: genkit_1.z.string(),
+    }),
+  ),
 });
 const DEPARTMENT_PROMPTS = {
-    marketing: {
-        agents: [
-            { name: "The Aggressive Closer", prompt: "You are 'The Aggressive Closer'. Focus on outbound sales, urgency, hard sells, D-T-D scripts, and direct response emails. You want immediate ROI and bookings." },
-            { name: "The Storyteller", prompt: "You are 'The Storyteller'. Focus on building long-term trust, narrative-driven video scripts, and emotional community radio ads." },
-            { name: "The Contrarian", prompt: "You are 'The Contrarian'. Pitch disruptive ideas that go against industry norms. Stand out by doing the exact opposite of what competitors do." }
-        ],
-        manager: "You are 'The ROI Enforcer'. You manage the Marketing department. You critique ideas purely on expected cost vs. return. Say 'YAY' only to data-backed, high-probability campaigns. Be ruthless."
-    },
-    branding: {
-        agents: [
-            { name: "The Purist", prompt: "You are 'The Purist'. Protect the maroon/cream palette, the authoritative voice of Elric Benson, and the 'maintenance-first' philosophy. Reject cheap trends." },
-            { name: "The Trend Chaser", prompt: "You are 'The Trend Chaser'. Adapt the brand to modern social media trends, viral formats, and high-engagement tactics." },
-            { name: "The Local Patriot", prompt: "You are 'The Local Patriot'. Focus entirely on hyper-local Harney County and Willamette Valley references and community pride. Make it feel like a neighbor." }
-        ],
-        manager: "You are 'The Brand Guardian'. You manage the Branding department. Ensure nothing dilutes the core message. Say 'NAY' to anything too risky, off-brand, or generic."
-    },
-    leadGen: {
-        agents: [
-            { name: "The Hook Master", prompt: "You are 'The Hook Master'. Focus on ethical clickbait, irresistible lead magnets, and calculators (like the True Cost of Homeownership)." },
-            { name: "The Optimizer", prompt: "You are 'The Optimizer'. Focus on A/B testing, micro-copy, removing friction from forms, and CRO." },
-            { name: "The Nurturer", prompt: "You are 'The Nurturer'. Focus on the 30-day email follow-up sequence, value-add content, and keeping cold leads warm." }
-        ],
-        manager: "You are 'The Conversion Czar'. You manage Lead Gen. Approve only if the path to a booked appointment is crystal clear. You hate vanity metrics."
-    }
+  marketing: {
+    agents: [
+      {
+        name: 'The Aggressive Closer',
+        prompt:
+          "You are 'The Aggressive Closer'. Focus on outbound sales, urgency, hard sells, D-T-D scripts, and direct response emails. You want immediate ROI and bookings.",
+      },
+      {
+        name: 'The Storyteller',
+        prompt:
+          "You are 'The Storyteller'. Focus on building long-term trust, narrative-driven video scripts, and emotional community radio ads.",
+      },
+      {
+        name: 'The Contrarian',
+        prompt:
+          "You are 'The Contrarian'. Pitch disruptive ideas that go against industry norms. Stand out by doing the exact opposite of what competitors do.",
+      },
+    ],
+    manager:
+      "You are 'The ROI Enforcer'. You manage the Marketing department. You critique ideas purely on expected cost vs. return. Say 'YAY' only to data-backed, high-probability campaigns. Be ruthless.",
+  },
+  branding: {
+    agents: [
+      {
+        name: 'The Purist',
+        prompt:
+          "You are 'The Purist'. Protect the maroon/cream palette, the authoritative voice of Elric Benson, and the 'maintenance-first' philosophy. Reject cheap trends.",
+      },
+      {
+        name: 'The Trend Chaser',
+        prompt:
+          "You are 'The Trend Chaser'. Adapt the brand to modern social media trends, viral formats, and high-engagement tactics.",
+      },
+      {
+        name: 'The Local Patriot',
+        prompt:
+          "You are 'The Local Patriot'. Focus entirely on hyper-local Harney County and Willamette Valley references and community pride. Make it feel like a neighbor.",
+      },
+    ],
+    manager:
+      "You are 'The Brand Guardian'. You manage the Branding department. Ensure nothing dilutes the core message. Say 'NAY' to anything too risky, off-brand, or generic.",
+  },
+  leadGen: {
+    agents: [
+      {
+        name: 'The Hook Master',
+        prompt:
+          "You are 'The Hook Master'. Focus on ethical clickbait, irresistible lead magnets, and calculators (like the True Cost of Homeownership).",
+      },
+      {
+        name: 'The Optimizer',
+        prompt:
+          "You are 'The Optimizer'. Focus on A/B testing, micro-copy, removing friction from forms, and CRO.",
+      },
+      {
+        name: 'The Nurturer',
+        prompt:
+          "You are 'The Nurturer'. Focus on the 30-day email follow-up sequence, value-add content, and keeping cold leads warm.",
+      },
+    ],
+    manager:
+      "You are 'The Conversion Czar'. You manage Lead Gen. Approve only if the path to a booked appointment is crystal clear. You hate vanity metrics.",
+  },
 };
-exports.departmentIdeationFlow = (0, functions_1.onFlow)(ai, {
-    name: "departmentIdeationFlow",
+exports.departmentIdeationFlow = (0, functions_1.onFlow)(
+  ai,
+  {
+    name: 'departmentIdeationFlow',
     inputSchema: genkit_1.z.object({
-        department: genkit_1.z.enum(["marketing", "branding", "leadGen"]),
-        goal: genkit_1.z.string()
+      department: genkit_1.z.enum(['marketing', 'branding', 'leadGen']),
+      goal: genkit_1.z.string(),
     }),
     outputSchema: ManagerDecisionSchema,
     authPolicy: (0, functions_1.noAuth)(),
-}, async ({ department, goal }) => {
+  },
+  async ({ department, goal }) => {
     const deptConfig = DEPARTMENT_PROMPTS[department];
     // Step 1: Idea Generation by 3 Agents (Run in parallel)
     const agentPromises = deptConfig.agents.map(async (agent) => {
-        const response = await ai.generate({
-            model: googleai_1.gemini15Flash,
-            prompt: `
+      const response = await ai.generate({
+        model: googleai_1.gemini15Flash,
+        prompt: `
           ${agent.prompt}
           
           Our Current Goal: ${goal}
@@ -66,19 +113,19 @@ exports.departmentIdeationFlow = (0, functions_1.onFlow)(ai, {
           Output exactly a JSON array of objects with keys: "title", "description", "agentPersona".
           Set "agentPersona" to "${agent.name}".
         `,
-            output: { schema: genkit_1.z.array(IdeaSchema) }
-        });
-        return response.output;
+        output: { schema: genkit_1.z.array(IdeaSchema) },
+      });
+      return response.output;
     });
     const nestedIdeas = await Promise.all(agentPromises);
     const allIdeas = nestedIdeas.flat();
     if (!allIdeas || allIdeas.length === 0) {
-        throw new Error("Failed to generate ideas.");
+      throw new Error('Failed to generate ideas.');
     }
     // Step 2: Debate & Manager Review
     const managerResponse = await ai.generate({
-        model: googleai_1.gemini15Pro,
-        prompt: `
+      model: googleai_1.gemini15Pro,
+      prompt: `
         ${deptConfig.manager}
         
         Our Goal: ${goal}
@@ -88,27 +135,31 @@ exports.departmentIdeationFlow = (0, functions_1.onFlow)(ai, {
         
         Review each idea. Be highly critical. Provide your final 'YAY' or 'NAY' decision for each idea along with a harsh, argumentative reason.
       `,
-        output: { schema: ManagerDecisionSchema }
+      output: { schema: ManagerDecisionSchema },
     });
     if (!managerResponse.output) {
-        throw new Error("Failed to get manager decision.");
+      throw new Error('Failed to get manager decision.');
     }
     return managerResponse.output;
-});
-exports.productionFlow = (0, functions_1.onFlow)(ai, {
-    name: "productionFlow",
+  },
+);
+exports.productionFlow = (0, functions_1.onFlow)(
+  ai,
+  {
+    name: 'productionFlow',
     inputSchema: genkit_1.z.object({
-        ideaTitle: genkit_1.z.string(),
-        department: genkit_1.z.enum(["marketing", "branding", "leadGen"]),
-        description: genkit_1.z.string()
+      ideaTitle: genkit_1.z.string(),
+      department: genkit_1.z.enum(['marketing', 'branding', 'leadGen']),
+      description: genkit_1.z.string(),
     }),
     outputSchema: genkit_1.z.string(),
     authPolicy: (0, functions_1.noAuth)(),
-}, async ({ ideaTitle, department, description }) => {
+  },
+  async ({ ideaTitle, department, description }) => {
     // Generate final assets based on the approved idea
     const response = await ai.generate({
-        model: googleai_1.gemini15Pro,
-        prompt: `
+      model: googleai_1.gemini15Pro,
+      prompt: `
         You are the Head of Production for the ${department} department.
         
         The Manager has approved the following idea:
@@ -122,17 +173,21 @@ exports.productionFlow = (0, functions_1.onFlow)(ai, {
       `,
     });
     return response.text;
-});
-exports.websiteMaintenanceFlow = (0, functions_1.onFlow)(ai, {
-    name: "websiteMaintenanceFlow",
+  },
+);
+exports.websiteMaintenanceFlow = (0, functions_1.onFlow)(
+  ai,
+  {
+    name: 'websiteMaintenanceFlow',
     inputSchema: genkit_1.z.string().optional(),
     outputSchema: genkit_1.z.string(),
     authPolicy: (0, functions_1.noAuth)(),
-}, async () => {
+  },
+  async () => {
     // Autonomous website maintenance
     const response = await ai.generate({
-        model: googleai_1.gemini15Pro,
-        prompt: `
+      model: googleai_1.gemini15Pro,
+      prompt: `
         You are the Autonomous Website Maintainer for Benson Home Solutions.
         
         Analyze our current state (simulate pulling from GSC and GA4 for this exercise) and generate 
@@ -142,5 +197,6 @@ exports.websiteMaintenanceFlow = (0, functions_1.onFlow)(ai, {
       `,
     });
     return response.text;
-});
+  },
+);
 //# sourceMappingURL=departments.js.map

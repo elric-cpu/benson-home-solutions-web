@@ -1,6 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Container, Section, Button, Badge, Card, CardContent } from '@/components/ui';
+import {
+  Container,
+  Section,
+  Button,
+  Badge,
+  Card,
+  CardContent,
+} from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
 import { ShieldAlert, Phone, Droplets, Wind, Zap } from 'lucide-react';
 
@@ -23,56 +30,85 @@ export const metadata: Metadata = {
 export default function EmergencyPage() {
   return (
     <>
-      <Section variant="oxblood" spacing="lg" className="relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-red-600/10 skew-x-12 transform origin-top-right" />
-        <Container className="text-center relative z-10">
-          <Badge className="mb-6 bg-red-600 text-white border-none px-4 py-2 uppercase tracking-widest font-black flex items-center gap-2 mx-auto w-fit animate-pulse">
-            <ShieldAlert className="w-4 h-4" /> Urgent Response Team
+      <Section
+        variant="oxblood"
+        spacing="lg"
+        className="relative overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 h-full w-1/3 origin-top-right skew-x-12 transform bg-red-600/10" />
+        <Container className="relative z-10 text-center">
+          <Badge className="mx-auto mb-6 flex w-fit animate-pulse items-center gap-2 border-none bg-red-600 px-4 py-2 font-black tracking-widest text-white uppercase">
+            <ShieldAlert className="h-4 w-4" /> Urgent Response Team
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-cream">
+          <h1 className="text-cream mb-8 text-5xl leading-tight font-black tracking-tight md:text-7xl">
             Stay Calm. <br />
             <span className="italic opacity-60">We&apos;re on the way.</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
-            If there is active damage or the property needs to be secured, call now. No form wall, no answering service, no waiting around for a callback.
+          <p className="text-cream/80 mx-auto mb-12 max-w-3xl text-xl leading-relaxed font-medium md:text-2xl">
+            If there is active damage or the property needs to be secured, call
+            now. No form wall, no answering service, no waiting around for a
+            callback.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6">
+          <div className="flex flex-col justify-center gap-6 sm:flex-row">
             <a href={`tel:${BUSINESS.afterhoursPhone}`}>
-              <Button size="lg" className="w-full sm:w-auto px-10 py-8 text-xl font-black uppercase tracking-widest bg-red-600 text-white border-none hover:bg-red-700 shadow-2xl shadow-red-900/50">
-                <Phone className="w-6 h-6 mr-3" /> Call Now: {BUSINESS.afterhoursPhone}
+              <Button
+                size="lg"
+                className="w-full border-none bg-red-600 px-10 py-8 text-xl font-black tracking-widest text-white uppercase shadow-2xl shadow-red-900/50 hover:bg-red-700 sm:w-auto"
+              >
+                <Phone className="mr-3 h-6 w-6" /> Call Now:{' '}
+                {BUSINESS.afterhoursPhone}
               </Button>
             </a>
           </div>
         </Container>
       </Section>
-      
+
       <Section spacing="lg">
         <Container>
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-oxblood mb-4">
+          <div className="mb-16 text-center">
+            <h2 className="text-oxblood mb-4 text-4xl font-black tracking-tight uppercase md:text-5xl">
               What to Do Right Now
             </h2>
-            <p className="text-xl text-slate font-medium max-w-2xl mx-auto">
-              Follow these steps while our team is on the way to minimize damage.
+            <p className="text-slate mx-auto max-w-2xl text-xl font-medium">
+              Follow these steps while our team is on the way to minimize
+              damage.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid gap-8 md:grid-cols-3">
             <Card>
               <CardContent className="p-8">
-                <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">1. Shut Off the Source</h3>
-                <p className="text-slate font-medium leading-relaxed">If you have a leak, shut off the main water valve to your property. For storm damage, stay away from broken windows and damaged electrical lines.</p>
+                <h3 className="text-oxblood mb-4 text-2xl font-black tracking-tight uppercase">
+                  1. Shut Off the Source
+                </h3>
+                <p className="text-slate leading-relaxed font-medium">
+                  If you have a leak, shut off the main water valve to your
+                  property. For storm damage, stay away from broken windows and
+                  damaged electrical lines.
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-8">
-                <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">2. Move Valuables</h3>
-                <p className="text-slate font-medium leading-relaxed">If it&apos;s safe to do so, move any electronics, furniture, and personal belongings away from the affected area to prevent further damage.</p>
+                <h3 className="text-oxblood mb-4 text-2xl font-black tracking-tight uppercase">
+                  2. Move Valuables
+                </h3>
+                <p className="text-slate leading-relaxed font-medium">
+                  If it&apos;s safe to do so, move any electronics, furniture,
+                  and personal belongings away from the affected area to prevent
+                  further damage.
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-8">
-                <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">3. Call Your Insurance</h3>
-                <p className="text-slate font-medium leading-relaxed">Once the immediate danger is stabilized, contact your insurance company to inform them of the situation. We can provide them with any documentation they need.</p>
+                <h3 className="text-oxblood mb-4 text-2xl font-black tracking-tight uppercase">
+                  3. Call Your Insurance
+                </h3>
+                <p className="text-slate leading-relaxed font-medium">
+                  Once the immediate danger is stabilized, contact your
+                  insurance company to inform them of the situation. We can
+                  provide them with any documentation they need.
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -81,26 +117,44 @@ export default function EmergencyPage() {
 
       <Section variant="cream" spacing="md">
         <Container>
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid gap-12 md:grid-cols-3">
             <div className="p-8">
-              <div className="mb-6 text-red-600"><Droplets className="w-10 h-10" /></div>
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Stop the Damage, Fast</h3>
-              <p className="text-slate font-medium leading-relaxed">
-                We use commercial-grade equipment to extract water, dry out structures, and prevent the secondary damage that happens within the first 24 hours.
+              <div className="mb-6 text-red-600">
+                <Droplets className="h-10 w-10" />
+              </div>
+              <h3 className="text-oxblood mb-4 text-2xl font-black tracking-tight uppercase">
+                Stop the Damage, Fast
+              </h3>
+              <p className="text-slate leading-relaxed font-medium">
+                We use commercial-grade equipment to extract water, dry out
+                structures, and prevent the secondary damage that happens within
+                the first 24 hours.
               </p>
             </div>
             <div className="p-8">
-              <div className="mb-6 text-red-600"><Wind className="w-10 h-10" /></div>
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Secure Your Property</h3>
-              <p className="text-slate font-medium leading-relaxed">
-                Our team provides immediate board-up services for windows, doors, and roofs to protect your property from the elements and prevent unauthorized access.
+              <div className="mb-6 text-red-600">
+                <Wind className="h-10 w-10" />
+              </div>
+              <h3 className="text-oxblood mb-4 text-2xl font-black tracking-tight uppercase">
+                Secure Your Property
+              </h3>
+              <p className="text-slate leading-relaxed font-medium">
+                Our team provides immediate board-up services for windows,
+                doors, and roofs to protect your property from the elements and
+                prevent unauthorized access.
               </p>
             </div>
             <div className="p-8">
-              <div className="mb-6 text-red-600"><Zap className="w-10 h-10" /></div>
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">A Clear Path to Recovery</h3>
-              <p className="text-slate font-medium leading-relaxed">
-                Once the site is stable, we document the issue, build the scope, and move the job from emergency response into repair and rebuild.
+              <div className="mb-6 text-red-600">
+                <Zap className="h-10 w-10" />
+              </div>
+              <h3 className="text-oxblood mb-4 text-2xl font-black tracking-tight uppercase">
+                A Clear Path to Recovery
+              </h3>
+              <p className="text-slate leading-relaxed font-medium">
+                Once the site is stable, we document the issue, build the scope,
+                and move the job from emergency response into repair and
+                rebuild.
               </p>
             </div>
           </div>
@@ -109,20 +163,28 @@ export default function EmergencyPage() {
 
       <Section spacing="lg">
         <Container size="narrow" className="text-center">
-          <h2 className="text-4xl font-black uppercase tracking-tight text-oxblood mb-8">
+          <h2 className="text-oxblood mb-8 text-4xl font-black tracking-tight uppercase">
             Don&apos;t Have an Emergency? Let&apos;s Keep It That Way.
           </h2>
-          <p className="text-xl text-slate font-medium leading-relaxed mb-12">
-            Maintenance is still cheaper than surprise damage. If the property is stable today, that is the right time to set up recurring upkeep.
+          <p className="text-slate mb-12 text-xl leading-relaxed font-medium">
+            Maintenance is still cheaper than surprise damage. If the property
+            is stable today, that is the right time to set up recurring upkeep.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6">
+          <div className="flex flex-col justify-center gap-6 sm:flex-row">
             <Link href="/plans">
-              <Button size="lg" className="w-full sm:w-auto px-10 py-7 text-lg font-black uppercase tracking-widest">
+              <Button
+                size="lg"
+                className="w-full px-10 py-7 text-lg font-black tracking-widest uppercase sm:w-auto"
+              >
                 Explore Our Plans
               </Button>
             </Link>
             <Link href="/contact">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto px-10 py-7 text-lg font-black uppercase tracking-widest border-2 border-oxblood text-oxblood">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-oxblood text-oxblood w-full border-2 px-10 py-7 text-lg font-black tracking-widest uppercase sm:w-auto"
+              >
                 Request a Consultation
               </Button>
             </Link>

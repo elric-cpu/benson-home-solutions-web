@@ -1,14 +1,14 @@
-import { genkit, z } from "genkit";
-import { onFlow, noAuth } from "@genkit-ai/firebase/functions";
-import { validateAddressTool } from "../addressTool";
+import { genkit, z } from 'genkit';
+import { onFlow, noAuth } from '@genkit-ai/firebase/functions';
+import { validateAddressTool } from '../addressTool';
 
 const ai = genkit({});
 
 export const validateAddressFlow = onFlow(
   ai,
   {
-    name: "validateAddressFlow",
-    inputSchema: z.string().describe("The address to validate"),
+    name: 'validateAddressFlow',
+    inputSchema: z.string().describe('The address to validate'),
     outputSchema: z.object({
       isValid: z.boolean(),
       standardizedAddress: z.string().optional(),
@@ -20,14 +20,15 @@ export const validateAddressFlow = onFlow(
   async (address) => {
     const result = await validateAddressTool({ address });
 
-    let message = "Address is valid.";
+    let message = 'Address is valid.';
     if (!result.isValid) {
       if (result.hasIncompleteComponents) {
-        message = "Address is incomplete. Please provide more details (e.g., street number or unit).";
+        message =
+          'Address is incomplete. Please provide more details (e.g., street number or unit).';
       } else if (result.hasUnconfirmedComponents) {
-        message = "Could not confirm all components of this address.";
+        message = 'Could not confirm all components of this address.';
       } else {
-        message = "Address might be invalid or not precise enough.";
+        message = 'Address might be invalid or not precise enough.';
       }
     }
 
@@ -37,5 +38,5 @@ export const validateAddressFlow = onFlow(
       message,
       details: result,
     };
-  }
+  },
 );

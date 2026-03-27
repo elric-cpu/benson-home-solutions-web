@@ -1,3 +1,5 @@
+import Script from 'next/script';
+
 export function WebPageJsonLd({
   title,
   description,
@@ -23,7 +25,8 @@ export function WebPageJsonLd({
   };
 
   return (
-    <script
+    <Script
+      id="webpage-json-ld"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />

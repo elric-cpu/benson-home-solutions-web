@@ -15,39 +15,50 @@ import {
  * NO LEGACY ALIASES. NO SLOP.
  */
 
-export const leads = pgTable('leads', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  name: varchar('name', { length: 255 }).notNull(),
-  email: varchar('email', { length: 255 }).notNull(),
-  phone: varchar('phone', { length: 30 }),
-  message: text('message'),
-  propertyAddress: text('property_address'),
-  serviceType: varchar('service_type', { length: 100 }),
-  status: varchar('status', { length: 50 }).default('new'),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => {
-  return {
-    emailCreatedAtIdx: index('email_created_at_idx').on(table.email, table.createdAt),
-  };
-});
+export const leads = pgTable(
+  'leads',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    name: varchar('name', { length: 255 }).notNull(),
+    email: varchar('email', { length: 255 }).notNull(),
+    phone: varchar('phone', { length: 30 }),
+    message: text('message'),
+    propertyAddress: text('property_address'),
+    serviceType: varchar('service_type', { length: 100 }),
+    status: varchar('status', { length: 50 }).default('new'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  },
+  (table) => {
+    return {
+      emailCreatedAtIdx: index('email_created_at_idx').on(
+        table.email,
+        table.createdAt,
+      ),
+    };
+  },
+);
 
-export const properties = pgTable('properties', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  leadId: uuid('lead_id').references(() => leads.id),
-  standardizedAddress: text('standardized_address').unique().notNull(),
-  city: varchar('city', { length: 100 }),
-  county: varchar('county', { length: 100 }),
-  lat: numeric('lat'),
-  lng: numeric('lng'),
-  metadata: jsonb('metadata'), // RSMeans, Year Built, Sqft
-  auditHash: text('audit_hash'), // SHA-256 for integrity
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-}, (table) => {
-  return {
-    leadIdIdx: index('property_lead_id_idx').on(table.leadId),
-  };
-});
+export const properties = pgTable(
+  'properties',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    leadId: uuid('lead_id').references(() => leads.id),
+    standardizedAddress: text('standardized_address').unique().notNull(),
+    city: varchar('city', { length: 100 }),
+    county: varchar('county', { length: 100 }),
+    lat: numeric('lat'),
+    lng: numeric('lng'),
+    metadata: jsonb('metadata'), // RSMeans, Year Built, Sqft
+    auditHash: text('audit_hash'), // SHA-256 for integrity
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  },
+  (table) => {
+    return {
+      leadIdIdx: index('property_lead_id_idx').on(table.leadId),
+    };
+  },
+);
 
 export const maintenancePlans = pgTable('maintenance_plans', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -97,7 +108,9 @@ export const catalogItems = pgTable('catalog_items', {
   productionRate: numeric('production_rate'),
   uom: varchar('uom', { length: 50 }),
   county: varchar('county', { length: 100 }),
-  lastSyncedAt: timestamp('last_synced_at', { withTimezone: true }).defaultNow(),
+  lastSyncedAt: timestamp('last_synced_at', {
+    withTimezone: true,
+  }).defaultNow(),
 });
 
 export type Lead = typeof leads.$inferSelect;

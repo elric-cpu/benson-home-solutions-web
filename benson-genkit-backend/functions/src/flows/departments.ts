@@ -1,64 +1,105 @@
-import { genkit, z } from "genkit";
-import { gemini15Flash, gemini15Pro } from "@genkit-ai/googleai";
-import { onFlow, noAuth } from "@genkit-ai/firebase/functions";
+import { genkit, z } from 'genkit';
+import { gemini15Flash, gemini15Pro } from '@genkit-ai/googleai';
+import { onFlow, noAuth } from '@genkit-ai/firebase/functions';
 
 const ai = genkit({});
 
 const IdeaSchema = z.object({
   title: z.string(),
   description: z.string(),
-  agentPersona: z.string()
+  agentPersona: z.string(),
 });
 
 const ManagerDecisionSchema = z.object({
-  decisions: z.array(z.object({
-    ideaTitle: z.string(),
-    status: z.enum(["YAY", "NAY"]),
-    reason: z.string()
-  }))
+  decisions: z.array(
+    z.object({
+      ideaTitle: z.string(),
+      status: z.enum(['YAY', 'NAY']),
+      reason: z.string(),
+    }),
+  ),
 });
 
 const DEPARTMENT_PROMPTS = {
   marketing: {
     agents: [
-      { name: "The Aggressive Closer", prompt: "You are 'The Aggressive Closer'. Focus on outbound sales, urgency, hard sells, D-T-D scripts, and direct response emails. You want immediate ROI and bookings." },
-      { name: "The Storyteller", prompt: "You are 'The Storyteller'. Focus on building long-term trust, narrative-driven video scripts, and emotional community radio ads." },
-      { name: "The Contrarian", prompt: "You are 'The Contrarian'. Pitch disruptive ideas that go against industry norms. Stand out by doing the exact opposite of what competitors do." }
+      {
+        name: 'The Aggressive Closer',
+        prompt:
+          "You are 'The Aggressive Closer'. Focus on outbound sales, urgency, hard sells, D-T-D scripts, and direct response emails. You want immediate ROI and bookings.",
+      },
+      {
+        name: 'The Storyteller',
+        prompt:
+          "You are 'The Storyteller'. Focus on building long-term trust, narrative-driven video scripts, and emotional community radio ads.",
+      },
+      {
+        name: 'The Contrarian',
+        prompt:
+          "You are 'The Contrarian'. Pitch disruptive ideas that go against industry norms. Stand out by doing the exact opposite of what competitors do.",
+      },
     ],
-    manager: "You are 'The ROI Enforcer'. You manage the Marketing department. You critique ideas purely on expected cost vs. return. Say 'YAY' only to data-backed, high-probability campaigns. Be ruthless."
+    manager:
+      "You are 'The ROI Enforcer'. You manage the Marketing department. You critique ideas purely on expected cost vs. return. Say 'YAY' only to data-backed, high-probability campaigns. Be ruthless.",
   },
   branding: {
     agents: [
-      { name: "The Purist", prompt: "You are 'The Purist'. Protect the maroon/cream palette, the authoritative voice of Elric Benson, and the 'maintenance-first' philosophy. Reject cheap trends." },
-      { name: "The Trend Chaser", prompt: "You are 'The Trend Chaser'. Adapt the brand to modern social media trends, viral formats, and high-engagement tactics." },
-      { name: "The Local Patriot", prompt: "You are 'The Local Patriot'. Focus entirely on hyper-local Harney County and Willamette Valley references and community pride. Make it feel like a neighbor." }
+      {
+        name: 'The Purist',
+        prompt:
+          "You are 'The Purist'. Protect the maroon/cream palette, the authoritative voice of Elric Benson, and the 'maintenance-first' philosophy. Reject cheap trends.",
+      },
+      {
+        name: 'The Trend Chaser',
+        prompt:
+          "You are 'The Trend Chaser'. Adapt the brand to modern social media trends, viral formats, and high-engagement tactics.",
+      },
+      {
+        name: 'The Local Patriot',
+        prompt:
+          "You are 'The Local Patriot'. Focus entirely on hyper-local Harney County and Willamette Valley references and community pride. Make it feel like a neighbor.",
+      },
     ],
-    manager: "You are 'The Brand Guardian'. You manage the Branding department. Ensure nothing dilutes the core message. Say 'NAY' to anything too risky, off-brand, or generic."
+    manager:
+      "You are 'The Brand Guardian'. You manage the Branding department. Ensure nothing dilutes the core message. Say 'NAY' to anything too risky, off-brand, or generic.",
   },
   leadGen: {
     agents: [
-      { name: "The Hook Master", prompt: "You are 'The Hook Master'. Focus on ethical clickbait, irresistible lead magnets, and calculators (like the True Cost of Homeownership)." },
-      { name: "The Optimizer", prompt: "You are 'The Optimizer'. Focus on A/B testing, micro-copy, removing friction from forms, and CRO." },
-      { name: "The Nurturer", prompt: "You are 'The Nurturer'. Focus on the 30-day email follow-up sequence, value-add content, and keeping cold leads warm." }
+      {
+        name: 'The Hook Master',
+        prompt:
+          "You are 'The Hook Master'. Focus on ethical clickbait, irresistible lead magnets, and calculators (like the True Cost of Homeownership).",
+      },
+      {
+        name: 'The Optimizer',
+        prompt:
+          "You are 'The Optimizer'. Focus on A/B testing, micro-copy, removing friction from forms, and CRO.",
+      },
+      {
+        name: 'The Nurturer',
+        prompt:
+          "You are 'The Nurturer'. Focus on the 30-day email follow-up sequence, value-add content, and keeping cold leads warm.",
+      },
     ],
-    manager: "You are 'The Conversion Czar'. You manage Lead Gen. Approve only if the path to a booked appointment is crystal clear. You hate vanity metrics."
-  }
+    manager:
+      "You are 'The Conversion Czar'. You manage Lead Gen. Approve only if the path to a booked appointment is crystal clear. You hate vanity metrics.",
+  },
 };
 
 export const departmentIdeationFlow = onFlow(
   ai,
   {
-    name: "departmentIdeationFlow",
+    name: 'departmentIdeationFlow',
     inputSchema: z.object({
-      department: z.enum(["marketing", "branding", "leadGen"]),
-      goal: z.string()
+      department: z.enum(['marketing', 'branding', 'leadGen']),
+      goal: z.string(),
     }),
     outputSchema: ManagerDecisionSchema,
     authPolicy: noAuth(),
   },
   async ({ department, goal }) => {
     const deptConfig = DEPARTMENT_PROMPTS[department];
-    
+
     // Step 1: Idea Generation by 3 Agents (Run in parallel)
     const agentPromises = deptConfig.agents.map(async (agent) => {
       const response = await ai.generate({
@@ -72,16 +113,16 @@ export const departmentIdeationFlow = onFlow(
           Output exactly a JSON array of objects with keys: "title", "description", "agentPersona".
           Set "agentPersona" to "${agent.name}".
         `,
-        output: { schema: z.array(IdeaSchema) }
+        output: { schema: z.array(IdeaSchema) },
       });
       return response.output;
     });
-    
+
     const nestedIdeas = await Promise.all(agentPromises);
     const allIdeas = nestedIdeas.flat();
-    
+
     if (!allIdeas || allIdeas.length === 0) {
-      throw new Error("Failed to generate ideas.");
+      throw new Error('Failed to generate ideas.');
     }
 
     // Step 2: Debate & Manager Review
@@ -97,25 +138,25 @@ export const departmentIdeationFlow = onFlow(
         
         Review each idea. Be highly critical. Provide your final 'YAY' or 'NAY' decision for each idea along with a harsh, argumentative reason.
       `,
-      output: { schema: ManagerDecisionSchema }
+      output: { schema: ManagerDecisionSchema },
     });
 
     if (!managerResponse.output) {
-      throw new Error("Failed to get manager decision.");
+      throw new Error('Failed to get manager decision.');
     }
 
     return managerResponse.output;
-  }
+  },
 );
 
 export const productionFlow = onFlow(
   ai,
   {
-    name: "productionFlow",
+    name: 'productionFlow',
     inputSchema: z.object({
       ideaTitle: z.string(),
-      department: z.enum(["marketing", "branding", "leadGen"]),
-      description: z.string()
+      department: z.enum(['marketing', 'branding', 'leadGen']),
+      description: z.string(),
     }),
     outputSchema: z.string(),
     authPolicy: noAuth(),
@@ -139,13 +180,13 @@ export const productionFlow = onFlow(
     });
 
     return response.text;
-  }
+  },
 );
 
 export const websiteMaintenanceFlow = onFlow(
   ai,
   {
-    name: "websiteMaintenanceFlow",
+    name: 'websiteMaintenanceFlow',
     inputSchema: z.string().optional(),
     outputSchema: z.string(),
     authPolicy: noAuth(),
@@ -165,5 +206,5 @@ export const websiteMaintenanceFlow = onFlow(
     });
 
     return response.text;
-  }
+  },
 );

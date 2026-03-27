@@ -1,24 +1,30 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.optimizeSiteFlow = void 0;
-const genkit_1 = require("genkit");
-const googleai_1 = require("@genkit-ai/googleai");
-const functions_1 = require("@genkit-ai/firebase/functions");
-const gscTool_1 = require("../gscTool");
+const genkit_1 = require('genkit');
+const googleai_1 = require('@genkit-ai/googleai');
+const functions_1 = require('@genkit-ai/firebase/functions');
+const gscTool_1 = require('../gscTool');
 const ai = (0, genkit_1.genkit)({});
-exports.optimizeSiteFlow = (0, functions_1.onFlow)(ai, {
-    name: "optimizeSiteFlow",
+exports.optimizeSiteFlow = (0, functions_1.onFlow)(
+  ai,
+  {
+    name: 'optimizeSiteFlow',
     inputSchema: genkit_1.z.string(), // The Site URL
     outputSchema: genkit_1.z.string(),
     authPolicy: (0, functions_1.noAuth)(),
-}, async (siteUrl) => {
+  },
+  async (siteUrl) => {
     // Step 1: Get data from the tool
-    const performanceData = await (0, gscTool_1.getSearchPerformance)({ siteUrl, days: 30 });
+    const performanceData = await (0, gscTool_1.getSearchPerformance)({
+      siteUrl,
+      days: 30,
+    });
     // Step 2: Gemini analyzes data for SEO/AEO/GEO gaps
     const response = await ai.generate({
-        model: googleai_1.gemini15Flash,
-        tools: [gscTool_1.getSearchPerformance], // Providing context
-        prompt: `
+      model: googleai_1.gemini15Flash,
+      tools: [gscTool_1.getSearchPerformance], // Providing context
+      prompt: `
         You are an elite SEO/AEO/GEO Strategist for Benson Home Solutions.
         
         Analyze the Search Performance Data for: ${siteUrl}
@@ -44,5 +50,6 @@ exports.optimizeSiteFlow = (0, functions_1.onFlow)(ai, {
       `,
     });
     return response.text;
-});
+  },
+);
 //# sourceMappingURL=seo.js.map

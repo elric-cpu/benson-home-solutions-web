@@ -18,7 +18,9 @@ function isRateLimited(ip: string): boolean {
   let attempts = ipSubmissions.get(ip) || [];
 
   // Filter out stale attempts (attempts older than RATE_LIMIT_WINDOW_MS)
-  attempts = attempts.filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS);
+  attempts = attempts.filter(
+    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS,
+  );
 
   // If all previous attempts have expired, and there's no current attempt yet, delete the IP from the map.
   // We do this before adding the current attempt to allow pruning for inactive IPs.
@@ -47,7 +49,10 @@ export async function POST(request: NextRequest) {
   try {
     const clientIp = getClientIp(request);
     if (isRateLimited(clientIp)) {
-      return new NextResponse('Too many messages. Please wait a minute and try again.', { status: 429 });
+      return new NextResponse(
+        'Too many messages. Please wait a minute and try again.',
+        { status: 429 },
+      );
     }
 
     const { message } = await request.json();
@@ -55,12 +60,17 @@ export async function POST(request: NextRequest) {
     if (!message || typeof message !== 'string') {
       return new NextResponse('Message is required.', { status: 400 });
     }
-    
+
     if (message.length > MAX_MESSAGE_LENGTH) {
-      return new NextResponse(`Message is too long. Maximum length is ${MAX_MESSAGE_LENGTH} characters.`, { status: 400 });
+      return new NextResponse(
+        `Message is too long. Maximum length is ${MAX_MESSAGE_LENGTH} characters.`,
+        { status: 400 },
+      );
     }
 
-    const { stream } = await generalChatFlow.stream({ message: message.trim() });
+    const { stream } = await generalChatFlow.stream({
+      message: message.trim(),
+    });
 
     const readableStream = new ReadableStream({
       async start(controller) {
@@ -72,8 +82,8 @@ export async function POST(request: NextRequest) {
           console.error('[AI Chat Stream Error]', streamError);
           controller.enqueue(
             new TextEncoder().encode(
-              'Benson Home Solutions is licensed under Oregon CCB #258533. If the assistant is offline, call 541-321-5115 and we will handle it directly.'
-            )
+              'Benson Home Solutions is licensed under Oregon CCB #258533. If the assistant is offline, call 541-321-5115 and we will handle it directly.',
+            ),
           );
         }
         controller.close();
@@ -90,7 +100,7 @@ export async function POST(request: NextRequest) {
     console.error('[AI Chat Error]', error);
     return new Response(
       'Benson Home Solutions is licensed under Oregon CCB #258533. If the assistant is offline, call 541-321-5115 and we will handle it directly.',
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

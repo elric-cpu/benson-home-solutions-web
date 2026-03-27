@@ -47,7 +47,7 @@
       "id": "pat-2025-01-11-002",
       "name": "Direct State Monitoring vs Callbacks",
       "source": "implementation_review",
-      "confidence": 0.90,
+      "confidence": 0.9,
       "applications": 0,
       "created": "2025-01-11",
       "category": "react_patterns",
@@ -99,7 +99,7 @@
       "id": "pat-2025-01-11-004",
       "name": "Measurable Success Criteria",
       "source": "user_feedback",
-      "confidence": 0.90,
+      "confidence": 0.9,
       "applications": 0,
       "created": "2025-01-11",
       "category": "prd_quality",
@@ -129,7 +129,7 @@
       "id": "pat-2025-01-11-005",
       "name": "Non-Goals Section",
       "source": "user_feedback",
-      "confidence": 0.90,
+      "confidence": 0.9,
       "applications": 0,
       "created": "2025-01-11",
       "category": "prd_structure",
@@ -157,8 +157,16 @@
       "problem": "Ambiguous UI specs (position, size, spacing) cause implementation rework",
       "solution": {
         "required_elements": {
-          "layout_structure": ["Relative position: same row / next row / below / above", "Parent-child container relationships", "Spacing values (gap, padding, margin)"],
-          "component_specs": ["Icon/Button sizes: iconSize=\"$4\" (24px)", "Text styles: size=\"$bodyMd\", color=\"$textSubdued\"", "Component variants: size=\"small\", variant=\"tertiary\""],
+          "layout_structure": [
+            "Relative position: same row / next row / below / above",
+            "Parent-child container relationships",
+            "Spacing values (gap, padding, margin)"
+          ],
+          "component_specs": [
+            "Icon/Button sizes: iconSize=\"$4\" (24px)",
+            "Text styles: size=\"$bodyMd\", color=\"$textSubdued\"",
+            "Component variants: size=\"small\", variant=\"tertiary\""
+          ],
           "visual_comparison": "Before/After ASCII art showing layout change",
           "executable_criteria": "Checklist with exact prop values"
         },
@@ -181,7 +189,7 @@
       "id": "pat-2025-01-11-007",
       "name": "Reuse Existing Infrastructure",
       "source": "comparison_analysis",
-      "confidence": 0.90,
+      "confidence": 0.9,
       "applications": 0,
       "created": "2025-01-11",
       "category": "architecture",
@@ -197,7 +205,12 @@
         "Confirm single source of truth",
         "Only add new fetching when lifecycle is truly independent"
       ],
-      "benefits": ["Reduces network/background calls", "Better performance (no redundant work)", "Single source of truth", "Simpler code (fewer hooks to manage)"],
+      "benefits": [
+        "Reduces network/background calls",
+        "Better performance (no redundant work)",
+        "Single source of truth",
+        "Simpler code (fewer hooks to manage)"
+      ],
       "target_skills": ["architecting-solutions", "api-designer", "debugger"]
     },
     "click_time_vs_open_time_computation": {
@@ -218,14 +231,18 @@
         "open_time": ["Immutable data", "Expensive computation"],
         "click_time": ["Mutable state", "User-dependent filters"]
       },
-      "benefits": ["State is always fresh when user acts", "No stale data issues", "Simpler reasoning about state"],
+      "benefits": [
+        "State is always fresh when user acts",
+        "No stale data issues",
+        "Simpler reasoning about state"
+      ],
       "target_skills": ["debugger", "api-designer"]
     },
     "search_before_creating_components": {
       "id": "pat-2025-01-11-009",
       "name": "Search Before Creating Components",
       "source": "prud_correction",
-      "confidence": 0.90,
+      "confidence": 0.9,
       "applications": 0,
       "created": "2025-01-11",
       "category": "development",
@@ -283,6 +300,15 @@
     "version": "1.0.0",
     "last_updated": "2025-01-12",
     "total_patterns": 10,
-    "categories": ["prd_structure", "prd_quality", "react_patterns", "async_patterns", "ui_patterns", "architecture", "development", "debugging"]
+    "categories": [
+      "prd_structure",
+      "prd_quality",
+      "react_patterns",
+      "async_patterns",
+      "ui_patterns",
+      "architecture",
+      "development",
+      "debugging"
+    ]
   }
 }

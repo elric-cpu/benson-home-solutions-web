@@ -5,6 +5,7 @@ import { Footer } from '@/components/layout';
 import { getOrganizationSchema } from '@/lib/schema/organization';
 import './globals.css';
 import { AIChat } from '@/components/AIChat';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.bensonhomesolutions.com'),
@@ -35,7 +36,8 @@ export const metadata: Metadata = {
     siteName: 'Benson Home Solutions',
     url: 'https://www.bensonhomesolutions.com',
     title: 'Benson Home Solutions | Repairs, Restoration, and Maintenance',
-    description: 'Licensed, bonded, and insured Oregon contractor serving the Mid-Willamette Valley and Harney County.',
+    description:
+      'Licensed, bonded, and insured Oregon contractor serving the Mid-Willamette Valley and Harney County.',
     images: ['/opengraph-image'],
   },
   robots: {
@@ -67,13 +69,19 @@ export default function RootLayout({
   return (
     <html lang="en" className={sourceSans3.variable}>
       <head>
-        <script
+        <Script
+          id="organization-json-ld"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
         />
       </head>
-      <body className="min-h-screen flex flex-col antialiased bg-cream text-charcoal">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:text-black focus:z-50 focus:top-0 focus:left-0">
+      <body className="bg-cream text-charcoal flex min-h-screen flex-col antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:bg-white focus:p-4 focus:text-black"
+        >
           Skip to main content
         </a>
         <Header />

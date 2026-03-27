@@ -14,7 +14,8 @@ const AREA_BY_SLUG = Object.fromEntries(
 );
 
 const toSlug = (text: string) => text.toLowerCase().replace(/ /g, '-');
-const toTitleCase = (text: string) => text.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+const toTitleCase = (text: string) =>
+  text.replace(/-/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 
 // --- Dynamic Page Generation ---
 
@@ -47,7 +48,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `${serviceInfo.title} | ${city}, OR`;
   const description = serviceInfo.description.replace(/\[City\]/g, city);
-  const keywords = serviceInfo.keywords.map(k => k.replace(/\[City\]/g, city));
+  const keywords = serviceInfo.keywords.map((k) =>
+    k.replace(/\[City\]/g, city),
+  );
   const url = `https://www.bensonhomesolutions.com/areas/${citySlug}/${serviceSlug}`;
 
   return {
@@ -74,7 +77,9 @@ export default async function ServiceCityPage({ params }: Props) {
   const sameRegionCities = Object.values(AREA_DATA)
     .filter((item) => item.slug !== citySlug && item.region === area?.region)
     .slice(0, 4);
-  const relatedServices = Object.entries(SERVICES).filter(([slug]) => slug !== serviceSlug).slice(0, 3);
+  const relatedServices = Object.entries(SERVICES)
+    .filter(([slug]) => slug !== serviceSlug)
+    .slice(0, 3);
 
   if (!service || !area) {
     notFound();
@@ -86,60 +91,91 @@ export default async function ServiceCityPage({ params }: Props) {
     <>
       <Section variant="cream" spacing="lg">
         <Container className="text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-8 leading-tight tracking-tight text-oxblood">
+          <h1 className="text-oxblood mb-8 text-4xl leading-tight font-black tracking-tight sm:text-5xl md:text-6xl">
             {service.title} in {city}, Oregon
           </h1>
-          <p className="text-lg md:text-xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            {serviceDescription} As a licensed Oregon contractor (CCB #258533), we provide practical scopes, clear communication, and solid repair work for {city} properties.
+          <p className="text-oxblood/80 mx-auto mb-12 max-w-3xl text-lg leading-relaxed font-medium md:text-xl">
+            {serviceDescription} As a licensed Oregon contractor (CCB #258533),
+            we provide practical scopes, clear communication, and solid repair
+            work for {city} properties.
           </p>
           <Link href="/contact">
-            <Button size="lg" className="px-10 py-7 text-lg font-black uppercase tracking-widest">
+            <Button
+              size="lg"
+              className="px-10 py-7 text-lg font-black tracking-widest uppercase"
+            >
               Start Your {city} Project
             </Button>
           </Link>
         </Container>
       </Section>
-      
+
       <Section spacing="lg">
         <Container>
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-black uppercase tracking-tight text-oxblood mb-4">
+          <div className="mb-16 text-center">
+            <h2 className="text-oxblood mb-4 text-4xl font-black tracking-tight uppercase">
               Why Choose Us for {service.title} in {city}?
             </h2>
           </div>
-          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
+          <div className="mx-auto grid max-w-4xl gap-12 md:grid-cols-2">
             <div className="flex items-start gap-6">
-              <CheckCircle2 className="w-8 h-8 text-oxblood shrink-0 mt-1" />
+              <CheckCircle2 className="text-oxblood mt-1 h-8 w-8 shrink-0" />
               <div>
-                <h3 className="text-xl font-black uppercase tracking-tight text-oxblood mb-2">Local Expertise</h3>
-                <p className="text-slate font-medium">We live and work here. We understand the specific challenges {city} properties face, from seasonal weather to local building codes.</p>
+                <h3 className="text-oxblood mb-2 text-xl font-black tracking-tight uppercase">
+                  Local Expertise
+                </h3>
+                <p className="text-slate font-medium">
+                  We live and work here. We understand the specific challenges{' '}
+                  {city} properties face, from seasonal weather to local
+                  building codes.
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-6">
-              <CheckCircle2 className="w-8 h-8 text-oxblood shrink-0 mt-1" />
+              <CheckCircle2 className="text-oxblood mt-1 h-8 w-8 shrink-0" />
               <div>
-                <h3 className="text-xl font-black uppercase tracking-tight text-oxblood mb-2">Root-Cause Repair</h3>
-                <p className="text-slate font-medium">We use field measurements, photos, and direct jobsite experience to scope the repair correctly and keep it from turning into repeat work.</p>
+                <h3 className="text-oxblood mb-2 text-xl font-black tracking-tight uppercase">
+                  Root-Cause Repair
+                </h3>
+                <p className="text-slate font-medium">
+                  We use field measurements, photos, and direct jobsite
+                  experience to scope the repair correctly and keep it from
+                  turning into repeat work.
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-6">
-              <CheckCircle2 className="w-8 h-8 text-oxblood shrink-0 mt-1" />
+              <CheckCircle2 className="text-oxblood mt-1 h-8 w-8 shrink-0" />
               <div>
-                <h3 className="text-xl font-black uppercase tracking-tight text-oxblood mb-2">Transparent Pricing</h3>
-                <p className="text-slate font-medium">You&apos;ll receive a detailed, easy-to-understand quote before any work begins. No surprises, no hidden fees.</p>
+                <h3 className="text-oxblood mb-2 text-xl font-black tracking-tight uppercase">
+                  Transparent Pricing
+                </h3>
+                <p className="text-slate font-medium">
+                  You&apos;ll receive a detailed, easy-to-understand quote
+                  before any work begins. No surprises, no hidden fees.
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-6">
-              <CheckCircle2 className="w-8 h-8 text-oxblood shrink-0 mt-1" />
+              <CheckCircle2 className="text-oxblood mt-1 h-8 w-8 shrink-0" />
               <div>
-                <h3 className="text-xl font-black uppercase tracking-tight text-oxblood mb-2">Licensed & Insured</h3>
-                <p className="text-slate font-medium">We are a fully licensed (CCB #258533), bonded, and insured general contractor for your complete peace of mind.</p>
+                <h3 className="text-oxblood mb-2 text-xl font-black tracking-tight uppercase">
+                  Licensed & Insured
+                </h3>
+                <p className="text-slate font-medium">
+                  We are a fully licensed (CCB #258533), bonded, and insured
+                  general contractor for your complete peace of mind.
+                </p>
               </div>
             </div>
           </div>
-          <div className="text-center mt-16">
+          <div className="mt-16 text-center">
             <Link href="/plans">
-              <Button variant="outline" size="lg" className="px-10 py-7 text-lg font-black uppercase tracking-widest border-2 border-oxblood text-oxblood">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-oxblood text-oxblood border-2 px-10 py-7 text-lg font-black tracking-widest uppercase"
+              >
                 Learn About Our Maintenance Plans
               </Button>
             </Link>
@@ -151,7 +187,7 @@ export default async function ServiceCityPage({ params }: Props) {
         <Container>
           <div className="grid gap-10 md:grid-cols-2">
             <div>
-              <h2 className="mb-5 text-2xl font-black uppercase tracking-tight text-oxblood">
+              <h2 className="text-oxblood mb-5 text-2xl font-black tracking-tight uppercase">
                 Related Services in {city}
               </h2>
               <div className="space-y-3">
@@ -159,9 +195,9 @@ export default async function ServiceCityPage({ params }: Props) {
                   <Link
                     key={slug}
                     href={`/areas/${citySlug}/${slug}`}
-                    className="block rounded-2xl border border-oxblood/10 bg-white px-5 py-4 font-medium text-slate transition-colors hover:border-oxblood hover:text-oxblood"
+                    className="border-oxblood/10 text-slate hover:border-oxblood hover:text-oxblood block rounded-2xl border bg-white px-5 py-4 font-medium transition-colors"
                   >
-                    <div className="text-sm font-black uppercase tracking-widest text-oxblood">
+                    <div className="text-oxblood text-sm font-black tracking-widest uppercase">
                       {relatedService.title}
                     </div>
                     <div className="mt-1 text-sm">
@@ -172,7 +208,7 @@ export default async function ServiceCityPage({ params }: Props) {
               </div>
             </div>
             <div>
-              <h2 className="mb-5 text-2xl font-black uppercase tracking-tight text-oxblood">
+              <h2 className="text-oxblood mb-5 text-2xl font-black tracking-tight uppercase">
                 Nearby Service Areas
               </h2>
               <div className="space-y-3">
@@ -182,13 +218,14 @@ export default async function ServiceCityPage({ params }: Props) {
                     <Link
                       key={nearbySlug}
                       href={`/areas/${nearbySlug}/${serviceSlug}`}
-                      className="block rounded-2xl border border-oxblood/10 bg-white px-5 py-4 font-medium text-slate transition-colors hover:border-oxblood hover:text-oxblood"
+                      className="border-oxblood/10 text-slate hover:border-oxblood hover:text-oxblood block rounded-2xl border bg-white px-5 py-4 font-medium transition-colors"
                     >
-                      <div className="text-sm font-black uppercase tracking-widest text-oxblood">
+                      <div className="text-oxblood text-sm font-black tracking-widest uppercase">
                         {service.title} in {nearbyArea.city}
                       </div>
                       <div className="mt-1 text-sm">
-                        See how we handle this scope for nearby owners and managers.
+                        See how we handle this scope for nearby owners and
+                        managers.
                       </div>
                     </Link>
                   );
@@ -198,7 +235,10 @@ export default async function ServiceCityPage({ params }: Props) {
           </div>
           <div className="mt-10 text-center">
             <Link href={`/areas/${citySlug}`}>
-              <Button variant="outline" className="border-2 border-oxblood text-oxblood">
+              <Button
+                variant="outline"
+                className="border-oxblood text-oxblood border-2"
+              >
                 See All {city} Service Options
               </Button>
             </Link>

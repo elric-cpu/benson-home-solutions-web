@@ -1,13 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --oxblood: #4C0C14;
-  --oxblood-light: #6D111D;
-  --maroon: #4C0C14;
-  --cream: #F5F5F0;
-  --surface: #FCFCF9;
-  --charcoal: #1A1A1A;
-  --border: #E5E5E0;
+  --oxblood: #4c0c14;
+  --oxblood-light: #6d111d;
+  --maroon: #4c0c14;
+  --cream: #f5f5f0;
+  --surface: #fcfcf9;
+  --charcoal: #1a1a1a;
+  --border: #e5e5e0;
 }
 
 body {

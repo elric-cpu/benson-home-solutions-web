@@ -30,7 +30,9 @@ interface NrelResponse {
   };
 }
 
-async function geocodeAddress(address: string): Promise<{ lon: number; lat: number } | null> {
+async function geocodeAddress(
+  address: string,
+): Promise<{ lon: number; lat: number } | null> {
   const url = `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${encodeURIComponent(address)}&benchmark=Public_AR_Current&format=json`;
   const response = await fetch(url);
   if (!response.ok) throw new Error('Geocoder request failed.');
@@ -39,7 +41,10 @@ async function geocodeAddress(address: string): Promise<{ lon: number; lat: numb
   return coordinates ? { lon: coordinates.x, lat: coordinates.y } : null;
 }
 
-async function getFemaFloodZone(lon: number, lat: number): Promise<string | null> {
+async function getFemaFloodZone(
+  lon: number,
+  lat: number,
+): Promise<string | null> {
   const url = `https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query?geometry=${lon},${lat}&geometryType=esriGeometryPoint&spatialRel=esriSpatialRelIntersects&outFields=FLD_ZONE,ZONE_SUBTY&f=json`;
   const response = await fetch(url);
   if (!response.ok) throw new Error('FEMA request failed.');
@@ -48,22 +53,26 @@ async function getFemaFloodZone(lon: number, lat: number): Promise<string | null
   return zoneInfo ? `${zoneInfo.FLD_ZONE} (${zoneInfo.ZONE_SUBTY})` : 'Unknown';
 }
 
-async function getNrelEnergyData(lon: number, lat: number): Promise<object | null> {
-    const apiKey = process.env.NREL_API_KEY;
-    if (!apiKey) {
-      logError(new Error('NREL_API_KEY is not set.'), { context: 'Enrichment' });
-      return null;
-    }
-    const url = `https://developer.nrel.gov/api/pvwatts/v8.json?api_key=${apiKey}&lat=${lat}&lon=${lon}&system_capacity=4&azimuth=180&tilt=40&array_type=1&module_type=0&losses=14`;
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('NREL request failed.');
-    const data: NrelResponse = await response.json();
-    return data.outputs ? {
+async function getNrelEnergyData(
+  lon: number,
+  lat: number,
+): Promise<object | null> {
+  const apiKey = process.env.NREL_API_KEY;
+  if (!apiKey) {
+    logError(new Error('NREL_API_KEY is not set.'), { context: 'Enrichment' });
+    return null;
+  }
+  const url = `https://developer.nrel.gov/api/pvwatts/v8.json?api_key=${apiKey}&lat=${lat}&lon=${lon}&system_capacity=4&azimuth=180&tilt=40&array_type=1&module_type=0&losses=14`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('NREL request failed.');
+  const data: NrelResponse = await response.json();
+  return data.outputs
+    ? {
         solar_irradiance_dni: data.outputs.avg_dni.annual,
         solar_irradiance_ghi: data.outputs.avg_ghi.annual,
-    } : null;
+      }
+    : null;
 }
-
 
 /**
  * API Route: Lead Enrichment (Internal)
@@ -73,8 +82,13 @@ export async function POST(request: NextRequest) {
   // 1. Security Check
   const internalApiKey = process.env.INTERNAL_API_KEY;
   if (!internalApiKey) {
-    logError(new Error('INTERNAL_API_KEY is not set.'), { context: 'Enrichment API' });
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    logError(new Error('INTERNAL_API_KEY is not set.'), {
+      context: 'Enrichment API',
+    });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 
   const authHeader = request.headers.get('Authorization');
@@ -85,20 +99,32 @@ export async function POST(request: NextRequest) {
   try {
     const { leadId } = await request.json();
     if (!leadId) {
-      return NextResponse.json({ error: 'leadId is required.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'leadId is required.' },
+        { status: 400 },
+      );
     }
 
     // 2. Fetch Lead & Property
     const [lead] = await db.select().from(leads).where(eq(leads.id, leadId));
     if (!lead || !lead.propertyAddress) {
-      return NextResponse.json({ error: 'Lead not found or has no address.' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Lead not found or has no address.' },
+        { status: 404 },
+      );
     }
 
-    const [property] = await db.select().from(properties).where(eq(properties.leadId, leadId));
+    const [property] = await db
+      .select()
+      .from(properties)
+      .where(eq(properties.leadId, leadId));
     if (!property) {
-      return NextResponse.json({ error: 'Property record not found for this lead.' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Property record not found for this lead.' },
+        { status: 404 },
+      );
     }
-    
+
     logInfo('Starting enrichment for lead:', { leadId });
 
     // 3. Geocode Address
@@ -114,8 +140,11 @@ export async function POST(request: NextRequest) {
     ]);
 
     // 5. Update Database
-    const currentMetadata = property.metadata && typeof property.metadata === 'object' ? property.metadata : {};
-    
+    const currentMetadata =
+      property.metadata && typeof property.metadata === 'object'
+        ? property.metadata
+        : {};
+
     const updatedMetadata = {
       ...currentMetadata,
       enrichment_complete: true,
@@ -125,19 +154,23 @@ export async function POST(request: NextRequest) {
       nrel_energy_data: nrelData,
     };
 
-    await db.update(properties)
+    await db
+      .update(properties)
       .set({ metadata: updatedMetadata })
       .where(eq(properties.id, property.id));
 
     logInfo('Enrichment successful for lead:', { leadId });
 
-    return NextResponse.json({ success: true, leadId: leadId, enrichedData: updatedMetadata });
-
+    return NextResponse.json({
+      success: true,
+      leadId: leadId,
+      enrichedData: updatedMetadata,
+    });
   } catch (error) {
     logError(error as Error, { context: 'Lead Enrichment API' });
     return NextResponse.json(
       { error: 'An error occurred during lead enrichment.' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

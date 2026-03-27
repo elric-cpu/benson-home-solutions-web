@@ -6,7 +6,8 @@ async function main() {
   try {
     const result = await masterMarketingFlow({
       topic: 'Essential Roofing Maintenance for Oregon Winters',
-      business_goals: 'Educate local homeowners and drive sign-ups for seasonal roof inspections.',
+      business_goals:
+        'Educate local homeowners and drive sign-ups for seasonal roof inspections.',
       asset_type: 'guide',
       target_url: 'https://www.bensonhomesolutions.com/roof-maintenance',
     });

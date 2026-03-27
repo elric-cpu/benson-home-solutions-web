@@ -1,14 +1,14 @@
-import { genkit, z } from "genkit";
-import { gemini15Flash } from "@genkit-ai/googleai";
-import { onFlow, noAuth } from "@genkit-ai/firebase/functions";
-import { getPricingTool, checkServiceAreaTool } from "../tools";
+import { genkit, z } from 'genkit';
+import { gemini15Flash } from '@genkit-ai/googleai';
+import { onFlow, noAuth } from '@genkit-ai/firebase/functions';
+import { getPricingTool, checkServiceAreaTool } from '../tools';
 
 const ai = genkit({});
 
 export const supportFlow = onFlow(
   ai,
   {
-    name: "supportAgent",
+    name: 'supportAgent',
     inputSchema: z.string(),
     outputSchema: z.string(),
     authPolicy: noAuth(),
@@ -25,5 +25,5 @@ export const supportFlow = onFlow(
     });
 
     return response.text;
-  }
+  },
 );

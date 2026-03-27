@@ -12,7 +12,6 @@ import {
   getSegmentData,
   getTier,
   recommendedTierBySegment,
-
 } from './maintenance-pricing';
 
 /**
@@ -28,7 +27,9 @@ export const ai = genkit({
 /**
  * --- SHARED SCHEMAS ---
  */
-const segmentSchema = z.enum(['residential', 'commercial', 'church']).describe('The property type.');
+const segmentSchema = z
+  .enum(['residential', 'commercial', 'church'])
+  .describe('The property type.');
 
 /**
  * --- TOOLS ---
@@ -37,16 +38,34 @@ const segmentSchema = z.enum(['residential', 'commercial', 'church']).describe('
 const createLeadSchema = z.object({
   name: z.string().min(2).max(100).describe("The user's full name."),
   email: z.string().email().describe("The user's email address."),
-  phone: z.string().min(10).max(20).optional().describe("The user's phone number."),
-  address: z.string().max(200).optional().describe("The full property address for the service."),
-  service: z.string().max(100).describe('The service or plan the user is interested in.'),
-  message: z.string().max(2000).describe('A summary of the user\'s request and the generated plan details.'),
+  phone: z
+    .string()
+    .min(10)
+    .max(20)
+    .optional()
+    .describe("The user's phone number."),
+  address: z
+    .string()
+    .max(200)
+    .optional()
+    .describe('The full property address for the service.'),
+  service: z
+    .string()
+    .max(100)
+    .describe('The service or plan the user is interested in.'),
+  message: z
+    .string()
+    .max(2000)
+    .describe(
+      "A summary of the user's request and the generated plan details.",
+    ),
 });
 
 export const createLeadTool = tool(
   {
     name: 'createLead',
-    description: 'Use this tool AFTER a user has finalized a maintenance plan or requested a quote for a specific project. Collect all required information first.',
+    description:
+      'Use this tool AFTER a user has finalized a maintenance plan or requested a quote for a specific project. Collect all required information first.',
     inputSchema: createLeadSchema,
     outputSchema: z.string(),
   },
@@ -58,14 +77,17 @@ export const createLeadTool = tool(
       // IDEMPOTENCY CHECK
       const fiveMinsAgo = new Date(Date.now() - 5 * 60 * 1000);
       const existingLead = await db.query.leads.findFirst({
-        where: (leads, { eq, and, gt }) => and(
-          eq(leads.email, input.email.trim().toLowerCase()),
-          gt(leads.createdAt, fiveMinsAgo)
-        )
+        where: (leads, { eq, and, gt }) =>
+          and(
+            eq(leads.email, input.email.trim().toLowerCase()),
+            gt(leads.createdAt, fiveMinsAgo),
+          ),
       });
 
       if (existingLead) {
-        logInfo('Duplicate lead creation prevented via idempotency check', { leadId: existingLead.id });
+        logInfo('Duplicate lead creation prevented via idempotency check', {
+          leadId: existingLead.id,
+        });
         return `A lead for ${input.name} was already created recently. Lead ID is ${existingLead.id}. Let the user know we will be in touch.`;
       }
 
@@ -78,40 +100,53 @@ export const createLeadTool = tool(
         }
       }
 
-      const standardizedAddrStr = typeof validatedAddr?.standardizedAddress === 'string' 
-        ? validatedAddr.standardizedAddress 
-        : null;
+      const standardizedAddrStr =
+        typeof validatedAddr?.standardizedAddress === 'string'
+          ? validatedAddr.standardizedAddress
+          : null;
 
-      const [newLead] = await db.insert(leads).values({
-        name: input.name.trim(),
-        email: input.email.trim().toLowerCase(),
-        phone: input.phone?.trim() || null,
-        serviceType: input.service || 'General Inquiry',
-        message: input.message.trim(),
-        propertyAddress: standardizedAddrStr || input.address || null,
-        status: 'new',
-      }).returning();
+      const [newLead] = await db
+        .insert(leads)
+        .values({
+          name: input.name.trim(),
+          email: input.email.trim().toLowerCase(),
+          phone: input.phone?.trim() || null,
+          serviceType: input.service || 'General Inquiry',
+          message: input.message.trim(),
+          propertyAddress: standardizedAddrStr || input.address || null,
+          status: 'new',
+        })
+        .returning();
 
       if (validatedAddr && validatedAddr.isDeliverable && standardizedAddrStr) {
-        await db.insert(properties).values({
-          leadId: newLead.id,
-          standardizedAddress: standardizedAddrStr,
-          city: validatedAddr.city || null,
-          county: validatedAddr.county || null,
-          lat: validatedAddr.latitude?.toString(),
-          lng: validatedAddr.longitude?.toString(),
-          auditHash: validatedAddr.addressHash,
-        }).onConflictDoNothing();
+        await db
+          .insert(properties)
+          .values({
+            leadId: newLead.id,
+            standardizedAddress: standardizedAddrStr,
+            city: validatedAddr.city || null,
+            county: validatedAddr.county || null,
+            lat: validatedAddr.latitude?.toString(),
+            lng: validatedAddr.longitude?.toString(),
+            auditHash: validatedAddr.addressHash,
+          })
+          .onConflictDoNothing();
       }
 
       logInfo('AI Lead Captured', { leadId: newLead.id });
 
       // INTERNAL SECURE ROUTING FOR BACKGROUND ENRICHMENT
-      const internalBaseUrl = process.env.INTERNAL_API_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+      const internalBaseUrl =
+        process.env.INTERNAL_API_URL ||
+        (process.env.VERCEL_URL
+          ? `https://${process.env.VERCEL_URL}`
+          : 'http://localhost:3000');
       const apiKey = process.env.INTERNAL_API_KEY;
 
       if (!apiKey) {
-        logError(new Error('INTERNAL_API_KEY is not set.'), { context: 'AI Enrichment Trigger Failed' });
+        logError(new Error('INTERNAL_API_KEY is not set.'), {
+          context: 'AI Enrichment Trigger Failed',
+        });
       } else {
         // Await fetch so serverless environments don't prematurely kill the background request.
         // We catch the error so it doesn't fail the primary tool invocation.
@@ -120,14 +155,19 @@ export const createLeadTool = tool(
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${apiKey}`,
+              Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({ leadId: newLead.id }),
             // Optional short timeout in real environments
           });
 
           if (!response.ok) {
-            logError(new Error(`Enrichment API failed with status: ${response.status}`), { context: 'AI Enrichment Trigger Failed' });
+            logError(
+              new Error(
+                `Enrichment API failed with status: ${response.status}`,
+              ),
+              { context: 'AI Enrichment Trigger Failed' },
+            );
           }
         } catch (err) {
           logError(err as Error, { context: 'AI Enrichment Trigger Failed' });
@@ -139,18 +179,24 @@ export const createLeadTool = tool(
       logError(error as Error, { context: 'AI createLeadTool' });
       return 'An error occurred while creating the lead. Inform the user and ask them to call 541-321-5115.';
     }
-  }
+  },
 );
 
 const buildMaintenancePlanSchema = z.object({
   segment: segmentSchema,
-  tierKey: z.string().optional().describe('Optional specific plan tier key when the user asks for a particular plan.'),
+  tierKey: z
+    .string()
+    .optional()
+    .describe(
+      'Optional specific plan tier key when the user asks for a particular plan.',
+    ),
 });
 
 export const buildMaintenancePlanTool = tool(
   {
     name: 'buildMaintenancePlan',
-    description: 'Calculates the monthly cost of a maintenance plan for a given property type.',
+    description:
+      'Calculates the monthly cost of a maintenance plan for a given property type.',
     inputSchema: buildMaintenancePlanSchema,
     outputSchema: z.object({
       planName: z.string(),
@@ -164,7 +210,10 @@ export const buildMaintenancePlanTool = tool(
   },
   async ({ segment, tierKey }) => {
     const segmentData = getSegmentData(segment);
-    const selectedTier = getTier(segment, tierKey ?? recommendedTierBySegment[segment]);
+    const selectedTier = getTier(
+      segment,
+      tierKey ?? recommendedTierBySegment[segment],
+    );
     const basePrice = selectedTier.price;
     const annualPrice = getAnnualPlanPrice(basePrice);
     const emergencyFrame = getEmergencyRiskFrame(segment, annualPrice);
@@ -180,13 +229,25 @@ export const buildMaintenancePlanTool = tool(
       segment,
       addonIds: [],
     };
-  }
+  },
 );
 const estimateMaintenanceCostSchema = z.object({
   segment: segmentSchema,
   tierKey: z.string().optional().describe('Optional plan tier key.'),
-  homeValue: z.number().positive().optional().describe('Approximate home value for residential industry-comparison context.'),
-  homeAge: z.number().positive().optional().describe('Approximate home age for residential industry-comparison context.'),
+  homeValue: z
+    .number()
+    .positive()
+    .optional()
+    .describe(
+      'Approximate home value for residential industry-comparison context.',
+    ),
+  homeAge: z
+    .number()
+    .positive()
+    .optional()
+    .describe(
+      'Approximate home age for residential industry-comparison context.',
+    ),
 });
 
 export const estimateMaintenanceCostTool = tool(
@@ -229,7 +290,7 @@ export const estimateMaintenanceCostTool = tool(
       annualPrice,
       comparisonSummary,
     };
-  }
+  },
 );
 
 /**
@@ -249,7 +310,11 @@ export const generalChatFlow = ai.defineFlow(
     const { stream, response } = await ai.generateStream({
       system: GUS_SYSTEM_PROMPT,
       prompt: input.message,
-      tools: [buildMaintenancePlanTool, estimateMaintenanceCostTool, createLeadTool],
+      tools: [
+        buildMaintenancePlanTool,
+        estimateMaintenanceCostTool,
+        createLeadTool,
+      ],
     });
 
     for await (const chunk of stream) {
@@ -258,5 +323,5 @@ export const generalChatFlow = ai.defineFlow(
 
     const fullResponse = await response;
     return fullResponse.text;
-  }
+  },
 );

@@ -31,7 +31,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: 'Applebot-Extended',
         allow: '/',
-      }
+      },
     ],
     sitemap: 'https://www.bensonhomesolutions.com/sitemap.xml',
   };

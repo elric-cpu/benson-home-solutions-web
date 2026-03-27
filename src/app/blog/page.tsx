@@ -9,10 +9,13 @@ const BlogPage = () => {
       <div className="mt-4">
         {BLOG_POSTS.map((post) => (
           <div key={post.slug} className="mb-4">
-            <Link href={`/blog/${post.slug}`} className="text-xl font-bold text-blue-600 hover:underline">
-                {post.title}
+            <Link
+              href={`/blog/${post.slug}`}
+              className="text-xl font-bold text-blue-600 hover:underline"
+            >
+              {post.title}
             </Link>
-            <p className="text-gray-600 text-sm">
+            <p className="text-sm text-gray-600">
               By {post.author} | {post.date}
             </p>
           </div>

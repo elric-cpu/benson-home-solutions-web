@@ -5,12 +5,24 @@ import { ai } from './genkit';
 // 1. SEO & AEO Strategist (Lead Role)
 // ============================================================================
 export const SEOStrategySchema = z.object({
-  primary_keywords: z.array(z.string()).describe("Target keywords for traditional search"),
-  entity_strategy: z.array(z.string()).describe("Key question entities for AI-powered search (AEO)"),
-  schema_requirements: z.array(z.string()).describe("Required Schema markup (e.g., FAQ, HowTo)"),
-  backlink_strategy: z.string().describe("Recommendations for backlink acquisition"),
-  internal_linking_architecture: z.array(z.string()).describe("Internal linking targets and anchor text"),
-  technical_seo_dod: z.array(z.string()).describe("Definition of Done for Core Web Vitals and site speed"),
+  primary_keywords: z
+    .array(z.string())
+    .describe('Target keywords for traditional search'),
+  entity_strategy: z
+    .array(z.string())
+    .describe('Key question entities for AI-powered search (AEO)'),
+  schema_requirements: z
+    .array(z.string())
+    .describe('Required Schema markup (e.g., FAQ, HowTo)'),
+  backlink_strategy: z
+    .string()
+    .describe('Recommendations for backlink acquisition'),
+  internal_linking_architecture: z
+    .array(z.string())
+    .describe('Internal linking targets and anchor text'),
+  technical_seo_dod: z
+    .array(z.string())
+    .describe('Definition of Done for Core Web Vitals and site speed'),
 });
 
 export const seoStrategistFlow = ai.defineFlow(
@@ -35,15 +47,18 @@ Qualifications: 5+ years tech SEO, deep expertise in structured data/JSON-LD, GA
   },
 );
 
-
 // ============================================================================
 // 2. Editorial & Content Strategy Lead (The "Voice")
 // ============================================================================
 export const EditorialReviewSchema = z.object({
   approval_status: z.enum(['Yay', 'Nay']),
-  feedback: z.array(z.string()).describe("Specific feedback on the content"),
-  brand_voice_compliance: z.string().describe("Notes on tone, style, and authority"),
-  required_revisions: z.array(z.string()).describe("Actionable items for the writer or designer"),
+  feedback: z.array(z.string()).describe('Specific feedback on the content'),
+  brand_voice_compliance: z
+    .string()
+    .describe('Notes on tone, style, and authority'),
+  required_revisions: z
+    .array(z.string())
+    .describe('Actionable items for the writer or designer'),
 });
 
 export const editorialLeadFlow = ai.defineFlow(
@@ -51,7 +66,13 @@ export const editorialLeadFlow = ai.defineFlow(
     name: 'editorialLeadFlow',
     inputSchema: z.object({
       content_draft: z.string(),
-      asset_type: z.enum(['guide', 'checklist', 'how-to', 'image_concept', 'video_concept']),
+      asset_type: z.enum([
+        'guide',
+        'checklist',
+        'how-to',
+        'image_concept',
+        'video_concept',
+      ]),
     }),
     outputSchema: EditorialReviewSchema,
   },
@@ -68,15 +89,25 @@ Qualifications: 7+ years technical writing/editing, exceptional English command,
   },
 );
 
-
 // ============================================================================
 // 3. Specialized Content Writer (Technical Writer)
 // ============================================================================
 export const ContentDraftSchema = z.object({
   title: z.string(),
-  content: z.string().describe("The exhaustive guide (1,500+ words), precise how-to, or logical checklist (Markdown format)"),
-  seo_aeo_elements_used: z.array(z.string()).describe("Headers, entity keywords incorporated based on strategy"),
-  interactive_tool_logic: z.string().optional().describe("Conceptual logic and user-facing copy for interactive web tools/calculators, if applicable"),
+  content: z
+    .string()
+    .describe(
+      'The exhaustive guide (1,500+ words), precise how-to, or logical checklist (Markdown format)',
+    ),
+  seo_aeo_elements_used: z
+    .array(z.string())
+    .describe('Headers, entity keywords incorporated based on strategy'),
+  interactive_tool_logic: z
+    .string()
+    .optional()
+    .describe(
+      'Conceptual logic and user-facing copy for interactive web tools/calculators, if applicable',
+    ),
 });
 
 export const contentWriterFlow = ai.defineFlow(
@@ -84,7 +115,7 @@ export const contentWriterFlow = ai.defineFlow(
     name: 'contentWriterFlow',
     inputSchema: z.object({
       topic: z.string(),
-      seo_strategy: z.any().describe("Output from the SEO Strategist"),
+      seo_strategy: z.any().describe('Output from the SEO Strategist'),
       asset_type: z.enum(['guide', 'checklist', 'how-to', 'interactive_tool']),
     }),
     outputSchema: ContentDraftSchema,
@@ -102,14 +133,25 @@ Qualifications: 3+ years tech writing, portfolio demonstrating ability to simpli
   },
 );
 
-
 // ============================================================================
 // 4. Full-Stack Web Developer (Technical Web Optimizer)
 // ============================================================================
 export const TechnicalImplementationSchema = z.object({
-  component_code: z.string().describe("React (Next.js) code for custom interactive tools or calculators"),
-  schema_markup: z.string().describe("JSON-LD structure for proper AEO indexing (e.g., FAQPage, HowTo, SoftwareApplication)"),
-  performance_optimizations: z.array(z.string()).describe("Required steps/code adjustments for rapid Site Speed and CWV compliance"),
+  component_code: z
+    .string()
+    .describe(
+      'React (Next.js) code for custom interactive tools or calculators',
+    ),
+  schema_markup: z
+    .string()
+    .describe(
+      'JSON-LD structure for proper AEO indexing (e.g., FAQPage, HowTo, SoftwareApplication)',
+    ),
+  performance_optimizations: z
+    .array(z.string())
+    .describe(
+      'Required steps/code adjustments for rapid Site Speed and CWV compliance',
+    ),
 });
 
 export const webDeveloperFlow = ai.defineFlow(
@@ -134,18 +176,30 @@ Qualifications: 4+ years professional full-stack development. Expert in HTML, CS
   },
 );
 
-
 // ============================================================================
 // 5. Multimedia Content Specialist (Image & Video)
 // ============================================================================
 export const MultimediaAssetSchema = z.object({
-  image_prompts: z.array(z.string()).describe("Optimized prompts for image generation models (Nano Banana 1 and 2)"),
-  video_script: z.string().optional().describe("Script for short-form instructional video suitable for generation via veo 1 and 2"),
-  asset_metadata: z.array(z.object({
-    suggested_filename: z.string(),
-    alt_text: z.string(),
-    compression_strategy: z.string().describe("How to optimize the file for minimum impact on site speed"),
-  })),
+  image_prompts: z
+    .array(z.string())
+    .describe(
+      'Optimized prompts for image generation models (Nano Banana 1 and 2)',
+    ),
+  video_script: z
+    .string()
+    .optional()
+    .describe(
+      'Script for short-form instructional video suitable for generation via veo 1 and 2',
+    ),
+  asset_metadata: z.array(
+    z.object({
+      suggested_filename: z.string(),
+      alt_text: z.string(),
+      compression_strategy: z
+        .string()
+        .describe('How to optimize the file for minimum impact on site speed'),
+    }),
+  ),
 });
 
 export const multimediaSpecialistFlow = ai.defineFlow(
@@ -153,7 +207,11 @@ export const multimediaSpecialistFlow = ai.defineFlow(
     name: 'multimediaSpecialistFlow',
     inputSchema: z.object({
       content_draft: z.string(),
-      asset_needs: z.array(z.string()).describe("Specific assets requested (e.g., 'diagram of HVAC', 'instructional video of filter change')"),
+      asset_needs: z
+        .array(z.string())
+        .describe(
+          "Specific assets requested (e.g., 'diagram of HVAC', 'instructional video of filter change')",
+        ),
     }),
     outputSchema: MultimediaAssetSchema,
   },
@@ -170,21 +228,30 @@ Qualifications: Expert command of visual design software (Nano Banana 1 and 2, v
   },
 );
 
-
 // ============================================================================
 // 6. Outreach & Growth Coordinator (The Connector)
 // ============================================================================
 export const OutreachCampaignSchema = z.object({
-  target_personas: z.array(z.string()).describe("Who we are pitching to (e.g., Real Estate Journalists, Local Oregon News)"),
-  unlinked_mention_strategy: z.string().describe("How to pursue unlinked mentions for this specific campaign"),
-  pitch_emails: z.array(z.object({
-    subject: z.string(),
-    body: z.string().describe("The personalized outreach email body"),
-  })),
-  guest_post_pitches: z.array(z.object({
-    target_domain_type: z.string(),
-    pitch_angle: z.string().describe("The angle we are selling them on"),
-  })),
+  target_personas: z
+    .array(z.string())
+    .describe(
+      'Who we are pitching to (e.g., Real Estate Journalists, Local Oregon News)',
+    ),
+  unlinked_mention_strategy: z
+    .string()
+    .describe('How to pursue unlinked mentions for this specific campaign'),
+  pitch_emails: z.array(
+    z.object({
+      subject: z.string(),
+      body: z.string().describe('The personalized outreach email body'),
+    }),
+  ),
+  guest_post_pitches: z.array(
+    z.object({
+      target_domain_type: z.string(),
+      pitch_angle: z.string().describe('The angle we are selling them on'),
+    }),
+  ),
 });
 
 export const outreachCoordinatorFlow = ai.defineFlow(
@@ -205,7 +272,8 @@ Qualifications: 2+ years experience in digital PR and relationship-driven link b
       prompt: `Develop a personalized link-building and outreach campaign for this newly published asset:\nURL: ${input.asset_url}\nSummary: ${input.asset_summary}\nTarget Keywords: ${input.target_keywords.join(', ')}`,
       output: { format: 'json', schema: OutreachCampaignSchema },
     });
-    if (!response.output) throw new Error('Outreach campaign generation failed');
+    if (!response.output)
+      throw new Error('Outreach campaign generation failed');
     return response.output;
   },
 );

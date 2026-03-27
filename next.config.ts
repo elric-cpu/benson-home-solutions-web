@@ -1,5 +1,9 @@
 import type { NextConfig } from 'next';
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: 'standalone',
@@ -55,12 +59,14 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/services/window-door-replacement',
-        destination: '/contact?service=Windows%20%2F%20Doors%20%2F%20Site%20Repairs',
+        destination:
+          '/contact?service=Windows%20%2F%20Doors%20%2F%20Site%20Repairs',
         permanent: true,
       },
       {
         source: '/services/mold-mitigation',
-        destination: '/contact?service=Water%20Damage%20%2F%20Mold%20%2F%20Moisture',
+        destination:
+          '/contact?service=Water%20Damage%20%2F%20Mold%20%2F%20Moisture',
         permanent: true,
       },
       {
@@ -170,13 +176,15 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/services/window-door-replacement',
-        destination: '/contact?service=Windows%20%2F%20Doors%20%2F%20Site%20Repairs',
+        destination:
+          '/contact?service=Windows%20%2F%20Doors%20%2F%20Site%20Repairs',
         permanent: true,
       },
       {
         source: '/services/mold-mitigation',
-        destination: '/contact?service=Water%20Damage%20%2F%20Mold%20%2F%20Moisture',
-                permanent: true,
+        destination:
+          '/contact?service=Water%20Damage%20%2F%20Mold%20%2F%20Moisture',
+        permanent: true,
       },
       {
         source: '/tools',
@@ -197,4 +205,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);

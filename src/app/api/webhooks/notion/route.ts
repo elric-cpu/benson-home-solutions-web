@@ -9,7 +9,9 @@ function verifyNotionSignature(req: NextRequest, bodyStr: string): boolean {
   const secret = process.env.NOTION_WEBHOOK_SECRET;
   if (!secret) {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('[Notion Webhook] NOTION_WEBHOOK_SECRET not set, bypassing signature validation in development.');
+      console.warn(
+        '[Notion Webhook] NOTION_WEBHOOK_SECRET not set, bypassing signature validation in development.',
+      );
       return true;
     }
     return false;
@@ -24,7 +26,10 @@ function verifyNotionSignature(req: NextRequest, bodyStr: string): boolean {
   const nowMs = Date.now();
   const fiveMinutesMs = 5 * 60 * 1000;
 
-  if (isNaN(requestTimestampMs) || Math.abs(nowMs - requestTimestampMs) > fiveMinutesMs) {
+  if (
+    isNaN(requestTimestampMs) ||
+    Math.abs(nowMs - requestTimestampMs) > fiveMinutesMs
+  ) {
     console.error('[Notion Webhook] Stale or invalid timestamp');
     return false;
   }
@@ -39,23 +44,20 @@ function verifyNotionSignature(req: NextRequest, bodyStr: string): boolean {
     return false;
   }
 
-  return crypto.timingSafeEqual(
-    signatureBuffer,
-    calculatedSignatureBuffer
-  );
+  return crypto.timingSafeEqual(signatureBuffer, calculatedSignatureBuffer);
 }
 
 /**
  * Notion Webhook Handler
- * 
+ *
  * Notion sends a POST request to this endpoint whenever a subscribed event occurs.
- * 
+ *
  * @see https://developers.notion.com/docs/webhooks
  */
 export async function POST(req: NextRequest) {
   try {
     const bodyStr = await req.text();
-    
+
     if (!verifyNotionSignature(req, bodyStr)) {
       console.error('[Notion Webhook] Invalid signature');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -80,7 +82,9 @@ export async function POST(req: NextRequest) {
         console.log(`[Notion Webhook] Page created: ${payload.page_id}`);
         break;
       default:
-        console.log(`[Notion Webhook] Unhandled event type: ${payload.event_type}`);
+        console.log(
+          `[Notion Webhook] Unhandled event type: ${payload.event_type}`,
+        );
     }
 
     return NextResponse.json({ received: true }, { status: 200 });
@@ -89,7 +93,7 @@ export async function POST(req: NextRequest) {
     // DO NOT leak error details to the caller
     return NextResponse.json(
       { error: 'Internal Server Error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

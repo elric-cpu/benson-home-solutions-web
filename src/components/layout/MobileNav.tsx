@@ -22,51 +22,55 @@ export function MobileNav({ isOpen, onClose, navigation }: MobileNavProps) {
   };
 
   return (
-    <div className="md:hidden border-t border-oxblood-light bg-oxblood text-cream shadow-inner animate-in slide-in-from-top duration-300">
+    <div className="border-oxblood-light bg-oxblood text-cream animate-in slide-in-from-top border-t shadow-inner duration-300 md:hidden">
       <Container>
-        <nav className="py-6 space-y-2">
+        <nav className="space-y-2 py-6">
           {navigation.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               onClick={onClose}
-              className="block px-4 py-3 text-lg font-medium text-cream/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+              className="text-cream/90 block rounded-lg px-4 py-3 text-lg font-medium transition-all hover:bg-white/10 hover:text-white"
             >
               {item.name}
             </Link>
           ))}
-          
-          <div className="pt-6 mt-6 border-t border-white/10 space-y-4">
+
+          <div className="mt-6 space-y-4 border-t border-white/10 pt-6">
             {/* Main Line */}
             <div className="flex flex-col gap-1 px-4">
-              <span className="text-[10px] uppercase tracking-widest font-bold text-cream/60">Main Office</span>
+              <span className="text-cream/60 text-[10px] font-bold tracking-widest uppercase">
+                Main Office
+              </span>
               <a
                 href={`tel:${BUSINESS.phone}`}
                 className="flex items-center gap-3 text-xl font-bold text-white"
               >
-                <Phone className="w-5 h-5 text-cream/80" /> {BUSINESS.phone}
+                <Phone className="text-cream/80 h-5 w-5" /> {BUSINESS.phone}
               </a>
             </div>
 
             {/* Emergency Button */}
             <button
               onClick={handleEmergencyClick}
-              className="w-full bg-red-700 hover:bg-red-600 text-white p-4 rounded-xl flex items-center justify-between border border-red-500 shadow-lg transition-transform active:scale-95"
+              className="flex w-full items-center justify-between rounded-xl border border-red-500 bg-red-700 p-4 text-white shadow-lg transition-transform hover:bg-red-600 active:scale-95"
             >
               <div className="flex items-center gap-3">
-                <AlertCircle className="w-6 h-6 animate-pulse" />
+                <AlertCircle className="h-6 w-6 animate-pulse" />
                 <div className="flex flex-col items-start leading-tight">
-                  <span className="text-xs uppercase font-bold text-red-100">Emergency</span>
+                  <span className="text-xs font-bold text-red-100 uppercase">
+                    Emergency
+                  </span>
                   <span className="text-lg font-bold">Call & Text Now</span>
                 </div>
               </div>
-              <MessageSquare className="w-5 h-5 opacity-70" />
+              <MessageSquare className="h-5 w-5 opacity-70" />
             </button>
 
             <Link
               href="/contact"
               onClick={onClose}
-              className="block w-full text-center px-5 py-4 text-lg font-bold rounded-xl bg-white text-oxblood hover:bg-cream transition-colors"
+              className="text-oxblood hover:bg-cream block w-full rounded-xl bg-white px-5 py-4 text-center text-lg font-bold transition-colors"
             >
               Start a Repair Request
             </Link>

@@ -31,6 +31,6 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
         {...props}
       />
     );
-  }
+  },
 );
 Section.displayName = 'Section';

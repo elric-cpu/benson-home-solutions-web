@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import { BUSINESS } from '@/lib/constants';
 
 export function LocalBusinessJsonLd() {
@@ -10,7 +11,8 @@ export function LocalBusinessJsonLd() {
     url: BUSINESS.url,
     telephone: BUSINESS.phone,
     email: BUSINESS.email,
-    description: 'Licensed Oregon contractor for post-inspection repairs, water damage restoration, mold mitigation, maintenance, property preservation, and weatherization.',
+    description:
+      'Licensed Oregon contractor for post-inspection repairs, water damage restoration, mold mitigation, maintenance, property preservation, and weatherization.',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '2283 NW Skyline Dr',
@@ -41,7 +43,8 @@ export function LocalBusinessJsonLd() {
   };
 
   return (
-    <script
+    <Script
+      id="local-business-json-ld"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />

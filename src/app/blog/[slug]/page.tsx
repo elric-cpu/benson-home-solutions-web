@@ -22,8 +22,8 @@ const PostPage = async ({ params }: PostPageProps) => {
 
   return (
     <article>
-      <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-      <div className="text-gray-600 text-sm mb-4">
+      <h1 className="mb-4 text-4xl font-bold">{post.title}</h1>
+      <div className="mb-4 text-sm text-gray-600">
         <span>By {post.author}</span> | <span>{post.date}</span>
       </div>
       <div

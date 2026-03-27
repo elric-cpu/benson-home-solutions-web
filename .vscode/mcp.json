@@ -8,10 +8,7 @@
   "mcpServers": {
     "vercel": {
       "command": "npx",
-      "args": [
-        "mcp-remote",
-        "https://mcp-vercel.vercel.app"
-      ]
+      "args": ["mcp-remote", "https://mcp-vercel.vercel.app"]
     }
   }
 }

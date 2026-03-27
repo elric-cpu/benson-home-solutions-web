@@ -7,7 +7,10 @@ import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
  * @returns The JSON-LD script content for the organization.
  */
 export function getOrganizationSchema(): WithContext<HomeAndConstructionBusiness> {
-  const allCities = [...SERVICE_AREAS.midWillametteValley, ...SERVICE_AREAS.harneyCounty];
+  const allCities = [
+    ...SERVICE_AREAS.midWillametteValley,
+    ...SERVICE_AREAS.harneyCounty,
+  ];
 
   return {
     '@context': 'https://schema.org',
@@ -31,7 +34,7 @@ export function getOrganizationSchema(): WithContext<HomeAndConstructionBusiness
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 44.6366,   // Corrected for Albany, OR
+      latitude: 44.6366, // Corrected for Albany, OR
       longitude: -123.105, // Corrected for Albany, OR
     },
     areaServed: allCities.map((name) => ({ '@type': 'City', name })),
@@ -41,9 +44,9 @@ export function getOrganizationSchema(): WithContext<HomeAndConstructionBusiness
       name: `Oregon ${BUSINESS.license}`,
     },
     sameAs: [
-        BUSINESS.gbp,
-        BUSINESS.facebook,
-        'https://search.ccb.state.or.us/search/search_results.aspx?license_number=258533',
+      BUSINESS.gbp,
+      BUSINESS.facebook,
+      'https://search.ccb.state.or.us/search/search_results.aspx?license_number=258533',
     ],
     openingHoursSpecification: [
       {

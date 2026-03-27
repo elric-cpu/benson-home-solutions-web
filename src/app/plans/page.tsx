@@ -1,5 +1,5 @@
-import type { Metadata } from 'next'
-import PlansPageClient from './PlansPageClient'
+import type { Metadata } from 'next';
+import PlansPageClient from './PlansPageClient';
 
 export const metadata: Metadata = {
   title: 'Maintenance Plans',
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     url: 'https://www.bensonhomesolutions.com/plans',
     images: ['/opengraph-image'],
   },
-}
+};
 
 export default function PlansPage() {
-  return <PlansPageClient />
+  return <PlansPageClient />;
 }
