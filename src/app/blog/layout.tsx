@@ -1,7 +1,5 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 
-const BlogLayout = ({ children }: { children: React.ReactNode }) => {
-  return <div className="container mx-auto px-4 py-8">{children}</div>;
-};
-
-export default BlogLayout;
+export default function BlogLayout({ children }: { children: ReactNode }) {
+  return <>{children}</>;
+}
