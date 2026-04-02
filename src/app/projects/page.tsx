@@ -2,12 +2,14 @@ import type { Metadata } from 'next';
 import { Container, Section, Button, Badge, Card, CardContent, CardHeader } from '@/components/ui';
 import Link from 'next/link';
 import { CheckCircle2, ClipboardList, PhoneCall } from 'lucide-react';
+import { canonicalMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = canonicalMetadata({
   title: 'Documented Work',
   description:
     'See the kinds of scopes Benson Home Solutions documents, how work is verified, and what clients receive after emergency, maintenance, and remodel projects in Oregon.',
-};
+  path: '/projects',
+});
 
 const DOCUMENTED_SCOPES = [
   {

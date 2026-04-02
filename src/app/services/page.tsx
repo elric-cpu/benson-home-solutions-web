@@ -2,12 +2,14 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Container, Section, Button, Badge, Card } from '@/components/ui';
 import { ShieldCheck, Droplets, Hammer, Thermometer, Construction, Home } from 'lucide-react';
+import { canonicalMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = canonicalMetadata({
   title: 'Contracting Services',
   description:
-    'Benson Home Solutions provides diagnostic property maintenance, emergency water restoration, mold mitigation, and specialized remodeling in the Mid-Willamette Valley.',
-};
+    'Benson Home Solutions provides diagnostic property maintenance, emergency water restoration, mold mitigation, specialized remodeling, and roof care in Oregon.',
+  path: '/services',
+});
 
 const serviceCategories = [
   {

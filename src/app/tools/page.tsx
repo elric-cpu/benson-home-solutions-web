@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
 import { Container, Section, Badge, Card, Button } from '@/components/ui';
 import Link from 'next/link';
-import { Calculator, Building2 } from 'lucide-react';
+import { Calculator, Building2, CalendarClock, Siren } from 'lucide-react';
+import { canonicalMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = canonicalMetadata({
   title: 'Diagnostic Property Tools | Benson Home Solutions',
   description:
-    'Interactive tools and calculators for assessing your property\'s rot risk and long-term maintenance liability in Oregon.',
-};
+    'Interactive homeowner tools for Oregon roof leaks, maintenance planning, deferred maintenance cost, and long-term building liability.',
+  path: '/tools',
+});
 
 const TOOLS = [
   {
@@ -21,7 +23,19 @@ const TOOLS = [
     slug: 'cost-estimator',
     description: 'A board-level strategic tool for commercial and ecclesiastical properties to forecast 10-year capital expenditure and maintenance liabilities.',
     icon: <Building2 className="w-8 h-8 text-maroon" />
-  }
+  },
+  {
+    title: 'Roof Leak Urgency Checker',
+    slug: 'roof-leak-urgency',
+    description: 'Score an active leak, ceiling stain, attic moisture issue, or roof vent problem and get clear next-step guidance.',
+    icon: <Siren className="w-8 h-8 text-maroon" />
+  },
+  {
+    title: 'Oregon Maintenance Planner',
+    slug: 'maintenance-planner',
+    description: 'Build a seasonal task list for gutters, roof edges, windows, crawlspaces, and exterior systems by region and property type.',
+    icon: <CalendarClock className="w-8 h-8 text-maroon" />
+  },
 ];
 
 export default function ToolsIndexPage() {
@@ -43,7 +57,7 @@ export default function ToolsIndexPage() {
 
       <Section spacing="lg">
         <Container>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {TOOLS.map((tool) => (
               <Card key={tool.slug} className="p-8 hover:border-maroon/40 transition-colors bg-white shadow-lg border-maroon/10 flex flex-col items-start">
                 <div className="p-4 bg-maroon/5 rounded-2xl mb-6">

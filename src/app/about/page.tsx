@@ -2,11 +2,15 @@ import type { Metadata } from 'next';
 import { Container, Section, Badge } from '@/components/ui';
 import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 import { ShieldCheck, Ruler, Map, Scale } from 'lucide-react';
+import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'About Benson Home Solutions',
   description:
     'Licensed Oregon contractor (CCB #258533) specializing in proactive property care. Learn about our maintenance-first philosophy and commitment to protecting residential and commercial assets in the Mid-Willamette Valley and Harney County.',
+  alternates: {
+    canonical: absoluteUrl('/about'),
+  },
   keywords: [
     'Benson Home Solutions about',
     'Elric Benson Oregon contractor',

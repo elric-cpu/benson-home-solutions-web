@@ -2,12 +2,14 @@ import type { Metadata } from 'next';
 import { Container, Section, Badge, Card } from '@/components/ui';
 import Link from 'next/link';
 import { BLOG_POSTS } from '@/lib/blog';
+import { canonicalMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = canonicalMetadata({
   title: 'Building Science Blog',
   description:
-    'Technical insights on property preservation, moisture management, and maintenance-first home care for Oregon property owners.',
-};
+    'Technical insights on roof leaks, gutter overflow, dry rot, deferred maintenance, and seasonal property care for Oregon homeowners and facility managers.',
+  path: '/blog',
+});
 
 export default function BlogPage() {
   const posts = Object.values(BLOG_POSTS);
@@ -55,6 +57,21 @@ export default function BlogPage() {
                 </Card>
               </Link>
             ))}
+          </div>
+
+          <div className="mt-16 rounded-3xl border border-maroon/10 bg-cream/40 p-8 text-center">
+            <h2 className="text-3xl font-black uppercase tracking-tight text-oxblood mb-4">
+              Need a Fast Answer?
+            </h2>
+            <p className="mx-auto max-w-2xl text-slate font-medium leading-relaxed mb-6">
+              Use the Benson tool suite to estimate repair cost, gauge leak urgency, and build a seasonal maintenance plan before you book field work.
+            </p>
+            <Link
+              href="/tools"
+              className="inline-flex items-center rounded-2xl bg-oxblood px-8 py-4 text-sm font-black uppercase tracking-widest text-cream transition-colors hover:bg-oxblood/90"
+            >
+              Explore Diagnostic Tools
+            </Link>
           </div>
         </Container>
       </Section>

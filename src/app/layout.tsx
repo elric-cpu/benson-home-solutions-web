@@ -39,9 +39,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  alternates: {
-    canonical: 'https://bensonhomesolutions.com',
-  },
   robots: {
     index: true,
     follow: true,
@@ -79,8 +76,9 @@ export default function RootLayout({
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: BUSINESS.phone,
+      email: BUSINESS.email,
       contactType: 'customer service',
-      areaServed: 'US',
+      areaServed: ['Albany', 'Salem', 'Corvallis', 'Keizer', 'Lebanon', 'Burns', 'Hines', 'Drewsey'],
       availableLanguage: 'en',
     },
     address: {
@@ -90,6 +88,16 @@ export default function RootLayout({
       postalCode: '97321',
       addressCountry: 'US',
     },
+    areaServed: [
+      { '@type': 'City', name: 'Albany' },
+      { '@type': 'City', name: 'Salem' },
+      { '@type': 'City', name: 'Corvallis' },
+      { '@type': 'City', name: 'Keizer' },
+      { '@type': 'City', name: 'Lebanon' },
+      { '@type': 'City', name: 'Burns' },
+      { '@type': 'City', name: 'Hines' },
+      { '@type': 'City', name: 'Drewsey' },
+    ],
     sameAs: [
       'https://maps.app.goo.gl/ad4eywwWonPsSZXP9',
       'https://www.facebook.com/profile.php?id=61565667928376',

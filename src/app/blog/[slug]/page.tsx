@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Container, Section, Badge } from '@/components/ui';
 import { getBlogPost, BLOG_POSTS } from '@/lib/blog';
 import { BUSINESS } from '@/lib/constants';
+import { absoluteUrl } from '@/lib/seo';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -18,12 +19,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${post.title} | Benson Home Solutions`,
     description: post.excerpt,
     authors: [{ name: post.author }],
+    alternates: {
+      canonical: absoluteUrl(`/blog/${slug}`),
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: 'article',
+      url: absoluteUrl(`/blog/${slug}`),
       publishedTime: post.date,
-    }
+    },
   };
 }
 
@@ -40,6 +45,28 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) {
     notFound();
   }
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      '@type': 'Person',
+      name: post.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: BUSINESS.name,
+      logo: {
+        '@type': 'ImageObject',
+        url: absoluteUrl('/favicon.svg'),
+      },
+    },
+    mainEntityOfPage: absoluteUrl(`/blog/${slug}`),
+  };
 
   // Simple markdown-to-html conversion for the hardcoded posts
   // Replace ### with h2, ** with bold, etc.
@@ -93,6 +120,10 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <Section variant="cream" spacing="lg">
         <Container size="narrow" className="text-center">
           <Badge className="mb-6 bg-oxblood/10 text-oxblood border-oxblood/20 px-4 py-1.5 uppercase tracking-widest font-black">

@@ -4,6 +4,7 @@ import { Container, Section, Button, Badge } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
 import { MapPin, ShieldCheck } from 'lucide-react';
 import { getAreaData, AREA_DATA } from '@/lib/areas';
+import { absoluteUrl } from '@/lib/seo';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -16,6 +17,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${area.name}, OR Home Maintenance | Benson Home Solutions`,
     description: `Professional diagnostic home maintenance and emergency restoration in ${area.name}, Oregon. Licensed contractor (${BUSINESS.license}) serving ${area.county} County.`,
+    alternates: {
+      canonical: absoluteUrl(`/areas/${slug}`),
+    },
+    openGraph: {
+      title: `${area.name}, OR Home Maintenance | Benson Home Solutions`,
+      description: `Professional diagnostic home maintenance and emergency restoration in ${area.name}, Oregon. Licensed contractor (${BUSINESS.license}) serving ${area.county} County.`,
+      url: absoluteUrl(`/areas/${slug}`),
+      type: 'website',
+    },
   };
 }
 

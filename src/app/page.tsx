@@ -5,6 +5,14 @@ import { FAQSection } from '@/components/content/FAQSection';
 import { Quote, CheckCircle2 } from 'lucide-react';
 import { BUSINESS } from '@/lib/constants';
 import { getHomePageContent } from '@/lib/content/site-content';
+import { canonicalMetadata } from '@/lib/seo';
+
+export const metadata = canonicalMetadata({
+  title: 'Benson Home Solutions | Licensed Oregon Contractor',
+  description:
+    'Licensed Oregon contractor for home maintenance, emergency restoration, remodeling, and monthly property stewardship across the Mid-Willamette Valley and Harney County.',
+  path: '/',
+});
 
 /**
  * Benson Home Solutions Home Page - Rebuild V1 (2026)
@@ -189,6 +197,51 @@ export default async function HomePage() {
                 </Link>
               </CardContent>
             </Card>
+          </div>
+        </Container>
+      </Section>
+
+      <Section variant="cream" spacing="lg">
+        <Container>
+          <div className="mb-12 text-center">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-oxblood mb-4">
+              Articles and Tools for Smarter Decisions
+            </h2>
+            <p className="mx-auto max-w-3xl text-xl font-medium text-slate">
+              Before you book a repair, use the site resources built for Oregon leak diagnosis, seasonal maintenance planning, and deferred-cost forecasting.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            <Link href="/blog/roof-vent-leak-first-response-oregon" className="rounded-3xl border border-oxblood/10 bg-white p-8 shadow-sm transition-colors hover:border-oxblood/25">
+              <div className="text-xs font-black uppercase tracking-widest text-oxblood/60 mb-3">Article</div>
+              <h3 className="text-2xl font-black tracking-tight text-oxblood mb-3">
+                Roof Vent Leak First Response
+              </h3>
+              <p className="font-medium leading-relaxed text-slate">
+                Learn what to document, what to avoid, and when a vent-area leak becomes a same-day problem.
+              </p>
+            </Link>
+
+            <Link href="/tools/roof-leak-urgency" className="rounded-3xl border border-oxblood/10 bg-white p-8 shadow-sm transition-colors hover:border-oxblood/25">
+              <div className="text-xs font-black uppercase tracking-widest text-oxblood/60 mb-3">Tool</div>
+              <h3 className="text-2xl font-black tracking-tight text-oxblood mb-3">
+                Roof Leak Urgency Checker
+              </h3>
+              <p className="font-medium leading-relaxed text-slate">
+                Score active leaks, ceiling stains, attic moisture, and electrical risk before you schedule work.
+              </p>
+            </Link>
+
+            <Link href="/tools/maintenance-planner" className="rounded-3xl border border-oxblood/10 bg-white p-8 shadow-sm transition-colors hover:border-oxblood/25">
+              <div className="text-xs font-black uppercase tracking-widest text-oxblood/60 mb-3">Tool</div>
+              <h3 className="text-2xl font-black tracking-tight text-oxblood mb-3">
+                Oregon Maintenance Planner
+              </h3>
+              <p className="font-medium leading-relaxed text-slate">
+                Generate a seasonal checklist for gutters, roof edges, crawlspaces, windows, and freeze-risk systems.
+              </p>
+            </Link>
           </div>
         </Container>
       </Section>

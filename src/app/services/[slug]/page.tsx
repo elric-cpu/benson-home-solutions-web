@@ -10,6 +10,7 @@ import {
   getServicePageContent,
   listServicePageSlugs,
 } from '@/lib/content/site-content';
+import { absoluteUrl } from '@/lib/seo';
 
 export async function generateStaticParams() {
   const slugs = await listServicePageSlugs();
@@ -29,6 +30,17 @@ export async function generateMetadata({
     description:
       service.metaDescription ||
       `${service.title} — professional service from Benson Home Solutions. Licensed Oregon contractor CCB #258533.`,
+    alternates: {
+      canonical: absoluteUrl(`/services/${slug}`),
+    },
+    openGraph: {
+      title: service.title,
+      description:
+        service.metaDescription ||
+        `${service.title} — professional service from Benson Home Solutions. Licensed Oregon contractor CCB #258533.`,
+      url: absoluteUrl(`/services/${slug}`),
+      type: 'website',
+    },
   };
 }
 

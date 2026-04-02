@@ -1,5 +1,5 @@
 import { z } from 'genkit';
-import { ai } from './genkit';
+import { ai } from './genkit-node';
 import {
   seoStrategistFlow,
   contentWriterFlow,

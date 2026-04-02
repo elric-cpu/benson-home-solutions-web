@@ -8,6 +8,51 @@ export interface BlogPost {
 }
 
 export const BLOG_POSTS: Record<string, BlogPost> = {
+  'roof-vent-leak-first-response-oregon': {
+    slug: 'roof-vent-leak-first-response-oregon',
+    title: 'Roof Vent Leak First Response for Oregon Homeowners',
+    excerpt:
+      'What to do when water starts showing up around a roof vent, bathroom fan vent, or pipe boot during Oregon rain.',
+    date: '2026-04-02',
+    author: 'Elric Benson (CCB #258533)',
+    content: `
+Roof vent leaks rarely start as dramatic emergencies. Most begin as a small failure around a pipe boot, vent cap, or flashing transition, then show up inside as a ceiling stain or a drip that only appears during heavy rain. Oregon homeowners lose time when they assume the water is "just condensation" or that a little caulk will solve the problem.
+
+### What to Do First
+
+When you notice a leak around a roof vent, protect the interior before you chase the cause. Catch active drips, move furniture, and document exactly where water is showing. If water is near lights, fans, or electrical devices, treat it as a safety issue first.
+
+- Place a container under the drip and protect flooring immediately.
+- Photograph the ceiling stain, attic moisture, or active drip path.
+- Note whether the leak happens only during rain or persists after the storm.
+- Avoid climbing onto the roof yourself if shingles are wet or the roof pitch is steep.
+
+### Why Roof Vent Leaks Spread Fast
+
+Vent leaks are deceptive because the visible stain is often not directly below the failure. Water can enter at the pipe boot or flashing, travel along the roof deck, and then drop into insulation, drywall, or framing several feet away. That is why interior staining often understates the actual repair scope.
+
+Common failure points include:
+
+- Cracked rubber boots around plumbing vents
+- Loose or poorly integrated metal flashing
+- Failed sealant around roof penetrations
+- Debris that traps runoff uphill from the vent
+
+### What Benson Checks On Site
+
+Our field process focuses on the entire leak path, not just the visible symptom. We inspect the roof penetration, the surrounding shingle field, the drainage pattern, and the attic or ceiling assembly below it. If the water source is actually a gutter overflow or roof-to-wall transition, we document that too so the repair plan solves the real failure.
+
+### When to Treat It as an Emergency
+
+If drywall is sagging, attic framing is wet, or the leak is close to electrical components, do not wait. Those are signs that the building assembly is already holding more water than it should.
+
+Use the **Roof Leak Urgency Checker** on this site if you need a fast field-priority read before booking service. It is a screening tool, not a substitute for diagnosis, but it will help you decide whether this is a same-day problem.
+
+### The Real Goal
+
+The objective is not just to stop one leak. The objective is to identify why the vent assembly failed, whether moisture has already moved into nearby framing, and what should be repaired now so the next storm does not reopen the problem.
+    `,
+  },
   'the-true-cost-of-deferred-maintenance-willamette-valley': {
     slug: 'the-true-cost-of-deferred-maintenance-willamette-valley',
     title: 'The True Cost of Deferred Maintenance in the Willamette Valley',
@@ -74,6 +119,107 @@ At Benson Home Solutions, we don't just repair the damage; we change the buildin
 
 Protect your equity. Let our building science expertise secure your property against Oregon's most relentless hidden threat.
     `
+  },
+  'why-gutters-overflow-in-oregon-homes': {
+    slug: 'why-gutters-overflow-in-oregon-homes',
+    title: 'Why Gutters Overflow in Oregon Homes and What to Check First',
+    excerpt:
+      'Overflow usually means more than leaves. Here is how roof pitch, downspouts, fascia condition, and rainfall intensity combine to create water intrusion.',
+    date: '2026-04-02',
+    author: 'Elric Benson (CCB #258533)',
+    content: `
+Most homeowners think a gutter overflow is a cleaning issue. Sometimes it is. Just as often, overflow is a sign that water is backing up where the building envelope is already vulnerable.
+
+### The Four Common Overflow Causes
+
+In the Willamette Valley, we most often find four root causes working alone or in combination:
+
+1. **Debris load** that blocks flow through the gutter and into the downspout.
+2. **Improper pitch** that leaves water standing in sections of gutter after storms.
+3. **Undersized or overwhelmed downspouts** at high-volume roof planes.
+4. **Fascia and drip-edge failures** that let water run behind the gutter instead of into it.
+
+### Why Overflow Turns Into Damage
+
+When gutters overflow repeatedly, water does not just fall harmlessly to the ground. It often wets fascia, soffit edges, siding bottoms, window heads, and foundation zones. If the same section overflows through an Oregon winter, the damage compounds quietly.
+
+- Fascia stays wet longer than it should.
+- Siding joints near roof edges absorb repeated splash-back.
+- Crawlspace and foundation drainage get overloaded.
+- Moss and debris keep roof edges wetter for longer cycles.
+
+### What to Check Before the Next Storm
+
+- Look for staining on fascia or peeling paint behind the gutter line.
+- Confirm each downspout discharges well away from the foundation.
+- Check whether one roof valley dumps a disproportionate amount of water into a short run of gutter.
+- Inspect for low spots that hold standing water after rain.
+
+### Cleaning Alone Is Not Always the Fix
+
+If overflow keeps happening in the same area, the problem may be geometry, not housekeeping. We often see homes where the gutter is clean but the water is outrunning the downspout layout, jumping at a valley transition, or getting behind the back edge because the drip path is wrong.
+
+That is why proactive maintenance matters. A field audit can tell you whether you need cleaning, pitch correction, flashing correction, fascia repair, or a wider drainage redesign.
+
+### A Better Maintenance Standard
+
+If you manage a home, rental, or small facility in western Oregon, the right question is not "Are the gutters full today?" It is "Does this roof drainage system move stormwater away from the building assembly without wetting the structure?"
+
+Use the **Oregon Maintenance Planner** on this site to build a seasonal inspection list, then book a field audit if the same overflow point keeps returning.
+    `,
+  },
+  'oregon-home-maintenance-calendar-by-season': {
+    slug: 'oregon-home-maintenance-calendar-by-season',
+    title: 'An Oregon Home Maintenance Calendar by Season',
+    excerpt:
+      'A practical seasonal maintenance schedule for roof edges, gutters, attic ventilation, windows, crawlspaces, and freeze-risk systems.',
+    date: '2026-04-02',
+    author: 'Elric Benson (CCB #258533)',
+    content: `
+An Oregon maintenance plan should not look like a generic national checklist. The Mid-Willamette Valley and Harney County expose buildings to very different risks, and both climates punish owners who wait too long between inspections.
+
+### Spring: Reset After Winter Exposure
+
+Spring is when hidden winter damage becomes visible. Focus on anything that took repeated rainfall, standing water, or freeze-thaw stress.
+
+- Flush gutters and downspouts completely.
+- Check roof penetrations, vent flashing, and valley transitions.
+- Inspect crawlspaces for standing water, mold odor, or wet insulation.
+- Review window heads and trim for peeling paint or soft wood.
+
+### Summer: Seal and Repair
+
+Summer is the time to correct failures while assemblies are dry enough to work on properly.
+
+- Replace failed exterior sealant.
+- Repair soft trim, fascia, or siding before fall rains return.
+- Clean moss-prone roof areas and remove trapped debris.
+- Inspect attic ventilation and bath fan exhaust routing.
+
+### Fall: Prepare for Water Volume
+
+Fall preparation is where a lot of deferred maintenance either gets corrected or turns into winter damage.
+
+- Clear leaves before the first heavy storm sequence.
+- Test downspout discharge away from the foundation.
+- Inspect roof edges after nearby trees start dropping debris.
+- Verify sump, drainage, and crawlspace moisture controls are operating.
+
+### Winter: Watch Active Symptoms
+
+Winter is not ideal for elective repair, but it is the best time to identify active leak paths and drainage failures.
+
+- Check ceilings and attic framing after major rain events.
+- Watch for recurring gutter overflow points.
+- Monitor utility rooms, crawlspaces, and exposed plumbing for freeze risk.
+- Document new stains or moisture changes immediately instead of waiting until spring.
+
+### Why a Calendar Beats Reactive Repair
+
+The main benefit of a seasonal plan is not organization. It is timing. When the right tasks happen before weather stress peaks, you avoid the expensive gap between a visible symptom and a full reconstruction.
+
+If you want a property-specific version of this schedule, use the **Oregon Maintenance Planner** and then turn that output into a monthly inspection route or maintenance subscription scope.
+    `,
   }
 };
 

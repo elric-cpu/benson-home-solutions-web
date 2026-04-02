@@ -3,12 +3,14 @@ import Link from 'next/link';
 import { Container, Section, Button, Badge, Card } from '@/components/ui';
 import { MapPin, ChevronRight } from 'lucide-react';
 import { SERVICE_AREAS } from '@/lib/constants';
+import { canonicalMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = canonicalMetadata({
   title: 'Service Areas',
   description:
     'Benson Home Solutions provides diagnostic property maintenance and emergency restoration across the Mid-Willamette Valley and Harney County, Oregon.',
-};
+  path: '/areas',
+});
 
 const regions = [
   {

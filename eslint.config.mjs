@@ -61,6 +61,7 @@ const eslintConfig = [
     ignores: [
       '.next/**',
       '.vercel/**',
+      '.agents/**',
       'benson-genkit-backend/functions/lib/**',
       'node_modules/**',
       'playwright-report/**',
