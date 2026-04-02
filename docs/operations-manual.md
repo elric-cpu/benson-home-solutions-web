@@ -113,7 +113,7 @@
 - All jobs follow deterministic, auditable processes
 - Use branded mitigation, rebuild, and authorization packets
 - Every scope of work includes line-item estimates and completion sign-off
-- **Forensic Audit Trail:** Every field photo must be timestamped and GPS-verified via the Forensic Documentation Service (CompanyCam integrated).
+- **Detailed Audit Trail:** Every field photo must be timestamped and GPS-verified via the Diagnostic Documentation Service (CompanyCam integrated).
 - **After-Action Reviews (AARs):** A mandatory 15-minute technical debrief is required after every project completion. Focus on: *What went well? What failed? How do we prevent the failure next time?*
 - Digital recordkeeping with consistent naming conventions and organized file structures
 
@@ -175,7 +175,7 @@ All written materials use Elric Benson's authentic voice — confident, direct, 
 
 #### How Elric Sees the Business
 
-1. **Identity = maintenance specialists, not general contractors.** Leads with maintenance, not remodeling or construction.
+1. **Identity = maintenance specialists who are also traditional general contractors.** Leads with maintenance, but fully capable of full-scale remodeling and construction.
 2. **Differentiates on tooling.** *"Interior concrete saws, dehumidifiers, the equipment most contractors don't carry."* Owns the equipment others rent or sub out.
 
 ### Writing Rules

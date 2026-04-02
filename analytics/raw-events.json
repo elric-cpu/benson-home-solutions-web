@@ -1,0 +1,6 @@
+{
+  "status": "scaffold",
+  "owner": "analytics_experimentation",
+  "summary": "Placeholder raw analytics event feed for analytics_experimentation_cron.",
+  "events": []
+}

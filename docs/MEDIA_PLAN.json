@@ -1,0 +1,198 @@
+[
+  {
+    "path": "/page.tsx",
+    "title": "Untitled",
+    "description": "We provide proactive, diagnostic home maintenance for the Mid-Willamette Valley and Harney County. If we aren&apos;t on your property once a month, you aren&apos;t protected.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/tools",
+    "title": "Untitled",
+    "description": "Stop guessing about your building&apos;s health. Use our data-driven tools to calculate your true maintenance liability.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services",
+    "title": "Untitled",
+    "description": "We don&apos;t just fix problems; we analyze the root cause of failure to provide permanent solutions for your property.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/projects",
+    "title": "Untitled",
+    "description": "From emergency water mitigation to complex structural restoration, we document every step of our process.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/privacy",
+    "title": "Untitled",
+    "description": "At Benson Home Solutions, we take the privacy of our clients and the security of their property data seriously. This Privacy Policy outlines how we collect, use, and protect your information.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/methodology",
+    "title": "Untitled",
+    "description": "Traditional contracting relies on visual assumptions. Benson Home Solutions relies on data. Our diagnostic methodology ensures that we fix the cause, not just the symptom.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/emergency",
+    "title": "Untitled",
+    "description": "When disaster strikes, every minute counts. We provide immediate diagnostic stabilization to stop the damage and protect your property from secondary failure.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/contact",
+    "title": "Request Your Property Audit",
+    "description": "Stop reacting to damage. Schedule a comprehensive audit to identify risks before they become expensive repairs, or reach out directly.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/calculator",
+    "title": "True Cost Calculator",
+    "description": "Powered by RSMeans 2026 & Gcloud Intelligence",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/blog",
+    "title": "Untitled",
+    "description": "Expert advice on protecting your property from the Pacific Northwest&apos;s most persistent threats.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/areas",
+    "title": "Untitled",
+    "description": "From the humid valley to the high desert, we provide specialized maintenance for Oregon&apos;s unique climate zones.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/about",
+    "title": "Untitled",
+    "description": "Benson Home Solutions is a traditional general contractor and proactive property care firm dedicated to the long-term preservation of Oregon&apos;s residential, commercial, and ecclesiastical assets.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/tools/cost-estimator",
+    "title": "Untitled",
+    "description": "For commercial boards and church committees. Calculate your hidden maintenance liability and plan your 10-year capital expenditure.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/tools/cost-calculator",
+    "title": "Untitled",
+    "description": "How long until a $150 gutter cleaning turns into a $15,000 siding restoration? Use the Rot Clock to find out.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services/water-damage",
+    "title": "Untitled",
+    "description": "Water damage doesn&apos;t wait. Neither do we. Benson Home Solutions provides diagnostic dry-out and full-service restoration with documentation designed to maximize your insurance recovery.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services/windows-doors",
+    "title": "Untitled",
+    "description": "Windows and doors are the most common points of building envelope failure. We provide diagnostic-level installations that stop moisture and keep the heat where it belongs.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services/tenant-services",
+    "title": "Untitled",
+    "description": "From rapid tenant turns to complex diagnostic build-outs, Benson Home Solutions provides the professional documentation and precision execution that commercial boards demand.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services/sitework",
+    "title": "Untitled",
+    "description": "Oregon sitework isn&apos;t just about moving dirt. It&apos;s about moisture management. Benson Home Solutions engineers drainage and grading that protects your foundation from the ground up.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services/roof-maintenance",
+    "title": "Untitled",
+    "description": "Oregon winters are relentless. From the atmospheric rivers of the Valley to the sub-zero freezes of Harney County, your roof is your first line of defense.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services/mold-remediation",
+    "title": "Untitled",
+    "description": "In Oregon, mold is a symptom of a building envelope failure. We don&apos;t just clean the mold; we use diagnostic moisture detection to identify the source and stop it forever.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services/maintenance-subscriptions",
+    "title": "Untitled",
+    "description": "Standard property management is reactive. Benson Home Solutions is diagnostic. Our subscription programs provide the board-ready documentation and monthly oversight required to preserve your asset&apos;s value.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services/kitchen-remodeling",
+    "title": "Untitled",
+    "description": "We don&apos;t just cover up old problems. Benson Home Solutions specializes in remodeling that begins with a diagnostic moisture audit and ends with a premium, board-ready finish.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services/demolition",
+    "title": "Untitled",
+    "description": "Demolition is the first step of discovery. Benson Home Solutions provides surgical demolition services that protect the integrity of your remaining structure while identifying hidden rot or failure.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/services/[slug]",
+    "title": "{service.heroHeadline || service.title}",
+    "description": "{service.metaDescription}",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/compare/kaufmans-home-maintenance",
+    "title": "Untitled",
+    "description": "Not all maintenance subscriptions are created equal. See why property owners in the Mid-Willamette Valley are choosing diagnostic, data-driven protection over basic quarterly checklists.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/compare/homesmiles",
+    "title": "Untitled",
+    "description": "Don&apos;t confuse exterior cleaning with structural protection. Learn why true property stewardship requires diagnostic, year-round maintenance inside and out.",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/blog/[slug]",
+    "title": "{post.title}",
+    "description": "{parseText(html)}",
+    "image_prompts": [],
+    "video_prompts": []
+  },
+  {
+    "path": "/areas/[slug]",
+    "title": "Untitled",
+    "description": "{area.mainText1}",
+    "image_prompts": [],
+    "video_prompts": []
+  }
+]

@@ -4,14 +4,17 @@ import { StatsSection } from '@/components/content/StatsSection';
 import { FAQSection } from '@/components/content/FAQSection';
 import { Quote, CheckCircle2 } from 'lucide-react';
 import { BUSINESS } from '@/lib/constants';
+import { getHomePageContent } from '@/lib/content/site-content';
 
 /**
  * Benson Home Solutions Home Page - Rebuild V1 (2026)
  * Answer-First SEO Strategy.
  */
-export default function HomePage() {
+export default async function HomePage() {
+  const data = await getHomePageContent();
+
   return (
-    <main>
+    <>
       {/* Hero Section */}
       <Section variant="cream" spacing="lg" className="relative overflow-hidden">
         <Container className="text-center relative z-10">
@@ -19,16 +22,16 @@ export default function HomePage() {
             Oregon CCB #258533
           </Badge>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-[1.05] tracking-tight text-oxblood">
-            Stop Reacting to Leaks. <br />
-            <span className="text-oxblood/60 italic">Start Maintaining.</span>
+            {data?.heroHeadline || "Stop Reacting to Leaks."} <br />
+            <span className="text-oxblood/60 italic">{data?.heroSubheadline || "Start Maintaining."}</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            We provide proactive, forensic home maintenance for the Mid-Willamette Valley and Harney County. If we aren&apos;t on your property once a month, you aren&apos;t protected.
+            We provide proactive, diagnostic home maintenance for the Mid-Willamette Valley and Harney County. If we aren&apos;t on your property once a month, you aren&apos;t protected.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6 mb-8">
-            <Link href="/tools/cost-calculator">
+            <Link href={data?.heroCtaLink || "/tools/cost-calculator"}>
               <Button size="lg" className="w-full sm:w-auto px-10 py-8 text-lg font-black uppercase tracking-widest shadow-xl shadow-oxblood/20">
-                True Cost Calculator
+                {data?.heroCtaText || "True Cost Calculator"}
               </Button>
             </Link>
             <Link href="/services/maintenance-subscriptions">
@@ -50,15 +53,15 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* Forensic Audits / Value Props */}
+      {/* Comprehensive Audits / Value Props */}
       <Section spacing="md">
         <Container>
           <div className="grid md:grid-cols-3 gap-12">
             <div className="group">
               <div className="h-2 w-12 bg-oxblood mb-6 group-hover:w-full transition-all duration-500" />
-              <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Forensic Audits</h3>
+              <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Comprehensive Audits</h3>
               <p className="text-slate font-medium leading-relaxed">
-                We find moisture, heat loss, and structural decay before they become insurance claims. Standard inspections are visual; we are forensic.
+                We find moisture, heat loss, and structural decay before they become insurance claims. Standard inspections are visual; we are diagnostic.
               </p>
             </div>
             <div className="group">
@@ -87,14 +90,14 @@ export default function HomePage() {
         <Container size="narrow" className="text-center">
           <Quote className="w-16 h-16 text-oxblood/20 mx-auto mb-8" />
           <blockquote className="text-3xl md:text-4xl font-black italic text-oxblood mb-8 leading-tight tracking-tight">
-            &ldquo;A visual home inspection is like checking the oil with the engine off. We go forensic because you can&apos;t protect what you can&apos;t see.&rdquo;
+            &ldquo;A visual home inspection is like checking the oil with the engine off. We go diagnostic because you can&apos;t protect what you can&apos;t see.&rdquo;
           </blockquote>
           <div className="flex flex-col items-center">
             <div className="font-black text-xl uppercase tracking-widest text-oxblood mb-1">
               {BUSINESS.owner}
             </div>
             <div className="text-oxblood/60 font-bold uppercase tracking-widest text-xs">
-              Founder & Master Inspector
+              Founder & General Contractor
             </div>
           </div>
         </Container>
@@ -120,7 +123,7 @@ export default function HomePage() {
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Monthly Forensic Audit</span>
+                    <span className="font-medium text-slate">Monthly Comprehensive Audit</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
@@ -192,6 +195,6 @@ export default function HomePage() {
 
       {/* FAQ Section (AEO/GEO Focus) */}
       <FAQSection />
-    </main>
+    </>
   );
 }

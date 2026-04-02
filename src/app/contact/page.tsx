@@ -10,6 +10,7 @@ import {
 } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
 import { CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Captcha } from '@/components/forms/Captcha';
 
 interface FormData {
   name: string;
@@ -40,6 +41,7 @@ export default function ContactPage() {
   });
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
 
   const handleChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -47,6 +49,8 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!isCaptchaVerified) return;
+
     setStatus('submitting');
     setErrorMessage('');
 
@@ -81,7 +85,7 @@ export default function ContactPage() {
               Request Your Property Audit
             </h1>
             <p className="mt-4 text-lg font-medium text-slate leading-relaxed">
-              Stop reacting to damage. Schedule a forensic audit to identify risks before they become expensive repairs, or reach out directly.
+              Stop reacting to damage. Schedule a comprehensive audit to identify risks before they become expensive repairs, or reach out directly.
             </p>
           </div>
         </Container>
@@ -213,6 +217,8 @@ export default function ContactPage() {
                     />
                   </div>
 
+                  <Captcha onVerify={setIsCaptchaVerified} />
+
                   {/* Error */}
                   {status === 'error' && (
                     <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800">
@@ -224,7 +230,7 @@ export default function ContactPage() {
                   <Button
                     type="submit"
                     size="lg"
-                    disabled={status === 'submitting'}
+                    disabled={status === 'submitting' || !isCaptchaVerified}
                     className="w-full sm:w-auto font-black uppercase tracking-widest px-8"
                   >
                     {status === 'submitting' ? 'Sending...' : 'Get My Free Audit'}

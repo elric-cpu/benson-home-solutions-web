@@ -1,0 +1,16 @@
+{
+  "run_id": "simulation-2026-04-01-platform",
+  "owner": "platform_engineering",
+  "timestamp": "2026-04-01T00:00:00Z",
+  "status": "fail",
+  "priority": "critical",
+  "summary": "The build completes, but release remains blocked by a hard-coded backend credential, backend contract drift, demo fallbacks, and contact-path resilience issues.",
+  "findings": [
+    "benson-genkit-backend/functions/src/genkit-config.ts contains a live hard-coded Google AI API key.",
+    "src/lib/genkit.ts still maps Firebase callable names with an Endpoint suffix that does not match deployed exports.",
+    "src/app/api/estimator/route.ts still returns demo-mode data and forwards a payload shape that does not match the backend flow contract.",
+    "src/lib/ratelimit.ts instantiates Upstash with dummy credentials when env vars are unset.",
+    "src/app/layout.tsx still mounts AIChat globally."
+  ],
+  "release_impact": "block"
+}

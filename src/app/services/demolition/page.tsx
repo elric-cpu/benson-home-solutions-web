@@ -5,14 +5,14 @@ import { FAQSection } from '@/components/content/FAQSection';
 import { Hammer, ShieldAlert, FileSearch } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Forensic Demolition | Benson Home Solutions',
+  title: 'Diagnostic Demolition | Benson Home Solutions',
   description:
-    'Licensed demolition services in Oregon. We specialize in controlled, forensic demolition that identifies underlying structural and moisture issues. CCB #258533.',
+    'Licensed demolition services in Oregon. We specialize in controlled, diagnostic demolition that identifies underlying structural and moisture issues. CCB #258533.',
 };
 
 export default function DemolitionPage() {
   return (
-    <main>
+    <>
       <Section variant="oxblood" spacing="lg">
         <Container className="text-center">
           <Badge className="mb-6 bg-cream/10 text-cream border-cream/20 px-4 py-1.5 uppercase tracking-widest font-black">
@@ -70,6 +70,6 @@ export default function DemolitionPage() {
       </Section>
 
       <FAQSection />
-    </main>
+    </>
   );
 }

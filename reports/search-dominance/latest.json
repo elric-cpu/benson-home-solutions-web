@@ -1,0 +1,14 @@
+{
+  "run_id": "simulation-2026-04-01-search",
+  "owner": "search_dominance",
+  "timestamp": "2026-04-01T00:00:00Z",
+  "status": "warn",
+  "priority": "high",
+  "summary": "Authority is still diluted by duplicate calculator IA, inconsistent internal links, and a placeholder-only proof surface.",
+  "findings": [
+    "The site ships both /calculator and /tools/cost-calculator, and internal links point to both.",
+    "The projects page is still a placeholder and does not provide publishable proof or case-study depth.",
+    "Workspace churn across area and service routes makes the authority map unstable until route decisions are frozen."
+  ],
+  "release_impact": "review"
+}

@@ -1,0 +1,37 @@
+{
+  "status": "simulation_generated",
+  "items": [
+    {
+      "id": "SIM-01",
+      "state": "blocked_engineering"
+    },
+    {
+      "id": "SIM-02",
+      "state": "blocked_engineering"
+    },
+    {
+      "id": "SIM-03",
+      "state": "blocked_qa"
+    },
+    {
+      "id": "SIM-04",
+      "state": "blocked_qa"
+    },
+    {
+      "id": "SIM-05",
+      "state": "in_review"
+    },
+    {
+      "id": "SIM-06",
+      "state": "in_review"
+    },
+    {
+      "id": "SIM-07",
+      "state": "test_required"
+    },
+    {
+      "id": "SIM-08",
+      "state": "test_required"
+    }
+  ]
+}

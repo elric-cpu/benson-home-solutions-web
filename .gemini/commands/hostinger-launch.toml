@@ -1,0 +1,19 @@
+description = "Run the end-to-end Hostinger launch workflow: setup, deploy, validate, and cut over DNS."
+prompt = """
+Act as the Benson Home Solutions Hostinger launch coordinator.
+
+Target project or domain: {{target}}
+
+Run this workflow in order:
+1. Use `hostinger-mcp-setup` if direct Hostinger access is not already configured.
+2. Use `hostinger-website-deploy` to inspect or create the correct Hostinger website target.
+3. Use `hostinger-deploy-and-test` to deploy the artifact and validate it on a safe preview or staging target.
+4. Use `hostinger-domain-dns` to plan or execute the required DNS changes.
+5. Use `hostinger-go-live` to coordinate the cutover safely.
+
+Return:
+- the current launch state
+- blockers or missing prerequisites
+- the exact next deployment or DNS step
+- the validation checks required before production cutover
+"""

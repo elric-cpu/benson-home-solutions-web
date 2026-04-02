@@ -4,9 +4,9 @@ import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 import { ShieldCheck, Ruler, Map, Scale } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'About Benson Home Solutions | Expert Oregon Contractor',
+  title: 'About Benson Home Solutions',
   description:
-    'Licensed Oregon contractor (CCB #258533) specializing in proactive property care. Learn about our maintenance-first philosophy and commitment to the Mid-Willamette Valley and Harney County.',
+    'Licensed Oregon contractor (CCB #258533) specializing in proactive property care. Learn about our maintenance-first philosophy and commitment to protecting residential and commercial assets in the Mid-Willamette Valley and Harney County.',
   keywords: [
     'Benson Home Solutions about',
     'Elric Benson Oregon contractor',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main>
+    <>
       {/* Hero Section */}
       <Section variant="cream" spacing="lg">
         <Container className="text-center">
@@ -31,7 +31,7 @@ export default function AboutPage() {
             <span className="italic text-oxblood/60">Every Dimension.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            Benson Home Solutions isn&apos;t just a construction company. We are a forensic property care firm dedicated to the long-term preservation of Oregon&apos;s residential, commercial, and ecclesiastical assets.
+            Benson Home Solutions is a traditional general contractor and proactive property care firm dedicated to the long-term preservation of Oregon&apos;s residential, commercial, and ecclesiastical assets.
           </p>
         </Container>
       </Section>
@@ -52,7 +52,7 @@ export default function AboutPage() {
                   This &ldquo;break-fix&rdquo; model is the most expensive way to own property. It leads to insurance claim denials, structural instability, and massive unexpected capital expenditures.
                 </p>
                 <p>
-                  We believe in a better way. By applying <strong>forensic auditing</strong> techniques and building-science metrics to regular property care, we identify vulnerabilities before they become liabilities. We don&apos;t just fix buildings; we protect them.
+                  We believe in a better way. By applying <strong>comprehensive auditing</strong> techniques and building-science metrics to regular property care, we identify vulnerabilities before they become liabilities. We don&apos;t just fix buildings; we protect them.
                 </p>
               </div>
             </div>
@@ -69,7 +69,7 @@ export default function AboutPage() {
                 <li className="flex gap-4">
                   <Ruler className="w-6 h-6 shrink-0 text-cream/60" />
                   <div>
-                    <div className="font-black uppercase tracking-widest text-sm mb-1">Forensic Precision</div>
+                    <div className="font-black uppercase tracking-widest text-sm mb-1">Diagnostic Precision</div>
                     <div className="text-cream/80 text-sm">We use thermal imaging and moisture metering on every audit. No guesswork.</div>
                   </div>
                 </li>
@@ -137,7 +137,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-3 gap-12 mb-16">
             <div>
               <div className="text-5xl font-black text-oxblood mb-2">10+</div>
-              <div className="text-xs uppercase font-bold tracking-widest text-slate opacity-60">Years of Forensic <br />Experience</div>
+              <div className="text-xs uppercase font-bold tracking-widest text-slate opacity-60">Years of Diagnostic <br />Experience</div>
             </div>
             <div>
               <div className="text-5xl font-black text-oxblood mb-2">200+</div>
@@ -168,6 +168,6 @@ export default function AboutPage() {
           </div>
         </Container>
       </Section>
-    </main>
+    </>
   );
 }

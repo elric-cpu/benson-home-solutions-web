@@ -1,7 +1,6 @@
-import { genkit, z } from "genkit";
+import { ai } from "./genkit-config";
+import { z } from "genkit";
 import { google } from "googleapis";
-
-const ai = genkit({});
 const searchconsole = google.searchconsole("v1");
 
 export const getSearchPerformance = ai.defineTool(
@@ -14,33 +13,47 @@ export const getSearchPerformance = ai.defineTool(
     }),
   },
   async (input) => {
-    const auth = new google.auth.GoogleAuth({
-      scopes: ["https://www.googleapis.com/auth/webmasters.readonly"],
-    });
-    const authClient = await auth.getClient();
-    google.options({ auth: authClient as any });
+    if (!process.env.GSC_CLIENT_EMAIL || !process.env.GSC_PRIVATE_KEY) {
+      throw new Error('GSC_CLIENT_EMAIL and GSC_PRIVATE_KEY must be configured for Search Console access.');
+    }
 
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - input.days);
-    
-    const response = await searchconsole.searchanalytics.query({
-      siteUrl: input.siteUrl,
-      requestBody: {
-        startDate: startDate.toISOString().split("T")[0],
-        endDate: new Date().toISOString().split("T")[0],
-        dimensions: ["query"],
-        rowLimit: 25,
-      },
-    });
+    try {
+      const auth = new google.auth.GoogleAuth({
+        credentials: {
+          client_email: process.env.GSC_CLIENT_EMAIL,
+          // Replace literal \n with actual newlines for private key parsing
+          private_key: process.env.GSC_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        },
+        scopes: ["https://www.googleapis.com/auth/webmasters.readonly"],
+      });
+      const authClient = await auth.getClient();
+      google.options({ auth: authClient as any });
 
-    const rows = response.data.rows || [];
-    
-    return rows.map(row => ({
-      query: row.keys?.[0] || "unknown",
-      clicks: row.clicks || 0,
-      impressions: row.impressions || 0,
-      ctr: (row.ctr || 0) * 100, // Convert to percentage
-      position: row.position || 0,
-    }));
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - input.days);
+      
+      const response = await searchconsole.searchanalytics.query({
+        siteUrl: input.siteUrl,
+        requestBody: {
+          startDate: startDate.toISOString().split("T")[0],
+          endDate: new Date().toISOString().split("T")[0],
+          dimensions: ["query"],
+          rowLimit: 25,
+        },
+      });
+
+      const rows = response.data.rows || [];
+      
+      return rows.map(row => ({
+        query: row.keys?.[0] || "unknown",
+        clicks: row.clicks || 0,
+        impressions: row.impressions || 0,
+        ctr: (row.ctr || 0) * 100, // Convert to percentage
+        position: row.position || 0,
+      }));
+    } catch (error) {
+      console.error('[GSC Tool] Error fetching search performance:', error);
+      throw new Error('Failed to fetch GSC data', { cause: error });
+    }
   }
 );

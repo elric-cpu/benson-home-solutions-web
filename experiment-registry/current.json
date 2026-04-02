@@ -1,0 +1,6 @@
+{
+  "status": "scaffold",
+  "owner": "experiment_ops",
+  "summary": "Placeholder active experiment registry.",
+  "experiments": []
+}

@@ -1,0 +1,23 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.chatEndpoint = exports.costEstimationEndpoint = exports.marketingContentEndpoint = exports.websiteMaintenanceEndpoint = exports.productionEndpoint = exports.departmentIdeationEndpoint = exports.setupGoogleApisEndpoint = exports.validateAddressEndpoint = exports.optimizeSiteEndpoint = exports.supportEndpoint = void 0;
+const https_1 = require("firebase-functions/https");
+const support_1 = require("./flows/support");
+const seo_1 = require("./flows/seo");
+const address_1 = require("./flows/address");
+const setup_1 = require("./flows/setup");
+const departments_1 = require("./flows/departments");
+const marketingContentFlow_1 = require("./flows/marketingContentFlow");
+const estimator_1 = require("./flows/estimator");
+const chat_1 = require("./flows/chat");
+exports.supportEndpoint = (0, https_1.onCallGenkit)(support_1.supportFlow);
+exports.optimizeSiteEndpoint = (0, https_1.onCallGenkit)(seo_1.optimizeSiteFlow);
+exports.validateAddressEndpoint = (0, https_1.onCallGenkit)(address_1.validateAddressFlow);
+exports.setupGoogleApisEndpoint = (0, https_1.onCallGenkit)(setup_1.setupGoogleApisFlow);
+exports.departmentIdeationEndpoint = (0, https_1.onCallGenkit)(departments_1.departmentIdeationFlow);
+exports.productionEndpoint = (0, https_1.onCallGenkit)(departments_1.productionFlow);
+exports.websiteMaintenanceEndpoint = (0, https_1.onCallGenkit)(departments_1.websiteMaintenanceFlow);
+exports.marketingContentEndpoint = (0, https_1.onCallGenkit)(marketingContentFlow_1.marketingContentFlow);
+exports.costEstimationEndpoint = (0, https_1.onCallGenkit)(estimator_1.costEstimationFlow);
+exports.chatEndpoint = (0, https_1.onCallGenkit)(chat_1.generalChatFlow);
+//# sourceMappingURL=index.js.map

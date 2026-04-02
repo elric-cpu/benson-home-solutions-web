@@ -2,10 +2,20 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
 
-const connectionString = process.env.DATABASE_URL!;
+let client: ReturnType<typeof postgres> | null = null;
+let database: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
-// Create a postgres connection
-const client = postgres(connectionString, { prepare: false });
+export function getDb() {
+  if (database) {
+    return database;
+  }
 
-// Export the db instance
-export const db = drizzle(client, { schema });
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error('DATABASE_URL environment variable is required for database-backed routes.');
+  }
+
+  client = postgres(connectionString, { prepare: false });
+  database = drizzle(client, { schema });
+  return database;
+}

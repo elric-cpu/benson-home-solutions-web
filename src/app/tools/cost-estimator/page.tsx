@@ -1,9 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Container, Section, Button, Badge, Card } from '@/components/ui';
 import { Building2, Calendar, ShieldAlert, FileText, PieChart, Info, Download } from 'lucide-react';
 import { BUSINESS } from '@/lib/constants';
+
+type EstimatorBreakdownItem = {
+  item: string;
+  cost_estimate: string;
+};
+
+type EstimatorResponse = {
+  estimated_range?: {
+    min: number;
+    max: number;
+  };
+  breakdown?: EstimatorBreakdownItem[];
+  caveats?: string[];
+  disclaimer?: string;
+};
 
 const assetCategories = [
   { name: 'Roofing Systems', life: 25, costPerSqFt: 12 },
@@ -16,23 +31,19 @@ const assetCategories = [
 export default function AssetLifecyclePlanner() {
   const [sqFt, setSqFt] = useState(5000);
   const [buildingAge, setBuildingAge] = useState(10);
-  const [annualBudget, setAnnualBudget] = useState(0);
-  const [totalLiability, setTotalLiability] = useState(0);
 
-  useEffect(() => {
-    // Basic calculation: Total cost to replace everything * % of life used
-    const totalReplacement = assetCategories.reduce((acc, cat) => acc + (cat.costPerSqFt * sqFt), 0);
-    const avgLife = assetCategories.reduce((acc, cat) => acc + cat.life, 0) / assetCategories.length;
-    
-    const lifeUsed = Math.min(1, buildingAge / avgLife);
-    const currentLiability = totalReplacement * lifeUsed;
-    
-    setTotalLiability(Math.round(currentLiability));
-    setAnnualBudget(Math.round(totalReplacement / avgLife));
-  }, [sqFt, buildingAge]);
+  // Basic calculation: Total cost to replace everything * % of life used
+  const totalReplacement = assetCategories.reduce((acc, cat) => acc + (cat.costPerSqFt * sqFt), 0);
+  const avgLife = assetCategories.reduce((acc, cat) => acc + cat.life, 0) / assetCategories.length;
+  
+  const lifeUsed = Math.min(1, buildingAge / avgLife);
+  const currentLiability = totalReplacement * lifeUsed;
+  
+  const totalLiability = Math.round(currentLiability);
+  const annualBudget = Math.round(totalReplacement / avgLife);
 
   return (
-    <main>
+    <>
       <Section variant="charcoal" spacing="lg">
         <Container className="text-center">
           <Badge className="mb-6 bg-cream/10 text-cream border-cream/20 px-4 py-1.5 uppercase tracking-widest font-black">
@@ -72,10 +83,11 @@ export default function AssetLifecyclePlanner() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-4">
+                    <label htmlFor="building-age-range" className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-4">
                       Average Building/System Age: {buildingAge} Years
                     </label>
                     <input
+                      id="building-age-range"
                       type="range"
                       min="0"
                       max="50"
@@ -155,13 +167,105 @@ export default function AssetLifecyclePlanner() {
 
       <Section variant="cream">
         <Container>
+          <div className="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-xl border border-oxblood/10 mb-16">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-black uppercase tracking-tight text-oxblood">AI Custom Project Estimator</h2>
+              <p className="text-slate font-medium mt-2">Describe your specific project and get a realistic cost breakdown based on local Mid-Valley data.</p>
+            </div>
+            <form 
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const project_type = (form.elements.namedItem('project_type') as HTMLSelectElement).value;
+                const details = (form.elements.namedItem('details') as HTMLTextAreaElement).value;
+                
+                const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+                const originalText = btn.innerText;
+                btn.innerText = 'Calculating...';
+                btn.disabled = true;
+
+                try {
+                  const res = await fetch('/api/estimator', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ project_type, details })
+                  });
+                  const data = (await res.json()) as EstimatorResponse;
+                  
+                  const resultsDiv = document.getElementById('ai-estimator-results');
+                  if (resultsDiv && data.estimated_range) {
+                    resultsDiv.classList.remove('hidden');
+                    resultsDiv.innerHTML = `
+                      <div class="mt-8 p-6 bg-cream/30 rounded-2xl border border-oxblood/10">
+                        <div class="text-center mb-6">
+                          <div class="text-sm font-black uppercase tracking-widest text-oxblood/60 mb-1">Estimated Range</div>
+                          <div class="text-4xl font-black italic text-oxblood">$${data.estimated_range.min.toLocaleString()} - $${data.estimated_range.max.toLocaleString()}</div>
+                        </div>
+                        <div class="space-y-3 mb-6">
+                          ${(data.breakdown || []).map((b) => `
+                            <div class="flex justify-between border-b border-oxblood/5 pb-2">
+                              <span class="font-bold text-slate">${b.item}</span>
+                              <span class="text-oxblood font-bold">${b.cost_estimate}</span>
+                            </div>
+                          `).join('')}
+                        </div>
+                        <div class="text-xs text-slate/70 mb-4">
+                          <strong class="uppercase tracking-widest">Caveats:</strong> ${(data.caveats || []).join(' ')}
+                        </div>
+                        <div class="text-[10px] text-oxblood/50 uppercase tracking-widest text-center">${data.disclaimer || ''}</div>
+                      </div>
+                    `;
+                  }
+                } catch (error) {
+                  console.error(error);
+                } finally {
+                  btn.innerText = originalText;
+                  btn.disabled = false;
+                }
+              }}
+              className="space-y-6"
+            >
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-black uppercase tracking-widest text-oxblood mb-2">Project Type</label>
+                  <select name="project_type" required className="w-full p-4 rounded-xl border border-oxblood/20 bg-cream/10 focus:outline-none focus:ring-2 focus:ring-oxblood/30 font-medium">
+                    <option value="">Select Project Type...</option>
+                    <option value="Roof Replacement">Roof Replacement</option>
+                    <option value="Kitchen Remodel">Kitchen Remodel</option>
+                    <option value="Bathroom Remodel">Bathroom Remodel</option>
+                    <option value="Siding Replacement">Siding Replacement</option>
+                    <option value="Water Damage Restoration">Water Damage Restoration</option>
+                    <option value="Commercial Maintenance">Commercial Maintenance</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-black uppercase tracking-widest text-oxblood mb-2">Square Footage / Scope</label>
+                  <input type="text" name="details" required placeholder="e.g. 2000 sq ft home, asphalt shingles..." className="w-full p-4 rounded-xl border border-oxblood/20 bg-cream/10 focus:outline-none focus:ring-2 focus:ring-oxblood/30 font-medium" />
+                </div>
+              </div>
+              <Button type="submit" className="w-full py-6 font-black uppercase tracking-widest text-lg">
+                Generate Custom Estimate
+              </Button>
+            </form>
+            <div id="ai-estimator-results" className="hidden"></div>
+          </div>
+
           <div className="max-w-3xl mx-auto text-center">
             <Info className="w-12 h-12 text-oxblood/20 mx-auto mb-6" />
-            <h3 className="text-3xl font-black uppercase tracking-tight text-oxblood mb-6">Stop Guessing. Start Budgeting.</h3>
-            <p className="text-slate font-medium leading-relaxed mb-8">
-              Commercial and non-profit boards are often surprised by multi-million dollar failures that could have been identified years in advance. 
-              <strong> Benson Home Solutions</strong> provides the forensic data you need to move from reactive crisis management to strategic asset stewardship.
+            <h2 className="text-3xl font-black uppercase tracking-tight text-oxblood mb-6">Stop Guessing. Start Budgeting.</h2>
+            <p className="text-slate font-medium leading-relaxed mb-8 text-left">
+              Commercial and non-profit boards in the Mid-Willamette Valley are often surprised by multi-million dollar failures that could have been identified years in advance. 
+              <strong> Benson Home Solutions</strong> provides the diagnostic data you need to move from reactive crisis management to strategic asset stewardship.
             </p>
+            <div className="text-left space-y-4 mb-10">
+              <h3 className="text-xl font-bold text-oxblood uppercase tracking-tight">The Importance of Capital Expenditure Planning</h3>
+              <p className="text-slate font-medium leading-relaxed">
+                Whether you manage a sprawling church campus in Keizer or a mid-sized commercial facility in Albany, predicting when major systems will fail is crucial. Roofs, HVAC units, siding, and plumbing systems all have finite lifespans. Our Capital Cost Estimator helps you visualize your hidden maintenance liability based on the square footage and average age of your building&apos;s systems. 
+              </p>
+              <p className="text-slate font-medium leading-relaxed">
+                By understanding your total replacement cost and factoring in the percentage of life used, your committee can accurately set annual reserve budgets. Deferring these costs doesn&apos;t make them disappear; it simply guarantees that when a failure occurs, it will happen as an emergency, drastically increasing the repair cost. Using data-driven lifecycle planning empowers you to schedule replacements during the off-season, secure competitive bids, and avoid business interruption.
+              </p>
+            </div>
             <div className="bg-oxblood text-cream p-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="text-left">
                 <div className="text-xs font-black uppercase tracking-widest opacity-60">Emergency Priority</div>
@@ -174,6 +278,6 @@ export default function AssetLifecyclePlanner() {
           </div>
         </Container>
       </Section>
-    </main>
+    </>
   );
 }

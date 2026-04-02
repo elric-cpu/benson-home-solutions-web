@@ -9,20 +9,20 @@ import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'Maintenance Subscriptions | Proactive Property Care Oregon',
   description:
-    'Licensed home, commercial, and church maintenance programs. Monthly forensic audits, defined SLAs, and board-ready documentation. Benson Home Solutions serving Salem, Albany, and Burns.',
+    'Licensed home, commercial, and church maintenance programs. Monthly comprehensive audits, defined SLAs, and board-ready documentation. Benson Home Solutions serving Salem, Albany, and Burns.',
   keywords: [
     'home maintenance subscription Oregon',
     'commercial property maintenance Salem',
     'church facility maintenance Oregon',
     'proactive property care',
-    'forensic home audit',
+    'diagnostic home audit',
     'Benson Home Solutions maintenance',
   ],
 };
 
 export default function MaintenanceSubscriptionsPage() {
   return (
-    <main>
+    <>
       {/* Hero Section */}
       <Section variant="oxblood" spacing="lg">
         <Container className="text-center">
@@ -34,7 +34,7 @@ export default function MaintenanceSubscriptionsPage() {
             <span className="italic opacity-60">Not Just Repair.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
-            Standard property management is reactive. Benson Home Solutions is forensic. Our subscription programs provide the board-ready documentation and monthly oversight required to preserve your asset&apos;s value.
+            Standard property management is reactive. Benson Home Solutions is diagnostic. Our subscription programs provide the board-ready documentation and monthly oversight required to preserve your asset&apos;s value.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link href="/contact">
@@ -56,7 +56,7 @@ export default function MaintenanceSubscriptionsPage() {
               </div>
               <h3 className="text-2xl font-black mb-4 uppercase tracking-tight text-oxblood">Board-Ready Data</h3>
               <p className="text-slate font-medium leading-relaxed">
-                Every visit generates a forensic digital report. Track moisture levels, building envelope integrity, and asset lifecycle in real-time.
+                Every visit generates a diagnostic digital report. Track moisture levels, building envelope integrity, and asset lifecycle in real-time.
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
@@ -109,7 +109,7 @@ export default function MaintenanceSubscriptionsPage() {
               <CardContent className="pt-8 flex-1">
                 <ul className="space-y-4 mb-10">
                   {[
-                    'Monthly Forensic Moisture Audits',
+                    'Monthly Diagnostic Moisture Audits',
                     'Gutter & Drainage Maintenance',
                     'Annual HVAC/Plumbing Systems Audit',
                     'Window & Door Seal Inspection',
@@ -274,6 +274,6 @@ export default function MaintenanceSubscriptionsPage() {
 
       {/* FAQ Section */}
       <FAQSection />
-    </main>
+    </>
   );
 }

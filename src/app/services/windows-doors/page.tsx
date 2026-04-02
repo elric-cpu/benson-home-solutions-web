@@ -5,14 +5,14 @@ import { FAQSection } from '@/components/content/FAQSection';
 import { ShieldCheck, Thermometer, Wind } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Windows & Doors | Forensic Installation Oregon',
+  title: 'Windows & Doors | Diagnostic Installation Oregon',
   description:
     'Expert window and door replacement in Salem and Albany. We focus on building envelope integrity and thermal efficiency to prevent PNW moisture intrusion. CCB #258533.',
 };
 
 export default function WindowsDoorsPage() {
   return (
-    <main>
+    <>
       <Section variant="oxblood" spacing="lg">
         <Container className="text-center">
           <Badge className="mb-6 bg-cream/10 text-cream border-cream/20 px-4 py-1.5 uppercase tracking-widest font-black">
@@ -23,7 +23,7 @@ export default function WindowsDoorsPage() {
             <span className="italic opacity-60">Vulnerability.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
-            Windows and doors are the most common points of building envelope failure. We provide forensic-level installations that stop moisture and keep the heat where it belongs.
+            Windows and doors are the most common points of building envelope failure. We provide diagnostic-level installations that stop moisture and keep the heat where it belongs.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link href="/contact?service=windows">
@@ -51,7 +51,7 @@ export default function WindowsDoorsPage() {
               <div className="mb-6 p-4 bg-oxblood/5 rounded-2xl">
                 <ShieldCheck className="w-10 h-10 text-oxblood" />
               </div>
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Forensic Flashing</h3>
+              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Diagnostic Flashing</h3>
               <p className="text-slate font-medium leading-relaxed">
                 It&apos;s not about the window; it&apos;s about the hole. We apply precision flashing and moisture barriers that exceed standard building codes.
               </p>
@@ -70,6 +70,6 @@ export default function WindowsDoorsPage() {
       </Section>
 
       <FAQSection />
-    </main>
+    </>
   );
 }

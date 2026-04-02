@@ -30,6 +30,17 @@ export const metadata: Metadata = {
     url: 'https://bensonhomesolutions.com',
     title: 'Benson Home Solutions | Licensed Oregon Contractor',
     description: 'Licensed, bonded, and insured Oregon contractor serving the Mid-Willamette Valley and Harney County.',
+    images: [
+      {
+        url: '/images/generated/hero-exterior.png',
+        width: 1200,
+        height: 630,
+        alt: 'Benson Home Solutions - Professional Oregon Contractor',
+      },
+    ],
+  },
+  alternates: {
+    canonical: 'https://bensonhomesolutions.com',
   },
   robots: {
     index: true,
@@ -92,13 +103,11 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={sourceSans3.variable}>
-      <head>
+      <body className="min-h-screen flex flex-col antialiased bg-cream text-charcoal">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-      </head>
-      <body className="min-h-screen flex flex-col antialiased bg-cream text-charcoal">
         <a href="#main-content" className="skip-nav">
           Skip to main content
         </a>

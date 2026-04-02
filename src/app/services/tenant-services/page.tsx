@@ -7,12 +7,12 @@ import { FileText, Zap, Users } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Tenant Improvement & Services | Benson Home Solutions',
   description:
-    'Board-ready tenant improvements and facility services for Oregon commercial assets. Fast-track forensic maintenance and professional oversight. CCB #258533.',
+    'Board-ready tenant improvements and facility services for Oregon commercial assets. Fast-track proactive maintenance and professional oversight. CCB #258533.',
 };
 
 export default function TenantServicesPage() {
   return (
-    <main>
+    <>
       <Section variant="oxblood" spacing="lg">
         <Container className="text-center">
           <Badge className="mb-6 bg-cream/10 text-cream border-cream/20 px-4 py-1.5 uppercase tracking-widest font-black">
@@ -23,7 +23,7 @@ export default function TenantServicesPage() {
             <span className="italic opacity-60">Asset Value.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
-            From rapid tenant turns to complex forensic build-outs, Benson Home Solutions provides the professional documentation and precision execution that commercial boards demand.
+            From rapid tenant turns to complex diagnostic build-outs, Benson Home Solutions provides the professional documentation and precision execution that commercial boards demand.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link href="/services/maintenance-subscriptions">
@@ -44,7 +44,7 @@ export default function TenantServicesPage() {
               </div>
               <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Fast-Track Turns</h3>
               <p className="text-slate font-medium leading-relaxed">
-                Minimize vacancy time. We provide efficient, forensic-quality tenant turns designed to get your unit back on the market in peak condition.
+                Minimize vacancy time. We provide efficient, diagnostic-quality tenant turns designed to get your unit back on the market in peak condition.
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
@@ -53,7 +53,7 @@ export default function TenantServicesPage() {
               </div>
               <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Board Reporting</h3>
               <p className="text-slate font-medium leading-relaxed">
-                Total transparency. Every project includes board-ready digital documentation with forensic photo verification of all work performed.
+                Total transparency. Every project includes board-ready digital documentation with diagnostic photo verification of all work performed.
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
@@ -70,6 +70,6 @@ export default function TenantServicesPage() {
       </Section>
 
       <FAQSection />
-    </main>
+    </>
   );
 }

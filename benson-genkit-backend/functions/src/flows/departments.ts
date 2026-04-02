@@ -1,169 +1,80 @@
-import { genkit, z } from "genkit";
-import { gemini15Flash, gemini15Pro } from "@genkit-ai/googleai";
-import { onFlow, noAuth } from "@genkit-ai/firebase/functions";
-
-const ai = genkit({});
-
-const IdeaSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  agentPersona: z.string()
-});
-
-const ManagerDecisionSchema = z.object({
-  decisions: z.array(z.object({
-    ideaTitle: z.string(),
-    status: z.enum(["YAY", "NAY"]),
-    reason: z.string()
-  }))
-});
+import { ai } from "../genkit-config";
+import { z } from "genkit";
 
 const DEPARTMENT_PROMPTS = {
   marketing: {
     agents: [
-      { name: "The Aggressive Closer", prompt: "You are 'The Aggressive Closer'. Focus on outbound sales, urgency, hard sells, D-T-D scripts, and direct response emails. You want immediate ROI and bookings." },
-      { name: "The Storyteller", prompt: "You are 'The Storyteller'. Focus on building long-term trust, narrative-driven video scripts, and emotional community radio ads." },
-      { name: "The Contrarian", prompt: "You are 'The Contrarian'. Pitch disruptive ideas that go against industry norms. Stand out by doing the exact opposite of what competitors do." }
+      { name: "Content Planner", prompt: "Create a 30-day content calendar for home maintenance tips." },
+      { name: "SEO Optimizer", prompt: "Suggest keyword clusters for Harney County drainage issues." }
     ],
-    manager: "You are 'The ROI Enforcer'. You manage the Marketing department. You critique ideas purely on expected cost vs. return. Say 'YAY' only to data-backed, high-probability campaigns. Be ruthless."
+    manager: "Marketing Director"
   },
   branding: {
     agents: [
-      { name: "The Purist", prompt: "You are 'The Purist'. Protect the maroon/cream palette, the authoritative voice of Elric Benson, and the 'maintenance-first' philosophy. Reject cheap trends." },
-      { name: "The Trend Chaser", prompt: "You are 'The Trend Chaser'. Adapt the brand to modern social media trends, viral formats, and high-engagement tactics." },
-      { name: "The Local Patriot", prompt: "You are 'The Local Patriot'. Focus entirely on hyper-local Harney County and Willamette Valley references and community pride. Make it feel like a neighbor." }
+      { name: "Voice Auditor", prompt: "Review these posts for 'corporate fluff' and replace with Elric's voice." },
     ],
-    manager: "You are 'The Brand Guardian'. You manage the Branding department. Ensure nothing dilutes the core message. Say 'NAY' to anything too risky, off-brand, or generic."
+    manager: "Brand Manager"
   },
   leadGen: {
     agents: [
-      { name: "The Hook Master", prompt: "You are 'The Hook Master'. Focus on ethical clickbait, irresistible lead magnets, and calculators (like the True Cost of Homeownership)." },
-      { name: "The Optimizer", prompt: "You are 'The Optimizer'. Focus on A/B testing, micro-copy, removing friction from forms, and CRO." },
-      { name: "The Nurturer", prompt: "You are 'The Nurturer'. Focus on the 30-day email follow-up sequence, value-add content, and keeping cold leads warm." }
+      { name: "Funnel Strategist", prompt: "Optimize the Rot Risk Simulator for higher conversion." }
     ],
-    manager: "You are 'The Conversion Czar'. You manage Lead Gen. Approve only if the path to a booked appointment is crystal clear. You hate vanity metrics."
+    manager: "Growth Lead"
   }
 };
 
-export const departmentIdeationFlow = onFlow(
-  ai,
+const DepartmentIdeationInputSchema = z.object({
+  department: z.enum(["marketing", "branding", "leadGen"]),
+  goal: z.string(),
+});
+
+export const departmentIdeationFlow = ai.defineFlow(
   {
     name: "departmentIdeationFlow",
-    inputSchema: z.object({
-      department: z.enum(["marketing", "branding", "leadGen"]),
-      goal: z.string()
-    }),
-    outputSchema: ManagerDecisionSchema,
-    authPolicy: noAuth(),
+    inputSchema: DepartmentIdeationInputSchema,
+    outputSchema: z.array(z.string()),
   },
   async ({ department, goal }) => {
-    const deptConfig = DEPARTMENT_PROMPTS[department];
-    
-    // Step 1: Idea Generation by 3 Agents (Run in parallel)
-    const agentPromises = deptConfig.agents.map(async (agent) => {
+    const config = DEPARTMENT_PROMPTS[department];
+    const results: string[] = [];
+
+    for (const agent of config.agents) {
       const response = await ai.generate({
-        model: gemini15Flash,
-        prompt: `
-          ${agent.prompt}
-          
-          Our Current Goal: ${goal}
-          
-          Generate 2 distinct ideas to achieve this goal. Ensure they align with your specific persona.
-          Output exactly a JSON array of objects with keys: "title", "description", "agentPersona".
-          Set "agentPersona" to "${agent.name}".
-        `,
-        output: { schema: z.array(IdeaSchema) }
+        prompt: `Department: ${department}. Goal: ${goal}. Agent ${agent.name} Task: ${agent.prompt}`,
       });
-      return response.output;
-    });
-    
-    const nestedIdeas = await Promise.all(agentPromises);
-    const allIdeas = nestedIdeas.flat();
-    
-    if (!allIdeas || allIdeas.length === 0) {
-      throw new Error("Failed to generate ideas.");
+      results.push(`${agent.name}: ${response.text}`);
     }
 
-    // Step 2: Debate & Manager Review
-    const managerResponse = await ai.generate({
-      model: gemini15Pro,
-      prompt: `
-        ${deptConfig.manager}
-        
-        Our Goal: ${goal}
-        
-        Here are the ideas generated by your team:
-        ${JSON.stringify(allIdeas, null, 2)}
-        
-        Review each idea. Be highly critical. Provide your final 'YAY' or 'NAY' decision for each idea along with a harsh, argumentative reason.
-      `,
-      output: { schema: ManagerDecisionSchema }
-    });
-
-    if (!managerResponse.output) {
-      throw new Error("Failed to get manager decision.");
-    }
-
-    return managerResponse.output;
+    return results;
   }
 );
 
-export const productionFlow = onFlow(
-  ai,
+export const productionFlow = ai.defineFlow(
   {
     name: "productionFlow",
-    inputSchema: z.object({
-      ideaTitle: z.string(),
-      department: z.enum(["marketing", "branding", "leadGen"]),
-      description: z.string()
-    }),
+    inputSchema: z.object({ task: z.string() }),
     outputSchema: z.string(),
-    authPolicy: noAuth(),
   },
-  async ({ ideaTitle, department, description }) => {
-    // Generate final assets based on the approved idea
+  async ({ task }) => {
     const response = await ai.generate({
-      model: gemini15Pro,
-      prompt: `
-        You are the Head of Production for the ${department} department.
-        
-        The Manager has approved the following idea:
-        TITLE: ${ideaTitle}
-        DESCRIPTION: ${description}
-        
-        Execute on this idea. If it's an email, write the full HTML email. If it's a video, write the script. If it's a radio ad, write the copy. 
-        If it's a website update, output the exact Markdown changes needed.
-        
-        Output the final production-ready asset.
-      `,
+      prompt: `Production task for Benson Home Solutions: ${task}. 
+      Focus on specialized tools like interior concrete saws and expert diagnosis.`,
     });
-
     return response.text;
   }
 );
 
-export const websiteMaintenanceFlow = onFlow(
-  ai,
+export const websiteMaintenanceFlow = ai.defineFlow(
   {
     name: "websiteMaintenanceFlow",
-    inputSchema: z.string().optional(),
+    inputSchema: z.object({ issue: z.string() }),
     outputSchema: z.string(),
-    authPolicy: noAuth(),
   },
-  async () => {
-    // Autonomous website maintenance
+  async ({ issue }) => {
     const response = await ai.generate({
-      model: gemini15Pro,
-      prompt: `
-        You are the Autonomous Website Maintainer for Benson Home Solutions.
-        
-        Analyze our current state (simulate pulling from GSC and GA4 for this exercise) and generate 
-        a list of 3 high-impact updates needed on the site to improve Lead Generation or SEO.
-        
-        Output the recommended website updates.
-      `,
+      prompt: `Website issue for bensonhomesolutions.com: ${issue}. 
+      Ensure systems-age truth-telling and transparent pricing are preserved.`,
     });
-
     return response.text;
   }
 );

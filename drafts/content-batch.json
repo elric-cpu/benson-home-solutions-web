@@ -1,0 +1,23 @@
+{
+  "status": "simulation_generated",
+  "drafts": [
+    {
+      "id": "SIM-DRAFT-01",
+      "owner": "content_production",
+      "title": "Project proof batch: three case studies for the new gallery",
+      "depends_on": [
+        "SIM-06"
+      ],
+      "state": "blocked_on_source_material"
+    },
+    {
+      "id": "SIM-DRAFT-02",
+      "owner": "content_production",
+      "title": "Calculator IA consolidation copy pack",
+      "depends_on": [
+        "SIM-05"
+      ],
+      "state": "ready_for_brief"
+    }
+  ]
+}

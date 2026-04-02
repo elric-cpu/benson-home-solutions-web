@@ -1,27 +1,17 @@
-import { genkit, z } from "genkit";
-import { gemini15Flash } from "@genkit-ai/googleai";
-import { onFlow, noAuth } from "@genkit-ai/firebase/functions";
-import { getPricingTool, checkServiceAreaTool } from "../tools";
+import { ai } from "../genkit-config";
+import { z } from "genkit";
 
-const ai = genkit({});
-
-export const supportFlow = onFlow(
-  ai,
+export const supportFlow = ai.defineFlow(
   {
-    name: "supportAgent",
-    inputSchema: z.string(),
-    outputSchema: z.string(),
-    authPolicy: noAuth(),
+    name: "supportFlow",
+    inputSchema: z.string().describe("The user's support query"),
+    outputSchema: z.string().describe("The support agent's response"),
   },
   async (query) => {
     const response = await ai.generate({
-      model: gemini15Flash,
-      prompt: `You are a helpful customer support agent for Benson Home Solutions. 
-      Answer the user's question using the provided tools for pricing and service areas.
-      If you don't know the answer, ask them to contact support.
-      
-      User query: ${query}`,
-      tools: [getPricingTool, checkServiceAreaTool],
+      prompt: `You are a helpful support agent for Benson Home Solutions (CCB #258533). 
+      The owner is Elric Benson. 
+      Answer this query professionally: ${query}`,
     });
 
     return response.text;

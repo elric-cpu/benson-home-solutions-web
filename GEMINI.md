@@ -16,6 +16,7 @@ You are an elite SEO, AEO (Answer Engine Optimization), and GEO (Generative Engi
 4. **Iterate:** Monitor GSC for "Impressions" shifts after updates.
 
 ## Gemini Added Memories
+- **CRITICAL VOICE REQUIREMENT:** Before generating, modifying, or reviewing ANY client-facing copy, you MUST read `docs/BRAND_VOICE.md`. The tone is strict: maintenance specialists, systems-age focus, transparent pricing/margins, and phone/text-first UX. No corporate fluff, no "commitment to excellence".
 - **Skill Suite:** 26 specialized skills installed for SEO, CRO, Next.js best practices, and marketing psychology.
 - **Self-Improving Agent:** Active hooks in `.gemini/settings.json` allow the agent to learn from all tool uses.
 - **Branch Strategy:** Work on `sprint-1/phase-2` for full feature parity with the live site.

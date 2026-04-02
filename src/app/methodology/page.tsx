@@ -3,15 +3,15 @@ import { Container, Section, Badge } from '@/components/ui';
 import { Microscope, ClipboardCheck, Zap, ShieldCheck, Ruler, Droplets } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Our Methodology | Forensic Property Care',
+  title: 'Diagnostic Methodology',
   description:
-    'The Benson Home Solutions methodology: Forensic auditing, data-backed reporting, and precision building science. Learn how we protect Oregon assets. CCB #258533.',
+    'The Benson Home Solutions methodology: Comprehensive Auditing, data-backed reporting, and precision building science. Learn how we use advanced diagnostics to protect residential and commercial assets in Oregon.',
 };
 
 export default function MethodologyPage() {
   const steps = [
     {
-      title: 'Forensic Audit',
+      title: 'Comprehensive Audit',
       desc: 'We use moisture meters, thermal imaging, and acoustic sensors to map the hidden state of your property.',
       icon: Microscope,
     },
@@ -27,13 +27,13 @@ export default function MethodologyPage() {
     },
     {
       title: 'Precision Execution',
-      desc: 'Our licensed team applies forensic-level repairs designed to eliminate the root cause of failure.',
+      desc: 'Our licensed team applies diagnostic-level repairs designed to eliminate the root cause of failure.',
       icon: Zap,
     },
   ];
 
   return (
-    <main>
+    <>
       <Section variant="oxblood" spacing="lg">
         <Container className="text-center">
           <Badge className="mb-6 bg-cream/10 text-cream border-cream/20 px-4 py-1.5 uppercase tracking-widest font-black">
@@ -44,7 +44,7 @@ export default function MethodologyPage() {
             <span className="italic opacity-60">Guesswork.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
-            Traditional contracting relies on visual assumptions. Benson Home Solutions relies on data. Our forensic methodology ensures that we fix the cause, not just the symptom.
+            Traditional contracting relies on visual assumptions. Benson Home Solutions relies on data. Our diagnostic methodology ensures that we fix the cause, not just the symptom.
           </p>
         </Container>
       </Section>
@@ -70,14 +70,14 @@ export default function MethodologyPage() {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
               <h2 className="text-4xl font-black uppercase tracking-tight text-oxblood leading-tight">
-                Why We Are <br />Forensic.
+                Why We Are <br />Diagnostic.
               </h2>
               <div className="p-8 bg-surface rounded-2xl border border-oxblood/10 shadow-xl">
                 <h4 className="flex items-center gap-2 font-black text-oxblood uppercase tracking-widest text-sm mb-4">
                   <Droplets className="w-4 h-4" /> Capillary Action
                 </h4>
                 <p className="text-slate font-medium text-sm">
-                  Oregon rain doesn&apos;t just hit a wall; it climbs. Without forensic detection, moisture trapped behind siding via capillary action goes unnoticed until structural rot occurs.
+                  Oregon rain doesn&apos;t just hit a wall; it climbs. Without diagnostic detection, moisture trapped behind siding via capillary action goes unnoticed until structural rot occurs.
                 </p>
               </div>
               <div className="p-8 bg-surface rounded-2xl border border-oxblood/10 shadow-xl">
@@ -96,13 +96,13 @@ export default function MethodologyPage() {
               </p>
               <ul className="space-y-4 font-bold uppercase tracking-widest text-xs">
                 <li className="flex items-center gap-3"><ShieldCheck className="w-4 h-4 text-cream/40" /> CCB Licensed #258533</li>
-                <li className="flex items-center gap-3"><ShieldCheck className="w-4 h-4 text-cream/40" /> Forensic Moisture Certified</li>
+                <li className="flex items-center gap-3"><ShieldCheck className="w-4 h-4 text-cream/40" /> Diagnostic Moisture Certified</li>
                 <li className="flex items-center gap-3"><ShieldCheck className="w-4 h-4 text-cream/40" /> Board-Ready Reporting</li>
               </ul>
             </div>
           </div>
         </Container>
       </Section>
-    </main>
+    </>
   );
 }

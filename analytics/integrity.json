@@ -1,0 +1,12 @@
+{
+  "run_id": "simulation-2026-04-01-analytics",
+  "owner": "analytics_experimentation",
+  "timestamp": "2026-04-01T00:00:00Z",
+  "status": "warn",
+  "summary": "The office can rank work manually, but analytics-driven prioritization is not trustworthy enough for autonomous decisioning.",
+  "findings": [
+    "analytics/raw-events.json is still a scaffold rather than a live event feed.",
+    "content prioritization is not derived from trusted measurement yet.",
+    "Release decisions currently depend on code inspection and build evidence rather than instrumentation."
+  ]
+}

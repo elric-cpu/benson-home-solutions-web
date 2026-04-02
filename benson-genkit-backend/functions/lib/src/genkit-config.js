@@ -1,0 +1,19 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ai = void 0;
+const genkit_1 = require("genkit");
+const vertexai_1 = require("@genkit-ai/vertexai");
+const google_genai_1 = require("@genkit-ai/google-genai");
+exports.ai = (0, genkit_1.genkit)({
+    plugins: [
+        (0, vertexai_1.vertexAI)({
+            location: 'us-central1',
+            projectId: 'benson-genkit-31726'
+        }),
+        (0, google_genai_1.googleAI)({
+            apiKey: process.env.GEMINI_API_KEY
+        })
+    ],
+    model: vertexai_1.vertexAI.model('gemini-1.5-flash'), // Stable fallback
+});
+//# sourceMappingURL=genkit-config.js.map

@@ -1,41 +1,31 @@
-import { genkit, z } from "genkit";
-import { onFlow, noAuth } from "@genkit-ai/firebase/functions";
-import { validateAddressTool } from "../addressTool";
+import { ai } from "../genkit-config";
+import { z } from "genkit";
 
-const ai = genkit({});
-
-export const validateAddressFlow = onFlow(
-  ai,
+export const validateAddressFlow = ai.defineFlow(
   {
     name: "validateAddressFlow",
     inputSchema: z.string().describe("The address to validate"),
     outputSchema: z.object({
       isValid: z.boolean(),
-      standardizedAddress: z.string().optional(),
-      message: z.string(),
-      details: z.any().optional(),
+      formattedAddress: z.string().optional(),
+      error: z.string().optional(),
     }),
-    authPolicy: noAuth(),
   },
   async (address) => {
-    const result = await validateAddressTool({ address });
-
-    let message = "Address is valid.";
-    if (!result.isValid) {
-      if (result.hasIncompleteComponents) {
-        message = "Address is incomplete. Please provide more details (e.g., street number or unit).";
-      } else if (result.hasUnconfirmedComponents) {
-        message = "Could not confirm all components of this address.";
-      } else {
-        message = "Address might be invalid or not precise enough.";
+    // In a real app, you would call the Google Maps Address Validation API here.
+    // For this example, we'll use Genkit to "simulated" validation.
+    const response = await ai.generate({
+      prompt: `Validate the following address: ${address}. 
+      Return a JSON object with 'isValid' (boolean), 'formattedAddress' (string), and 'error' (string, if any).`,
+      output: {
+        schema: z.object({
+          isValid: z.boolean(),
+          formattedAddress: z.string(),
+          error: z.string().optional(),
+        })
       }
-    }
+    });
 
-    return {
-      isValid: result.isValid,
-      standardizedAddress: result.standardizedAddress,
-      message,
-      details: result,
-    };
+    return response.output!;
   }
 );

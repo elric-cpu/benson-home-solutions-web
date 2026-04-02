@@ -6,12 +6,15 @@ This document provides a technical initialization guide for AI agents operating 
 *   **Root Directory**: `/home/elricenson/benson-home-solutions-web/`
 *   **System Mandates**:
     *   **Credential Protection**: Never log or commit secrets. Use `.env.example` as a template for environment variables.
-    *   **Technical Integrity**: Maintain the architectural patterns (Next.js App Router, Sanity CMS, Tailwind CSS).
+    *   **Technical Integrity**: Maintain the architectural patterns and the Google-first platform mandate.
+    *   **Google-First Platform Rule**: Use Google/Gemini-family models only for website AI, keep chatbot work in Google AI, and keep email/calendar/contacts/storage in Google Workspace and/or Google Cloud Storage.
+    *   **Credential Authority**: Production AI and Google service access must use the sanctioned GCloud JSON service account and/or Google Workspace-managed access.
     *   **Project Context**: Refer to `GEMINI.md` and `.gemini/AGENTS.md` for role-specific mandates.
 
 ## 2. Dependency Graph
 *   **Frontend**: Next.js, React, Lucide (icons), Framer Motion (animations).
-*   **Data Layer**: Drizzle ORM (PostgreSQL via Supabase), Sanity Client (CMS).
+*   **Data Layer**: Drizzle ORM, CMS client integrations, and Google Workspace/Google Cloud-connected services.
+*   **AI Layer**: Google AI / Gemini-family runtimes and Google-authenticated backend services.
 *   **SEO**: Custom JSON-LD components, `next-sitemap`.
 *   **Validation**: Playwright (E2E), ESLint, Prettier.
 

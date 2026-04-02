@@ -1,0 +1,11 @@
+{
+  "status": "simulation_generated",
+  "headline": "Release hold: platform and QA veto remain active after workspace simulation.",
+  "top_items": [
+    "SIM-01",
+    "SIM-02",
+    "SIM-03",
+    "SIM-04"
+  ],
+  "decision": "hold"
+}

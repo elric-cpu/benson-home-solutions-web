@@ -1,44 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setupGoogleApisFlow = void 0;
+const genkit_config_1 = require("../genkit-config");
 const genkit_1 = require("genkit");
-const functions_1 = require("@genkit-ai/firebase/functions");
-const googleapis_1 = require("googleapis");
-const ai = (0, genkit_1.genkit)({});
-const serviceusage = googleapis_1.google.serviceusage("v1");
-exports.setupGoogleApisFlow = (0, functions_1.onFlow)(ai, {
+exports.setupGoogleApisFlow = genkit_config_1.ai.defineFlow({
     name: "setupGoogleApisFlow",
-    inputSchema: genkit_1.z.void(),
+    inputSchema: genkit_1.z.string().describe("Project ID to set up"),
     outputSchema: genkit_1.z.object({
         status: genkit_1.z.string(),
-        enabledServices: genkit_1.z.array(genkit_1.z.string()),
+        details: genkit_1.z.string(),
     }),
-    authPolicy: (0, functions_1.noAuth)(),
-}, async () => {
-    const auth = new googleapis_1.google.auth.GoogleAuth({
-        scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+}, async (projectId) => {
+    const response = await genkit_config_1.ai.generate({
+        prompt: `Outline a plan to set up Google Search Console and Vertex AI for project: ${projectId}. 
+      Mention authentication needs and service account roles.`,
+        output: {
+            schema: genkit_1.z.object({
+                status: genkit_1.z.string(),
+                details: genkit_1.z.string(),
+            })
+        }
     });
-    const authClient = await auth.getClient();
-    googleapis_1.google.options({ auth: authClient });
-    const projectId = await auth.getProjectId();
-    const servicesToEnable = [
-        "addressvalidation.googleapis.com",
-        "searchconsole.googleapis.com",
-        "maps-backend.googleapis.com",
-        "geocoding-backend.googleapis.com",
-        "aiplatform.googleapis.com",
-    ];
-    const enabledServices = [];
-    for (const service of servicesToEnable) {
-        console.log(`Checking/Enabling service: ${service}`);
-        await serviceusage.services.enable({
-            name: `projects/${projectId}/services/${service}`,
-        });
-        enabledServices.push(service);
-    }
-    return {
-        status: "All required Google APIs have been verified/enabled.",
-        enabledServices,
-    };
+    return response.output;
 });
 //# sourceMappingURL=setup.js.map

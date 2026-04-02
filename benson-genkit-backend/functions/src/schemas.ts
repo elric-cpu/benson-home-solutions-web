@@ -12,3 +12,27 @@ export const QuoteRequestSchema = z.object({
   squareFootage: z.number().optional().describe("Approximate square footage for the project"),
   urgency: z.enum(["low", "medium", "high", "emergency"]).describe("How urgent the request is"),
 });
+
+export const CostEstimationSchema = z.object({
+  estimated_range: z.object({
+    min: z.number(),
+    max: z.number(),
+    currency: z.string().default("USD"),
+  }),
+  breakdown: z.array(
+    z.object({
+      item: z.string(),
+      cost_estimate: z.string(),
+    })
+  ),
+  caveats: z.array(z.string()),
+  disclaimer: z.string().describe("Standard CCB #258533 disclaimer"),
+});
+
+export const ChatInputSchema = z.object({
+  message: z.string().describe("User's query for Gus the AI assistant"),
+  history: z.array(z.object({
+    role: z.enum(["user", "model"]),
+    text: z.string(),
+  })).optional(),
+});

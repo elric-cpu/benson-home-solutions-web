@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Container, Section, Button, Badge, Card } from '@/components/ui';
 import { AlertTriangle, Droplets, TrendingUp, ShieldCheck, Share2 } from 'lucide-react';
@@ -23,25 +23,18 @@ export default function RotRiskSimulator() {
   const [yearsDeferred, setYearsDeferred] = useState(0);
   const [siding, setSiding] = useState(sidingTypes[0]);
   const [location, setLocation] = useState(locations[0]);
-  const [repairCost, setRepairCost] = useState(150);
-  const [restorationCost, setRestorationCost] = useState(1500);
 
-  useEffect(() => {
-    // Base cost $150/yr for maintenance
-    const baseMaint = 150 * (yearsDeferred || 1);
-    
-    // Exponential restoration cost: 1500 * (1.5 ^ years) * risk_multiplier
-    const mult = location.rainfall > 40 ? 1.8 : 1.3;
-    const baseRest = 1500 * Math.pow(mult, yearsDeferred) * siding.risk;
-    
-    setRepairCost(Math.round(baseMaint));
-    setRestorationCost(Math.round(baseRest));
-  }, [yearsDeferred, siding, location]);
+  // Base cost $150/yr for maintenance
+  const repairCost = Math.round(150 * (yearsDeferred || 1));
+  
+  // Exponential restoration cost: 1500 * (1.5 ^ years) * risk_multiplier
+  const mult = location.rainfall > 40 ? 1.8 : 1.3;
+  const restorationCost = Math.round(1500 * Math.pow(mult, yearsDeferred) * siding.risk);
 
   const riskScore = Math.min(100, Math.round((yearsDeferred * 15) * siding.risk * (location.rainfall / 30)));
 
   return (
-    <main>
+    <>
       <Section variant="cream" spacing="lg">
         <Container className="text-center">
           <Badge variant="secondary" className="mb-6 uppercase tracking-widest font-black border-oxblood/30 text-oxblood px-4 py-1.5">
@@ -65,10 +58,11 @@ export default function RotRiskSimulator() {
               
               <div className="space-y-8">
                 <div>
-                  <label className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-4">
-                    Years since last forensic audit: {yearsDeferred}
+                  <label htmlFor="years-deferred" className="block text-sm font-black uppercase tracking-widest text-oxblood/60 mb-4">
+                    Years since last comprehensive audit: {yearsDeferred}
                   </label>
                   <input
+                    id="years-deferred"
                     type="range"
                     min="0"
                     max="10"
@@ -135,7 +129,7 @@ export default function RotRiskSimulator() {
                       ? "You're in the safe zone, but Oregon's rain is persistent. A monthly audit keeps your score at zero."
                       : riskScore < 60
                       ? "Significant risk detected. Moisture is likely trapped behind your building envelope right now."
-                      : "CRITICAL ALERT: Your property is likely sustaining active structural decay. Immediate forensic intervention required."
+                      : "CRITICAL ALERT: Your property is likely sustaining active structural decay. Immediate diagnostic intervention required."
                     }
                   </p>
                   <div className="flex gap-4">
@@ -144,7 +138,7 @@ export default function RotRiskSimulator() {
                         Request Audit
                       </Button>
                     </Link>
-                    <Button variant="outline" className="border-cream text-cream hover:bg-cream hover:text-oxblood">
+                    <Button variant="outline" aria-label="Share results" className="border-cream text-cream hover:bg-cream hover:text-oxblood">
                       <Share2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -175,24 +169,34 @@ export default function RotRiskSimulator() {
       
       <Section variant="cream">
         <Container size="narrow" className="text-center">
-          <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-6">Why This Matters</h3>
+          <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-6">Why Diagnostic Rot Monitoring Matters</h3>
+          <p className="text-slate font-medium leading-relaxed mb-6">
+            In the Pacific Northwest, particularly the Mid-Willamette Valley and Harney County, moisture isn&apos;t just a surface-level annoyance—it is a structural predator. Unlike arid climates where water evaporates quickly, our persistent rain cycles and high relative humidity create a &quot;wicking effect&quot; that pulls moisture deep into your home&apos;s framing. By the time you notice a soft spot on your siding or a stain on your interior drywall, the structural rot has often been progressing for months, if not years.
+          </p>
+          <p className="text-slate font-medium leading-relaxed mb-6">
+            Our Rot Risk Simulator is built on the reality of building science: for every dollar you defer in routine maintenance—like gutter cleaning, window seal checks, and flashing audits—you will eventually spend four dollars in reactive restoration. We call this the &quot;Reactive Repair Multiplier.&quot; In the humid Valley environment, mold can begin to colonize within 24 to 48 hours of a bulk water event, transforming a minor seal failure into a major environmental mitigation project. 
+          </p>
           <p className="text-slate font-medium leading-relaxed mb-8">
-            In Oregon, moisture doesn&apos;t just sit on the surface. It uses capillary action to pull itself into your framing. By the time you see a stain on your drywall, the structure is already compromised. 
-            <strong> Forensic maintenance identifies the moisture before the rot begins.</strong>
+            Benson Home Solutions uses comprehensive auditing technology, including infrared thermography and high-sensitivity moisture mapping, to detect these failures before they manifest as visible rot. Our monthly subscription plans are designed to stabilize your property&apos;s risk score, providing a continuous shield against the decay that devalues Oregon properties. Investing in proactive stewardship is the only way to transform your property from a depreciating asset into a secured, high-value investment.
           </p>
           <div className="inline-flex gap-8 items-center py-4 px-8 bg-oxblood/5 rounded-2xl border border-oxblood/10">
             <div className="text-left">
-              <div className="text-2xl font-black text-oxblood">3:1</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest opacity-60">Maintenance ROI</div>
+              <div className="text-2xl font-black text-oxblood">4:1</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest opacity-60">Restoration ROI</div>
             </div>
             <div className="w-px h-8 bg-oxblood/10" />
             <div className="text-left">
               <div className="text-2xl font-black text-oxblood">24hr</div>
               <div className="text-[10px] font-bold uppercase tracking-widest opacity-60">Mold Growth Window</div>
             </div>
+            <div className="w-px h-8 bg-oxblood/10" />
+            <div className="text-left">
+              <div className="text-2xl font-black text-oxblood">2.5s</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest opacity-60">Target Performance</div>
+            </div>
           </div>
         </Container>
       </Section>
-    </main>
+    </>
   );
 }

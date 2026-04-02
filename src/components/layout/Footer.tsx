@@ -20,9 +20,17 @@ const footerNav = {
   ],
   resources: [
     { name: 'FAQ', href: '/#faq' },
-    { name: 'Maintenance Tools', href: '/tools/cost-calculator' },
+    { name: 'True Cost Calculator', href: '/calculator' },
+    { name: 'Capital Cost Estimator', href: '/tools/cost-estimator' },
     { name: 'Areas We Serve', href: '/areas' },
-    { name: 'Emergency Service', href: '/emergency' },
+    { name: 'Privacy Policy', href: '/privacy' },
+  ],
+  areas: [
+    { name: 'Albany', href: '/areas/albany' },
+    { name: 'Salem', href: '/areas/salem' },
+    { name: 'Corvallis', href: '/areas/corvallis' },
+    { name: 'Burns', href: '/areas/burns' },
+    { name: 'Hines', href: '/areas/hines' },
   ],
 };
 
@@ -31,14 +39,14 @@ export function Footer() {
     <footer className="bg-charcoal text-cream/90">
       <Container>
         <div className="py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
             {/* Brand column */}
             <div className="lg:col-span-1">
               <Link href="/" className="text-xl font-bold text-cream">
                 {BUSINESS.name}
               </Link>
               <p className="mt-3 text-sm text-cream/70 leading-relaxed">
-                Professional property care and forensic maintenance services for the
+                Professional property care and proactive maintenance services for the
                 Mid-Willamette Valley and Harney County. Licensed, bonded, and insured.
               </p>
               <div className="mt-4 space-y-3 text-sm">
@@ -59,9 +67,9 @@ export function Footer() {
 
             {/* Services */}
             <div>
-              <h3 className="text-sm font-semibold text-cream uppercase tracking-wider">
+              <h2 className="text-sm font-semibold text-cream uppercase tracking-wider">
                 Services
-              </h3>
+              </h2>
               <ul className="mt-3 space-y-2">
                 {footerNav.services.map((item) => (
                   <li key={item.name}>
@@ -78,9 +86,9 @@ export function Footer() {
 
             {/* Company */}
             <div>
-              <h3 className="text-sm font-semibold text-cream uppercase tracking-wider">
+              <h2 className="text-sm font-semibold text-cream uppercase tracking-wider">
                 Company
-              </h3>
+              </h2>
               <ul className="mt-3 space-y-2">
                 {footerNav.company.map((item) => (
                   <li key={item.name}>
@@ -97,11 +105,30 @@ export function Footer() {
 
             {/* Resources */}
             <div>
-              <h3 className="text-sm font-semibold text-cream uppercase tracking-wider">
+              <h2 className="text-sm font-semibold text-cream uppercase tracking-wider">
                 Resources
-              </h3>
+              </h2>
               <ul className="mt-3 space-y-2">
                 {footerNav.resources.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-sm text-cream/70 hover:text-cream transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Areas */}
+            <div>
+              <h2 className="text-sm font-semibold text-cream uppercase tracking-wider">
+                Service Areas
+              </h2>
+              <ul className="mt-3 space-y-2">
+                {footerNav.areas.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}

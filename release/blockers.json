@@ -1,0 +1,9 @@
+{
+  "status": "simulation_generated",
+  "blockers": [
+    "SIM-01",
+    "SIM-02",
+    "SIM-03",
+    "SIM-04"
+  ]
+}

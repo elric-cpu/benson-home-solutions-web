@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { cn } from '@/lib/utils';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'emergency';
@@ -26,16 +25,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       icon: 'p-2',
     };
 
+    const baseClass = 'inline-flex items-center justify-center rounded-2xl font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none';
+
     return (
       <button
         ref={ref}
         disabled={disabled || loading}
-        className={cn(
-          'inline-flex items-center justify-center rounded-2xl font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none',
-          variants[variant],
-          sizes[size],
-          className
-        )}
+        className={`${baseClass} ${variants[variant]} ${sizes[size]} ${className || ''}`.trim()}
         {...props}
       >
         {loading ? <span className="animate-pulse">Analyzing...</span> : children}

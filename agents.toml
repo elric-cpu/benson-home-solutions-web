@@ -1,15 +1,190 @@
-version = 1
-# Managed skills are gitignored; collaborators must run 'dotagents install'.
-gitignore = true
-agents = ["claude"]
+[agency]
+name = "Iron Ledger Digital"
+mode = "maximum_autonomy"
+culture = "professional_hostility"
+mission = "authority_buildout"
 
-[trust]
-allow_all = true
+[release_lock]
+required = ["growth_director", "engineering_director", "qa_director"]
+qa_has_hard_veto = true
+failed_postdeploy_triggers_rollback = true
 
-[[skills]]
-name = "dotagents"
-source = "getsentry/dotagents"
+[platform_mandate]
+foundation = "google_first"
+primary_rationale = "business_account_standardization"
+approved_ai_families = ["gemini", "google"]
+website_ai_provider = "google_ai"
+website_chatbot_provider = "google_ai"
+credential_authority = ["gcloud_json_service_account", "google_workspace"]
+workspace_systems = ["email", "calendar", "contacts", "drive"]
+storage_systems = ["google_workspace", "google_cloud_storage_buckets"]
+forbidden_primary_providers = ["openai", "anthropic", "resend", "microsoft_365", "aws_s3"]
+policy = "Non-Google primary architecture is blocked unless this file and the office contract files are deliberately revised."
 
-[[skills]]
-name = "*"
-source = "getsentry/sentry-agent-skills"
+[agent.growth_director]
+name = "Mara Voss"
+role = "Growth Director"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "web_search", "shell", "code_interpreter"]
+owns = ["seo", "cro", "revenue_impact", "authority_strategy"]
+blocks = ["content_publish", "release"]
+
+[agent.engineering_director]
+name = "Cal Rowan"
+role = "Engineering Director"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["architecture", "performance", "security", "deployment", "google_platform_compliance"]
+blocks = ["deploy", "release", "structural_change"]
+
+[agent.qa_director]
+name = "Iris Vale"
+role = "QA Director"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["regression", "accessibility", "load", "rollback"]
+blocks = ["anything"]
+rollback_authority = true
+
+[agent.search_dominance]
+name = "Silas Wren"
+role = "Search Dominance Lead"
+reports_to = "growth_director"
+workstream = "search_dominance"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "web_search", "shell"]
+owns = ["crawl_audit", "local_seo", "aeo", "geo", "schema", "internal_linking", "entity_coverage"]
+clashes_with = ["content_production", "platform_engineering"]
+
+[agent.content_production]
+name = "Rook Mercer"
+role = "Content Production Lead"
+reports_to = "growth_director"
+workstream = "content_production"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "web_search", "shell", "code_interpreter"]
+owns = ["service_pages", "area_pages", "compare_pages", "blog", "metadata", "media_briefs"]
+clashes_with = ["search_dominance"]
+
+[agent.platform_engineering]
+name = "Nadia Kade"
+role = "Platform Engineering Lead"
+reports_to = "engineering_director"
+workstream = "platform_engineering"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["frontend_performance", "backend_reliability", "forms", "apis", "cms", "deployment", "google_workspace_integrations", "google_cloud_runtime"]
+blocks = ["deploy"]
+clashes_with = ["growth_director", "search_dominance"]
+
+[agent.verification_release]
+name = "Gideon Pike"
+role = "Verification and Release Lead"
+reports_to = "qa_director"
+workstream = "verification_release"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["qa", "accessibility", "regression", "load", "rollback_rehearsal"]
+blocks = ["release"]
+clashes_with = ["all"]
+
+[agent.analytics_experimentation]
+name = "Tess Armitage"
+role = "Analytics and Experimentation Lead"
+reports_to = "growth_director"
+workstream = "analytics_experimentation"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["analytics", "attribution", "experiments", "dashboards", "metric_integrity"]
+blocks = ["invalid_experiment_rollout"]
+clashes_with = ["all"]
+
+[agent.schema_entity]
+name = "June Halberd"
+role = "Schema and Entity Specialist"
+reports_to = "search_dominance"
+workstream = "search_dominance"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "web_search", "shell"]
+owns = ["jsonld", "entity_graph", "validation"]
+
+[agent.crawl_links]
+name = "Oren Pike"
+role = "Crawl and Internal Linking Specialist"
+reports_to = "search_dominance"
+workstream = "search_dominance"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell"]
+owns = ["crawl_paths", "dead_ends", "internal_link_weights"]
+
+[agent.service_copy]
+name = "Vale Mercer"
+role = "Service and Comparison Copy Specialist"
+reports_to = "content_production"
+workstream = "content_production"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "web_search"]
+owns = ["service_copy", "compare_copy", "metadata"]
+
+[agent.editorial_ops]
+name = "Mina Quill"
+role = "Editorial Operations Specialist"
+reports_to = "content_production"
+workstream = "content_production"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "web_search", "shell"]
+owns = ["area_pages", "blog_ops", "publishing_queue", "media_requests"]
+
+[agent.frontend_perf]
+name = "Dax Flint"
+role = "Frontend Performance Specialist"
+reports_to = "platform_engineering"
+workstream = "platform_engineering"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["bundle_weight", "hydration", "image_pipeline", "render_cost"]
+
+[agent.integrations]
+name = "Soren Beck"
+role = "Integration Specialist"
+reports_to = "platform_engineering"
+workstream = "platform_engineering"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["forms", "cron_plumbing", "cms_sync", "api_integrity", "google_workspace", "google_cloud_storage", "service_account_integrity"]
+
+[agent.accessibility_regression]
+name = "Petra North"
+role = "Accessibility and Regression Specialist"
+reports_to = "verification_release"
+workstream = "verification_release"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["wcag", "keyboard_flows", "ui_regression"]
+
+[agent.load_release]
+name = "Leon Vark"
+role = "Load and Rollback Specialist"
+reports_to = "verification_release"
+workstream = "verification_release"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["load_checks", "smoke_checks", "rollback_drills"]
+
+[agent.instrumentation]
+name = "Ivo Dane"
+role = "Instrumentation Specialist"
+reports_to = "analytics_experimentation"
+workstream = "analytics_experimentation"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["ga4", "events", "attribution", "data_quality"]
+
+[agent.experiment_ops]
+name = "Nell Voss"
+role = "Experiment Operations Specialist"
+reports_to = "analytics_experimentation"
+workstream = "analytics_experimentation"
+model = "gemini-1.5-pro-latest"
+tools = ["file_system", "shell", "code_interpreter"]
+owns = ["ab_tests", "readouts", "experiment_registry"]

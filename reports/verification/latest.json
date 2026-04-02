@@ -1,0 +1,16 @@
+{
+  "run_id": "simulation-2026-04-01-verification",
+  "owner": "verification_release",
+  "timestamp": "2026-04-01T00:00:00Z",
+  "status": "fail",
+  "priority": "critical",
+  "summary": "The office cannot certify this workspace for release. Core AI, contact, and configuration paths still fail the release bar.",
+  "findings": [
+    "A live credential is committed in backend config.",
+    "Production request paths still depend on demo-mode behavior and placeholder outputs.",
+    "The estimator path is contract-incompatible with the backend and likely fails in live mode.",
+    "The contact path can fail entirely in environments without Upstash configuration.",
+    "Production build logs still emit CRITICAL Sanity configuration errors."
+  ],
+  "release_impact": "block"
+}

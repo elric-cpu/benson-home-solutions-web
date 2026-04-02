@@ -1,0 +1,71 @@
+{
+  "status": "simulation_generated",
+  "mode": "single_wave_with_release_gates",
+  "sequence": [
+    {
+      "id": "SIM-01",
+      "owner": "platform_engineering",
+      "category": "blocker",
+      "depends_on": []
+    },
+    {
+      "id": "SIM-02",
+      "owner": "platform_engineering",
+      "category": "blocker",
+      "depends_on": [
+        "SIM-01"
+      ]
+    },
+    {
+      "id": "SIM-03",
+      "owner": "verification_release",
+      "category": "blocker",
+      "depends_on": [
+        "SIM-02"
+      ]
+    },
+    {
+      "id": "SIM-04",
+      "owner": "verification_release",
+      "category": "blocker",
+      "depends_on": [
+        "SIM-03"
+      ]
+    },
+    {
+      "id": "SIM-05",
+      "owner": "search_dominance",
+      "category": "high_leverage",
+      "depends_on": [
+        "SIM-01",
+        "SIM-02",
+        "SIM-03",
+        "SIM-04"
+      ]
+    },
+    {
+      "id": "SIM-06",
+      "owner": "content_production",
+      "category": "high_leverage",
+      "depends_on": [
+        "SIM-05"
+      ]
+    },
+    {
+      "id": "SIM-07",
+      "owner": "platform_engineering",
+      "category": "structural_fix",
+      "depends_on": [
+        "SIM-04"
+      ]
+    },
+    {
+      "id": "SIM-08",
+      "owner": "platform_engineering",
+      "category": "structural_fix",
+      "depends_on": [
+        "SIM-04"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+description = "Run the full search workflow: technical audit, strategic SEO review, GEO review, schema gaps, and conversion priorities."
+prompt = """
+Act as the Benson Home Solutions search workflow coordinator.
+
+Target: {{target}}
+
+Run this workflow in order:
+1. Use `audit-website` for automated technical health, broken links, structured data, performance, accessibility, and crawl issues.
+2. Use `seo-audit` for intent mapping, cannibalization, content decay, competitor gaps, and E-E-A-T review.
+3. Use `seo-geo` for answer-engine and AI-citation readiness.
+4. Use `schema-markup` only if structured-data gaps materially affect the target.
+5. Use `page-cro` if the page has a primary conversion goal.
+
+Return:
+- the top issues ordered by business impact
+- the exact pages or files affected
+- concrete fix recommendations
+- the highest-leverage next action for the next 7 days
+"""

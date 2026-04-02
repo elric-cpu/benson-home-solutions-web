@@ -1,5 +1,4 @@
 import type { HTMLAttributes } from 'react'
-import { cn } from '@/lib/utils'
 
 interface SectionProps extends HTMLAttributes<HTMLElement> {
   variant?: 'default' | 'cream' | 'oxblood' | 'charcoal'
@@ -20,5 +19,5 @@ const spacingClasses = {
 }
 
 export function Section({ variant = 'default', spacing = 'md', className, ...props }: SectionProps) {
-  return <section className={cn(variantClasses[variant], spacingClasses[spacing], className)} {...props} />
+  return <section className={`${variantClasses[variant]} ${spacingClasses[spacing]} ${className || ''}`.trim()} {...props} />
 }

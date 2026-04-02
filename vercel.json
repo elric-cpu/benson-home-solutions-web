@@ -1,11 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "installCommand": "npm install",
-  "crons": [
+  "routes": [
     {
-      "path": "/api/ai/marketing",
-      "schedule": "0 2 * * 1,4"
+      "src": "/api/(.*)",
+      "dest": "https://benson-web-203836236603.us-central1.run.app/api/$1"
     }
   ]
 }

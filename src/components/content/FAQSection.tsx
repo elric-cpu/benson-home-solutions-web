@@ -1,35 +1,10 @@
 import { Container, Section } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
+import { getFaqContent } from '@/lib/content/site-content';
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-const faqs: FAQItem[] = [
-  {
-    question: "What is a 'Maintenance-First' subscription?",
-    answer: "A 'Maintenance-First' subscription is a proactive property care program where Benson Home Solutions performs regular (typically monthly) forensic audits of your property. Instead of waiting for a leak or failure, we identify and fix small issues before they become expensive insurance claims.",
-  },
-  {
-    question: "Why do I need monthly property protection in Oregon?",
-    answer: "The Mid-Willamette Valley's high rainfall and humidity make properties susceptible to mold, rot, and drainage failures. Regular monthly checks ensure building envelopes are intact and gutters/drainage systems are functioning correctly, preventing thousands of dollars in water damage.",
-  },
-  {
-    question: "How is a 'Forensic Audit' different from a standard home inspection?",
-    answer: "Standard inspections are primarily visual and occur during property transfers. Our forensic audits use moisture meters, thermal imaging, and building-science metrics to detect hidden decay, heat loss, and structural vulnerabilities that visual inspections miss.",
-  },
-  {
-    question: "Do you serve Harney County for property maintenance?",
-    answer: "Yes. We provide specialized high-desert maintenance for properties from Burns to Drewsey, focusing on winterization, wildfire hardening, and extreme temperature protection for residential and commercial assets.",
-  },
-  {
-    question: "How do I save money with proactive care?",
-    answer: "According to industry standards (BOMA), proactive maintenance has a 3:1 ROI. By spending a small amount monthly to keep systems in peak condition, you avoid the high cost of emergency repairs, structural restoration, and increased insurance premiums.",
-  },
-];
-
-export function FAQSection() {
+export async function FAQSection() {
+  const faqs = await getFaqContent();
+  
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -55,7 +30,7 @@ export function FAQSection() {
         </h2>
         <div className="space-y-8">
           {faqs.map((faq, index) => (
-            <div key={index} className="border-b border-border pb-8">
+            <div key={faq.id || index} className="border-b border-border pb-8">
               <h3 className="text-xl font-black mb-4 text-charcoal leading-tight">
                 {faq.question}
               </h3>

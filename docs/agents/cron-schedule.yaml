@@ -1,0 +1,92 @@
+version: 1
+
+jobs:
+  - id: search_dominance_cron
+    schedule: "5 0,4,8,12,16,20 * * *"
+    owner: search_dominance
+    inputs:
+      - sitemap
+      - route_inventory
+      - prior_search_findings
+      - schema_inventory
+    outputs:
+      - reports/search-dominance/latest.json
+      - queues/content-opportunities.json
+      - queues/seo-fixes.json
+    release_impact: review
+
+  - id: content_production_cron
+    schedule: "25 0,4,8,12,16,20 * * *"
+    owner: content_production
+    inputs:
+      - queues/content-opportunities.json
+      - reports/search-dominance/latest.json
+      - analytics/content-priorities.json
+    outputs:
+      - drafts/content-batch.json
+      - queues/media-requests.json
+      - queues/publish-candidates.json
+    release_impact: review
+
+  - id: platform_engineering_cron
+    schedule: "45 0,4,8,12,16,20 * * *"
+    owner: platform_engineering
+    inputs:
+      - queues/seo-fixes.json
+      - queues/publish-candidates.json
+      - runtime/health-signals.json
+    outputs:
+      - reports/platform-health/latest.json
+      - queues/engineering-fixes.json
+      - build/preflight.json
+    release_impact: block_if_fail
+
+  - id: verification_release_cron
+    schedule: "5 1,5,9,13,17,21 * * *"
+    owner: verification_release
+    inputs:
+      - build/preflight.json
+      - runtime/health-signals.json
+      - deploy/current-release.json
+    outputs:
+      - reports/verification/latest.json
+      - release/blockers.json
+      - rollback/readiness.json
+    release_impact: block_if_fail
+
+  - id: analytics_experimentation_cron
+    schedule: "25 1,5,9,13,17,21 * * *"
+    owner: analytics_experimentation
+    inputs:
+      - analytics/raw-events.json
+      - deploy/current-release.json
+      - experiment-registry/current.json
+    outputs:
+      - analytics/integrity.json
+      - analytics/priority-signals.json
+      - experiment-registry/recommendations.json
+    release_impact: review
+
+  - id: war_room_brief
+    schedule: "0 */4 * * *"
+    owner: qa_director
+    inputs:
+      - reports/search-dominance/latest.json
+      - reports/platform-health/latest.json
+      - reports/verification/latest.json
+      - analytics/integrity.json
+    outputs:
+      - war-room/brief.json
+      - release/board.json
+    release_impact: review
+
+  - id: release_window
+    schedule: "0 9,21 * * *"
+    owner: release_lock
+    inputs:
+      - release/board.json
+      - release/blockers.json
+      - rollback/readiness.json
+    outputs:
+      - deploy/decision.json
+    release_impact: final

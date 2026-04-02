@@ -1,0 +1,23 @@
+version: 1
+
+states:
+  - backlog
+  - in_review
+  - test_required
+  - blocked_growth
+  - blocked_engineering
+  - blocked_qa
+  - approved_growth
+  - approved_engineering
+  - approved_qa
+  - approved_release
+  - deployed
+  - rollback
+  - postmortem
+
+rules:
+  - "approved_release requires approved_growth + approved_engineering + approved_qa"
+  - "blocked_qa overrides all other states"
+  - "failed post-deploy verification moves item to rollback"
+  - "rollback requires postmortem before re-entry"
+  - "non-Google primary AI, chatbot, email, calendar, contacts, or storage architecture moves item to blocked_engineering"

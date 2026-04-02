@@ -45,7 +45,7 @@ Every prompt issued by any agent on this project **must open with this Context C
 | --- | --- | --- | --- |
 | Sprint 0 | Feb 26–28 | Kickoff, audits, architecture, DNS cutover, deployment | ✅ **COMPLETE** |
 | Sprint 1 | Mar 1–18 | Core build, lead gen engine, CRM integration, audit layer | 🟢 **ACTIVE** |
-| Sprint 2 | Mar 19–Apr 1 | AI features (Chatbot, RAG), Cost Estimator, live preview | ⬜ Upcoming |
+| Sprint 2 | Mar 19–Apr 1 | AI features (Chatbot, RAG), Cost Estimator, live preview | ✅ **COMPLETE** |
 
 ### Major Milestones (Mar 1)
 

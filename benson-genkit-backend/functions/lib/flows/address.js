@@ -1,39 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateAddressFlow = void 0;
+const genkit_config_1 = require("../genkit-config");
 const genkit_1 = require("genkit");
-const functions_1 = require("@genkit-ai/firebase/functions");
-const addressTool_1 = require("../addressTool");
-const ai = (0, genkit_1.genkit)({});
-exports.validateAddressFlow = (0, functions_1.onFlow)(ai, {
+exports.validateAddressFlow = genkit_config_1.ai.defineFlow({
     name: "validateAddressFlow",
     inputSchema: genkit_1.z.string().describe("The address to validate"),
     outputSchema: genkit_1.z.object({
         isValid: genkit_1.z.boolean(),
-        standardizedAddress: genkit_1.z.string().optional(),
-        message: genkit_1.z.string(),
-        details: genkit_1.z.any().optional(),
+        formattedAddress: genkit_1.z.string().optional(),
+        error: genkit_1.z.string().optional(),
     }),
-    authPolicy: (0, functions_1.noAuth)(),
 }, async (address) => {
-    const result = await (0, addressTool_1.validateAddressTool)({ address });
-    let message = "Address is valid.";
-    if (!result.isValid) {
-        if (result.hasIncompleteComponents) {
-            message = "Address is incomplete. Please provide more details (e.g., street number or unit).";
+    const response = await genkit_config_1.ai.generate({
+        prompt: `Validate the following address: ${address}. 
+      Return a JSON object with 'isValid' (boolean), 'formattedAddress' (string), and 'error' (string, if any).`,
+        output: {
+            schema: genkit_1.z.object({
+                isValid: genkit_1.z.boolean(),
+                formattedAddress: genkit_1.z.string(),
+                error: genkit_1.z.string().optional(),
+            })
         }
-        else if (result.hasUnconfirmedComponents) {
-            message = "Could not confirm all components of this address.";
-        }
-        else {
-            message = "Address might be invalid or not precise enough.";
-        }
-    }
-    return {
-        isValid: result.isValid,
-        standardizedAddress: result.standardizedAddress,
-        message,
-        details: result,
-    };
+    });
+    return response.output;
 });
 //# sourceMappingURL=address.js.map

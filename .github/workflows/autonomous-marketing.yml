@@ -55,3 +55,12 @@ jobs:
         working-directory: ./benson-genkit-backend/functions
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Run GSC Autonomous Marketing Loop
+        run: |
+          npx tsx scripts/autonomous-marketing-loop.ts
+        env:
+          GOOGLE_GENAI_API_KEY: ${{ secrets.GOOGLE_GENAI_API_KEY }}
+          GENKIT_BACKEND_URL: ${{ secrets.GENKIT_BACKEND_URL }}
+          GSC_SITE_URL: https://bensonhomesolutions.com/
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}

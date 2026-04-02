@@ -1,0 +1,11 @@
+{
+  "status": "simulation_generated",
+  "decision": "hold",
+  "reason": "release blockers active",
+  "blocked_by": [
+    "SIM-01",
+    "SIM-02",
+    "SIM-03",
+    "SIM-04"
+  ]
+}

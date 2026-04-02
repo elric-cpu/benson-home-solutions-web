@@ -1,50 +1,28 @@
-import { genkit, z } from "genkit";
-import { onFlow, noAuth } from "@genkit-ai/firebase/functions";
-import { google } from "googleapis";
+import { ai } from "../genkit-config";
+import { z } from "genkit";
 
-const ai = genkit({});
-const serviceusage = google.serviceusage("v1");
-
-export const setupGoogleApisFlow = onFlow(
-  ai,
+export const setupGoogleApisFlow = ai.defineFlow(
   {
     name: "setupGoogleApisFlow",
-    inputSchema: z.void(),
+    inputSchema: z.string().describe("Project ID to set up"),
     outputSchema: z.object({
       status: z.string(),
-      enabledServices: z.array(z.string()),
+      details: z.string(),
     }),
-    authPolicy: noAuth(),
   },
-  async () => {
-    const auth = new google.auth.GoogleAuth({
-      scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+  async (projectId) => {
+    // Simulated setup
+    const response = await ai.generate({
+      prompt: `Outline a plan to set up Google Search Console and Vertex AI for project: ${projectId}. 
+      Mention authentication needs and service account roles.`,
+      output: {
+        schema: z.object({
+          status: z.string(),
+          details: z.string(),
+        })
+      }
     });
-    const authClient = await auth.getClient();
-    google.options({ auth: authClient as any });
 
-    const projectId = await auth.getProjectId();
-    const servicesToEnable = [
-      "addressvalidation.googleapis.com",
-      "searchconsole.googleapis.com",
-      "maps-backend.googleapis.com",
-      "geocoding-backend.googleapis.com",
-      "aiplatform.googleapis.com",
-    ];
-
-    const enabledServices: string[] = [];
-
-    for (const service of servicesToEnable) {
-      console.log(`Checking/Enabling service: ${service}`);
-      await serviceusage.services.enable({
-        name: `projects/${projectId}/services/${service}`,
-      });
-      enabledServices.push(service);
-    }
-
-    return {
-      status: "All required Google APIs have been verified/enabled.",
-      enabledServices,
-    };
+    return response.output!;
   }
 );

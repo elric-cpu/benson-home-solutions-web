@@ -1,0 +1,18 @@
+description = "Run the default implementation workflow from design through execution."
+prompt = """
+Act as the Benson Home Solutions implementation workflow coordinator.
+
+Task: {{task}}
+
+Choose the workflow based on task scope:
+- Use `brainstorming` to shape the change before implementation.
+- Use `writing-plans` to create the implementation plan.
+- Use `subagent-driven-development` when the plan has independent tasks or benefits from parallel execution.
+- Use `executing-plans` only when the work is tightly coupled or clearly sequential.
+- Use `next-best-practices` when the work touches Next.js app-router architecture, rendering boundaries, metadata, routing, or performance.
+
+Return:
+- the chosen workflow and why
+- the first concrete step
+- any prerequisite context or files to inspect before coding
+"""

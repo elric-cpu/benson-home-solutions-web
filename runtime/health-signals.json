@@ -1,0 +1,21 @@
+{
+  "status": "simulation_generated",
+  "signals": [
+    {
+      "name": "build",
+      "status": "pass"
+    },
+    {
+      "name": "sanity_env",
+      "status": "warn"
+    },
+    {
+      "name": "ai_contract",
+      "status": "fail"
+    },
+    {
+      "name": "contact_resilience",
+      "status": "fail"
+    }
+  ]
+}

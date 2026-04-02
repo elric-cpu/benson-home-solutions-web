@@ -1,7 +1,6 @@
-import { genkit, z } from "genkit";
+import { ai } from "./genkit-config";
+import { z } from "genkit";
 import { google } from "googleapis";
-
-const ai = genkit({});
 const addressvalidation = google.addressvalidation("v1");
 
 export const validateAddressTool = ai.defineTool(

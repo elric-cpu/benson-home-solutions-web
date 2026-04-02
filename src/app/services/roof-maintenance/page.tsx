@@ -7,7 +7,7 @@ import { Snowflake, CloudRain, Wind, FileSearch } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Essential Roofing Maintenance for Oregon Winters | Benson Home Solutions',
   description:
-    'Protect your home from Oregon winter damage. Professional roof maintenance, moss removal, and forensic inspections in Salem, Albany, and Harney County. CCB #258533.',
+    'Protect your home from Oregon winter damage. Professional roof maintenance, moss removal, and diagnostic inspections in Salem, Albany, and Harney County. CCB #258533.',
   keywords: [
     'Oregon roof maintenance winter',
     'roof moss removal Salem',
@@ -32,8 +32,8 @@ const roofingFaqs = [
     answer: "Moss acts like a sponge, holding moisture against your shingles and lifting their edges. During freeze-thaw cycles, this trapped water expands, cracking the roofing material and creating direct paths for water to enter your home.",
   },
   {
-    question: "What is a 'Forensic Roof Inspection'?",
-    answer: "Standard inspections are visual. Our forensic audits use moisture meters at the roof-to-wall transitions and thermal imaging in the attic to detect heat loss and moisture intrusion that haven't yet caused visible ceiling stains.",
+    question: "What is a 'Diagnostic Roof Inspection'?",
+    answer: "Standard inspections are visual. Our comprehensive audits use moisture meters at the roof-to-wall transitions and thermal imaging in the attic to detect heat loss and moisture intrusion that haven't yet caused visible ceiling stains.",
   },
 ];
 
@@ -63,7 +63,7 @@ export default function RoofMaintenancePage() {
   };
 
   return (
-    <main>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -120,7 +120,7 @@ export default function RoofMaintenancePage() {
               </div>
               <h3 className="text-2xl font-black mb-4 uppercase tracking-tight text-oxblood">Wind Scouring</h3>
               <p className="text-slate font-medium leading-relaxed">
-                Oregon storm winds can lift unsecured shingles. Our forensic team checks every perimeter for mechanical fastening integrity.
+                Oregon storm winds can lift unsecured shingles. Our diagnostic team checks every perimeter for mechanical fastening integrity.
               </p>
             </div>
           </div>
@@ -133,7 +133,7 @@ export default function RoofMaintenancePage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl font-black uppercase tracking-tight text-oxblood mb-6">
-                The 22-Point <br />Forensic Audit
+                The 22-Point <br />Comprehensive Audit
               </h2>
               <p className="text-lg text-slate font-medium mb-8">
                 We don&apos;t just look at the roof. We analyze the system. Every winter audit includes:
@@ -144,7 +144,7 @@ export default function RoofMaintenancePage() {
                   'Chimney Cap & Seal Inspection',
                   'Vent Pipe Boot Integrity Audit',
                   'Gutter Pitch & Drainage Validation',
-                  'Skylight Flashing Forensic Check',
+                  'Skylight Flashing Diagnostic Check',
                   'Branch & Debris Mitigation',
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-3 font-bold text-oxblood">
@@ -206,7 +206,7 @@ export default function RoofMaintenancePage() {
         <Container className="text-center">
           <h2 className="text-4xl font-black uppercase tracking-tight mb-6">Don&apos;t Wait for the Leak.</h2>
           <p className="text-xl opacity-80 mb-10 max-w-xl mx-auto font-medium">
-            Join the 200+ Oregon property owners who trust Benson Home Solutions for forensic seasonal protection.
+            Join the 200+ Oregon property owners who trust Benson Home Solutions for diagnostic seasonal protection.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/contact?service=roofing">
@@ -218,6 +218,6 @@ export default function RoofMaintenancePage() {
           </div>
         </Container>
       </Section>
-    </main>
+    </>
   );
 }

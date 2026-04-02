@@ -8,7 +8,7 @@ import { UtensilsCrossed, Bath, ShieldCheck } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Kitchen & Bathroom Remodeling | Benson Home Solutions',
   description:
-    'Expert kitchen and bathroom remodeling in Salem, Albany, and Corvallis. Forensic audits for moisture protection and premium finishes. CCB #258533.',
+    'Expert kitchen and bathroom remodeling in Salem, Albany, and Corvallis. Comprehensive Audits for moisture protection and premium finishes. CCB #258533.',
   keywords: [
     'kitchen remodeling Salem Oregon',
     'bathroom renovation Albany',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RemodelingPage() {
   return (
-    <main>
+    <>
       {/* Hero Section */}
       <Section variant="cream" spacing="lg">
         <Container className="text-center">
@@ -30,10 +30,10 @@ export default function RemodelingPage() {
           </Badge>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-oxblood">
             Precision Rebuilds. <br />
-            <span className="italic text-oxblood/60">Forensic Quality.</span>
+            <span className="italic text-oxblood/60">Diagnostic Quality.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            We don&apos;t just cover up old problems. Benson Home Solutions specializes in remodeling that begins with a forensic moisture audit and ends with a premium, board-ready finish.
+            We don&apos;t just cover up old problems. Benson Home Solutions specializes in remodeling that begins with a diagnostic moisture audit and ends with a premium, board-ready finish.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link href="/contact?service=remodeling">
@@ -68,7 +68,7 @@ export default function RemodelingPage() {
               <Bath className="w-12 h-12 text-oxblood mb-6" />
               <h2 className="text-3xl font-black uppercase tracking-tight text-oxblood mb-4">Bathroom Renovation</h2>
               <p className="text-slate font-medium leading-relaxed mb-8">
-                Precision waterproofing is our obsession. We use forensic moisture detection to ensure your new bathroom is protected from the substrate out.
+                Precision waterproofing is our obsession. We use diagnostic moisture detection to ensure your new bathroom is protected from the substrate out.
               </p>
               <ul className="space-y-3 mb-8">
                 {['Schluter-Certified Waterproofing', 'Custom Tile Work', 'Luxury Shower Systems', 'Heated Flooring'].map(i => (
@@ -87,7 +87,7 @@ export default function RemodelingPage() {
         <Container className="text-center">
           <h2 className="text-4xl font-black uppercase tracking-tight mb-6">Ready to Rebuild?</h2>
           <p className="text-xl opacity-80 mb-10 max-w-xl mx-auto font-medium">
-            Let&apos;s start with a forensic audit of your current space to build a foundation that lasts.
+            Let&apos;s start with a comprehensive audit of your current space to build a foundation that lasts.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/contact?service=remodeling">
@@ -101,6 +101,6 @@ export default function RemodelingPage() {
       </Section>
 
       <FAQSection />
-    </main>
+    </>
   );
 }

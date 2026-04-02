@@ -1,11 +1,6 @@
 {
   "version": 1,
   "skills": {
-    "ai-seo": {
-      "source": "coreyhaines31/marketingskills",
-      "sourceType": "github",
-      "computedHash": "5f7ce5ccdb2b0dce5e1ea7f3ed8bf17070b790865e91725ca8908e6ec829e164"
-    },
     "analytics-tracking": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
@@ -50,6 +45,31 @@
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "computedHash": "de49a0fd426d4710fc05b2759244588c6f5b5014d9cd9331a0d54dc655f023bc"
+    },
+    "hostinger-deploy-and-test": {
+      "source": "elricbenson/hostinger-skills",
+      "sourceType": "github",
+      "computedHash": "e1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcde"
+    },
+    "hostinger-domain-dns": {
+      "source": "elricbenson/hostinger-skills",
+      "sourceType": "github",
+      "computedHash": "e1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcde"
+    },
+    "hostinger-go-live": {
+      "source": "elricbenson/hostinger-skills",
+      "sourceType": "github",
+      "computedHash": "e1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcde"
+    },
+    "hostinger-mcp-setup": {
+      "source": "elricbenson/hostinger-skills",
+      "sourceType": "github",
+      "computedHash": "e1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcde"
+    },
+    "hostinger-website-deploy": {
+      "source": "elricbenson/hostinger-skills",
+      "sourceType": "github",
+      "computedHash": "e1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcde"
     },
     "marketing-ideas": {
       "source": "coreyhaines31/marketingskills",

@@ -1,18 +1,101 @@
 [commands.audit]
-description = "Run a full SEO/AEO/GEO audit on a specific URL"
+description = "Run the full search workflow: technical audit, strategic SEO review, GEO review, schema gaps, and conversion priorities."
 prompt = """
-Using the Genkit 'getSearchPerformance' tool, analyze the last 30 days for {{url}}.
-Identify:
-1. High-impression, low-click keywords (SEO opportunity).
-2. Questions where we appear in the 'People Also Ask' but not the top snippet (AEO opportunity).
-3. Citations in AI Overviews where competitors are cited but we are not (GEO opportunity).
-Output a structured 'Revenue Growth Plan'.
+Act as the Benson Home Solutions search workflow coordinator.
+
+Target: {{target}}
+
+Run this workflow in order:
+1. Use `audit-website` for automated technical health, broken links, structured data, performance, accessibility, and crawl issues.
+2. Use `seo-audit` for intent mapping, cannibalization, content decay, competitor gaps, and E-E-A-T review.
+3. Use `seo-geo` for answer-engine and AI-citation readiness.
+4. Use `schema-markup` only if structured-data gaps materially affect the target.
+5. Use `page-cro` if the page has a primary conversion goal.
+
+Return:
+- the top issues ordered by business impact
+- the exact pages or files affected
+- concrete fix recommendations
+- the highest-leverage next action for the next 7 days
 """
 
 [commands.geo-fix]
-description = "Rewrite a content block for better LLM citation"
+description = "Refresh a page or content file for stronger answer-engine citations and richer snippets."
 prompt = """
-Read the provided file {{file}}. Rewrite the 'Executive Summary' and 'Key Findings' 
-using the 'Information Density' framework. Ensure facts are clearly cited and 
-structured for Generative Engine discovery.
+Act as the Benson Home Solutions citation-refresh workflow.
+
+Target file or page: {{target}}
+
+Use this sequence:
+1. Read the target content.
+2. Use `seo-geo` to identify weak definition blocks, unsupported claims, and missing citation structure.
+3. Use `copywriting` to tighten the core copy without losing brand clarity.
+4. Use `schema-markup` if FAQ, HowTo, LocalBusiness, or breadcrumb schema would materially improve discoverability.
+5. Use `page-cro` if the refreshed content needs a clearer next step.
+
+Return:
+- a rewritten version of the weakest sections
+- any title, meta description, FAQ, or schema additions worth shipping
+- a short rationale for each change
+"""
+
+[commands.conversion-audit]
+description = "Run the CRO workflow across page messaging, form friction, and analytics coverage."
+prompt = """
+Act as the Benson Home Solutions conversion workflow coordinator.
+
+Target: {{target}}
+
+Run this workflow in order:
+1. Use `analytics-tracking` to identify missing measurement, weak conversion events, or broken attribution.
+2. Use `page-cro` to review page structure, CTA clarity, objections, and trust signals.
+3. Use `form-cro` if the flow includes any lead or contact form.
+4. Use `copywriting` to improve weak headlines, subheads, or calls to action uncovered by the review.
+
+Return:
+- the top conversion blockers
+- instrumentation gaps
+- the copy or UX changes with the highest likely impact
+- a concise experiment list
+"""
+
+[commands.hostinger-launch]
+description = "Run the end-to-end Hostinger launch workflow: setup, deploy, validate, and cut over DNS."
+prompt = """
+Act as the Benson Home Solutions Hostinger launch coordinator.
+
+Target project or domain: {{target}}
+
+Run this workflow in order:
+1. Use `hostinger-mcp-setup` if direct Hostinger access is not already configured.
+2. Use `hostinger-website-deploy` to inspect or create the correct Hostinger website target.
+3. Use `hostinger-deploy-and-test` to deploy the artifact and validate it on a safe preview or staging target.
+4. Use `hostinger-domain-dns` to plan or execute the required DNS changes.
+5. Use `hostinger-go-live` to coordinate the cutover safely.
+
+Return:
+- the current launch state
+- blockers or missing prerequisites
+- the exact next deployment or DNS step
+- the validation checks required before production cutover
+"""
+
+[commands.implement-feature]
+description = "Run the default implementation workflow from design through execution."
+prompt = """
+Act as the Benson Home Solutions implementation workflow coordinator.
+
+Task: {{task}}
+
+Choose the workflow based on task scope:
+- Use `brainstorming` to shape the change before implementation.
+- Use `writing-plans` to create the implementation plan.
+- Use `subagent-driven-development` when the plan has independent tasks or benefits from parallel execution.
+- Use `executing-plans` only when the work is tightly coupled or clearly sequential.
+- Use `next-best-practices` when the work touches Next.js app-router architecture, rendering boundaries, metadata, routing, or performance.
+
+Return:
+- the chosen workflow and why
+- the first concrete step
+- any prerequisite context or files to inspect before coding
 """

@@ -5,14 +5,14 @@ import { FAQSection } from '@/components/content/FAQSection';
 import { Mountain, Droplets, ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Forensic Sitework & Drainage | Benson Home Solutions',
+  title: 'Diagnostic Sitework & Drainage | Benson Home Solutions',
   description:
     'Licensed sitework and drainage solutions in Oregon. We solve foundation moisture issues, grading problems, and landscape failures with building science. CCB #258533.',
 };
 
 export default function SiteworkPage() {
   return (
-    <main>
+    <>
       <Section variant="oxblood" spacing="lg">
         <Container className="text-center">
           <Badge className="mb-6 bg-cream/10 text-cream border-cream/20 px-4 py-1.5 uppercase tracking-widest font-black">
@@ -44,7 +44,7 @@ export default function SiteworkPage() {
               </div>
               <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Precision Grading</h3>
               <p className="text-slate font-medium leading-relaxed">
-                We use laser levels and forensic site analysis to ensure water flows away from your building envelope, never toward it.
+                We use laser levels and diagnostic site analysis to ensure water flows away from your building envelope, never toward it.
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
@@ -62,7 +62,7 @@ export default function SiteworkPage() {
               </div>
               <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4">Foundation Sealing</h3>
               <p className="text-slate font-medium leading-relaxed">
-                Forensic application of moisture barriers and foundation protection to stop capillary action and crawlspace dampness.
+                Diagnostic application of moisture barriers and foundation protection to stop capillary action and crawlspace dampness.
               </p>
             </div>
           </div>
@@ -70,6 +70,6 @@ export default function SiteworkPage() {
       </Section>
 
       <FAQSection />
-    </main>
+    </>
   );
 }

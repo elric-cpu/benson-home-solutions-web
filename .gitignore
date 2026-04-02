@@ -50,7 +50,11 @@ next-env.d.ts
 .agents/.gitignore
 .hostinger/
 
-.gemini/
+!.gemini/
+.gemini/*
+!.gemini/AGENTS.md
+!.gemini/commands/
+!.gemini/commands/*.toml
 gha-creds-*.json
 
 # HubSpot config file
@@ -63,3 +67,10 @@ user_uploads/
 .env.production
 archived.hubspot.config.yml
 
+benson-app-sa.json
+benson-genkit-31726.json
+benson-genkit-31726-*.json
+benson-genkit-31726-*.json.bak-*
+.codex/
+benson-genkit-backend/functions/.genkit/
+benson-genkit-backend/functions/firebase-debug.log

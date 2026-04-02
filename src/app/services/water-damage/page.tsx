@@ -8,7 +8,7 @@ import { Droplets, ShieldAlert, FileSearch, Zap, Hammer } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Water Damage Restoration | Emergency Dry-Out Salem & Albany',
   description:
-    '24/7 emergency water damage restoration in the Mid-Willamette Valley. Forensic dry-out, insurance-ready documentation, and full rebuild services. CCB #258533.',
+    '24/7 emergency water damage restoration in the Mid-Willamette Valley. Diagnostic dry-out, insurance-ready documentation, and full rebuild services. CCB #258533.',
   keywords: [
     'water damage restoration Salem Oregon',
     'emergency dry out Albany Oregon',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function WaterDamagePage() {
   return (
-    <main>
+    <>
       {/* Hero Section */}
       <Section variant="oxblood" spacing="lg">
         <Container className="text-center">
@@ -33,7 +33,7 @@ export default function WaterDamagePage() {
             <span className="italic opacity-60">Start the Restore.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
-            Water damage doesn&apos;t wait. Neither do we. Benson Home Solutions provides forensic dry-out and full-service restoration with documentation designed to maximize your insurance recovery.
+            Water damage doesn&apos;t wait. Neither do we. Benson Home Solutions provides diagnostic dry-out and full-service restoration with documentation designed to maximize your insurance recovery.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <a href={`tel:${BUSINESS.afterhoursPhone}`}>
@@ -45,7 +45,7 @@ export default function WaterDamagePage() {
         </Container>
       </Section>
 
-      {/* The Forensic Difference */}
+      {/* The Diagnostic Difference */}
       <Section spacing="md">
         <Container>
           <div className="grid md:grid-cols-3 gap-12">
@@ -64,7 +64,7 @@ export default function WaterDamagePage() {
               </div>
               <h3 className="text-2xl font-black mb-4 uppercase tracking-tight text-oxblood">Claims Documentation</h3>
               <p className="text-slate font-medium leading-relaxed">
-                We provide the forensic data adjusters need. Moisture logs, infrared scans, and detailed line-item estimates (Xactimate-compatible).
+                We provide the diagnostic data adjusters need. Moisture logs, infrared scans, and detailed line-item estimates (Xactimate-compatible).
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
@@ -95,7 +95,7 @@ export default function WaterDamagePage() {
           <div className="grid md:grid-cols-4 gap-8">
             {[
               { title: 'Response', desc: 'On-site within hours to stop the source and prevent secondary damage.', icon: Zap },
-              { title: 'Audit', desc: 'Forensic mapping of moisture levels to define the dry-out strategy.', icon: FileSearch },
+              { title: 'Audit', desc: 'Diagnostic mapping of moisture levels to define the dry-out strategy.', icon: FileSearch },
               { title: 'Mitigation', desc: 'Extraction, dehumidification, and antimicrobial treatment.', icon: Droplets },
               { title: 'Rebuild', desc: 'Seamless reconstruction to restore your property to pre-loss condition.', icon: Hammer },
             ].map((step, idx) => (
@@ -119,7 +119,7 @@ export default function WaterDamagePage() {
               Dealing with Water Now?
             </h2>
             <p className="text-xl font-medium mb-12 opacity-80 max-w-2xl mx-auto">
-              Every hour matters. Standing water leads to mold in as little as 24 hours. Let our forensic team take control.
+              Every hour matters. Standing water leads to mold in as little as 24 hours. Let our diagnostic team take control.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <a
@@ -154,6 +154,6 @@ export default function WaterDamagePage() {
       </Section>
 
       <FAQSection />
-    </main>
+    </>
   );
 }

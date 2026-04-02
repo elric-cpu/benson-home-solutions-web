@@ -41,7 +41,7 @@ We categorize keywords into three intents to capture users at every stage of the
 | **Short-Tail** | water damage restoration Albany OR | Transactional | Core service page. Strong "Call Now" CTA. |
 | **Short-Tail** | emergency home repair Burns | Transactional | Core emergency page. Emphasize 24/7 dispatch. |
 | **Long-Tail** | who to call for burst pipe in Lebanon OR | Transactional / GEO | **FAQ Schema Target.** Provide a 3-step emergency checklist. |
-| **Long-Tail** | water damage insurance documentation contractor | Investigational | Explain our forensic moisture mapping and adjuster-ready reports. |
+| **Long-Tail** | water damage insurance documentation contractor | Investigational | Explain our advanced moisture mapping and adjuster-ready reports. |
 | **Long-Tail** | cost to fix flooded basement Sweet Home | Investigational | Publish average starting costs to steal the AI Overview citation. |
 
 ### Cluster C: Remodeling & Structural Reconstruction (High Ticket)
@@ -49,7 +49,7 @@ We categorize keywords into three intents to capture users at every stage of the
 
 | Keyword Type | Keyword target | Search Intent | Content Strategy & GEO Tactic |
 | :--- | :--- | :--- | :--- |
-| **Short-Tail** | bathroom remodeling Albany OR | Transactional | Core service page. Focus on forensic waterproofing. |
+| **Short-Tail** | bathroom remodeling Albany OR | Transactional | Core service page. Focus on diagnostic waterproofing. |
 | **Short-Tail** | kitchen reconstruction Lebanon OR | Transactional | Core service page. Focus on structural integrity. |
 | **Long-Tail** | how much does a kitchen remodel cost in Albany Oregon | Investigational / GEO | **FAQ Schema Target.** Provide a transparent price range ($25k-$45k). |
 | **Long-Tail** | contractor to fix load bearing wall Burns OR | Transactional | Highlight our CCB licensing and structural expertise. |

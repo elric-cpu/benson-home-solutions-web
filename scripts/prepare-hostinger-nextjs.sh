@@ -4,7 +4,7 @@ set -euo pipefail
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 artifact_dir="${root_dir}/.hostinger/node-app"
 tarball_path="${root_dir}/.hostinger/node-app.tgz"
-standalone_dir="${root_dir}/.next/standalone/benson-home-solutions-web"
+standalone_dir="${root_dir}/.next/standalone"
 
 cd "${root_dir}"
 

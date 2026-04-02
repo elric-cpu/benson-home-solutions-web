@@ -1,0 +1,53 @@
+{
+  "status": "simulation_generated",
+  "signals": [
+    {
+      "id": "SIM-01",
+      "priority": "critical",
+      "owner": "platform_engineering",
+      "reason": "Hard-coded backend credential"
+    },
+    {
+      "id": "SIM-02",
+      "priority": "critical",
+      "owner": "platform_engineering",
+      "reason": "Genkit/Firebase contract mismatch"
+    },
+    {
+      "id": "SIM-03",
+      "priority": "critical",
+      "owner": "verification_release",
+      "reason": "Demo-mode and placeholder production behavior"
+    },
+    {
+      "id": "SIM-04",
+      "priority": "high",
+      "owner": "verification_release",
+      "reason": "Contact path rate-limit fallback can hard-fail"
+    },
+    {
+      "id": "SIM-05",
+      "priority": "high",
+      "owner": "search_dominance",
+      "reason": "Duplicate calculator IA and inconsistent links"
+    },
+    {
+      "id": "SIM-06",
+      "priority": "medium",
+      "owner": "content_production",
+      "reason": "Projects proof surface remains placeholder-only"
+    },
+    {
+      "id": "SIM-07",
+      "priority": "medium",
+      "owner": "platform_engineering",
+      "reason": "Global AIChat hydration footprint"
+    },
+    {
+      "id": "SIM-08",
+      "priority": "medium",
+      "owner": "platform_engineering",
+      "reason": "Sanity production env logs critical errors during build"
+    }
+  ]
+}

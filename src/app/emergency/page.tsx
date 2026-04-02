@@ -5,14 +5,14 @@ import { BUSINESS } from '@/lib/constants';
 import { ShieldAlert, Clock, Droplets, Wind } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: '24/7 Emergency Response | Benson Home Solutions',
+  title: '24/7 Emergency Restoration',
   description:
-    'Rapid forensic emergency response for water damage, storm damage, and structural failures in the Mid-Willamette Valley. Call (541) 413-0480 for immediate dispatch.',
+    'Rapid diagnostic emergency response for water damage, storm damage, and structural failures in the Mid-Willamette Valley and Harney County. Available 24/7 for immediate stabilization and restoration dispatch.',
 };
 
 export default function EmergencyPage() {
   return (
-    <main>
+    <>
       <Section variant="oxblood" spacing="lg" className="relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-red-600/10 skew-x-12 transform origin-top-right" />
         <Container className="text-center relative z-10">
@@ -20,11 +20,11 @@ export default function EmergencyPage() {
             <ShieldAlert className="w-4 h-4" /> Critical Response Team
           </Badge>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-cream">
-            24/7 Forensic <br />
+            24/7 Diagnostic <br />
             <span className="italic opacity-60">Emergency Dispatch.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
-            When disaster strikes, every minute counts. We provide immediate forensic stabilization to stop the damage and protect your property from secondary failure.
+            When disaster strikes, every minute counts. We provide immediate diagnostic stabilization to stop the damage and protect your property from secondary failure.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <a href={`tel:${BUSINESS.afterhoursPhone}`}>
@@ -83,6 +83,6 @@ export default function EmergencyPage() {
           </div>
         </Container>
       </Section>
-    </main>
+    </>
   );
 }

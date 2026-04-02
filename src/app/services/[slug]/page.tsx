@@ -2,52 +2,18 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { client } from '@/sanity/lib/client';
-import { urlForImage } from '@/sanity/lib/image';
 import { Button, Container, Section, Badge } from '@/components/ui';
-import { PortableTextRenderer } from '@/components/content/PortableText';
 import { BUSINESS } from '@/lib/constants';
-
-interface ServicePageData {
-  _id: string;
-  title: string;
-  slug: { current: string };
-  metaDescription?: string;
-  heroImage?: any;
-  heroHeadline?: string;
-  content?: any[];
-  serviceArea?: { title: string; slug: { current: string } }[];
-  ctaText?: string;
-  ctaLink?: string;
-  pricingNote?: string;
-  faqItems?: { _id: string; question: string; answer: string }[];
-  relatedServices?: { _id: string; title: string; slug: { current: string }; heroImage?: any }[];
-}
-
-const serviceQuery = `*[_type == "servicePage" && slug.current == $slug][0]{
-  _id,
-  title,
-  slug,
-  metaDescription,
-  heroImage,
-  heroHeadline,
-  content[]{
-    ...,
-    _type == "image" => { ..., asset-> }
-  },
-  serviceArea[]->{ title, slug },
-  ctaText,
-  ctaLink,
-  pricingNote,
-  faqItems[]->{ _id, question, answer },
-  relatedServices[]->{ _id, title, slug, heroImage }
-}`;
+import { PortableTextRenderer } from '@/components/content/PortableText';
+import { urlForImage } from '@/sanity/lib/image';
+import {
+  getServicePageContent,
+  listServicePageSlugs,
+} from '@/lib/content/site-content';
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<{ slug: { current: string } }[]>(
-    `*[_type == "servicePage" && defined(slug.current)]{ slug }`
-  );
-  return slugs.map((s) => ({ slug: s.slug.current }));
+  const slugs = await listServicePageSlugs();
+  return slugs.map(slug => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -56,7 +22,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
+  const service = await getServicePageContent(slug);
   if (!service) return {};
   return {
     title: service.title,
@@ -72,7 +38,7 @@ export default async function ServicePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const service = await client.fetch<ServicePageData | null>(serviceQuery, { slug });
+  const service = await getServicePageContent(slug);
 
   if (!service) notFound();
 
@@ -156,7 +122,7 @@ export default async function ServicePage({
             </h2>
             <div className="space-y-6">
               {service.faqItems.map((faq) => (
-                <div key={faq._id}>
+                <div key={faq.id || faq.question}>
                   <h3 className="text-lg font-semibold text-charcoal">
                     {faq.question}
                   </h3>
@@ -210,7 +176,7 @@ export default async function ServicePage({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {service.relatedServices.map((related) => (
                 <Link
-                  key={related._id}
+                  key={related.id || related.slug.current}
                   href={`/services/${related.slug.current}`}
                   className="group"
                 >
@@ -218,10 +184,7 @@ export default async function ServicePage({
                     {related.heroImage && (
                       <div className="relative h-40">
                         <Image
-                          src={urlForImage(related.heroImage)
-                            .width(400)
-                            .height(200)
-                            .url()}
+                          src={urlForImage(related.heroImage).width(400).height(200).url()}
                           alt={related.title}
                           fill
                           className="object-cover"
@@ -240,6 +203,7 @@ export default async function ServicePage({
           </Container>
         </Section>
       )}
+
     </>
   );
 }

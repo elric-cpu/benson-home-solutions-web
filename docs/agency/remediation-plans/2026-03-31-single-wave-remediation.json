@@ -1,0 +1,161 @@
+{
+  "plan_id": "2026-03-31-single-wave-remediation",
+  "mode": "single_approved_wave",
+  "release_stance": "blocked",
+  "ordering_model": "business_impact",
+  "groups": [
+    {
+      "id": "release_blockers",
+      "items": ["RB-01", "RB-02", "RB-03", "RB-04"]
+    },
+    {
+      "id": "high_leverage_wins",
+      "items": ["HL-01", "HL-02"]
+    },
+    {
+      "id": "structural_fixes",
+      "items": ["SF-01", "SF-02", "SF-03", "SF-04", "SF-05"]
+    }
+  ],
+  "items": [
+    {
+      "id": "RB-01",
+      "title": "Rotate and remove committed service-account key",
+      "owner": "platform_engineering",
+      "supporting_agents": ["engineering_director", "verification_release"],
+      "targets": ["benson-genkit-31726-f661784b7733.json"],
+      "severity": "critical",
+      "business_impact": "security",
+      "effort": "medium",
+      "release_gate": "blocked_engineering"
+    },
+    {
+      "id": "RB-02",
+      "title": "Repair broken production build",
+      "owner": "platform_engineering",
+      "supporting_agents": ["frontend_perf", "verification_release"],
+      "targets": ["src/lib/genkit-node.ts"],
+      "severity": "critical",
+      "business_impact": "deployability",
+      "effort": "low",
+      "release_gate": "blocked_engineering"
+    },
+    {
+      "id": "RB-03",
+      "title": "Remove production demo and stub behavior",
+      "owner": "platform_engineering",
+      "supporting_agents": ["growth_director", "analytics_experimentation", "verification_release"],
+      "targets": [
+        "src/app/api/chat/route.ts",
+        "src/app/api/estimator/route.ts",
+        "src/app/api/agreements/recommend/route.ts",
+        "src/lib/agreements/signatures.ts",
+        "benson-genkit-backend/functions/src/gscTool.ts",
+        "benson-genkit-backend/functions/src/flows/marketingContentFlow.ts"
+      ],
+      "severity": "critical",
+      "business_impact": "trust",
+      "effort": "medium",
+      "release_gate": "blocked_qa"
+    },
+    {
+      "id": "RB-04",
+      "title": "Remove invalid placeholder media from active inventory",
+      "owner": "content_production",
+      "supporting_agents": ["service_copy"],
+      "targets": ["public/images/from_facebook", "docs/MEDIA_PLAN.json"],
+      "severity": "high",
+      "business_impact": "content_integrity",
+      "effort": "low",
+      "release_gate": "blocked_growth"
+    },
+    {
+      "id": "HL-01",
+      "title": "Replace placeholder projects page with real authority asset",
+      "owner": "content_production",
+      "supporting_agents": ["growth_director", "service_copy"],
+      "targets": ["src/app/projects/page.tsx"],
+      "severity": "high",
+      "business_impact": "authority",
+      "effort": "medium",
+      "depends_on": ["RB-04"],
+      "release_gate": "approved_growth"
+    },
+    {
+      "id": "HL-02",
+      "title": "Replace bathroom redirect-only route with a real decision",
+      "owner": "search_dominance",
+      "supporting_agents": ["content_production", "platform_engineering"],
+      "targets": ["src/app/services/bathroom-remodeling/page.tsx"],
+      "severity": "high",
+      "business_impact": "topical_authority",
+      "effort": "medium",
+      "release_gate": "approved_growth"
+    },
+    {
+      "id": "SF-01",
+      "title": "Consolidate calculator surfaces",
+      "owner": "platform_engineering",
+      "supporting_agents": ["search_dominance", "analytics_experimentation"],
+      "targets": ["/calculator", "/tools/cost-calculator"],
+      "severity": "high",
+      "business_impact": "funnel_clarity",
+      "effort": "medium",
+      "depends_on": ["RB-02"],
+      "release_gate": "approved_engineering"
+    },
+    {
+      "id": "SF-02",
+      "title": "Remove site-wide chat hydration tax",
+      "owner": "platform_engineering",
+      "supporting_agents": ["frontend_perf", "verification_release"],
+      "targets": ["src/app/layout.tsx", "src/components/AIChat.tsx"],
+      "severity": "high",
+      "business_impact": "performance",
+      "effort": "medium",
+      "depends_on": ["RB-02"],
+      "release_gate": "approved_qa"
+    },
+    {
+      "id": "SF-03",
+      "title": "Reduce oversized client page complexity",
+      "owner": "platform_engineering",
+      "supporting_agents": ["frontend_perf", "accessibility_regression"],
+      "targets": [
+        "src/app/contact/page.tsx",
+        "src/app/tools/cost-calculator/page.tsx",
+        "src/app/tools/cost-estimator/page.tsx",
+        "src/app/calculator/page.tsx"
+      ],
+      "severity": "high",
+      "business_impact": "performance_and_maintainability",
+      "effort": "medium",
+      "depends_on": ["RB-02"],
+      "release_gate": "approved_qa"
+    },
+    {
+      "id": "SF-04",
+      "title": "Prune orphaned components and unused assets",
+      "owner": "platform_engineering",
+      "supporting_agents": ["content_production"],
+      "targets": ["src/components/PropertyCard.tsx", "public/images/generated"],
+      "severity": "medium",
+      "business_impact": "payload_control",
+      "effort": "low",
+      "depends_on": ["RB-04"],
+      "release_gate": "approved_engineering"
+    },
+    {
+      "id": "SF-05",
+      "title": "Normalize backend function artifact strategy",
+      "owner": "platform_engineering",
+      "supporting_agents": ["engineering_director", "integrations"],
+      "targets": ["benson-genkit-backend/functions/lib", "benson-genkit-backend/functions/lib/src"],
+      "severity": "medium",
+      "business_impact": "repo_health",
+      "effort": "medium",
+      "depends_on": ["RB-02"],
+      "release_gate": "approved_engineering"
+    }
+  ]
+}

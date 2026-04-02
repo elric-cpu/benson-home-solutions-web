@@ -8,11 +8,9 @@ import { loadEnvConfig } from '@next/env';
 loadEnvConfig(process.cwd());
 
 const CORE_RUNTIME_VARS = [
-  'NEXT_PUBLIC_SANITY_PROJECT_ID',
-  'NEXT_PUBLIC_SANITY_DATASET',
-  'SANITY_API_TOKEN',
   'DATABASE_URL',
-  'GOOGLE_GENAI_API_KEY',
+  'GCLOUD_PROJECT',
+  'GOOGLE_CLOUD_LOCATION',
   'GOOGLE_MAPS_API_KEY',
   'GCS_BUCKET_NAME',
 ];
@@ -23,8 +21,40 @@ const OPTIONAL_VARS = [
     reason: 'Sentry monitoring stays disabled until a real DSN is configured.',
   },
   {
-    name: 'RESEND_API_KEY',
-    reason: 'Transactional emails will be disabled.',
+    name: 'ENABLE_MULTI_AGENT',
+    reason: 'Multi-agent office mode defaults to enabled unless explicitly turned off.',
+  },
+  {
+    name: 'NEXT_PUBLIC_ENABLE_MULTI_AGENT',
+    reason: 'Client-side chat badge and request mode default to enabled unless explicitly turned off.',
+  },
+  {
+    name: 'NEXT_PUBLIC_SANITY_PROJECT_ID',
+    reason: 'Legacy Sanity fallback content will be disabled.',
+  },
+  {
+    name: 'NEXT_PUBLIC_SANITY_DATASET',
+    reason: 'Legacy Sanity fallback content will be disabled.',
+  },
+  {
+    name: 'SANITY_API_TOKEN',
+    reason: 'Legacy Sanity fallback content will be disabled.',
+  },
+  {
+    name: 'GOOGLE_WORKSPACE_SENDER',
+    reason: 'Gmail-based notifications will be skipped unless Workspace sending is configured.',
+  },
+  {
+    name: 'GOOGLE_WORKSPACE_IMPERSONATED_USER',
+    reason: 'Workspace APIs will rely on GOOGLE_WORKSPACE_SENDER or remain disabled.',
+  },
+  {
+    name: 'GOOGLE_WORKSPACE_AGREEMENTS_FOLDER_ID',
+    reason: 'Agreement documents will remain in the Workspace root or use mock links.',
+  },
+  {
+    name: 'FIRESTORE_CONTENT_ROOT',
+    reason: 'Firestore content collections will default to the website_content prefix.',
   },
 ];
 

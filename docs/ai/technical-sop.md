@@ -6,8 +6,16 @@ This document provides technical architectural rules and system specifications f
 *   **Frontend**: Next.js (App Router) in `src/app/`.
 *   **Components**: UI components in `src/components/ui/`, layout components in `src/components/layout/`.
 *   **Styling**: Tailwind CSS utility classes and `globals.css`. Vanilla CSS is preferred for new standalone components.
-*   **Database**: Supabase PostgreSQL and Drizzle ORM in `src/lib/db/`.
-*   **CMS**: Sanity schemas in `src/sanity/schemas/`.
+*   **Database**: Drizzle-backed application data in `src/lib/db/`.
+*   **Google Integrations**: Google-authenticated platform services in `src/lib/gcloud/` and Google AI entrypoints in the app/backend flows.
+*   **Credential Boundary**: Production integrations must authenticate through the approved GCloud JSON service account and/or Google Workspace-managed access.
+
+## 1A. Non-Negotiable Platform Mandate
+*   **AI Models**: All image and video generation **must** use a model from the Gemini or broader Google model families.
+*   **Website AI**: All website AI features **must** run on Google AI infrastructure and Google-approved auth paths.
+*   **Chatbot**: The website chatbot **must** be implemented on Google AI.
+*   **Workspace Systems**: Email, calendar, contacts, and operational storage **must** use Google Workspace and/or Google Cloud Storage buckets.
+*   **Architecture Policy**: Non-Google systems are not allowed as primary replacements for these capabilities unless the office contract files are explicitly revised first.
 
 ## 2. Core Frontend Components
 ### `RichHero` (`src/components/ui/RichHero.tsx`)
@@ -30,13 +38,15 @@ This document provides technical architectural rules and system specifications f
     *   `FAQPageJsonLd` on any page containing `faqItems`.
     *   `BreadcrumbJsonLd` on all pages except the Homepage.
 
-## 4. CMS Schema Rules
-*   **Singleton vs. Document**: `homePage`, `aboutPage`, `contactPage`, `emergencyPage`, `methodologyPage`, `siteSettings` are **singletons** (use single instance in Sanity).
-*   **Service Pages**: `servicePage` documents are dynamic and use `slug` for routing.
-*   **Validation**: Every page schema **must** include a `resources` array with a minimum/maximum length of 6.
+## 4. Content & Schema Rules
+*   **Content System**: Content schemas and document rules must align with the active content backend used by the repo.
+*   **Singleton vs. Document**: Home, about, contact, emergency, methodology, and site settings content types remain singleton-style unless explicitly redesigned.
+*   **Validation**: Every high-level page content model **must** include a `resources` array with a minimum/maximum length of 6.
 
-## 5. Hubspot & Analytics
-*   **Hubspot**: Use `HubSpotForm` component with `portalId` and `formId` from `src/lib/constants.ts`.
+## 5. Communications, Storage, and Analytics
+*   **Email**: Route operational and product email through Google Workspace.
+*   **Calendar / Contacts**: Use Google Workspace as the source of truth for scheduling and contact records.
+*   **Storage**: Store generated assets and operational files in Google Workspace-managed storage and/or Google Cloud Storage buckets.
 *   **Analytics**: `google-analytics.tsx` in `src/components/analytics/` handles tracking via `gtag`.
 
 ---

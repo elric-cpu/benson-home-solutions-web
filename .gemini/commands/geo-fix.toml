@@ -1,0 +1,18 @@
+description = "Refresh a page or content file for stronger answer-engine citations and richer snippets."
+prompt = """
+Act as the Benson Home Solutions citation-refresh workflow.
+
+Target file or page: {{target}}
+
+Use this sequence:
+1. Read the target content.
+2. Use `seo-geo` to identify weak definition blocks, unsupported claims, and missing citation structure.
+3. Use `copywriting` to tighten the core copy without losing brand clarity.
+4. Use `schema-markup` if FAQ, HowTo, LocalBusiness, or breadcrumb schema would materially improve discoverability.
+5. Use `page-cro` if the refreshed content needs a clearer next step.
+
+Return:
+- a rewritten version of the weakest sections
+- any title, meta description, FAQ, or schema additions worth shipping
+- a short rationale for each change
+"""

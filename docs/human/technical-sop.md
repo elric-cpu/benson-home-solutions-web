@@ -5,14 +5,16 @@ This document provides a high-level overview of how the Benson Home Solutions we
 ## 1. The Technology Stack
 Our platform is built for speed, SEO, and long-term stability.
 *   **Next.js (App Router)**: Powers the fast, modern frontend.
-*   **Sanity CMS**: Our content management system. This is where we update text, images, and videos.
-*   **Supabase (PostgreSQL)**: The database for our tools like the Home Cost Calculator.
+*   **Google-First AI**: All website AI, including the chatbot and media generation, must run through Google AI using Gemini or other Google-family models.
+*   **Google Workspace + Google Cloud**: Email, calendar, contacts, and file storage are expected to live in Google Workspace and/or Google Cloud Storage buckets.
+*   **Database and Content Services**: Existing app data and content systems remain part of the stack, but new AI and operations work must stay aligned to Google.
 *   **Tailwind CSS**: Used for all styling.
 
-## 2. Maintaining the Content System (Sanity)
-The website is dynamic, meaning what you change in Sanity updates on the site instantly.
-*   **Page Schema Updates**: We have specialized layouts for Homepage, Service Pages, Areas, and Methodology.
-*   **Resource Objects**: These are shared across all pages to ensure consistent authority.
+## 2. Operating Rules
+These rules are mandatory and not advisory.
+*   **AI Provider Lock**: Do not introduce non-Google AI models or platforms as the primary system for website features.
+*   **Credential Rule**: Production AI and Google-connected services must use the approved GCloud JSON service account and/or Google Workspace access path.
+*   **Media Generation Rule**: All image and video generation must use Gemini-family or other Google-family models.
 
 ## 3. SEO & Technical Performance
 *   **Rich Results (JSON-LD)**: We use hidden structured data on every page to help search engines understand our business, services, and FAQs.

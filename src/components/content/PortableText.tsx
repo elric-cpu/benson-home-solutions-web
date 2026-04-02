@@ -91,7 +91,7 @@ const components: PortableTextComponents = {
 };
 
 interface Props {
-  value: any;
+  value: any; /* eslint-disable-line @typescript-eslint/no-explicit-any */
 }
 
 export function PortableTextRenderer({ value }: Props) {

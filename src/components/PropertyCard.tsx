@@ -39,7 +39,7 @@ export function PropertyCard({ address, initialDescription = '' }: PropertyCardP
         <div className="flex justify-between items-center">
           <div>
             <CardTitle>{address}</CardTitle>
-            <p className="text-xs opacity-70 mt-1 uppercase tracking-tighter font-bold">Forensic Health Profile</p>
+            <p className="text-xs opacity-70 mt-1 uppercase tracking-tighter font-bold">Diagnostic Health Profile</p>
           </div>
           <Shield size={32} className="opacity-20" />
         </div>

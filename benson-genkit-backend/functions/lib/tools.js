@@ -1,18 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkServiceAreaTool = exports.getPricingTool = void 0;
+const genkit_config_1 = require("./genkit-config");
 const genkit_1 = require("genkit");
-// Initialize genkit instance
-const ai = (0, genkit_1.genkit)({});
-// Pricing Tool
-exports.getPricingTool = ai.defineTool({
+exports.getPricingTool = genkit_config_1.ai.defineTool({
     name: "getServicePricing",
     description: "Looks up estimated pricing for Benson Home Solutions services.",
     inputSchema: genkit_1.z.object({
         serviceType: genkit_1.z.string().describe("The service type (e.g., kitchen, bathroom, roofing)"),
     }),
 }, async ({ serviceType }) => {
-    // Hardcoded logic for sample implementation
     const pricingDb = {
         kitchen: "Kitchen remodels start at $15,000.",
         bathroom: "Bathroom remodels start at $8,000.",
@@ -25,8 +22,7 @@ exports.getPricingTool = ai.defineTool({
     }
     return "Pricing for that service varies. Please request a custom quote.";
 });
-// Service Areas Tool
-exports.checkServiceAreaTool = ai.defineTool({
+exports.checkServiceAreaTool = genkit_config_1.ai.defineTool({
     name: "checkServiceArea",
     description: "Checks if a specific zip code or city is within Benson Home Solutions' service area.",
     inputSchema: genkit_1.z.object({

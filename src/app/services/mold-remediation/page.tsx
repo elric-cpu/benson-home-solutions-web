@@ -8,37 +8,37 @@ import { ShieldCheck, CloudRain, FileSearch } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Mold Remediation & Protection | Benson Home Solutions',
   description:
-    'Licensed mold remediation and forensic moisture audits in the Mid-Willamette Valley. We identify the source, stop the growth, and protect your asset. CCB #258533.',
+    'Licensed mold remediation and diagnostic moisture audits in the Mid-Willamette Valley. We identify the source, stop the growth, and protect your asset. CCB #258533.',
   keywords: [
     'mold remediation Salem Oregon',
     'black mold removal Albany',
     'moisture detection Corvallis',
     'attic mold treatment Oregon',
-    'forensic moisture audit mold',
+    'diagnostic moisture audit mold',
     'Benson Home Solutions mold',
   ],
 };
 
 export default function MoldRemediationPage() {
   return (
-    <main>
+    <>
       {/* Hero Section */}
       <Section variant="oxblood" spacing="lg">
         <Container className="text-center">
           <Badge className="mb-6 bg-cream/10 text-cream border-cream/20 px-4 py-1.5 uppercase tracking-widest font-black">
-            Forensic Moisture Control
+            Diagnostic Moisture Control
           </Badge>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-cream">
             Identify. Remediate. <br />
             <span className="italic opacity-60">Protect.</span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-cream/80 max-w-3xl mx-auto">
-            In Oregon, mold is a symptom of a building envelope failure. We don&apos;t just clean the mold; we use forensic moisture detection to identify the source and stop it forever.
+            In Oregon, mold is a symptom of a building envelope failure. We don&apos;t just clean the mold; we use diagnostic moisture detection to identify the source and stop it forever.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link href="/contact?service=mold">
               <Button size="lg" variant="secondary" className="w-full sm:w-auto px-10 py-8 text-lg font-black uppercase tracking-widest">
-                Request Forensic Audit
+                Request Comprehensive Audit
               </Button>
             </Link>
           </div>
@@ -85,7 +85,7 @@ export default function MoldRemediationPage() {
         <Container className="text-center">
           <h2 className="text-4xl font-black uppercase tracking-tight text-oxblood mb-6">Don&apos;t Just Spray It.</h2>
           <p className="text-xl text-slate font-medium mb-10 max-w-xl mx-auto">
-            Surface cleaning is a temporary fix. Let our forensic team identify why the mold is growing and protect your asset for the long term.
+            Surface cleaning is a temporary fix. Let our diagnostic team identify why the mold is growing and protect your asset for the long term.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <a
@@ -105,6 +105,6 @@ export default function MoldRemediationPage() {
       </Section>
 
       <FAQSection />
-    </main>
+    </>
   );
 }

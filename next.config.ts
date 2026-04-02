@@ -41,11 +41,6 @@ const nextConfig: NextConfig = {
     return [
       // === Sprint 0: Legacy URL redirect map (portal.bensonhomesolutions.com → new) ===
       {
-        source: '/services',
-        destination: '/',
-        permanent: true,
-      },
-      {
         source: '/services/water-damage-restoration',
         destination: '/services/water-damage',
         permanent: true,

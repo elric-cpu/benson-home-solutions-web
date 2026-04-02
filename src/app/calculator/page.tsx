@@ -38,10 +38,11 @@ export default function CalculatorPage() {
         {!result ? (
           <form onSubmit={handleCalculate} className="space-y-6">
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest mb-2 opacity-50">Property Address</label>
+              <label htmlFor="property-address" className="block text-xs font-black uppercase tracking-widest mb-2 opacity-50">Property Address</label>
               <div className="relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-maroon/30" size={20} />
                 <input
+                  id="property-address"
                   required
                   value={address}
                   onChange={e => setAddress(e.target.value)}
@@ -52,10 +53,11 @@ export default function CalculatorPage() {
             </div>
             <button
               disabled={isProcessing}
+              aria-label="Calculate My True Cost"
               className="w-full bg-maroon text-cream py-5 rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] transition disabled:opacity-50 flex justify-center items-center gap-3"
             >
               {isProcessing ? <Loader2 className="animate-spin" /> : <Calculator size={20} />}
-              Analyze My Property
+              Calculate My True Cost
             </button>
           </form>
         ) : (
@@ -89,6 +91,28 @@ export default function CalculatorPage() {
             </button>
           </div>
         )}
+      </div>
+
+      <div className="mt-16 bg-cream/30 border border-maroon/10 rounded-3xl p-8 shadow-sm">
+        <h2 className="text-2xl font-black uppercase tracking-tight mb-4 text-maroon">Why Calculating True Home Maintenance Costs Matters</h2>
+        <p className="text-maroon/80 font-medium mb-6 leading-relaxed">
+          Homeowners in the Mid-Willamette Valley and Harney County often underestimate the compounding financial impact of deferred maintenance. While traditional inspections focus on immediate repairs, our True Cost Calculator leverages advanced predictive analytics to project your property&apos;s 3-to-5-year maintenance liability. By analyzing local climate stressors—from valley humidity to high-desert freezes—this tool gives you a precise, localized estimate of your total cost of ownership.
+        </p>
+
+        <h3 className="text-xl font-bold uppercase tracking-tight mb-3 text-maroon">The Hidden Cost of Deferred Maintenance</h3>
+        <p className="text-maroon/80 font-medium mb-6 leading-relaxed">
+          It is a statistical reality that every $1 deferred in routine home maintenance results in approximately $4 in emergency repair costs later. Minor seal failures around windows can lead to catastrophic water intrusion, black mold, and structural rot, transforming a $150 preventative fix into a $15,000 mitigation project. Our calculator breaks down your projected costs into three core categories: preventative maintenance, deferred risk liability, and energy efficiency losses. By prioritizing these elements, homeowners avoid the cascading damage that plagues valley properties exposed to continuous rain cycles.
+        </p>
+
+        <h3 className="text-xl font-bold uppercase tracking-tight mb-3 text-maroon">How Our Algorithm Works</h3>
+        <p className="text-maroon/80 font-medium mb-6 leading-relaxed">
+          We integrate RSMeans construction cost data with historical property records and localized weather patterns. When you enter your address, the system evaluates the median age of homes in your exact neighborhood, typical construction materials used in your specific county, and known environmental threats. Whether you are managing an aging commercial facility in Salem or a rural homestead in Harney County, understanding these numbers is the first step toward transforming your property from a depreciating liability into a stabilized, appreciating asset. Benson Home Solutions uses this data to customize maintenance subscriptions that completely offset these risks, keeping your property safe, dry, and secure year-round.
+        </p>
+        
+        <h3 className="text-xl font-bold uppercase tracking-tight mb-3 text-maroon">Shift from Reactive to Proactive</h3>
+        <p className="text-maroon/80 font-medium leading-relaxed">
+          Traditional contractors thrive on your emergencies. When a storm hits the Mid-Willamette Valley or a deep freeze strikes Harney County, reactive repair services charge premium emergency rates. At Benson Home Solutions, we believe property ownership shouldn&apos;t involve unpredictable financial shocks. Our predictive cost analysis isn&apos;t just an estimate—it&apos;s the baseline for our diagnostic stewardship. We perform comprehensive monthly inspections, clear gutters, check building envelopes, and maintain HVAC systems so you never have to make a panicked 2 AM phone call. Let our building science expertise transform how you manage your Oregon property, guaranteeing long-term value preservation and unparalleled peace of mind.
+        </p>
       </div>
     </div>
   );

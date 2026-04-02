@@ -1,7 +1,5 @@
-import { genkit, z } from "genkit";
-
-// Initialize genkit instance
-const ai = genkit({});
+import { ai } from "./genkit-config";
+import { z } from "genkit";
 
 // Pricing Tool
 export const getPricingTool = ai.defineTool(

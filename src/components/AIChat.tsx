@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { getOfficeAgentModeLabel, isMultiAgentEnabled, resolveOfficeAgentMode } from '@/lib/office';
 
 export function AIChat() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +10,8 @@ export function AIChat() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const agentMode = resolveOfficeAgentMode(isMultiAgentEnabled() ? 'multi' : 'single');
+  const agentModeLabel = getOfficeAgentModeLabel(agentMode);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -27,10 +29,21 @@ export function AIChat() {
     setIsLoading(true);
 
     try {
+      const history = messages
+        .filter(message => message.content.trim().length > 0)
+        .map(message => ({
+          role: message.role,
+          content: [{ text: message.content }],
+        }));
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({
+          message: userMessage,
+          history,
+          agentMode,
+        }),
       });
 
       if (!response.ok) throw new Error('Chat failed');
@@ -52,7 +65,13 @@ export function AIChat() {
         });
       }
     } catch {
-      setMessages(prev => [...prev, { role: 'model', content: 'Gus is temporarily offline. Call 541-555-0199.' }]);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'model',
+          content: 'Chat is unavailable right now. Call 541-602-9694 or use the contact form and we will respond directly.',
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -63,17 +82,22 @@ export function AIChat() {
       {isOpen ? (
         <div className="bg-white border-2 border-maroon rounded-2xl shadow-2xl w-80 sm:w-96 flex flex-col overflow-hidden">
           <div className="bg-maroon text-cream p-4 flex justify-between items-center font-bold">
-            <span>Ask Gus (CCB #258533)</span>
+            <div className="flex flex-col">
+              <span>Ask Gus (CCB #258533)</span>
+              <span className="text-[11px] font-medium text-cream/80">{agentModeLabel}</span>
+            </div>
             <button onClick={() => setIsOpen(false)}><X size={20} /></button>
           </div>
           <div ref={scrollRef} className="h-96 overflow-y-auto p-4 space-y-4 bg-cream/10 text-sm">
             {messages.length === 0 && (
               <div className="bg-white p-3 rounded-lg border border-maroon/20">
-                I&apos;m Gus. What&apos;s broken, and why haven&apos;t you fixed it yet?
+                {agentMode === 'multi'
+                  ? "I'm Gus, fronting the office while the specialist leads sort the answer out. What's broken, and why haven't you fixed it yet?"
+                  : "I'm Gus. What's broken, and why haven't you fixed it yet?"}
               </div>
             )}
             {messages.map((m, i) => (
-              <div key={i} className={cn("p-3 rounded-lg max-w-[85%]", m.role === 'user' ? "bg-maroon text-cream ml-auto" : "bg-white border border-maroon/20 mr-auto")}>
+              <div key={i} className={`p-3 rounded-lg max-w-[85%] ${m.role === 'user' ? "bg-maroon text-cream ml-auto" : "bg-white border border-maroon/20 mr-auto"}`}>
                 {m.content}
               </div>
             ))}
@@ -96,6 +120,7 @@ export function AIChat() {
       ) : (
         <button
           onClick={() => setIsOpen(true)}
+          aria-label="Open chat assistant"
           className="bg-maroon text-cream p-4 rounded-full shadow-xl hover:scale-105 transition"
         >
           <MessageSquare size={24} />
