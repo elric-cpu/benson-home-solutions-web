@@ -18,7 +18,6 @@ export const metadata: Metadata = {
     type: 'website', locale: 'en_US', siteName: BUSINESS.name, url: BUSINESS.url,
     title: 'Benson Home Solutions | Harney County General Contractor',
     description: 'Construction, repair, post-fire recovery, property maintenance, and rural project work throughout Harney County, Oregon.',
-    images: [{ url: '/images/generated/hero-exterior.png', width: 1200, height: 630, alt: 'Benson Home Solutions construction work in Oregon' }],
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 } },
 };
@@ -31,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     '@graph': [
       {
         '@type': 'HomeAndConstructionBusiness', '@id': `${BUSINESS.url}/#business`, name: BUSINESS.name,
-        legalName: BUSINESS.legalName, url: BUSINESS.url, logo: `${BUSINESS.url}/favicon.svg`, telephone: BUSINESS.phone,
+        legalName: BUSINESS.legalName, url: BUSINESS.url, telephone: BUSINESS.phone,
         email: BUSINESS.email, identifier: BUSINESS.license,
         areaServed: [{ '@type': 'AdministrativeArea', name: 'Harney County, Oregon' }, ...SERVICE_AREAS.harneyCounty.map(name => ({ '@type': 'Place', name: `${name}, Oregon` }))],
         sameAs: [BUSINESS.facebook, BUSINESS.gbp],
