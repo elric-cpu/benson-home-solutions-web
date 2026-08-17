@@ -1,117 +1,58 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Container, Section, Button, Badge, Card } from '@/components/ui';
-import { ShieldCheck, Droplets, Hammer, Thermometer, Construction, Home } from 'lucide-react';
-import { canonicalMetadata } from '@/lib/seo';
+import { services, wildfireServiceSlugs } from '@/lib/service-catalog';
 
-export const metadata: Metadata = canonicalMetadata({
-  title: 'Contracting Services',
-  description:
-    'Benson Home Solutions provides diagnostic property maintenance, emergency water restoration, mold mitigation, specialized remodeling, and roof care in Oregon.',
-  path: '/services',
-});
-
-const serviceCategories = [
-  {
-    title: 'Maintenance Subscriptions',
-    description: 'Proactive property care programs for residential, commercial, and church assets. Comprehensive Audits included.',
-    href: '/services/maintenance-subscriptions',
-    icon: ShieldCheck,
-  },
-  {
-    title: 'Emergency Restoration',
-    description: '24/7 rapid response for water damage, mold mitigation, and active moisture intrusion in Oregon climate.',
-    href: '/services/water-damage',
-    icon: Droplets,
-  },
-  {
-    title: 'Roof & Envelope Care',
-    description: 'Essential preservation for roofing systems, siding, and building shells to prevent catastrophic rot.',
-    href: '/services/roof-maintenance',
-    icon: Home,
-  },
-  {
-    title: 'Energy & Weatherization',
-    description: 'Specialized air sealing, insulation, and moisture-barrier corrections for high-desert and valley properties.',
-    href: '/services/sitework', // Adjusted based on available routes
-    icon: Thermometer,
-  },
-  {
-    title: 'Remodeling & Repairs',
-    description: 'Lender-required repairs, post-inspection scopes, and high-performance kitchen and bath remodeling.',
-    href: '/services/kitchen-remodeling',
-    icon: Hammer,
-  },
-  {
-    title: 'Tenant & Property Services',
-    description: 'Preservation and maintenance for rental portfolios and property managers in Linn and Harney Counties.',
-    href: '/services/tenant-services',
-    icon: Construction,
-  }
-];
+export const metadata: Metadata = {
+  title: 'Construction, Repair & Property Services in Harney County',
+  description: 'Benson Home Solutions provides demolition, post-fire recovery, water-damage reconstruction, windows and doors, framing, sitework, property maintenance, and rural construction services across Harney County, Oregon.',
+  alternates: { canonical: 'https://bensonhomesolutions.com/services' },
+};
 
 export default function ServicesPage() {
+  const wildfire = services.filter(service => wildfireServiceSlugs.includes(service.slug));
+  const core = services.filter(service => !wildfireServiceSlugs.includes(service.slug));
+
   return (
     <>
-      <Section variant="oxblood" spacing="lg">
-        <Container className="text-center">
-          <Badge variant="secondary" className="mb-6">
-            Expert Trade Services
-          </Badge>
-          <h1 className="text-4xl md:text-6xl font-black text-cream leading-tight uppercase tracking-tight mb-6">
-            Diagnostic <span className="italic opacity-60">Property Care.</span>
-          </h1>
-          <p className="text-xl text-cream/80 max-w-2xl mx-auto font-medium">
-            We don&apos;t just fix problems; we analyze the root cause of failure to provide permanent solutions for your property.
-          </p>
-        </Container>
-      </Section>
+      <section className="bg-[#4A1F24] text-[#FAF8F3]">
+        <div className="mx-auto max-w-6xl px-5 py-16 md:py-24">
+          <p className="font-semibold uppercase tracking-[0.16em] text-[#F5F1E8]/80">Harney County · Oregon CCB #258533</p>
+          <h1 className="mt-4 max-w-4xl text-4xl font-bold leading-tight md:text-6xl">Construction, repair, recovery, and rural property services.</h1>
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-[#F5F1E8]">Each service page explains the actual scope, constraints, related work, and what we need to review the job. Rural work is planned around distance, weather, material availability, access, disposal, and subcontractor scheduling.</p>
+          <Link href="/request-estimate" className="mt-8 inline-block rounded-md bg-[#F5F1E8] px-6 py-3 font-semibold text-[#722F37]">Request an Estimate</Link>
+        </div>
+      </section>
 
-      <Section spacing="lg">
-        <Container>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {serviceCategories.map((service) => (
-              <Link key={service.title} href={service.href}>
-                <Card className="p-8 group hover:border-oxblood/20 transition-all cursor-pointer h-full flex flex-col">
-                  <div className="p-3 bg-oxblood/5 rounded-2xl w-fit mb-6 group-hover:bg-oxblood group-hover:text-cream transition-colors">
-                    <service.icon className="w-6 h-6" />
-                  </div>
-                  <h2 className="text-2xl font-black text-oxblood uppercase tracking-tight mb-4">
-                    {service.title}
-                  </h2>
-                  <p className="text-slate font-medium leading-relaxed mb-6 flex-1">
-                    {service.description}
-                  </p>
-                  <div className="flex items-center text-oxblood font-bold uppercase tracking-widest text-sm">
-                    View Details <span className="ml-2 group-hover:translate-x-2 transition-transform">&rarr;</span>
-                  </div>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </Section>
+      <section className="mx-auto max-w-6xl px-5 py-14 md:py-20">
+        <div className="mb-8 max-w-3xl">
+          <p className="font-semibold uppercase tracking-[0.14em] text-[#722F37]">High Priority</p>
+          <h2 className="mt-2 text-3xl font-bold text-[#4A1F24] md:text-4xl">Post-Fire Cleanup & Recovery</h2>
+          <p className="mt-4 leading-7">For wildfire-damaged properties, we separate regulated debris and hazardous-material requirements from the construction scope, then help move the property through stabilization, demolition, repair, and reconstruction.</p>
+        </div>
+        <div className="grid gap-5 md:grid-cols-2">{wildfire.map(service => <ServiceCard key={service.slug} {...service} />)}</div>
+      </section>
 
-      <Section variant="cream" spacing="lg">
-        <Container className="text-center">
-          <h2 className="text-3xl font-black text-oxblood uppercase tracking-tight mb-6">Need Emergency Response?</h2>
-          <p className="text-lg text-slate mb-8 max-w-xl mx-auto font-medium">
-            Active water damage or structural safety issues? Our emergency teams are available 24/7 for urgent diagnostic stabilization.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/emergency">
-              <Button size="lg" variant="emergency" className="w-full sm:w-auto font-black uppercase tracking-widest px-10">
-                24/7 Emergency Line
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto font-black uppercase tracking-widest px-10">
-                Request Non-Urgent Quote
-              </Button>
-            </Link>
-          </div>
-        </Container>
-      </Section>
+      <section className="border-y border-[#722F37]/10 bg-[#F5F1E8]">
+        <div className="mx-auto max-w-6xl px-5 py-14 md:py-20">
+          <h2 className="text-3xl font-bold text-[#4A1F24] md:text-4xl">Core Services</h2>
+          <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{core.map(service => <ServiceCard key={service.slug} {...service} />)}</div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-14 text-center">
+        <h2 className="text-3xl font-bold text-[#4A1F24]">The project crosses more than one category?</h2>
+        <p className="mx-auto mt-4 max-w-2xl leading-7">Send the whole scope. Reconstruction, remote maintenance, and loss work often involve several trades and are better reviewed as one sequence.</p>
+        <Link href="/request-estimate" className="mt-7 inline-block rounded-md bg-[#722F37] px-6 py-3 font-semibold text-white">Tell Us About the Project</Link>
+      </section>
     </>
   );
+}
+
+function ServiceCard({ slug, title, description, eyebrow }: { slug: string; title: string; description: string; eyebrow: string }) {
+  return <Link href={`/services/${slug}`} className="group rounded-xl border border-[#722F37]/15 bg-[#FAF8F3] p-6 transition hover:-translate-y-0.5 hover:border-[#722F37]/35 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#722F37]">
+    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#722F37]">{eyebrow}</p>
+    <h3 className="mt-2 text-xl font-bold text-[#4A1F24] group-hover:text-[#722F37]">{title}</h3>
+    <p className="mt-3 leading-7 text-[#2D2D2D]">{description}</p>
+    <span className="mt-5 inline-block font-semibold text-[#722F37]">View service →</span>
+  </Link>;
 }

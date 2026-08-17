@@ -1,15 +1,61 @@
 @import "tailwindcss";
 
 :root {
-  --maroon: #4C0C14;
-  --cream: #F5F5F0;
+  --oxblood: #722F37;
+  --dark-maroon: #5C252C;
+  --burgundy: #8B454D;
+  --wine: #4A1F24;
+  --cream: #F5F1E8;
+  --off-white: #FAF8F3;
+  --charcoal: #2D2D2D;
 }
 
+html { scroll-behavior: smooth; }
 body {
-  @apply bg-[#F5F5F0] text-[#4C0C14];
+  margin: 0;
+  background: var(--off-white);
+  color: var(--charcoal);
+  font-family: var(--font-source-sans-3), Arial, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-libre-baskerville), Georgia, serif;
+}
+
+nav, button, [role="button"] {
+  font-family: var(--font-montserrat), Arial, sans-serif;
+}
+
+:focus-visible {
+  outline: 3px solid var(--oxblood);
+  outline-offset: 3px;
+}
+
+.skip-nav {
+  position: fixed;
+  left: 1rem;
+  top: -5rem;
+  z-index: 100;
+  border-radius: .375rem;
+  background: var(--cream);
+  color: var(--wine);
+  padding: .75rem 1rem;
+  font-weight: 700;
+}
+.skip-nav:focus { top: 1rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
 
 @theme {
-  --color-maroon: #4C0C14;
-  --color-cream: #F5F5F0;
+  --color-oxblood: #722F37;
+  --color-dark-maroon: #5C252C;
+  --color-burgundy: #8B454D;
+  --color-wine: #4A1F24;
+  --color-cream: #F5F1E8;
+  --color-surface: #FAF8F3;
+  --color-charcoal: #2D2D2D;
 }

@@ -1,221 +1,119 @@
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Button, Container, Section, Badge } from '@/components/ui';
+import { notFound } from 'next/navigation';
 import { BUSINESS } from '@/lib/constants';
-import { PortableTextRenderer } from '@/components/content/PortableText';
-import { urlForImage } from '@/sanity/lib/image';
-import {
-  getServicePageContent,
-  listServicePageSlugs,
-} from '@/lib/content/site-content';
-import { absoluteUrl } from '@/lib/seo';
+import { serviceMap, services } from '@/lib/service-catalog';
 
-export async function generateStaticParams() {
-  const slugs = await listServicePageSlugs();
-  return slugs.map(slug => ({ slug }));
+const baseUrl = BUSINESS.url;
+
+export function generateStaticParams() {
+  return services.map(({ slug }) => ({ slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const service = await getServicePageContent(slug);
+  const service = serviceMap[slug];
   if (!service) return {};
+  const url = `${baseUrl}/services/${slug}`;
   return {
     title: service.title,
-    description:
-      service.metaDescription ||
-      `${service.title} — professional service from Benson Home Solutions. Licensed Oregon contractor CCB #258533.`,
-    alternates: {
-      canonical: absoluteUrl(`/services/${slug}`),
-    },
-    openGraph: {
-      title: service.title,
-      description:
-        service.metaDescription ||
-        `${service.title} — professional service from Benson Home Solutions. Licensed Oregon contractor CCB #258533.`,
-      url: absoluteUrl(`/services/${slug}`),
-      type: 'website',
-    },
+    description: service.description,
+    alternates: { canonical: url },
+    openGraph: { title: `${service.title} | Benson Home Solutions`, description: service.description, url, type: 'website' },
   };
 }
 
-export default async function ServicePage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const service = await getServicePageContent(slug);
-
+  const service = serviceMap[slug];
   if (!service) notFound();
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Service',
+        name: service.title,
+        description: service.description,
+        url: `${baseUrl}/services/${service.slug}`,
+        provider: { '@type': 'HomeAndConstructionBusiness', name: BUSINESS.name, url: baseUrl },
+        areaServed: { '@type': 'AdministrativeArea', name: 'Harney County, Oregon' },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl },
+          { '@type': 'ListItem', position: 2, name: 'Services', item: `${baseUrl}/services` },
+          { '@type': 'ListItem', position: 3, name: service.title, item: `${baseUrl}/services/${service.slug}` },
+        ],
+      },
+    ],
+  };
 
   return (
     <>
-      {/* Hero */}
-      <Section variant="cream" spacing="lg">
-        <Container>
-          <div className="max-w-3xl">
-            <Link
-              href="/services"
-              className="text-sm font-medium text-oxblood hover:text-oxblood/80 transition-colors mb-4 inline-block"
-            >
-              &larr; All Services
-            </Link>
-            <h1 className="text-4xl md:text-5xl font-bold text-oxblood leading-tight">
-              {service.heroHeadline || service.title}
-            </h1>
-            {service.metaDescription && (
-              <p className="mt-4 text-lg text-slate leading-relaxed">
-                {service.metaDescription}
-              </p>
-            )}
-            {service.serviceArea && service.serviceArea.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {service.serviceArea.map((area) => (
-                  <Badge key={area.slug.current} variant="secondary">
-                    {area.title}
-                  </Badge>
-                ))}
-              </div>
-            )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <section className="bg-[#F5F1E8] border-b border-[#722F37]/15">
+        <div className="mx-auto max-w-6xl px-5 py-16 md:py-24">
+          <nav aria-label="Breadcrumb" className="mb-6 text-sm text-[#5C252C]">
+            <Link href="/">Home</Link> <span aria-hidden="true">/</span> <Link href="/services">Services</Link> <span aria-hidden="true">/</span> <span>{service.title}</span>
+          </nav>
+          <p className="mb-3 font-semibold uppercase tracking-[0.16em] text-[#722F37]">{service.eyebrow}</p>
+          <h1 className="max-w-4xl text-4xl font-bold leading-tight text-[#4A1F24] md:text-6xl">{service.title}</h1>
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-[#2D2D2D]">{service.description}</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/request-estimate" className="rounded-md bg-[#722F37] px-6 py-3 font-semibold text-[#FAF8F3] hover:bg-[#5C252C] focus:outline-none focus:ring-2 focus:ring-[#722F37] focus:ring-offset-2">Request an Estimate</Link>
+            <a href={`tel:${BUSINESS.phoneHref}`} className="rounded-md border border-[#722F37] px-6 py-3 font-semibold text-[#722F37] hover:bg-white">Call {BUSINESS.phone}</a>
           </div>
-        </Container>
-      </Section>
-
-      {/* Hero Image */}
-      {service.heroImage && (
-        <div className="relative w-full h-64 md:h-96">
-          <Image
-            src={urlForImage(service.heroImage).width(1600).height(600).url()}
-            alt={service.title}
-            fill
-            className="object-cover"
-            priority
-          />
         </div>
-      )}
+      </section>
 
-      {/* Content */}
-      {service.content && service.content.length > 0 && (
-        <Section spacing="md">
-          <Container size="narrow">
-            <PortableTextRenderer value={service.content} />
-          </Container>
-        </Section>
-      )}
-
-      {/* Pricing Note */}
-      {service.pricingNote && (
-        <Section variant="cream" spacing="sm">
-          <Container size="narrow">
-            <div className="bg-surface rounded-xl p-6 border border-border">
-              <h3 className="text-lg font-semibold text-charcoal mb-2">
-                Pricing
-              </h3>
-              <p className="text-slate leading-relaxed">
-                {service.pricingNote}
-              </p>
-            </div>
-          </Container>
-        </Section>
-      )}
-
-      {/* FAQ */}
-      {service.faqItems && service.faqItems.length > 0 && (
-        <Section spacing="md">
-          <Container size="narrow">
-            <h2 className="text-2xl md:text-3xl font-bold mb-8">
-              Frequently Asked Questions
-            </h2>
-            <div className="space-y-6">
-              {service.faqItems.map((faq) => (
-                <div key={faq.id || faq.question}>
-                  <h3 className="text-lg font-semibold text-charcoal">
-                    {faq.question}
-                  </h3>
-                  <p className="mt-2 text-slate leading-relaxed">
-                    {faq.answer}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Container>
-        </Section>
-      )}
-
-      {/* CTA */}
-      <Section variant="oxblood" spacing="md">
-        <Container size="narrow">
-          <div className="text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-cream">
-              Ready for {service.title}?
-            </h2>
-            <p className="mt-3 text-cream/80">
-              Get a free, no-obligation estimate from our licensed team.
-            </p>
-            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
-              <Link href={service.ctaLink || '/contact'}>
-                <Button variant="secondary" size="lg">
-                  {service.ctaText || 'Get a Free Estimate'}
-                </Button>
-              </Link>
-              <a href={`tel:${BUSINESS.phone}`}>
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  className="text-cream hover:text-cream hover:bg-cream/10"
-                >
-                  Call {BUSINESS.phone}
-                </Button>
-              </a>
-            </div>
+      <article className="mx-auto max-w-6xl px-5 py-14 md:py-20">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)]">
+          <div className="space-y-14">
+            <section>
+              <h2 className="text-3xl font-bold text-[#4A1F24]">What this service covers</h2>
+              <p className="mt-4 text-lg leading-8 text-[#2D2D2D]">{service.intro}</p>
+            </section>
+            <section>
+              <h2 className="text-3xl font-bold text-[#4A1F24]">Typical problems we solve</h2>
+              <ul className="mt-5 grid gap-3 sm:grid-cols-2">{service.problems.map(item => <li key={item} className="rounded-lg border border-[#722F37]/15 bg-[#FAF8F3] p-4">{item}</li>)}</ul>
+            </section>
+            <section>
+              <h2 className="text-3xl font-bold text-[#4A1F24]">Scope of work</h2>
+              <ul className="mt-5 space-y-3">{service.scope.map(item => <li key={item} className="flex gap-3"><span aria-hidden="true" className="font-bold text-[#722F37]">—</span><span>{item}</span></li>)}</ul>
+            </section>
+            <section>
+              <h2 className="text-3xl font-bold text-[#4A1F24]">How we approach the job</h2>
+              <ol className="mt-5 space-y-4">{service.process.map((item, i) => <li key={item} className="flex gap-4"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#722F37] font-semibold text-white">{i + 1}</span><span className="pt-1 leading-7">{item}</span></li>)}</ol>
+            </section>
+            <section className="rounded-xl bg-[#F5F1E8] p-6 md:p-8">
+              <h2 className="text-2xl font-bold text-[#4A1F24]">Rural and remote work</h2>
+              <p className="mt-3 leading-7">{service.rural}</p>
+            </section>
+            {service.insurance && <section><h2 className="text-3xl font-bold text-[#4A1F24]">Insurance and regulated-work considerations</h2><p className="mt-4 leading-8">{service.insurance}</p></section>}
+            <section>
+              <h2 className="text-3xl font-bold text-[#4A1F24]">Frequently asked questions</h2>
+              <div className="mt-6 divide-y divide-[#722F37]/15 border-y border-[#722F37]/15">{service.faq.map(item => <details key={item.question} className="group py-5"><summary className="cursor-pointer list-none font-semibold text-[#4A1F24]">{item.question}</summary><p className="mt-3 max-w-3xl leading-7">{item.answer}</p></details>)}</div>
+            </section>
           </div>
-        </Container>
-      </Section>
 
-      {/* Related Services */}
-      {service.relatedServices && service.relatedServices.length > 0 && (
-        <Section spacing="md">
-          <Container>
-            <h2 className="text-2xl md:text-3xl font-bold mb-8">
-              Related Services
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {service.relatedServices.map((related) => (
-                <Link
-                  key={related.id || related.slug.current}
-                  href={`/services/${related.slug.current}`}
-                  className="group"
-                >
-                  <div className="rounded-xl overflow-hidden bg-surface shadow-card hover:shadow-elevated transition-shadow">
-                    {related.heroImage && (
-                      <div className="relative h-40">
-                        <Image
-                          src={urlForImage(related.heroImage).width(400).height(200).url()}
-                          alt={related.title}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="p-4">
-                      <h3 className="font-semibold text-charcoal group-hover:text-oxblood transition-colors">
-                        {related.title}
-                      </h3>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </Container>
-        </Section>
-      )}
+          <aside className="h-fit rounded-xl border border-[#722F37]/20 bg-[#FAF8F3] p-6 lg:sticky lg:top-28">
+            <h2 className="text-xl font-bold text-[#4A1F24]">Service area</h2>
+            <p className="mt-3 leading-7">Harney County, Oregon, including Burns, Hines, Frenchglen, Fields, Diamond, Princeton, Riley, Drewsey, Crane, Lawen, surrounding ranches, and remote properties.</p>
+            <h2 className="mt-8 text-xl font-bold text-[#4A1F24]">Related services</h2>
+            <ul className="mt-3 space-y-2">{service.related.map(relatedSlug => { const related = serviceMap[relatedSlug]; return related ? <li key={relatedSlug}><Link className="font-semibold text-[#722F37] underline-offset-4 hover:underline" href={`/services/${relatedSlug}`}>{related.title}</Link></li> : null; })}</ul>
+          </aside>
+        </div>
+      </article>
 
+      <section className="bg-[#4A1F24] text-[#FAF8F3]">
+        <div className="mx-auto max-w-5xl px-5 py-14 text-center">
+          <h2 className="text-3xl font-bold">Start with the property, not a generic quote.</h2>
+          <p className="mx-auto mt-4 max-w-2xl leading-7 text-[#F5F1E8]">Send the location, a short description, access notes, timing, and useful photos. We’ll review the scope and the practical next step.</p>
+          <Link href="/request-estimate" className="mt-7 inline-block rounded-md bg-[#F5F1E8] px-6 py-3 font-semibold text-[#722F37]">Request an Estimate</Link>
+        </div>
+      </section>
     </>
   );
 }

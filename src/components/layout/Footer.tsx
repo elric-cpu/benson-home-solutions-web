@@ -1,165 +1,53 @@
 import Link from 'next/link';
 import { Container } from '@/components/ui';
 import { BUSINESS } from '@/lib/constants';
-import { Phone, Mail } from 'lucide-react';
 
-const footerNav = {
-  services: [
-    { name: 'Residential Maintenance', href: '/services/maintenance-subscriptions' },
-    { name: 'Commercial Services', href: '/services/maintenance-subscriptions' },
-    { name: 'Emergency Repairs', href: '/emergency' },
-    { name: 'Church & Non-Profit', href: '/services/maintenance-subscriptions' },
-    { name: 'All Services', href: '/services' },
-  ],
-  company: [
-    { name: 'About Us', href: '/about' },
-    { name: 'Our Methodology', href: '/methodology' },
-    { name: 'Projects', href: '/projects' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Contact', href: '/contact' },
-  ],
-  resources: [
-    { name: 'FAQ', href: '/#faq' },
-    { name: 'True Cost Calculator', href: '/calculator' },
-    { name: 'Capital Cost Estimator', href: '/tools/cost-estimator' },
-    { name: 'Areas We Serve', href: '/areas' },
-    { name: 'Privacy Policy', href: '/privacy' },
-  ],
-  areas: [
-    { name: 'Albany', href: '/areas/albany' },
-    { name: 'Salem', href: '/areas/salem' },
-    { name: 'Corvallis', href: '/areas/corvallis' },
-    { name: 'Burns', href: '/areas/burns' },
-    { name: 'Hines', href: '/areas/hines' },
-  ],
-};
+const groups = [
+  {
+    title: 'Recovery & Repair', links: [
+      ['Post-Fire Recovery', '/services/post-fire-cleanup-recovery'],
+      ['Fire Damage Demolition', '/services/fire-damage-demolition'],
+      ['Water Damage', '/services/water-damage-restoration'],
+      ['Framing & Structural', '/services/framing-structural-repairs'],
+      ['All Services', '/services'],
+    ],
+  },
+  {
+    title: 'Property Services', links: [
+      ['Windows & Doors', '/services/window-door-replacement'],
+      ['Property Maintenance', '/services/property-maintenance'],
+      ['Sitework & Excavation', '/services/sitework-excavation'],
+      ['Small Concrete', '/services/concrete-small-projects'],
+      ['Exterior Cleanup', '/services/exterior-property-cleanup'],
+    ],
+  },
+  {
+    title: 'Company', links: [
+      ['Projects', '/projects'], ['Service Area', '/service-area'], ['About', '/about'], ['Contact', '/contact'], ['Privacy', '/privacy'],
+    ],
+  },
+];
 
 export function Footer() {
   return (
-    <footer className="bg-charcoal text-cream/90">
+    <footer className="bg-[#2D2D2D] text-[#F5F1E8]">
       <Container>
-        <div className="py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {/* Brand column */}
-            <div className="lg:col-span-1">
-              <Link href="/" className="text-xl font-bold text-cream">
-                {BUSINESS.name}
-              </Link>
-              <p className="mt-3 text-sm text-cream/70 leading-relaxed">
-                Professional property care and proactive maintenance services for the
-                Mid-Willamette Valley and Harney County. Licensed, bonded, and insured.
-              </p>
-              <div className="mt-4 space-y-3 text-sm">
-                <a
-                  href={`tel:${BUSINESS.phone}`}
-                  className="flex items-center gap-2 text-cream/80 hover:text-cream transition-colors"
-                >
-                  <Phone className="w-4 h-4" /> {BUSINESS.phone}
-                </a>
-                <a
-                  href={`mailto:${BUSINESS.email}`}
-                  className="flex items-center gap-2 text-cream/80 hover:text-cream transition-colors"
-                >
-                  <Mail className="w-4 h-4" /> {BUSINESS.email}
-                </a>
-              </div>
+        <div className="grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-5 md:py-16">
+          <div className="lg:col-span-2">
+            <Link href="/" className="text-2xl font-bold">{BUSINESS.name}</Link>
+            <p className="mt-3 max-w-md leading-7 text-[#F5F1E8]/75">Construction, repair, reconstruction, property maintenance, and rural project services throughout Harney County, Oregon.</p>
+            <div className="mt-5 space-y-2 text-sm">
+              <a href={`tel:${BUSINESS.phoneHref}`} className="block hover:text-white">{BUSINESS.phone}</a>
+              <a href={`mailto:${BUSINESS.email}`} className="block hover:text-white">{BUSINESS.email}</a>
+              <span className="block">{BUSINESS.legalName} · {BUSINESS.license}</span>
             </div>
-
-            {/* Services */}
-            <div>
-              <h2 className="text-sm font-semibold text-cream uppercase tracking-wider">
-                Services
-              </h2>
-              <ul className="mt-3 space-y-2">
-                {footerNav.services.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-cream/70 hover:text-cream transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div>
-              <h2 className="text-sm font-semibold text-cream uppercase tracking-wider">
-                Company
-              </h2>
-              <ul className="mt-3 space-y-2">
-                {footerNav.company.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-cream/70 hover:text-cream transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Resources */}
-            <div>
-              <h2 className="text-sm font-semibold text-cream uppercase tracking-wider">
-                Resources
-              </h2>
-              <ul className="mt-3 space-y-2">
-                {footerNav.resources.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-cream/70 hover:text-cream transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Areas */}
-            <div>
-              <h2 className="text-sm font-semibold text-cream uppercase tracking-wider">
-                Service Areas
-              </h2>
-              <ul className="mt-3 space-y-2">
-                {footerNav.areas.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-cream/70 hover:text-cream transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <Link href="/request-estimate" className="mt-6 inline-block rounded-md bg-[#F5F1E8] px-5 py-2.5 font-semibold text-[#722F37]">Request an Estimate</Link>
           </div>
-
-          {/* Bottom bar */}
-          <div className="mt-12 pt-8 border-t border-cream/10 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-sm text-cream/50">
-              &copy; {new Date().getFullYear()} {BUSINESS.name}. All rights
-              reserved.
-            </div>
-            <div className="text-sm text-cream/50">
-              <a
-                href="http://search.ccb.state.or.us/search/business_details.aspx?id=258533"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-cream transition-colors underline"
-              >
-                {BUSINESS.license}
-              </a>{' '}
-              &middot; Licensed &middot; Bonded &middot; Insured
-            </div>
-          </div>
+          {groups.map(group => <div key={group.title}><h2 className="text-sm font-semibold uppercase tracking-[0.12em]">{group.title}</h2><ul className="mt-4 space-y-2">{group.links.map(([name, href]) => <li key={href}><Link href={href} className="text-sm text-[#F5F1E8]/70 hover:text-white">{name}</Link></li>)}</ul></div>)}
+        </div>
+        <div className="flex flex-col gap-3 border-t border-white/10 py-6 text-xs text-[#F5F1E8]/60 sm:flex-row sm:items-center sm:justify-between">
+          <span>© {new Date().getFullYear()} {BUSINESS.legalName}. All rights reserved.</span>
+          <span>Harney County, Oregon · {BUSINESS.license}</span>
         </div>
       </Container>
     </footer>

@@ -1,59 +1,100 @@
-# Benson Home Solutions Web Platform
+# Benson Home Solutions Website
 
-A production-grade Next.js application for Benson Home Solutions, a general contractor specializing in maintenance-first subscription programs in the Mid-Willamette Valley and Harney County, Oregon.
+Production website for Benson Enterprises, LLC dba Benson Home Solutions, an Oregon general contractor serving Harney County and rural/remote properties.
 
-## 🚀 Tech Stack
+## Production stack
 
-- **Framework:** [Next.js 15 (App Router)](https://nextjs.org/)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS + Vanilla CSS
-- **Platform Mandate:** Google-first architecture for AI, communications, and operational storage
-- **AI:** Google AI / Gemini-family models only for website AI, chatbot, and media generation
-- **Auth for AI / Google Services:** GCloud JSON service account and/or Google Workspace-managed access
-- **Communications & Storage:** Google Workspace + Google Cloud Storage buckets
-- **Database:** Drizzle ORM-backed application data layer
-- **Lead Capture:** HubSpot CRM Integration
-- **Email / Calendar / Contacts:** Google Workspace
+- Next.js 15 App Router + TypeScript
+- React 19
+- Tailwind CSS 4
+- Node.js 22
+- pnpm 10
+- Drizzle-backed contact persistence with Firestore fallback
+- Google Workspace mail notification for website project requests
+- Playwright + axe accessibility coverage
+- Lighthouse CI
+- `next-sitemap` post-build sitemap/robots generation
 
-## 🏗️ Architecture
+## Primary architecture
 
-### 1. Component System (`src/components`)
-- `ui`: Atomic, reusable UI elements (Buttons, Cards, Inputs).
-- `layout`: Structural components (Header, Footer, Navigation).
-- `content`: Feature-specific components (Homepage sections, Portable Text renderers).
+- `src/app/page.tsx` — homepage
+- `src/app/services/page.tsx` — service hub
+- `src/app/services/[slug]/page.tsx` — reusable, statically generated service landing pages
+- `src/lib/service-catalog.ts` — authoritative public service content and internal relationships
+- `src/app/wildfire-recovery/page.tsx` — wildfire recovery pillar
+- `src/app/service-area/page.tsx` — Harney County service-area hub
+- `src/app/request-estimate/page.tsx` — project intake funnel
+- `src/app/api/contact/route.ts` — validated and rate-limited lead capture
+- `src/components/layout` — navigation/footer system
+- `src/lib/constants.ts` — current public business identity and service geography
 
-### 2. Logic Layer (`src/lib`)
-- `ai`: Google AI-powered prompt execution, retrieval, and application intelligence.
-- `gcloud`: Google auth, storage, logging, and platform integrations.
-- `crm`: Lead synchronization with HubSpot.
-- `db`: Database schema definitions and Drizzle client.
-- `email`: Google Workspace-aligned transactional and notification utilities.
-- `notion`: Bidirectional sync between Notion internal SOPs and production database.
+## Brand system
 
-### 3. Tool Suite (`src/app/tools`)
-- **True Cost Calculator:** Address-based homeownership cost projection.
-- **Maintenance Configurator:** Personalized service package builder.
+- Oxblood maroon `#722F37`
+- Dark maroon `#5C252C`
+- Burgundy `#8B454D`
+- Rich wine `#4A1F24`
+- 1970s Ford cream `#F5F1E8`
+- Off-white cream `#FAF8F3`
+- Charcoal `#2D2D2D`
+- Headings: Libre Baskerville
+- Navigation/UI: Montserrat
+- Body: Source Sans 3
 
-## 🛠️ Development
+## Local development
 
-### Setup
-1. Clone the repository.
-2. Install dependencies: `pnpm install`
-3. Copy `.env.example` to `.env.local` and fill in required keys.
-4. Run development server: `pnpm dev`
+Requirements: Node.js 22+ and pnpm 10+.
 
-### AI Runtime Flags
-- `ENABLE_MULTI_AGENT=true`: Enables office-style multi-agent routing for server-side chat handling. This repo now defaults to enabled unless explicitly set to `false`.
-- `NEXT_PUBLIC_ENABLE_MULTI_AGENT=true`: Mirrors the multi-agent state into the client so the chat UI can label and request office mode. This repo now defaults to enabled unless explicitly set to `false`.
+```bash
+pnpm install
+cp .env.example .env.local
+pnpm dev
+```
 
-### Core Scripts
-- `pnpm build`: Production build with type checking and linting.
-- `pnpm lint`: ESLint code quality audit.
-- `pnpm test`: Playwright E2E and accessibility testing.
-- `pnpm seed:pinecone`: Index the Notion knowledge base into Pinecone.
+Do not commit `.env.local`, service-account JSON, API keys, database credentials, or production secrets.
 
-## ⚖️ Compliance & Standards
-- CCB License: #258533
-- ADA/WCAG 2.1 AA compliant.
-- GDPR/TCPA lead capture protocols.
-- Non-Google primary AI, chatbot, email, calendar, contacts, or storage architecture is out of policy unless the office contract files are explicitly revised.
+## Validation
+
+Before merging to production:
+
+```bash
+pnpm install --no-frozen-lockfile
+pnpm exec tsc --noEmit
+pnpm lint
+pnpm build
+pnpm test
+```
+
+The pull-request CI also runs a production build, Playwright/axe checks, and Lighthouse CI. Fix failures rather than disabling the production build or test jobs.
+
+## Production environment
+
+The application requires the environment variables used by its active persistence, Google Workspace mail, rate-limit, and optional legacy integrations. `.env.example` is the source-of-truth inventory; production values belong in the hosting control panel, not Git.
+
+The production URL is `https://bensonhomesolutions.com`. Canonicals, structured data, and sitemap output must use that hostname consistently.
+
+## Hostinger deployment
+
+Hostinger supports Next.js as a Node.js Web App with GitHub-connected automatic deployments. Production should use the repository `elric-cpu/benson-home-solutions-web` and the `main` branch.
+
+Recommended settings for this repository:
+
+- Framework: Next.js
+- Node.js: 22.x
+- Package manager: pnpm
+- Install: `pnpm install --no-frozen-lockfile`
+- Build: `pnpm build`
+- Start: `pnpm start`
+- Production domain: `bensonhomesolutions.com`
+
+Add production environment variables in Hostinger hPanel before the first production build. Keep SSL enabled, redirect HTTP to HTTPS, choose one canonical www/non-www hostname, and verify the live sitemap, robots file, forms, redirects, and representative service routes after each release.
+
+## Content and compliance rules
+
+- Do not publish fabricated ratings, reviews, project counts, awards, response-time guarantees, or case studies.
+- Harney County is the primary public service geography. Secondary-market claims must reflect current operations.
+- Wildfire cleanup language must not imply unrestricted handling of asbestos, contaminated ash, hazardous waste, or other regulated materials.
+- Engineering, regulated abatement, and licensed specialty-trade work must be represented as coordination when Benson is not the licensed provider.
+- Preserve valuable legacy URLs with permanent redirects when public slugs change.
+
+Oregon CCB #258533.

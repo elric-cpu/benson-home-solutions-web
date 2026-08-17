@@ -1,134 +1,28 @@
 import type { Metadata } from 'next';
-import { Container, Section, Button, Badge, Card, CardContent, CardHeader } from '@/components/ui';
 import Link from 'next/link';
-import { CheckCircle2, ClipboardList, PhoneCall } from 'lucide-react';
-import { canonicalMetadata } from '@/lib/seo';
+import { BUSINESS } from '@/lib/constants';
 
-export const metadata: Metadata = canonicalMetadata({
-  title: 'Documented Work',
-  description:
-    'See the kinds of scopes Benson Home Solutions documents, how work is verified, and what clients receive after emergency, maintenance, and remodel projects in Oregon.',
-  path: '/projects',
-});
-
-const DOCUMENTED_SCOPES = [
-  {
-    title: 'Picture Window Replacement',
-    summary:
-      'A replacement scope built around stopping a persistent leak path, correcting envelope failure, and documenting the repair sequence clearly enough for owner review.',
-    proof: [
-      'Used in brand guidance as a concrete example of problem-solving work the company is proud of.',
-      'Relevant to water-intrusion diagnosis, finish repair, and long-term envelope protection.',
-    ],
-  },
-  {
-    title: 'ADA Ramp Access Upgrade',
-    summary:
-      'An accessibility-driven build scope where the value is functional access, code-minded execution, and clean handoff documentation rather than cosmetic flash.',
-    proof: [
-      'Named in the operating manual and brand guidance as representative work.',
-      'Supports the company position that useful, durable scopes matter more than vanity projects.',
-    ],
-  },
-  {
-    title: 'Emergency Water Mitigation and Rebuild',
-    summary:
-      'Rapid stabilization, moisture tracking, photo documentation, and insurance-ready rebuild planning for Oregon water-loss events.',
-    proof: [
-      'Matches the live emergency and water-damage service lines on the site.',
-      'Clients receive diagnostic notes, risk explanation, and a clear next-step scope instead of a vague cleanup summary.',
-    ],
-  },
-];
+export const metadata: Metadata = {
+  title: 'Projects & Documented Work',
+  description: 'Documented Benson Home Solutions project work and the portfolio structure used for future Harney County construction case studies.',
+  alternates: { canonical: `${BUSINESS.url}/projects` },
+};
 
 export default function ProjectsPage() {
-  return (
-    <>
-      <Section variant="oxblood" spacing="lg">
-        <Container className="text-center">
-          <Badge variant="secondary" className="mb-6">
-            Work Portfolio
-          </Badge>
-          <h1 className="text-4xl md:text-6xl font-black text-cream leading-tight uppercase tracking-tight mb-6">
-            Documented <span className="italic opacity-60">Work.</span>
-          </h1>
-          <p className="text-xl text-cream/80 max-w-2xl mx-auto font-medium">
-            We do not publish fabricated case studies. This page shows the real scope categories we document, the standards we use, and the proof package a client can expect.
-          </p>
-        </Container>
-      </Section>
+  return <>
+    <section className="bg-[#4A1F24] text-[#FAF8F3]"><div className="mx-auto max-w-6xl px-5 py-16 md:py-24"><p className="font-semibold uppercase tracking-[0.16em] text-[#F5F1E8]/75">Documented Work</p><h1 className="mt-4 max-w-4xl text-4xl font-bold md:text-6xl">Real projects, without manufactured case studies.</h1><p className="mt-6 max-w-3xl text-lg leading-8 text-[#F5F1E8]">We publish project examples only when the scope and media are tied to actual Benson work. The portfolio will grow as verified before-and-after documentation is organized for public use.</p></div></section>
 
-      <Section spacing="lg">
-        <Container>
-          <div className="grid gap-8 md:grid-cols-3">
-            {DOCUMENTED_SCOPES.map((scope) => (
-              <Card key={scope.title} className="h-full border-oxblood/10 bg-white">
-                <CardHeader>
-                  <h2 className="text-2xl font-black uppercase tracking-tight text-oxblood">
-                    {scope.title}
-                  </h2>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="font-medium text-slate leading-relaxed">{scope.summary}</p>
-                  <ul className="space-y-3">
-                    {scope.proof.map((item) => (
-                      <li key={item} className="flex gap-3">
-                        <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-oxblood" />
-                        <span className="text-sm font-medium text-slate">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </Container>
-      </Section>
+    <section className="mx-auto max-w-6xl px-5 py-14 md:py-20">
+      <article className="overflow-hidden rounded-xl border border-[#722F37]/15 bg-[#FAF8F3]">
+        <div className="grid md:grid-cols-[.8fr_1.2fr]">
+          <div className="bg-[#F5F1E8] p-7 md:p-9"><p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#722F37]">Frenchglen, Oregon</p><h2 className="mt-3 text-3xl font-bold text-[#4A1F24]">RV sanitation dump pad rebuild</h2><p className="mt-4 leading-7">Small concrete and sanitation-site reconstruction in a remote South County location.</p></div>
+          <div className="p-7 md:p-9"><h3 className="text-xl font-bold text-[#4A1F24]">Problem</h3><p className="mt-2 leading-7">The existing dump area had a failing concrete pad and needed a practical rebuild around the drain and vehicle approach.</p><h3 className="mt-6 text-xl font-bold text-[#4A1F24]">Scope</h3><ul className="mt-3 space-y-2 leading-7"><li>— Remove failed concrete and prepare the work area.</li><li>— Rebuild the pad around the sanitation drain.</li><li>— Form the curb and approach/taper for usable drainage and access.</li><li>— Coordinate a remote concrete placement where haul time and batch timing materially affected execution.</li></ul><div className="mt-7 flex flex-wrap gap-3"><Link href="/services/concrete-small-projects" className="font-semibold text-[#722F37] underline underline-offset-4">Small concrete projects</Link><Link href="/services/sitework-excavation" className="font-semibold text-[#722F37] underline underline-offset-4">Sitework & excavation</Link></div></div>
+        </div>
+      </article>
 
-      <Section variant="cream" spacing="lg">
-        <Container className="grid gap-8 lg:grid-cols-2">
-          <Card className="border-oxblood/10 bg-white">
-            <CardHeader className="flex flex-row items-center gap-4">
-              <ClipboardList className="h-6 w-6 text-oxblood" />
-              <h2 className="text-2xl font-black uppercase tracking-tight text-oxblood">
-                What the Proof Package Includes
-              </h2>
-            </CardHeader>
-            <CardContent className="space-y-3 text-slate">
-              <p className="font-medium">Scope summary tied to the failure or maintenance risk.</p>
-              <p className="font-medium">Photo documentation and field notes where applicable.</p>
-              <p className="font-medium">Material or system recommendations tied to Oregon climate realities.</p>
-              <p className="font-medium">A next-step plan for maintenance, repair, or phased rebuild work.</p>
-            </CardContent>
-          </Card>
+      <section className="mt-12 grid gap-6 md:grid-cols-3"><div className="rounded-xl border border-[#722F37]/15 p-6"><h2 className="text-xl font-bold text-[#4A1F24]">What future case studies include</h2><p className="mt-3 leading-7">Location, problem, approved scope, solution, before/after media when available, and links to the related services.</p></div><div className="rounded-xl border border-[#722F37]/15 p-6"><h2 className="text-xl font-bold text-[#4A1F24]">Insurance work</h2><p className="mt-3 leading-7">Loss projects are published only when the project status, documentation, and permission support a truthful public case study.</p></div><div className="rounded-xl border border-[#722F37]/15 p-6"><h2 className="text-xl font-bold text-[#4A1F24]">No filler</h2><p className="mt-3 leading-7">No invented client names, quotes, star ratings, project counts, or stock-photo projects are presented as Benson work.</p></div></section>
+    </section>
 
-          <Card className="border-oxblood/10 bg-oxblood text-cream">
-            <CardHeader className="flex flex-row items-center gap-4">
-              <PhoneCall className="h-6 w-6" />
-              <h2 className="text-2xl font-black uppercase tracking-tight">
-                Need References or Similar Scope Examples?
-              </h2>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <p className="font-medium text-cream/85">
-                If you need project references, comparable scope details, or documentation expectations for your property type, request them directly. We would rather provide a truthful reference packet than publish filler.
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Link href="/contact">
-                  <Button size="lg" className="font-black uppercase tracking-widest">
-                    Request References
-                  </Button>
-                </Link>
-                <Link href="/services">
-                  <Button variant="outline" size="lg" className="border-cream text-cream hover:bg-cream hover:text-oxblood font-black uppercase tracking-widest">
-                    Review Services
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </Container>
-      </Section>
-    </>
-  );
+    <section className="bg-[#F5F1E8]"><div className="mx-auto max-w-5xl px-5 py-14 text-center"><h2 className="text-3xl font-bold text-[#4A1F24]">Need to discuss a similar scope?</h2><p className="mx-auto mt-4 max-w-2xl leading-7">Send the property location, problem, access notes, timing, and useful photos. We can review the project on its own facts.</p><Link href="/request-estimate" className="mt-7 inline-block rounded-md bg-[#722F37] px-6 py-3 font-semibold text-white">Request a Project Review</Link></div></section>
+  </>;
 }

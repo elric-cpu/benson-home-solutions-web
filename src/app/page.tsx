@@ -1,253 +1,114 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Container, Section, Button, Badge, Card, CardHeader, CardContent } from '@/components/ui';
-import { StatsSection } from '@/components/content/StatsSection';
-import { FAQSection } from '@/components/content/FAQSection';
-import { Quote, CheckCircle2 } from 'lucide-react';
 import { BUSINESS } from '@/lib/constants';
-import { getHomePageContent } from '@/lib/content/site-content';
-import { canonicalMetadata } from '@/lib/seo';
+import { serviceMap } from '@/lib/service-catalog';
 
-export const metadata = canonicalMetadata({
-  title: 'Benson Home Solutions | Licensed Oregon Contractor',
-  description:
-    'Licensed Oregon contractor for home maintenance, emergency restoration, remodeling, and monthly property stewardship across the Mid-Willamette Valley and Harney County.',
-  path: '/',
-});
+export const metadata: Metadata = {
+  title: 'Harney County General Contractor | Benson Home Solutions',
+  description: 'Construction, repair, post-fire recovery, demolition, property maintenance, and rural project work throughout Harney County, Oregon. Oregon CCB #258533.',
+  alternates: { canonical: BUSINESS.url },
+};
 
-/**
- * Benson Home Solutions Home Page - Rebuild V1 (2026)
- * Answer-First SEO Strategy.
- */
-export default async function HomePage() {
-  const data = await getHomePageContent();
+const featured = [
+  'post-fire-cleanup-recovery',
+  'demolition',
+  'water-damage-restoration',
+  'window-door-replacement',
+  'property-maintenance',
+  'framing-structural-repairs',
+  'sitework-excavation',
+  'fire-damage-repair-reconstruction',
+].map(slug => serviceMap[slug]);
 
+export default function HomePage() {
   return (
     <>
-      {/* Hero Section */}
-      <Section variant="cream" spacing="lg" className="relative overflow-hidden">
-        <Container className="text-center relative z-10">
-          <Badge variant="secondary" className="mb-8 uppercase tracking-widest font-black border-oxblood/30 text-oxblood px-4 py-1.5">
-            Oregon CCB #258533
-          </Badge>
-          <h1 className="text-5xl md:text-7xl font-black mb-8 leading-[1.05] tracking-tight text-oxblood">
-            {data?.heroHeadline || "Stop Reacting to Leaks."} <br />
-            <span className="text-oxblood/60 italic">{data?.heroSubheadline || "Start Maintaining."}</span>
-          </h1>
-          <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            We provide proactive, diagnostic home maintenance for the Mid-Willamette Valley and Harney County. If we aren&apos;t on your property once a month, you aren&apos;t protected.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6 mb-8">
-            <Link href={data?.heroCtaLink || "/tools/cost-calculator"}>
-              <Button size="lg" className="w-full sm:w-auto px-10 py-8 text-lg font-black uppercase tracking-widest shadow-xl shadow-oxblood/20">
-                {data?.heroCtaText || "True Cost Calculator"}
-              </Button>
-            </Link>
-            <Link href="/services/maintenance-subscriptions">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto px-10 py-8 text-lg font-black uppercase tracking-widest border-2 border-oxblood text-oxblood hover:bg-oxblood hover:text-cream">
-                View Plans
-              </Button>
-            </Link>
+      <section className="relative overflow-hidden bg-[#F5F1E8]">
+        <div className="absolute inset-y-0 right-0 hidden w-1/3 bg-[#722F37]/5 lg:block" aria-hidden="true" />
+        <div className="relative mx-auto max-w-6xl px-5 py-16 md:py-24 lg:py-28">
+          <p className="font-semibold uppercase tracking-[0.16em] text-[#722F37]">Harney County, Oregon · {BUSINESS.license}</p>
+          <h1 className="mt-5 max-w-5xl text-4xl font-bold leading-[1.08] text-[#4A1F24] md:text-6xl lg:text-7xl">Construction, repair, and recovery for properties where distance matters.</h1>
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-[#2D2D2D] md:text-xl">Benson Home Solutions handles residential and light-commercial repair, reconstruction, demolition, property maintenance, and rural project work throughout Harney County. From Burns and Hines to Frenchglen, Fields, and remote ranch properties, we plan the logistics as carefully as the construction.</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/request-estimate" className="rounded-md bg-[#722F37] px-6 py-3.5 font-semibold text-white hover:bg-[#5C252C] focus:outline-none focus:ring-2 focus:ring-[#722F37] focus:ring-offset-2">Request an Estimate</Link>
+            <a href={`tel:${BUSINESS.phoneHref}`} className="rounded-md border border-[#722F37] bg-white px-6 py-3.5 font-semibold text-[#722F37] hover:bg-[#FAF8F3]">Call {BUSINESS.phone}</a>
           </div>
-          <div className="flex items-center justify-center gap-3 text-sm font-bold uppercase tracking-widest text-oxblood/60">
-            <div className="flex -space-x-2">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-cream bg-oxblood/10 flex items-center justify-center">
-                  <span className="text-oxblood text-xs">★</span>
-                </div>
-              ))}
-            </div>
-            <span>Join 150+ Protected Properties</span>
+          <div className="mt-10 grid gap-3 text-sm font-semibold text-[#4A1F24] sm:grid-cols-3">
+            <div className="border-l-2 border-[#722F37] pl-4">Oregon contractor · CCB #258533</div>
+            <div className="border-l-2 border-[#722F37] pl-4">Harney County rural & remote mobilization</div>
+            <div className="border-l-2 border-[#722F37] pl-4">Repair, reconstruction & documented scopes</div>
           </div>
-        </Container>
-      </Section>
+        </div>
+      </section>
 
-      {/* Comprehensive Audits / Value Props */}
-      <Section spacing="md">
-        <Container>
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="group">
-              <div className="h-2 w-12 bg-oxblood mb-6 group-hover:w-full transition-all duration-500" />
-              <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Comprehensive Audits</h3>
-              <p className="text-slate font-medium leading-relaxed">
-                We find moisture, heat loss, and structural decay before they become insurance claims. Standard inspections are visual; we are diagnostic.
-              </p>
-            </div>
-            <div className="group">
-              <div className="h-2 w-12 bg-oxblood mb-6 group-hover:w-full transition-all duration-500" />
-              <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Valley Protection</h3>
-              <p className="text-slate font-medium leading-relaxed">
-                Specifically engineered for the Mid-Willamette Valley climate. Gutters, drainage, and building envelopes optimized for Oregon rain.
-              </p>
-            </div>
-            <div className="group">
-              <div className="h-2 w-12 bg-oxblood mb-6 group-hover:w-full transition-all duration-500" />
-              <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">High Desert Prep</h3>
-              <p className="text-slate font-medium leading-relaxed">
-                Harney County winterization and wildfire hardening. We protect properties from Burns to Drewsey against extreme climate swings.
-              </p>
+      <section className="bg-[#4A1F24] text-[#FAF8F3]">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-[1.1fr_.9fr] md:py-20">
+          <div>
+            <p className="font-semibold uppercase tracking-[0.16em] text-[#F5F1E8]/75">Wildfire Recovery</p>
+            <h2 className="mt-3 text-3xl font-bold md:text-5xl">After the fire, recovery starts with a plan.</h2>
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-[#F5F1E8]">Fire-damaged property can involve unstable structures, utilities, asbestos, contaminated ash, household hazardous waste, disposal rules, insurance documentation, and reconstruction. We help organize the construction recovery path without pretending regulated debris is ordinary jobsite waste.</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/services/post-fire-cleanup-recovery" className="rounded-md bg-[#F5F1E8] px-5 py-3 font-semibold text-[#722F37]">Post-Fire Cleanup & Recovery</Link>
+              <Link href="/wildfire-recovery" className="rounded-md border border-[#F5F1E8]/50 px-5 py-3 font-semibold text-[#F5F1E8]">Wildfire Recovery Guide</Link>
             </div>
           </div>
-        </Container>
-      </Section>
+          <ol className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
+            {['1. Document & assess', '2. Stabilize the property', '3. Resolve regulated-material requirements', '4. Demolish what cannot be saved', '5. Repair & reconstruct'].map(item => <li key={item} className="rounded-lg border border-[#F5F1E8]/20 bg-white/5 p-4 font-semibold">{item}</li>)}
+          </ol>
+        </div>
+      </section>
 
-      {/* Stats Section (GEO Focus) */}
-      <StatsSection />
+      <section className="mx-auto max-w-6xl px-5 py-14 md:py-20">
+        <div className="max-w-3xl">
+          <p className="font-semibold uppercase tracking-[0.16em] text-[#722F37]">What We Handle</p>
+          <h2 className="mt-2 text-3xl font-bold text-[#4A1F24] md:text-5xl">One contractor for the parts of the project that need to stay connected.</h2>
+          <p className="mt-4 text-lg leading-8">Many repair jobs are not one trade. Water damage can become subfloor, drywall, paint, and flooring. Fire damage can become demolition, framing, openings, insulation, finishes, and subcontractor coordination. We scope the sequence instead of treating each symptom in isolation.</p>
+        </div>
+        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {featured.map(service => <Link key={service.slug} href={`/services/${service.slug}`} className="group rounded-xl border border-[#722F37]/15 bg-[#FAF8F3] p-5 hover:border-[#722F37]/40 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#722F37]"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#722F37]">{service.eyebrow}</p><h3 className="mt-2 text-xl font-bold text-[#4A1F24] group-hover:text-[#722F37]">{service.title}</h3><p className="mt-3 text-sm leading-6">{service.description}</p><span className="mt-4 inline-block font-semibold text-[#722F37]">Learn more →</span></Link>)}
+        </div>
+        <Link href="/services" className="mt-8 inline-block font-semibold text-[#722F37] underline underline-offset-4">See every service</Link>
+      </section>
 
-      {/* Expert Quote (GEO Focus) */}
-      <Section variant="cream" spacing="lg">
-        <Container size="narrow" className="text-center">
-          <Quote className="w-16 h-16 text-oxblood/20 mx-auto mb-8" />
-          <blockquote className="text-3xl md:text-4xl font-black italic text-oxblood mb-8 leading-tight tracking-tight">
-            &ldquo;A visual home inspection is like checking the oil with the engine off. We go diagnostic because you can&apos;t protect what you can&apos;t see.&rdquo;
-          </blockquote>
-          <div className="flex flex-col items-center">
-            <div className="font-black text-xl uppercase tracking-widest text-oxblood mb-1">
-              {BUSINESS.owner}
-            </div>
-            <div className="text-oxblood/60 font-bold uppercase tracking-widest text-xs">
-              Founder & General Contractor
-            </div>
+      <section className="border-y border-[#722F37]/10 bg-[#F5F1E8]">
+        <div className="mx-auto grid max-w-6xl gap-12 px-5 py-14 md:grid-cols-2 md:py-20">
+          <div>
+            <p className="font-semibold uppercase tracking-[0.16em] text-[#722F37]">Rural & Remote</p>
+            <h2 className="mt-2 text-3xl font-bold text-[#4A1F24] md:text-5xl">Miles don’t stop us. Poor planning does.</h2>
+            <p className="mt-5 text-lg leading-8">Rural work takes planning. Materials are farther away, subcontractors are harder to schedule, disposal can be hours from the site, and weather or road access can change the day. We work in these conditions regularly and build the route, material list, access plan, and trade sequence around them.</p>
           </div>
-        </Container>
-      </Section>
-
-      {/* Maintenance Subscriptions Preview */}
-      <Section spacing="lg">
-        <Container>
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-oxblood mb-4">
-              Monthly Protection Plans
-            </h2>
-            <p className="text-xl text-slate font-medium max-w-2xl mx-auto">
-              Proactive, board-ready maintenance for every type of property.
-            </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {['Remote ranch properties', 'Rural residences & cabins', 'Churches & nonprofits', 'Light-commercial facilities', 'Vacant & managed properties', 'South County route work'].map(item => <div key={item} className="rounded-lg border border-[#722F37]/15 bg-[#FAF8F3] p-5 font-semibold text-[#4A1F24]">{item}</div>)}
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card hover className="bg-cream/30">
-              <CardHeader>
-                <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood">Residential</h3>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Monthly Comprehensive Audit</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Gutter & Drainage Clearing</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">HVAC & Plumbing Health Checks</span>
-                  </li>
-                </ul>
-                <Link href="/services/maintenance-subscriptions">
-                  <Button className="w-full font-black uppercase tracking-widest">Plan Details</Button>
-                </Link>
-              </CardContent>
-            </Card>
+        </div>
+      </section>
 
-            <Card hover className="bg-oxblood text-cream">
-              <CardHeader>
-                <h3 className="text-2xl font-black uppercase tracking-tight">Commercial</h3>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-cream shrink-0 mt-1" />
-                    <span className="font-medium">Board-Ready Asset Reports</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-cream shrink-0 mt-1" />
-                    <span className="font-medium">Priority 4hr Emergency SLA</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-cream shrink-0 mt-1" />
-                    <span className="font-medium">Lifecycle Expense Mapping</span>
-                  </li>
-                </ul>
-                <Link href="/services/maintenance-subscriptions">
-                  <Button variant="secondary" className="w-full font-black uppercase tracking-widest">Plan Details</Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            <Card hover className="bg-cream/30">
-              <CardHeader>
-                <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood">Churches</h3>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Historical Asset Preservation</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Facility Budget Planning</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-oxblood shrink-0 mt-1" />
-                    <span className="font-medium text-slate">Volunteer Support Systems</span>
-                  </li>
-                </ul>
-                <Link href="/services/maintenance-subscriptions">
-                  <Button className="w-full font-black uppercase tracking-widest">Plan Details</Button>
-                </Link>
-              </CardContent>
-            </Card>
+      <section className="mx-auto max-w-6xl px-5 py-14 md:py-20">
+        <div className="grid gap-12 lg:grid-cols-[.9fr_1.1fr]">
+          <div>
+            <p className="font-semibold uppercase tracking-[0.16em] text-[#722F37]">Service Area</p>
+            <h2 className="mt-2 text-3xl font-bold text-[#4A1F24] md:text-5xl">Based around Harney County.</h2>
+            <p className="mt-5 text-lg leading-8">We publicly route work around Burns, Hines, Frenchglen, Fields, Diamond, Princeton, Riley, Drewsey, Crane, Lawen, surrounding ranches, and remote locations throughout the county. Exact timing depends on scope, access, weather, material availability, and route fit.</p>
+            <Link href="/service-area" className="mt-6 inline-block font-semibold text-[#722F37] underline underline-offset-4">Review service-area details</Link>
           </div>
-        </Container>
-      </Section>
-
-      <Section variant="cream" spacing="lg">
-        <Container>
-          <div className="mb-12 text-center">
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-oxblood mb-4">
-              Articles and Tools for Smarter Decisions
-            </h2>
-            <p className="mx-auto max-w-3xl text-xl font-medium text-slate">
-              Before you book a repair, use the site resources built for Oregon leak diagnosis, seasonal maintenance planning, and deferred-cost forecasting.
-            </p>
+          <div className="rounded-xl bg-[#4A1F24] p-7 text-[#FAF8F3] md:p-9">
+            <h3 className="text-2xl font-bold">A straightforward start</h3>
+            <ol className="mt-6 space-y-5">
+              <li><strong>1. Send the basics.</strong><br/><span className="text-[#F5F1E8]">Location, photos, measurements if useful, access notes, timing, and what is happening now.</span></li>
+              <li><strong>2. We review the route and scope.</strong><br/><span className="text-[#F5F1E8]">We identify likely dependencies, specialty trades, materials, and whether a site visit is the next useful step.</span></li>
+              <li><strong>3. You get a defined next step.</strong><br/><span className="text-[#F5F1E8]">Estimate, inspection, documented scope, or referral/coordination when another licensed specialty is required first.</span></li>
+            </ol>
           </div>
+        </div>
+      </section>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            <Link href="/blog/roof-vent-leak-first-response-oregon" className="rounded-3xl border border-oxblood/10 bg-white p-8 shadow-sm transition-colors hover:border-oxblood/25">
-              <div className="text-xs font-black uppercase tracking-widest text-oxblood/60 mb-3">Article</div>
-              <h3 className="text-2xl font-black tracking-tight text-oxblood mb-3">
-                Roof Vent Leak First Response
-              </h3>
-              <p className="font-medium leading-relaxed text-slate">
-                Learn what to document, what to avoid, and when a vent-area leak becomes a same-day problem.
-              </p>
-            </Link>
-
-            <Link href="/tools/roof-leak-urgency" className="rounded-3xl border border-oxblood/10 bg-white p-8 shadow-sm transition-colors hover:border-oxblood/25">
-              <div className="text-xs font-black uppercase tracking-widest text-oxblood/60 mb-3">Tool</div>
-              <h3 className="text-2xl font-black tracking-tight text-oxblood mb-3">
-                Roof Leak Urgency Checker
-              </h3>
-              <p className="font-medium leading-relaxed text-slate">
-                Score active leaks, ceiling stains, attic moisture, and electrical risk before you schedule work.
-              </p>
-            </Link>
-
-            <Link href="/tools/maintenance-planner" className="rounded-3xl border border-oxblood/10 bg-white p-8 shadow-sm transition-colors hover:border-oxblood/25">
-              <div className="text-xs font-black uppercase tracking-widest text-oxblood/60 mb-3">Tool</div>
-              <h3 className="text-2xl font-black tracking-tight text-oxblood mb-3">
-                Oregon Maintenance Planner
-              </h3>
-              <p className="font-medium leading-relaxed text-slate">
-                Generate a seasonal checklist for gutters, roof edges, crawlspaces, windows, and freeze-risk systems.
-              </p>
-            </Link>
-          </div>
-        </Container>
-      </Section>
-
-      {/* FAQ Section (AEO/GEO Focus) */}
-      <FAQSection />
+      <section className="bg-[#722F37] text-white">
+        <div className="mx-auto max-w-5xl px-5 py-14 text-center">
+          <h2 className="text-3xl font-bold md:text-4xl">Tell us what the property needs.</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[#F5F1E8]">A clear location, short description, and useful photos are enough to start the review. We do not need a finished scope from you.</p>
+          <div className="mt-7 flex flex-wrap justify-center gap-3"><Link href="/request-estimate" className="rounded-md bg-[#F5F1E8] px-6 py-3 font-semibold text-[#722F37]">Request an Estimate</Link><a href={`tel:${BUSINESS.phoneHref}`} className="rounded-md border border-white/50 px-6 py-3 font-semibold">Call {BUSINESS.phone}</a></div>
+        </div>
+      </section>
     </>
   );
 }
