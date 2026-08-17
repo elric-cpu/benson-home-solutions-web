@@ -8,7 +8,6 @@ on:
 
 env:
   NODE_VERSION: '22'
-  # Build env fallbacks (real values live in Vercel)
   NEXT_PUBLIC_SANITY_PROJECT_ID: 'PLACEHOLDER'
   NEXT_PUBLIC_SANITY_DATASET: 'production'
   NEXT_TELEMETRY_DISABLED: '1'
@@ -26,30 +25,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-
       - name: Cache Next.js build
         uses: actions/cache@v4
         with:
-          path: |
-            ${{ github.workspace }}/.next/cache
-          # Generate a new cache whenever packages or source files change.
+          path: ${{ github.workspace }}/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
-          # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
-
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
-
-      # TODO: Sprint 2 — remove soft-fail once scaffold pages have real types
-      - name: TypeScript check (soft-fail)
-        run: pnpm exec tsc --noEmit || echo "::warning::TypeScript check failed — soft-fail enabled for Sprint 1 scaffolds"
-      # TODO: Sprint 2 — remove soft-fail once all files are properly linted
-      - name: ESLint (soft-fail)
-        run: pnpm lint || echo "::warning::ESLint failed — soft-fail enabled for Sprint 1 scaffolds"
-      # TODO: Sprint 2 — remove soft-fail once format is enforced on all files
-      - name: Prettier check (soft-fail)
-        run: pnpm format:check || echo "::warning::Prettier check failed — soft-fail enabled for API-pushed code"
+      - name: TypeScript check
+        run: pnpm exec tsc --noEmit
+      - name: ESLint
+        run: pnpm lint
 
   build:
     name: Build
