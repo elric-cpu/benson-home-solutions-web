@@ -46,11 +46,11 @@ async function persistSubmission(body: ContactPayload) {
   try {
     const db = getDb();
     await db.insert(contactSubmissions).values(payload);
-    return 'database';
+    return 'database' as const;
   } catch (error) {
     console.warn('[Contact API] Database persistence unavailable, using Firestore fallback:', error);
     await createFirestoreDocument('ops_contact_submissions', { ...payload, createdAt: new Date().toISOString() });
-    return 'firestore';
+    return 'firestore' as const;
   }
 }
 
@@ -68,17 +68,24 @@ export async function POST(request: NextRequest) {
     const { success, limit, reset, remaining } = await ratelimit.limit(`contact_${ip}`);
     if (!success) return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429, headers: { 'X-RateLimit-Limit': String(limit), 'X-RateLimit-Remaining': String(remaining), 'X-RateLimit-Reset': String(reset) } });
 
-    let persistence: 'database' | 'firestore' | 'unknown' = 'unknown';
+    let persistence: 'database' | 'firestore';
     try {
       persistence = await persistSubmission(body);
+    } catch (error) {
+      console.error('[Contact API] Unable to persist project request:', error);
+      return NextResponse.json({ error: 'We could not save the request. Please call or email Benson Home Solutions directly.' }, { status: 503 });
+    }
+
+    // The persisted lead is the source of truth. Notification failure is logged
+    // but does not tell the customer to resubmit and create duplicate records.
+    try {
       await sendGoogleWorkspaceMail({
         to: [BUSINESS.email],
         subject: `New Website Project Request: ${body.name}`,
         html: `<h2>New Website Project Request</h2><p><strong>Name:</strong> ${escapeHtml(body.name)}</p><p><strong>Email:</strong> ${escapeHtml(body.email)}</p><p><strong>Phone:</strong> ${escapeHtml(body.phone || 'N/A')}</p><p><strong>Service:</strong> ${escapeHtml(body.service || 'N/A')}</p><p><strong>Project details:</strong></p><pre style="white-space:pre-wrap;font-family:Arial,sans-serif">${escapeHtml(body.message)}</pre>`,
       });
     } catch (error) {
-      console.error('[Contact API] Persistence or notification failure:', error);
-      return NextResponse.json({ error: 'We could not save the request. Please call or email Benson Home Solutions directly.' }, { status: 503 });
+      console.error('[Contact API] Project request saved but notification email failed:', error);
     }
 
     return NextResponse.json({ success: true, persistence, message: 'Project request received.' }, { status: 200 });
