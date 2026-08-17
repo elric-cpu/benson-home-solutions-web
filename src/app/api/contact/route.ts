@@ -17,7 +17,8 @@ interface ContactPayload {
 const max = { name: 120, email: 254, phone: 40, service: 160, message: 6000 } as const;
 
 function clean(value: string | undefined, limit: number) {
-  return (value || '').replace(/\u0000/g, '').trim().slice(0, limit);
+  const withoutNulls = Array.from(value || '').filter(char => char.charCodeAt(0) !== 0).join('');
+  return withoutNulls.trim().slice(0, limit);
 }
 
 function escapeHtml(value: string) {
@@ -76,8 +77,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'We could not save the request. Please call or email Benson Home Solutions directly.' }, { status: 503 });
     }
 
-    // The persisted lead is the source of truth. Notification failure is logged
-    // but does not tell the customer to resubmit and create duplicate records.
     try {
       await sendGoogleWorkspaceMail({
         to: [BUSINESS.email],
