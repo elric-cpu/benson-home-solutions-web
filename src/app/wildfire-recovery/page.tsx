@@ -1,0 +1,30 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { BUSINESS } from '@/lib/constants';
+
+export const metadata: Metadata = {
+  title: 'Wildfire Recovery Construction in Harney County',
+  description: 'A practical path for Harney County property owners after wildfire: document, stabilize, resolve hazardous-material requirements, demolish, repair, and reconstruct.',
+  alternates: { canonical: `${BUSINESS.url}/wildfire-recovery` },
+};
+
+const steps = [
+  ['Document before disturbing', 'Photograph damaged structures, openings, utilities, access, and surrounding conditions when it is safe to do so. Contact the insurer before cleanup or demolition when coverage may apply.'],
+  ['Control immediate exposure', 'Board-up, temporary weather protection, utility isolation, and other stabilization may be appropriate, but only after the site is safe to enter and the work will not disturb regulated debris improperly.'],
+  ['Resolve hazardous-material requirements', 'Burned-building ash and debris may contain asbestos, lead, mercury, chemicals, fuels, batteries, propane cylinders, and other hazardous materials. Testing, licensed abatement, packaging, transport, and disposal requirements must be established before ordinary construction cleanup.'],
+  ['Define demolition and salvage', 'After regulated-material requirements are handled, determine what can remain, what needs selective demolition, and what must be removed for safe reconstruction.'],
+  ['Build the reconstruction scope', 'Sequence structural repair, exterior openings, rough trades, insulation, drywall, finishes, flooring, trim, and closeout documentation.'],
+];
+
+export default function WildfireRecoveryPage() {
+  return <>
+    <section className="bg-[#4A1F24] text-[#FAF8F3]"><div className="mx-auto max-w-6xl px-5 py-16 md:py-24"><p className="font-semibold uppercase tracking-[0.16em] text-[#F5F1E8]/75">Harney County Wildfire Recovery</p><h1 className="mt-4 max-w-5xl text-4xl font-bold leading-tight md:text-6xl">From damaged property to a buildable recovery plan.</h1><p className="mt-6 max-w-3xl text-lg leading-8 text-[#F5F1E8]">Benson Home Solutions can help manage the construction side of wildfire recovery—documentation, stabilization, demolition planning, repair, reconstruction, and trade coordination—while keeping regulated ash, asbestos, hazardous waste, and specialty work inside the proper legal boundaries.</p><div className="mt-8 flex flex-wrap gap-3"><Link href="/services/post-fire-cleanup-recovery" className="rounded-md bg-[#F5F1E8] px-6 py-3 font-semibold text-[#722F37]">Post-Fire Recovery Services</Link><Link href="/request-estimate" className="rounded-md border border-white/50 px-6 py-3 font-semibold">Request a Property Review</Link></div></div></section>
+    <section className="mx-auto max-w-6xl px-5 py-14 md:py-20"><div className="max-w-3xl"><h2 className="text-3xl font-bold text-[#4A1F24] md:text-4xl">The recovery sequence</h2><p className="mt-4 text-lg leading-8">The right sequence prevents cleanup work from creating safety, disposal, insurance, or reconstruction problems later.</p></div><ol className="mt-10 grid gap-5">{steps.map(([title, body], i) => <li key={title} className="grid gap-4 rounded-xl border border-[#722F37]/15 bg-[#FAF8F3] p-6 md:grid-cols-[56px_1fr]"><span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#722F37] text-lg font-bold text-white">{i+1}</span><div><h3 className="text-xl font-bold text-[#4A1F24]">{title}</h3><p className="mt-2 leading-7">{body}</p></div></li>)}</ol></section>
+    <section className="border-y border-[#722F37]/10 bg-[#F5F1E8]"><div className="mx-auto max-w-6xl px-5 py-14 md:py-20"><div className="grid gap-10 md:grid-cols-2"><div><h2 className="text-3xl font-bold text-[#4A1F24]">What Benson can handle</h2><ul className="mt-5 space-y-3">{['Construction condition and photo documentation','Temporary construction-side stabilization where appropriate','Selective and structural demolition after required clearances','Framing and structural repair','Window and exterior door replacement','Insulation, drywall, painting, flooring, trim, and finish reconstruction','Project management and licensed-trade coordination','Rural mobilization, material planning, and site logistics'].map(x => <li key={x}>— {x}</li>)}</ul></div><div className="rounded-xl bg-[#4A1F24] p-7 text-[#FAF8F3]"><h2 className="text-2xl font-bold">Important boundary</h2><p className="mt-4 leading-7 text-[#F5F1E8]">We do not represent ordinary construction cleanup as licensed asbestos abatement or unrestricted wildfire-debris hauling. Oregon DEQ warns that burned-building ash and debris can contain asbestos and other hazardous substances, and disposal facilities may require testing and documentation. When regulated work is required, we coordinate the recovery sequence with appropriately licensed specialists.</p></div></div></div></section>
+    <section className="mx-auto max-w-6xl px-5 py-14 md:py-20"><h2 className="text-3xl font-bold text-[#4A1F24]">Choose the part of recovery you need</h2><div className="mt-7 grid gap-5 md:grid-cols-3">{[
+      ['Fire Damage Demolition','/services/fire-damage-demolition','Selective and structural removal with retained-building protection and reconstruction in mind.'],
+      ['Fire Damage Repair & Reconstruction','/services/fire-damage-repair-reconstruction','Structural repair through interior and exterior finish reconstruction.'],
+      ['Post-Fire Property Cleanup','/services/post-fire-property-cleanup','Construction-side cleanup and site preparation after regulated debris requirements are established.'],
+    ].map(([title, href, body]) => <Link key={href} href={href} className="rounded-xl border border-[#722F37]/15 p-6 hover:border-[#722F37]/40"><h3 className="text-xl font-bold text-[#4A1F24]">{title}</h3><p className="mt-3 leading-7">{body}</p><span className="mt-4 inline-block font-semibold text-[#722F37]">View service →</span></Link>)}</div></section>
+  </>;
+}
