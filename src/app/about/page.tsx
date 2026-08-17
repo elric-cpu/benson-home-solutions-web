@@ -1,177 +1,21 @@
 import type { Metadata } from 'next';
-import { Container, Section, Badge } from '@/components/ui';
+import Link from 'next/link';
 import { BUSINESS, SERVICE_AREAS } from '@/lib/constants';
-import { ShieldCheck, Ruler, Map, Scale } from 'lucide-react';
-import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'About Benson Home Solutions',
-  description:
-    'Licensed Oregon contractor (CCB #258533) specializing in proactive property care. Learn about our maintenance-first philosophy and commitment to protecting residential and commercial assets in the Mid-Willamette Valley and Harney County.',
-  alternates: {
-    canonical: absoluteUrl('/about'),
-  },
-  keywords: [
-    'Benson Home Solutions about',
-    'Elric Benson Oregon contractor',
-    'maintenance-first philosophy',
-    'licensed Oregon contractor CCB 258533',
-    'Salem Oregon property care',
-    'Burns Oregon property care',
-  ],
+  description: 'Benson Enterprises, LLC dba Benson Home Solutions provides construction, repair, reconstruction, property maintenance, and rural project services in Harney County, Oregon.',
+  alternates: { canonical: `${BUSINESS.url}/about` },
 };
 
 export default function AboutPage() {
-  return (
-    <>
-      {/* Hero Section */}
-      <Section variant="cream" spacing="lg">
-        <Container className="text-center">
-          <Badge variant="secondary" className="mb-6 uppercase tracking-widest font-black border-oxblood/30 text-oxblood px-4 py-1.5">
-            Oregon CCB #258533
-          </Badge>
-          <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-oxblood">
-            Precision in <br />
-            <span className="italic text-oxblood/60">Every Dimension.</span>
-          </h1>
-          <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-oxblood/80 max-w-3xl mx-auto">
-            Benson Home Solutions is a traditional general contractor and proactive property care firm dedicated to the long-term preservation of Oregon&apos;s residential, commercial, and ecclesiastical assets.
-          </p>
-        </Container>
-      </Section>
+  return <>
+    <section className="bg-[#F5F1E8]"><div className="mx-auto max-w-6xl px-5 py-16 md:py-24"><p className="font-semibold uppercase tracking-[0.16em] text-[#722F37]">{BUSINESS.legalName} · {BUSINESS.license}</p><h1 className="mt-4 max-w-4xl text-4xl font-bold text-[#4A1F24] md:text-6xl">A general contractor built around practical scopes and rural logistics.</h1><p className="mt-6 max-w-3xl text-lg leading-8">Benson Home Solutions provides residential and light-commercial construction, repair, reconstruction, property maintenance, demolition, and site work. Harney County is the primary public service area, including projects where travel, access, weather, materials, disposal, and subcontractor availability are part of the job from the start.</p></div></section>
 
-      {/* The Mission */}
-      <Section spacing="md">
-        <Container>
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-4xl font-black uppercase tracking-tight text-oxblood mb-6">
-                The Maintenance-First Philosophy
-              </h2>
-              <div className="space-y-6 text-slate font-medium leading-relaxed">
-                <p>
-                  Founded by {BUSINESS.owner}, Benson Home Solutions was born from a simple observation: most property owners are trapped in a cycle of reactive repair. They wait for the leak to appear, the wood to rot, or the system to fail before taking action.
-                </p>
-                <p>
-                  This &ldquo;break-fix&rdquo; model is the most expensive way to own property. It leads to insurance claim denials, structural instability, and massive unexpected capital expenditures.
-                </p>
-                <p>
-                  We believe in a better way. By applying <strong>comprehensive auditing</strong> techniques and building-science metrics to regular property care, we identify vulnerabilities before they become liabilities. We don&apos;t just fix buildings; we protect them.
-                </p>
-              </div>
-            </div>
-            <div className="bg-oxblood p-12 rounded-3xl text-cream">
-              <h3 className="text-2xl font-black uppercase tracking-tight mb-8">Our Core Standards</h3>
-              <ul className="space-y-6">
-                <li className="flex gap-4">
-                  <ShieldCheck className="w-6 h-6 shrink-0 text-cream/60" />
-                  <div>
-                    <div className="font-black uppercase tracking-widest text-sm mb-1">Full Compliance</div>
-                    <div className="text-cream/80 text-sm">Licensed (CCB #258533), Bonded, and Insured for your absolute protection.</div>
-                  </div>
-                </li>
-                <li className="flex gap-4">
-                  <Ruler className="w-6 h-6 shrink-0 text-cream/60" />
-                  <div>
-                    <div className="font-black uppercase tracking-widest text-sm mb-1">Diagnostic Precision</div>
-                    <div className="text-cream/80 text-sm">We use thermal imaging and moisture metering on every audit. No guesswork.</div>
-                  </div>
-                </li>
-                <li className="flex gap-4">
-                  <Scale className="w-6 h-6 shrink-0 text-cream/60" />
-                  <div>
-                    <div className="font-black uppercase tracking-widest text-sm mb-1">Total Transparency</div>
-                    <div className="text-cream/80 text-sm">Board-ready reports with photos and data-backed recommendations for every visit.</div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </Container>
-      </Section>
+    <section className="mx-auto grid max-w-6xl gap-12 px-5 py-14 md:grid-cols-2 md:py-20"><div><h2 className="text-3xl font-bold text-[#4A1F24]">How we work</h2><p className="mt-4 text-lg leading-8">A useful construction scope starts with the condition on the property. We review what is damaged, what needs to stay, what another licensed trade must handle, how the site can be accessed, and what the next phase depends on. That is especially important on remote work where a missing fitting, wrong measurement, or unplanned disposal trip can cost a day.</p><p className="mt-5 text-lg leading-8">Documentation matters on repair, insurance-loss, vacant-property, and multi-trade work. Photos, written scopes, change documentation, and clear sequencing make it easier for owners, subcontractors, insurers, and future decision-makers to understand what was done.</p></div><div className="rounded-xl bg-[#4A1F24] p-7 text-[#FAF8F3] md:p-9"><h2 className="text-2xl font-bold">Operating standards</h2><ul className="mt-6 space-y-5 leading-7 text-[#F5F1E8]"><li><strong className="text-white">Verified claims.</strong> We do not publish invented ratings, project counts, awards, or guarantees.</li><li><strong className="text-white">Defined scope.</strong> Work is separated into what Benson can perform, what requires a licensed specialty trade, and what needs engineering or regulated-material handling.</li><li><strong className="text-white">Rural planning.</strong> Route, access, materials, equipment, disposal, and weather are addressed before they become field problems.</li><li><strong className="text-white">Straight communication.</strong> Unknown conditions are identified as unknowns rather than hidden inside marketing language.</li></ul></div></section>
 
-      {/* Dual Region Section */}
-      <Section variant="cream" spacing="lg">
-        <Container>
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-oxblood mb-4">
-              Dual-Region Expertise
-            </h2>
-            <p className="text-xl text-slate font-medium max-w-2xl mx-auto">
-              We understand the unique demands of Oregon&apos;s diverse climates.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-surface p-10 rounded-2xl border border-oxblood/5 shadow-xl">
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4 flex items-center gap-3">
-                <Map className="w-6 h-6" /> The Valley
-              </h3>
-              <p className="text-slate font-medium mb-6 leading-relaxed">
-                In the Mid-Willamette Valley, we combat the persistent moisture and high humidity that leads to rot and mold. Our focus is building envelope integrity and drainage optimization.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {SERVICE_AREAS.midWillametteValley.slice(0, 5).map(city => (
-                  <span key={city} className="px-3 py-1 bg-oxblood/5 rounded-full text-[10px] font-bold uppercase tracking-widest text-oxblood">{city}</span>
-                ))}
-                <span className="px-3 py-1 bg-oxblood/5 rounded-full text-[10px] font-bold uppercase tracking-widest text-oxblood">+ More</span>
-              </div>
-            </div>
+    <section className="border-y border-[#722F37]/10 bg-[#F5F1E8]"><div className="mx-auto max-w-6xl px-5 py-14 md:py-20"><p className="font-semibold uppercase tracking-[0.16em] text-[#722F37]">Harney County</p><h2 className="mt-2 text-3xl font-bold text-[#4A1F24] md:text-4xl">Local towns, ranches, and remote properties.</h2><p className="mt-4 max-w-3xl text-lg leading-8">Public service coverage is organized around Harney County. Individual project availability depends on scope, route fit, season, access, and current workload.</p><div className="mt-7 flex flex-wrap gap-3">{SERVICE_AREAS.harneyCounty.map(area => <span key={area} className="rounded-full border border-[#722F37]/20 bg-[#FAF8F3] px-4 py-2 font-semibold text-[#4A1F24]">{area}</span>)}</div><Link href="/service-area" className="mt-7 inline-block font-semibold text-[#722F37] underline underline-offset-4">Review service-area planning</Link></div></section>
 
-            <div className="bg-surface p-10 rounded-2xl border border-oxblood/5 shadow-xl">
-              <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-4 flex items-center gap-3">
-                <Map className="w-6 h-6" /> The High Desert
-              </h3>
-              <p className="text-slate font-medium mb-6 leading-relaxed">
-                In Harney County, we protect against extreme temperature swings and wildfire risk. Our focus is winterization, thermal efficiency, and property hardening.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {SERVICE_AREAS.harneyCounty.map(city => (
-                  <span key={city} className="px-3 py-1 bg-oxblood/5 rounded-full text-[10px] font-bold uppercase tracking-widest text-oxblood">{city}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      {/* Trust & Stats */}
-      <Section spacing="lg">
-        <Container className="text-center">
-          <div className="grid md:grid-cols-3 gap-12 mb-16">
-            <div>
-              <div className="text-5xl font-black text-oxblood mb-2">10+</div>
-              <div className="text-xs uppercase font-bold tracking-widest text-slate opacity-60">Years of Diagnostic <br />Experience</div>
-            </div>
-            <div>
-              <div className="text-5xl font-black text-oxblood mb-2">200+</div>
-              <div className="text-xs uppercase font-bold tracking-widest text-slate opacity-60">Projects Successfully <br />Completed</div>
-            </div>
-            <div>
-              <div className="text-5xl font-black text-oxblood mb-2">4.9/5</div>
-              <div className="text-xs uppercase font-bold tracking-widest text-slate opacity-60">Customer Satisfaction <br />Rating</div>
-            </div>
-          </div>
-          
-          <div className="max-w-3xl mx-auto border-t border-oxblood/10 pt-16">
-            <h3 className="text-2xl font-black uppercase tracking-tight text-oxblood mb-8">Ready to Protect Your Asset?</h3>
-            <div className="flex flex-col sm:flex-row justify-center gap-6">
-              <a
-                href={`tel:${BUSINESS.phone}`}
-                className="inline-flex items-center justify-center h-16 px-10 text-sm font-black uppercase tracking-widest rounded-xl bg-oxblood text-cream hover:bg-oxblood/90 transition-all shadow-xl shadow-oxblood/20"
-              >
-                Call {BUSINESS.phone}
-              </a>
-              <a
-                href="mailto:office@bensonhomesolutions.com"
-                className="inline-flex items-center justify-center h-16 px-10 text-sm font-black uppercase tracking-widest rounded-xl border-2 border-oxblood text-oxblood hover:bg-oxblood hover:text-cream transition-all"
-              >
-                Email Our Office
-              </a>
-            </div>
-          </div>
-        </Container>
-      </Section>
-    </>
-  );
+    <section className="mx-auto max-w-5xl px-5 py-14 text-center md:py-20"><h2 className="text-3xl font-bold text-[#4A1F24]">Need a contractor to own the sequence, not just one task?</h2><p className="mx-auto mt-4 max-w-2xl leading-7">Send the property location and the full problem. We can determine which parts fit our scope and which dependencies need to be coordinated first.</p><div className="mt-7 flex flex-wrap justify-center gap-3"><Link href="/request-estimate" className="rounded-md bg-[#722F37] px-6 py-3 font-semibold text-white">Request an Estimate</Link><a href={`tel:${BUSINESS.phoneHref}`} className="rounded-md border border-[#722F37] px-6 py-3 font-semibold text-[#722F37]">Call {BUSINESS.phone}</a></div></section>
+  </>;
 }
