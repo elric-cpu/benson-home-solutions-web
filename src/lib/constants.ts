@@ -17,4 +17,7 @@ export const SERVICE_AREAS = {
     'Burns', 'Hines', 'Frenchglen', 'Fields', 'Diamond', 'Princeton', 'Riley', 'Drewsey', 'Crane', 'Lawen',
   ],
   secondary: ['Sweet Home'],
+  // Compatibility only for legacy route modules that are permanently redirected.
+  // Do not use this array for current public service-area positioning or schema.
+  midWillametteValley: ['Sweet Home'],
 } as const;
