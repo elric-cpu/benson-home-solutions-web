@@ -22,11 +22,13 @@ def main():
     densities = [r.get("total_density_pts_m2") for r in passes if r.get("total_density_pts_m2") is not None]
     ground_densities = [r.get("ground_density_pts_m2") for r in passes if r.get("ground_density_pts_m2") is not None]
 
+    expected_count = manifest.get("authoritative_expected_tile_count")
+    resolved_count = manifest.get("resolved_tile_count")
     report = {
         "phase": "Phase 1 - LiDAR source validation",
-        "manifest_resolved_tile_count": manifest.get("resolved_tile_count"),
-        "prior_inventory_expected_tile_count": manifest.get("expected_tile_count_from_prior_inventory"),
-        "manifest_count_matches_prior_inventory": manifest.get("count_matches_prior_inventory"),
+        "authoritative_expected_tile_count": expected_count,
+        "manifest_resolved_tile_count": resolved_count,
+        "manifest_count_matches_authoritative_expected": manifest.get("count_matches_authoritative_expected"),
         "results_received": len(rows),
         "pass_count": len(passes),
         "fail_count": len(failures),
@@ -34,6 +36,10 @@ def main():
         "unexpected_result_indices": extras,
         "all_manifest_tiles_attempted": not missing and not extras and len(rows) == len(expected_indices),
         "all_tiles_pass": not failures and not missing and not extras and len(rows) == len(expected_indices),
+        "phase1_gate_pass": (
+            expected_count == 66 and resolved_count == 66 and
+            not missing and not extras and len(rows) == 66 and not failures
+        ),
         "density_pts_m2": {
             "min": min(densities) if densities else None,
             "median": statistics.median(densities) if densities else None,
