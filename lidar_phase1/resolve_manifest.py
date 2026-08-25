@@ -44,7 +44,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--bbox", required=True, help="west,south,east,north in WGS84")
     ap.add_argument("--project", default="OR_NRCSUSGS_2019_D19")
-    ap.add_argument("--expected-count", type=int, default=171)
+    ap.add_argument("--expected-count", type=int, default=66)
     ap.add_argument("--out", default="phase1_manifest")
     args = ap.parse_args()
 
@@ -86,14 +86,14 @@ def main():
     for i, item in enumerate(filtered): item["index"] = i
 
     manifest = {
-        "manifest_version": 1,
+        "manifest_version": 2,
         "source": "USGS The National Map TNMAccess",
         "dataset": DATASET,
         "project_filter": args.project,
         "aoi_bbox_wgs84": [float(v) for v in args.bbox.split(",")],
-        "expected_tile_count_from_prior_inventory": args.expected_count,
+        "authoritative_expected_tile_count": args.expected_count,
         "resolved_tile_count": len(filtered),
-        "count_matches_prior_inventory": len(filtered) == args.expected_count,
+        "count_matches_authoritative_expected": len(filtered) == args.expected_count,
         "query_urls": query_urls,
         "tiles": filtered,
     }
@@ -109,7 +109,7 @@ def main():
 
     status = {
         "resolved_tile_count": len(filtered),
-        "expected_tile_count": args.expected_count,
+        "authoritative_expected_tile_count": args.expected_count,
         "count_match": len(filtered) == args.expected_count,
     }
     (out / "resolution_status.json").write_text(json.dumps(status, indent=2) + "\n")
@@ -117,6 +117,9 @@ def main():
     if not filtered:
         print("ERROR: authoritative TNM query resolved zero project LAZ/LAS products", file=sys.stderr)
         return 2
+    if len(filtered) != args.expected_count:
+        print(f"ERROR: authoritative AOI expected {args.expected_count} tiles but resolved {len(filtered)}", file=sys.stderr)
+        return 3
     return 0
 
 if __name__ == "__main__":
