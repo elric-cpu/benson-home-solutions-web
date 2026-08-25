@@ -1,0 +1,49 @@
+name: LiDAR Source Diagnostic
+
+on:
+  push:
+    branches:
+      - lidar-source-diagnostic-20260825
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve and HEAD matching 2019 LPC products
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, urllib.parse, urllib.request
+          lon,lat=-118.93389,43.76949
+          bbox=f'{lon-0.006},{lat-0.006},{lon+0.006},{lat+0.006}'
+          base='https://tnmaccess.nationalmap.gov/api/v1/products'
+          items=[]
+          for ds in ('Lidar Point Cloud (LPC)','Lidar Point Cloud (3DEP)'):
+              qs=urllib.parse.urlencode({'datasets':ds,'bbox':bbox,'prodFormats':'LAS,LAZ','outputFormat':'JSON','max':200})
+              req=urllib.request.Request(base+'?'+qs,headers={'User-Agent':'Benson-LiDAR-Diagnostic/1.0'})
+              with urllib.request.urlopen(req,timeout=120) as r:d=json.load(r)
+              print('DATASET',ds,'TOTAL',d.get('total'),'ITEMS',len(d.get('items',[])))
+              items += d.get('items',[])
+          seen=set(); unique=[]
+          for it in items:
+              key=it.get('downloadURL') or it.get('title')
+              if key and key not in seen: seen.add(key); unique.append(it)
+          for i,it in enumerate(unique):
+              h=json.dumps(it,sort_keys=True).lower()
+              selected=('2019' in h or 'd19' in h)
+              print('\nPRODUCT',i,'SELECTED_2019',selected)
+              print('TITLE:',it.get('title'))
+              print('DATE:',it.get('dateCreated') or it.get('publicationDate') or it.get('lastUpdated'))
+              print('FORMAT:',it.get('format'))
+              print('SIZE_FIELD:',it.get('sizeInBytes') or it.get('size'))
+              u=it.get('downloadURL'); print('URL:',u)
+              if selected and u:
+                  try:
+                      req=urllib.request.Request(u,method='HEAD',headers={'User-Agent':'Benson-LiDAR-Diagnostic/1.0'})
+                      with urllib.request.urlopen(req,timeout=120) as r:
+                          print('HEAD_STATUS:',r.status)
+                          print('CONTENT_LENGTH:',r.headers.get('Content-Length'))
+                          print('CONTENT_TYPE:',r.headers.get('Content-Type'))
+                          print('FINAL_URL:',r.geturl())
+                  except Exception as e: print('HEAD_ERROR:',repr(e))
+          PY
