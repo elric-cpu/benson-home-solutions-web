@@ -1,4 +1,4 @@
-name: PDAL Enumeration Diagnostic
+name: PDAL Count Diagnostic
 
 on:
   push:
@@ -18,23 +18,32 @@ jobs:
             'https://rockyweb.usgs.gov/vdelivery/Datasets/Staged/Elevation/LPC/Projects/OR_NRCSUSGS_2019_D19/OR_NRCSUSGS_1_2019/LAZ/USGS_LPC_OR_NRCSUSGS_2019_D19_s17280w07470.laz' \
             -o test.laz
           stat -c '%s %n' test.laz
-      - name: Install PDAL 2.10 runtime
+      - name: Run filters.stats count metadata
         run: |
           set -euo pipefail
+          cat > pipeline.json <<'JSON'
+          {
+            "pipeline": [
+              {"type":"readers.las","filename":"/work/test.laz"},
+              {"type":"filters.stats","dimensions":"Classification,ReturnNumber,NumberOfReturns","count":"Classification,ReturnNumber,NumberOfReturns"},
+              {"type":"writers.null"}
+            ]
+          }
+          JSON
           docker pull alpine:edge
-          docker run --name pdal-test -v "$PWD:/work" -w /work alpine:edge sh -lc 'apk add --no-cache pdal && pdal --version && pdal info test.laz --stats --dimensions=Classification,ReturnNumber,NumberOfReturns --enumerate=Classification,ReturnNumber,NumberOfReturns > stats.json && cat stats.json'
-          docker cp pdal-test:/work/stats.json ./stats.json
+          docker run --name pdal-test -v "$PWD:/work" -w /work alpine:edge sh -lc 'apk add --no-cache pdal && pdal --version && pdal pipeline pipeline.json --metadata count-metadata.json && cat count-metadata.json'
+          docker cp pdal-test:/work/count-metadata.json ./count-metadata.json
           docker rm pdal-test
-      - name: Print structural paths
+      - name: Print count structures
         run: |
           python3 - <<'PY'
           import json
-          d=json.load(open('stats.json'))
+          d=json.load(open('count-metadata.json'))
           def walk(o,p='$'):
               if isinstance(o,dict):
                   for k,v in o.items():
-                      if any(x in k.lower() for x in ('enum','count','class','return','stat')):
-                          print(p+'.'+k, type(v).__name__, repr(v)[:800])
+                      if any(x in k.lower() for x in ('count','value','class','return','stat')):
+                          print(p+'.'+k, type(v).__name__, repr(v)[:1200])
                       walk(v,p+'.'+k)
               elif isinstance(o,list):
                   for i,v in enumerate(o): walk(v,f'{p}[{i}]')
@@ -42,6 +51,6 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: pdal-enum-diagnostic
-          path: stats.json
+          name: pdal-count-diagnostic
+          path: count-metadata.json
           retention-days: 7
