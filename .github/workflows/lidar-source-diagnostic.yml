@@ -9,23 +9,12 @@ jobs:
   diagnose:
     runs-on: ubuntu-latest
     steps:
-      - name: Resolve exact focus-coordinate 2019 LPC tile
+      - name: Test Alpine edge PDAL CLI install
         shell: bash
         run: |
-          python3 - <<'PY'
-          import json, urllib.parse, urllib.request
-          lon,lat=-118.93389,43.76949
-          base='https://tnmaccess.nationalmap.gov/api/v1/products'
-          for delta in (0.00001,0.0001,0.001):
-              bbox=f'{lon-delta},{lat-delta},{lon+delta},{lat+delta}'
-              qs=urllib.parse.urlencode({'datasets':'Lidar Point Cloud (LPC)','bbox':bbox,'prodFormats':'LAS,LAZ','outputFormat':'JSON','max':200})
-              req=urllib.request.Request(base+'?'+qs,headers={'User-Agent':'Benson-LiDAR-Diagnostic/1.1'})
-              with urllib.request.urlopen(req,timeout=120) as r:d=json.load(r)
-              items=d.get('items',[])
-              print('\nDELTA',delta,'BBOX',bbox,'TOTAL',d.get('total'),'ITEMS',len(items))
-              for i,it in enumerate(items):
-                  h=json.dumps(it,sort_keys=True).lower()
-                  if '2019' not in h and 'd19' not in h: continue
-                  print('PRODUCT',i)
-                  print(json.dumps({k:it.get(k) for k in ('title','downloadURL','format','sizeInBytes','size','boundingBox','dateCreated','lastUpdated','sourceId','id')},indent=2))
-          PY
+          set -euo pipefail
+          docker pull alpine:edge
+          docker run --name pdal-test alpine:edge sh -lc 'apk add --no-cache pdal && pdal --version && pdal --drivers | grep readers.las'
+          docker commit pdal-test local-pdal:edge
+          docker rm pdal-test
+          docker run --rm local-pdal:edge pdal --version
