@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse, hashlib, json, math, os, pathlib, shlex, shutil, subprocess, sys, time
+import argparse, concurrent.futures, hashlib, json, os, pathlib, shlex, shutil, subprocess, time
 
 PROJECT_META = {
     "project": "Central Oregon 3DEP 2019 / OR_NRCSUSGS_2019_D19",
@@ -49,7 +49,9 @@ def parse_enum_value(v):
 def enum_counts(node):
     out = {}
     def add(k, v):
-        try: out[parse_enum_value(k)] = out.get(parse_enum_value(k), 0) + int(v)
+        try:
+            key = parse_enum_value(k)
+            out[key] = out.get(key, 0) + int(v)
         except Exception: pass
     def consume(raw):
         if isinstance(raw, dict):
@@ -85,7 +87,7 @@ def extract_crs(metadata):
     text = json.dumps(metadata)
     wkt = None
     for d in walk(metadata):
-        for k, v in d.items():
+        for _, v in d.items():
             if isinstance(v, str) and any(tok in v for tok in ("PROJCRS[","PROJCS[","COMPOUNDCRS[","COMPD_CS[")):
                 if wkt is None or len(v) > len(wkt): wkt = v
     upper = text.upper()
@@ -100,11 +102,54 @@ def extract_crs(metadata):
         "resolved_geoid_model": PROJECT_META["geoid_model"],
     }
 
-def download(url, dest):
-    cmd = ["curl","--fail","--location","--retry","8","--retry-delay","2","--retry-all-errors","--continue-at","-","--output",str(dest),url]
+def curl_range(url, dest, start, end):
+    cmd = ["curl","--fail","--silent","--show-error","--location","--retry","6","--retry-delay","2","--retry-all-errors","--range",f"{start}-{end}","--output",str(dest),url]
     p = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if p.returncode != 0:
-        raise RuntimeError("curl failed: " + p.stderr[-3000:])
+        raise RuntimeError(f"range {start}-{end} failed: {p.stderr[-1500:]}")
+    expected = end - start + 1
+    actual = dest.stat().st_size
+    if actual != expected:
+        raise RuntimeError(f"range {start}-{end} expected {expected} bytes, got {actual}")
+
+def download(url, dest, expected_size):
+    # USGS Rockyweb supports byte ranges for these LPC files. Probe before parallelizing.
+    if expected_size and expected_size > 1:
+        probe = dest.with_suffix(dest.suffix + ".probe")
+        p = subprocess.run([
+            "curl","--silent","--show-error","--location","--retry","3","--range","0-0",
+            "--output",str(probe),"--write-out","%{http_code}",url
+        ], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        try:
+            range_ok = p.returncode == 0 and p.stdout.strip() == "206" and probe.exists() and probe.stat().st_size == 1
+        finally:
+            try: probe.unlink()
+            except FileNotFoundError: pass
+        if range_ok:
+            parts = 4
+            part_dir = dest.parent / (dest.name + ".parts")
+            part_dir.mkdir(parents=True, exist_ok=True)
+            chunk = (int(expected_size) + parts - 1) // parts
+            tasks = []
+            with concurrent.futures.ThreadPoolExecutor(max_workers=parts) as ex:
+                for i in range(parts):
+                    start = i * chunk
+                    if start >= expected_size: break
+                    end = min(expected_size - 1, start + chunk - 1)
+                    part = part_dir / f"part.{i:02d}"
+                    tasks.append((i, part, ex.submit(curl_range, url, part, start, end)))
+                for _, _, fut in tasks: fut.result()
+            with dest.open("wb") as out:
+                for _, part, _ in sorted(tasks):
+                    with part.open("rb") as src: shutil.copyfileobj(src, out, length=8*1024*1024)
+            shutil.rmtree(part_dir, ignore_errors=True)
+            if dest.stat().st_size != expected_size:
+                raise RuntimeError(f"assembled file expected {expected_size} bytes, got {dest.stat().st_size}")
+            return "parallel-range-4"
+    cmd = ["curl","--fail","--silent","--show-error","--location","--retry","8","--retry-delay","2","--retry-all-errors","--continue-at","-","--output",str(dest),url]
+    p = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if p.returncode != 0: raise RuntimeError("curl failed: " + p.stderr[-3000:])
+    return "single-stream-fallback"
 
 def pdal_json(path, args):
     p = run(PDAL + ["info", str(path)] + args)
@@ -117,25 +162,20 @@ def validate_tile(tile, scratch, result_dir):
     local = scratch / filename
     started = time.time()
     result = {
-        "index": idx,
-        "title": tile.get("title"),
-        "filename": filename,
-        "download_url": url,
-        "catalog_size_bytes": tile.get("catalog_size_bytes"),
-        "source_id": tile.get("source_id"),
-        "status": "FAIL",
-        "checks": {},
+        "index": idx, "title": tile.get("title"), "filename": filename,
+        "download_url": url, "catalog_size_bytes": tile.get("catalog_size_bytes"),
+        "source_id": tile.get("source_id"), "status": "FAIL", "checks": {},
         "project_metadata_used": PROJECT_META,
     }
     try:
-        download(url, local)
+        cat_size = tile.get("catalog_size_bytes")
+        result["download_mode"] = download(url, local, int(cat_size) if cat_size else None)
         size = local.stat().st_size
         sha = hashlib.sha256()
         with local.open("rb") as f:
             for chunk in iter(lambda: f.read(8*1024*1024), b""): sha.update(chunk)
         result["downloaded_size_bytes"] = size
         result["sha256"] = sha.hexdigest()
-        cat_size = tile.get("catalog_size_bytes")
         result["checks"]["byte_size"] = "PASS" if cat_size in (None,0) or int(cat_size) == size else "FAIL"
 
         summary = pdal_json(local, ["--summary"])
@@ -143,54 +183,48 @@ def validate_tile(tile, scratch, result_dir):
         stats = pdal_json(local, ["--stats","--dimensions=Classification,ReturnNumber,NumberOfReturns,Intensity,Z","--enumerate=Classification,ReturnNumber,NumberOfReturns"])
         result["checks"]["full_decode"] = "PASS"
 
-        points = find_point_count(summary)
-        bounds = find_bounds(summary)
+        points = find_point_count(summary); bounds = find_bounds(summary)
         classes = dimension_counts(stats, "Classification")
         rnum = dimension_counts(stats, "ReturnNumber")
         nret = dimension_counts(stats, "NumberOfReturns")
         ground = int(classes.get("2", 0))
-        result["point_count"] = points
-        result["projected_bounds"] = bounds
-        result["classification_counts"] = classes
-        result["return_number_counts"] = rnum
-        result["number_of_returns_counts"] = nret
-        result["ground_class_2_count"] = ground
-        result["crs"] = extract_crs(metadata)
-
-        # Project source CRS uses international feet. Area conversion is therefore deterministic.
+        result.update({
+            "point_count": points, "projected_bounds": bounds,
+            "classification_counts": classes, "return_number_counts": rnum,
+            "number_of_returns_counts": nret, "ground_class_2_count": ground,
+            "crs": extract_crs(metadata),
+        })
         unit_to_m = 0.3048
         area_native = ((bounds["maxx"]-bounds["minx"])*(bounds["maxy"]-bounds["miny"])) if bounds else None
         area_m2 = area_native * unit_to_m * unit_to_m if area_native else None
-        result["area_native_sq_ft"] = area_native
-        result["area_m2"] = area_m2
+        result["area_native_sq_ft"] = area_native; result["area_m2"] = area_m2
         result["total_density_pts_m2"] = points/area_m2 if points and area_m2 else None
         result["ground_density_pts_m2"] = ground/area_m2 if ground and area_m2 else None
-
-        result["checks"]["point_count"] = "PASS" if points and points > 0 else "FAIL"
-        result["checks"]["bounds"] = "PASS" if bounds else "FAIL"
-        result["checks"]["classification"] = "PASS" if classes else "FAIL"
-        result["checks"]["ground_class_2"] = "PASS" if ground > 0 else "FAIL"
-        result["checks"]["returns"] = "PASS" if rnum and nret else "FAIL"
-        result["checks"]["density"] = "PASS" if result["total_density_pts_m2"] and result["total_density_pts_m2"] > 0 else "FAIL"
-        result["checks"]["vertical_datum_resolved"] = "PASS"
+        result["checks"].update({
+            "point_count": "PASS" if points and points > 0 else "FAIL",
+            "bounds": "PASS" if bounds else "FAIL",
+            "classification": "PASS" if classes else "FAIL",
+            "ground_class_2": "PASS" if ground > 0 else "FAIL",
+            "returns": "PASS" if rnum and nret else "FAIL",
+            "density": "PASS" if result["total_density_pts_m2"] and result["total_density_pts_m2"] > 0 else "FAIL",
+            "vertical_datum_resolved": "PASS",
+        })
         result["status"] = "PASS" if all(v == "PASS" for v in result["checks"].values()) else "FAIL"
     except Exception as e:
         result["error"] = f"{type(e).__name__}: {e}"
-        if local.exists() and local.stat().st_size:
-            result["partial_size_bytes"] = local.stat().st_size
+        if local.exists() and local.stat().st_size: result["partial_size_bytes"] = local.stat().st_size
     finally:
         result["elapsed_seconds"] = round(time.time() - started, 3)
         (result_dir / f"tile_{idx:05d}.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
         try: local.unlink()
         except FileNotFoundError: pass
+        shutil.rmtree(local.parent / (local.name + ".parts"), ignore_errors=True)
     return result
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--manifest", required=True)
-    ap.add_argument("--shard-index", type=int, required=True)
-    ap.add_argument("--shard-count", type=int, required=True)
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--manifest", required=True); ap.add_argument("--shard-index", type=int, required=True)
+    ap.add_argument("--shard-count", type=int, required=True); ap.add_argument("--out", required=True)
     args = ap.parse_args()
     manifest = json.loads(pathlib.Path(args.manifest).read_text())
     out = pathlib.Path(args.out); results = out / "results"; scratch = out / "scratch"
@@ -200,12 +234,10 @@ def main():
     for tile in assigned:
         r = validate_tile(tile, scratch, results)
         summary["pass" if r["status"] == "PASS" else "fail"] += 1
-        print(json.dumps({"index": r["index"], "filename": r["filename"], "status": r["status"], "error": r.get("error")}), flush=True)
+        print(json.dumps({"index": r["index"], "filename": r["filename"], "status": r["status"], "download_mode":r.get("download_mode"), "error": r.get("error")}), flush=True)
     shutil.rmtree(scratch, ignore_errors=True)
     (out / "shard_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(summary, indent=2))
-    # Never abort the batch for per-tile failures; aggregate stage owns the final gate.
     return 0
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+if __name__ == "__main__": raise SystemExit(main())
