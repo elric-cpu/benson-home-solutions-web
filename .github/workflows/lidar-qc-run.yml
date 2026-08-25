@@ -13,6 +13,7 @@ jobs:
     env:
       TILE_NAME: USGS_LPC_OR_NRCSUSGS_2019_D19_s17250w07380.laz
       TILE_URL: https://rockyweb.usgs.gov/vdelivery/Datasets/Staged/Elevation/LPC/Projects/OR_NRCSUSGS_2019_D19/OR_NRCSUSGS_1_2019/LAZ/USGS_LPC_OR_NRCSUSGS_2019_D19_s17250w07380.laz
+      TILE_BYTES: '120697918'
     steps:
       - name: Initialize exact source record
         shell: bash
@@ -42,28 +43,59 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --location --retry 5 --retry-delay 3 --continue-at - "$TILE_URL" -o "lidar_qc/laz/$TILE_NAME"
-          test "$(stat -c%s "lidar_qc/laz/$TILE_NAME")" -eq 120697918
-          stat -c 'bytes=%s file=%n' "lidar_qc/laz/$TILE_NAME" | tee lidar_qc/reports/file-size.txt
+          mkdir -p /tmp/lazparts
+          code=$(curl -sS -L --retry 3 -r 0-0 -o /tmp/range-test -w '%{http_code}' "$TILE_URL" || true)
+          if [ "$code" = "206" ] && [ "$(stat -c%s /tmp/range-test)" = "1" ]; then
+            echo 'HTTP byte ranges supported; using 8 parallel verified chunks.' | tee lidar_qc/reports/download-mode.txt
+            parts=8
+            chunk=$(( (TILE_BYTES + parts - 1) / parts ))
+            pids=()
+            for i in $(seq 0 $((parts-1))); do
+              start=$((i*chunk))
+              end=$((start+chunk-1))
+              if [ "$end" -ge "$TILE_BYTES" ]; then end=$((TILE_BYTES-1)); fi
+              if [ "$start" -ge "$TILE_BYTES" ]; then continue; fi
+              expected=$((end-start+1))
+              (
+                curl --fail --location --retry 6 --retry-delay 2 --retry-all-errors -r "${start}-${end}" "$TILE_URL" -o "/tmp/lazparts/part.$i"
+                actual=$(stat -c%s "/tmp/lazparts/part.$i")
+                test "$actual" -eq "$expected"
+              ) &
+              pids+=("$!")
+            done
+            rc=0
+            for p in "${pids[@]}"; do wait "$p" || rc=1; done
+            test "$rc" -eq 0
+            : > "lidar_qc/laz/$TILE_NAME"
+            for i in $(seq 0 7); do [ -f "/tmp/lazparts/part.$i" ] && cat "/tmp/lazparts/part.$i" >> "lidar_qc/laz/$TILE_NAME"; done
+          else
+            echo 'HTTP byte-range probe unavailable; using single-stream retry-safe download.' | tee lidar_qc/reports/download-mode.txt
+            curl --fail --location --retry 8 --retry-delay 3 --retry-all-errors --continue-at - "$TILE_URL" -o "lidar_qc/laz/$TILE_NAME"
+          fi
+          actual=$(stat -c%s "lidar_qc/laz/$TILE_NAME")
+          test "$actual" -eq "$TILE_BYTES"
+          printf 'bytes=%s file=%s\n' "$actual" "$TILE_NAME" | tee lidar_qc/reports/file-size.txt
           sha256sum "lidar_qc/laz/$TILE_NAME" | tee lidar_qc/reports/SHA256SUMS.txt
 
-      - name: Install and verify PDAL runtime
+      - name: Install and verify PDAL 2.10.1 runtime
         shell: bash
         run: |
           set -euo pipefail
-          docker pull pdal/pdal:latest-amd64
-          docker image inspect pdal/pdal:latest-amd64 --format '{{index .RepoDigests 0}}' | tee lidar_qc/reports/pdal-image-digest.txt
-          docker run --rm pdal/pdal:latest-amd64 pdal --version | tee lidar_qc/reports/pdal-version.txt
-          docker run --rm pdal/pdal:latest-amd64 pdal --drivers > lidar_qc/reports/pdal-drivers.txt
+          docker pull alpine:edge
+          docker run --name pdal-build alpine:edge sh -lc 'apk add --no-cache pdal && pdal --version && pdal --drivers | grep readers.las'
+          docker commit pdal-build local-pdal:edge > lidar_qc/reports/pdal-image-id.txt
+          docker rm pdal-build
+          docker run --rm local-pdal:edge pdal --version | tee lidar_qc/reports/pdal-version.txt
+          docker run --rm local-pdal:edge pdal --drivers > lidar_qc/reports/pdal-drivers.txt
           grep -E 'readers\.las' lidar_qc/reports/pdal-drivers.txt
 
       - name: Header schema CRS and metadata QC
         shell: bash
         run: |
           set -euo pipefail
-          docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:latest-amd64 pdal info "/data/laz/$TILE_NAME" --summary > lidar_qc/reports/summary.json
-          docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:latest-amd64 pdal info "/data/laz/$TILE_NAME" --metadata > lidar_qc/reports/metadata.json
-          docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:latest-amd64 pdal info "/data/laz/$TILE_NAME" --schema > lidar_qc/reports/schema.json
+          docker run --rm -v "$PWD/lidar_qc:/data" local-pdal:edge pdal info "/data/laz/$TILE_NAME" --summary > lidar_qc/reports/summary.json
+          docker run --rm -v "$PWD/lidar_qc:/data" local-pdal:edge pdal info "/data/laz/$TILE_NAME" --metadata > lidar_qc/reports/metadata.json
+          docker run --rm -v "$PWD/lidar_qc:/data" local-pdal:edge pdal info "/data/laz/$TILE_NAME" --schema > lidar_qc/reports/schema.json
           python3 -m json.tool lidar_qc/reports/summary.json >/dev/null
           python3 -m json.tool lidar_qc/reports/metadata.json >/dev/null
           python3 -m json.tool lidar_qc/reports/schema.json >/dev/null
@@ -72,8 +104,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # PDAL --stats reads the entire dataset. Successful completion is the full-decode gate.
-          docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:latest-amd64 pdal info "/data/laz/$TILE_NAME" \
+          docker run --rm -v "$PWD/lidar_qc:/data" local-pdal:edge pdal info "/data/laz/$TILE_NAME" \
             --stats \
             --dimensions=Classification,ReturnNumber,NumberOfReturns,Intensity,Z \
             --enumerate=Classification,ReturnNumber,NumberOfReturns \
@@ -90,42 +121,27 @@ jobs:
           summary=json.loads((r/'summary.json').read_text())
           metadata=json.loads((r/'metadata.json').read_text())
           stats=json.loads((r/'stats.json').read_text())
-
           def walk(obj):
               if isinstance(obj,dict):
                   yield obj
                   for v in obj.values(): yield from walk(v)
               elif isinstance(obj,list):
                   for v in obj: yield from walk(v)
-
-          # Find projected XY bounds from PDAL summary.
           bounds=None
           for d in walk(summary):
               if all(k in d for k in ('minx','maxx','miny','maxy')):
                   try:
-                      vals={k:float(d[k]) for k in ('minx','maxx','miny','maxy')}
-                      if vals['maxx']>vals['minx'] and vals['maxy']>vals['miny']:
-                          bounds=vals; break
+                      b={k:float(d[k]) for k in ('minx','maxx','miny','maxy')}
+                      if b['maxx']>b['minx'] and b['maxy']>b['miny']: bounds=b; break
                   except Exception: pass
-
-          # Find point count robustly.
           point_count=None
           for d in walk(summary):
               for k in ('num_points','count','points'):
                   v=d.get(k)
-                  if isinstance(v,(int,float)) and v>0:
-                      point_count=int(v)
-                      if point_count>1000: break
-              if point_count and point_count>1000: break
-
-          stat_nodes=[]
-          for d in walk(stats):
-              if isinstance(d.get('name'),str) and d['name'] in ('Classification','ReturnNumber','NumberOfReturns','Intensity','Z'):
-                  stat_nodes.append(d)
-
+                  if isinstance(v,(int,float)) and v>1000: point_count=int(v); break
+              if point_count: break
           def enum_counts(node):
-              out={}
-              raw=node.get('counts') or node.get('bins') or []
+              out={}; raw=node.get('counts') or node.get('bins') or []
               if isinstance(raw,dict):
                   for k,v in raw.items():
                       try: out[str(int(float(k)))]=int(v)
@@ -133,62 +149,41 @@ jobs:
               elif isinstance(raw,list):
                   for x in raw:
                       if isinstance(x,str) and '/' in x:
-                          try:
-                              k,v=x.rsplit('/',1); out[str(int(float(k)))]=int(v)
+                          try: k,v=x.rsplit('/',1); out[str(int(float(k)))]=int(v)
                           except Exception: pass
-                      elif isinstance(x,dict):
-                          k=x.get('value'); v=x.get('count')
-                          if k is not None and v is not None:
-                              try: out[str(int(float(k)))]=int(v)
-                              except Exception: pass
+                      elif isinstance(x,dict) and x.get('value') is not None and x.get('count') is not None:
+                          try: out[str(int(float(x['value'])))]=int(x['count'])
+                          except Exception: pass
               return out
-
-          classes={}
-          return_numbers={}
-          number_of_returns={}
-          for n in stat_nodes:
-              if n.get('name')=='Classification': classes=enum_counts(n) or classes
-              if n.get('name')=='ReturnNumber': return_numbers=enum_counts(n) or return_numbers
-              if n.get('name')=='NumberOfReturns': number_of_returns=enum_counts(n) or number_of_returns
-
+          classes={}; return_numbers={}; number_of_returns={}
+          for d in walk(stats):
+              if d.get('name')=='Classification': classes=enum_counts(d) or classes
+              elif d.get('name')=='ReturnNumber': return_numbers=enum_counts(d) or return_numbers
+              elif d.get('name')=='NumberOfReturns': number_of_returns=enum_counts(d) or number_of_returns
           if not point_count and classes: point_count=sum(classes.values())
           ground_count=int(classes.get('2',0))
-
-          # Detect horizontal linear-unit conversion from WKT/metadata.
-          meta_txt=json.dumps(metadata)
-          factors=[]
-          for pat in [r'LENGTHUNIT[^\]]*?[, ]([0-9]+(?:\.[0-9]+)?)', r'UNIT[^\]]*?foot[^\]]*?[, ]([0-9]+(?:\.[0-9]+)?)']:
-              for m in re.finditer(pat,meta_txt,re.I):
-                  try:
-                      f=float(m.group(1))
-                      if 0.2 < f < 2: factors.append(f)
-                  except Exception: pass
-          unit_to_m=factors[0] if factors else None
-          area_native=None; area_m2=None
-          if bounds:
-              area_native=(bounds['maxx']-bounds['minx'])*(bounds['maxy']-bounds['miny'])
-              if unit_to_m: area_m2=area_native*unit_to_m*unit_to_m
-
+          text=json.dumps(metadata); unit_to_m=None
+          for m in re.finditer(r'(?:LENGTHUNIT|UNIT)[^\]]*?[, ]([0-9]+(?:\.[0-9]+)?)',text,re.I):
+              try:
+                  f=float(m.group(1))
+                  if 0.2 < f < 2: unit_to_m=f; break
+              except Exception: pass
+          area_native=(bounds['maxx']-bounds['minx'])*(bounds['maxy']-bounds['miny']) if bounds else None
+          area_m2=area_native*unit_to_m*unit_to_m if area_native and unit_to_m else None
           report={
               'tile':'USGS_LPC_OR_NRCSUSGS_2019_D19_s17250w07380.laz',
               'focus_coordinate_lon_lat':[-118.93389,43.76949],
-              'full_decode':'PASS',
-              'point_count':point_count,
-              'classification_counts':classes,
-              'ground_class_2_count':ground_count,
-              'return_number_counts':return_numbers,
-              'number_of_returns_counts':number_of_returns,
-              'projected_bounds':bounds,
-              'horizontal_unit_to_meter_factor_detected':unit_to_m,
-              'area_native_sq_units':area_native,
-              'area_m2':area_m2,
+              'full_decode':'PASS','point_count':point_count,
+              'classification_counts':classes,'ground_class_2_count':ground_count,
+              'return_number_counts':return_numbers,'number_of_returns_counts':number_of_returns,
+              'projected_bounds':bounds,'horizontal_unit_to_meter_factor_detected':unit_to_m,
+              'area_native_sq_units':area_native,'area_m2':area_m2,
               'total_density_pts_m2':(point_count/area_m2 if point_count and area_m2 else None),
               'ground_density_pts_m2':(ground_count/area_m2 if ground_count and area_m2 else None),
               'sha256':(r/'SHA256SUMS.txt').read_text().split()[0],
               'source_size_bytes':120697918
           }
-          (r/'tile_qc_summary.json').write_text(json.dumps(report,indent=2))
-          print(json.dumps(report,indent=2))
+          (r/'tile_qc_summary.json').write_text(json.dumps(report,indent=2)); print(json.dumps(report,indent=2))
           if not point_count or point_count<=0: raise SystemExit('Point count missing/invalid')
           if not classes: raise SystemExit('Classification enumeration missing')
           if ground_count<=0: raise SystemExit('No LAS class 2 ground points detected')
