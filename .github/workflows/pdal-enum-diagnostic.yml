@@ -1,0 +1,47 @@
+name: PDAL Enumeration Diagnostic
+
+on:
+  push:
+    branches:
+      - lidar-source-diagnostic-20260825
+  workflow_dispatch:
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download small authoritative test tile
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 6 --retry-all-errors \
+            'https://rockyweb.usgs.gov/vdelivery/Datasets/Staged/Elevation/LPC/Projects/OR_NRCSUSGS_2019_D19/OR_NRCSUSGS_1_2019/LAZ/USGS_LPC_OR_NRCSUSGS_2019_D19_s17280w07470.laz' \
+            -o test.laz
+          stat -c '%s %n' test.laz
+      - name: Install PDAL 2.10 runtime
+        run: |
+          set -euo pipefail
+          docker pull alpine:edge
+          docker run --name pdal-test -v "$PWD:/work" -w /work alpine:edge sh -lc 'apk add --no-cache pdal && pdal --version && pdal info test.laz --stats --dimensions=Classification,ReturnNumber,NumberOfReturns --enumerate=Classification,ReturnNumber,NumberOfReturns > stats.json && cat stats.json'
+          docker cp pdal-test:/work/stats.json ./stats.json
+          docker rm pdal-test
+      - name: Print structural paths
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('stats.json'))
+          def walk(o,p='$'):
+              if isinstance(o,dict):
+                  for k,v in o.items():
+                      if any(x in k.lower() for x in ('enum','count','class','return','stat')):
+                          print(p+'.'+k, type(v).__name__, repr(v)[:800])
+                      walk(v,p+'.'+k)
+              elif isinstance(o,list):
+                  for i,v in enumerate(o): walk(v,f'{p}[{i}]')
+          walk(d)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pdal-enum-diagnostic
+          path: stats.json
+          retention-days: 7
