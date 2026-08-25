@@ -10,161 +10,194 @@ jobs:
   acquire-and-validate:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    env:
+      TILE_NAME: USGS_LPC_OR_NRCSUSGS_2019_D19_s17250w07380.laz
+      TILE_URL: https://rockyweb.usgs.gov/vdelivery/Datasets/Staged/Elevation/LPC/Projects/OR_NRCSUSGS_2019_D19/OR_NRCSUSGS_1_2019/LAZ/USGS_LPC_OR_NRCSUSGS_2019_D19_s17250w07380.laz
     steps:
-      - name: Initialize workspace
-        run: mkdir -p lidar_qc/laz lidar_qc/reports
-
-      - name: Resolve exact 3DEP project and tile URLs
+      - name: Initialize exact source record
         shell: bash
         run: |
-          python3 - <<'PY'
-          import json, urllib.parse, urllib.request, pathlib
-          out = pathlib.Path('lidar_qc/reports')
-          lon, lat = -118.93389, 43.76949
-
-          def get_json(url, params):
-              full=url+'?'+urllib.parse.urlencode(params)
-              req=urllib.request.Request(full, headers={'User-Agent':'Benson-LiDAR-QC/1.1'})
-              with urllib.request.urlopen(req, timeout=120) as r:
-                  return json.load(r)
-
-          # Probe both current 3DEP LPC index layers. These are diagnostic only;
-          # TNMAccess below is the actual product acquisition source.
-          arc_params={
-              'where':'1=1','geometry':json.dumps({'x':lon,'y':lat,'spatialReference':{'wkid':4326}}),
-              'geometryType':'esriGeometryPoint','inSR':'4326','spatialRel':'esriSpatialRelIntersects',
-              'outFields':'*','returnGeometry':'false','f':'json'
+          mkdir -p lidar_qc/laz lidar_qc/reports
+          cat > lidar_qc/reports/source_record.json <<'JSON'
+          {
+            "source": "USGS The National Map / 3DEP Lidar Point Cloud (LPC)",
+            "project": "OR_NRCSUSGS_2019_D19",
+            "title": "USGS Lidar Point Cloud OR_NRCSUSGS_2019_D19 s17250w07380",
+            "filename": "USGS_LPC_OR_NRCSUSGS_2019_D19_s17250w07380.laz",
+            "source_id": "619ce4efd34eb622f6947dff",
+            "size_in_bytes_catalog": 120697918,
+            "focus_coordinate_lon_lat": [-118.93389, 43.76949],
+            "catalog_bounding_box_wgs84": {
+              "minX": -118.93756680484053,
+              "maxX": -118.9259932145681,
+              "minY": 43.76366860075545,
+              "maxY": 43.77205582453654
+            },
+            "download_url": "https://rockyweb.usgs.gov/vdelivery/Datasets/Staged/Elevation/LPC/Projects/OR_NRCSUSGS_2019_D19/OR_NRCSUSGS_1_2019/LAZ/USGS_LPC_OR_NRCSUSGS_2019_D19_s17250w07380.laz",
+            "selection_method": "TNM LPC product bbox intersection at project focus coordinate"
           }
-          for layer in (24,8):
-              try:
-                  arc=f'https://index.nationalmap.gov/arcgis/rest/services/3DEPElevationIndex/MapServer/{layer}/query'
-                  project=get_json(arc, arc_params)
-                  (out/f'project_query_layer_{layer}.json').write_text(json.dumps(project, indent=2))
-                  print('3DEP index layer',layer,'features=',len(project.get('features',[])))
-                  for f in project.get('features',[]): print(json.dumps(f.get('attributes',{}), indent=2))
-              except Exception as e:
-                  print('3DEP index diagnostic failed for layer',layer,repr(e))
+          JSON
 
-          # Query a ~1 km box around the target point against the product catalog.
-          bbox=f'{lon-0.006},{lat-0.006},{lon+0.006},{lat+0.006}'
-          api='https://tnmaccess.nationalmap.gov/api/v1/products'
-          results=[]
-          for ds in ('Lidar Point Cloud (LPC)','Lidar Point Cloud (3DEP)'):
-              try:
-                  params={'datasets':ds,'bbox':bbox,'prodFormats':'LAS,LAZ','outputFormat':'JSON','max':200}
-                  d=get_json(api,params)
-                  d['queried_dataset']=ds; d['queried_bbox']=bbox
-                  (out/('tnm_products_'+('lpc' if 'LPC' in ds else '3dep')+'.json')).write_text(json.dumps(d,indent=2))
-                  print('TNM dataset',ds,'total=',d.get('total'),'items=',len(d.get('items',[])))
-                  results.extend(d.get('items',[]))
-              except Exception as e:
-                  print('TNM query failed',ds,repr(e))
-          # De-duplicate on URL/title.
-          unique=[]; seen=set()
-          for it in results:
-              key=it.get('downloadURL') or it.get('title') or json.dumps(it,sort_keys=True)
-              if key not in seen:
-                  seen.add(key); unique.append(it)
-          print('Intersecting TNM products:')
-          for i,it in enumerate(unique): print(i,it.get('title'),it.get('downloadURL'))
-          if not unique:
-              raise SystemExit('TNM API returned no LPC products for the project focus box')
-
-          def hay(it): return json.dumps(it,sort_keys=True).lower()
-          strong=('2019','d19','north central oregon','northcentraloregon','central oregon','centraloregon','lot 6a','harney')
-          selected=[it for it in unique if ('2019' in hay(it) or 'd19' in hay(it)) and any(t in hay(it) for t in strong[2:])]
-          if not selected: selected=[it for it in unique if '2019' in hay(it) or 'd19' in hay(it)]
-          if not selected:
-              print('No explicit 2019 token in product records; refusing to silently select another acquisition.')
-              raise SystemExit(2)
-
-          urls=[]
-          for it in selected:
-              u=it.get('downloadURL')
-              if u and ('.laz' in u.lower() or '.las' in u.lower()): urls.append(u)
-          urls=list(dict.fromkeys(urls))
-          if not urls: raise SystemExit('2019 products found but no LAS/LAZ downloadURL was returned')
-          (out/'selected_products.json').write_text(json.dumps(selected,indent=2))
-          pathlib.Path('lidar_qc/urls.txt').write_text('\n'.join(urls)+'\n')
-          print('Selected URLs:'); print('\n'.join(urls))
-          PY
-
-      - name: Download selected LAZ/LAS source tile(s)
+      - name: Download exact LAZ source tile
         shell: bash
         run: |
           set -euo pipefail
-          while IFS= read -r url; do
-            [ -n "$url" ] || continue
-            name="$(basename "${url%%\?*}")"
-            echo "Downloading $name"
-            curl --fail --location --retry 5 --retry-delay 3 --continue-at - "$url" -o "lidar_qc/laz/$name"
-          done < lidar_qc/urls.txt
-          ls -lh lidar_qc/laz
-          sha256sum lidar_qc/laz/* | tee lidar_qc/reports/SHA256SUMS.txt
+          curl --fail --location --retry 5 --retry-delay 3 --continue-at - "$TILE_URL" -o "lidar_qc/laz/$TILE_NAME"
+          test "$(stat -c%s "lidar_qc/laz/$TILE_NAME")" -eq 120697918
+          stat -c 'bytes=%s file=%n' "lidar_qc/laz/$TILE_NAME" | tee lidar_qc/reports/file-size.txt
+          sha256sum "lidar_qc/laz/$TILE_NAME" | tee lidar_qc/reports/SHA256SUMS.txt
 
       - name: Install and verify PDAL runtime
         shell: bash
         run: |
-          docker pull pdal/pdal:2.10.0
-          docker run --rm pdal/pdal:2.10.0 pdal --version | tee lidar_qc/reports/pdal-version.txt
+          set -euo pipefail
+          docker pull pdal/pdal:latest-amd64
+          docker image inspect pdal/pdal:latest-amd64 --format '{{index .RepoDigests 0}}' | tee lidar_qc/reports/pdal-image-digest.txt
+          docker run --rm pdal/pdal:latest-amd64 pdal --version | tee lidar_qc/reports/pdal-version.txt
+          docker run --rm pdal/pdal:latest-amd64 pdal --drivers > lidar_qc/reports/pdal-drivers.txt
+          grep -E 'readers\.las' lidar_qc/reports/pdal-drivers.txt
 
-      - name: Full-decode and point-cloud QC
+      - name: Header schema CRS and metadata QC
         shell: bash
         run: |
           set -euo pipefail
-          for f in lidar_qc/laz/*; do
-            [ -f "$f" ] || continue
-            b="$(basename "$f")"; stem="${b%.*}"
-            echo "QC $b"
-            docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:2.10.0 pdal info "/data/laz/$b" --summary > "lidar_qc/reports/${stem}.summary.json"
-            docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:2.10.0 pdal info "/data/laz/$b" --metadata > "lidar_qc/reports/${stem}.metadata.json"
-            docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:2.10.0 pdal info "/data/laz/$b" --schema > "lidar_qc/reports/${stem}.schema.json"
-            # Full file read/decode plus enumerated class/return counts.
-            docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:2.10.0 pdal info "/data/laz/$b" --stats --dimensions=Classification,ReturnNumber,NumberOfReturns --enumerate=Classification,ReturnNumber,NumberOfReturns > "lidar_qc/reports/${stem}.stats.json"
-          done
+          docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:latest-amd64 pdal info "/data/laz/$TILE_NAME" --summary > lidar_qc/reports/summary.json
+          docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:latest-amd64 pdal info "/data/laz/$TILE_NAME" --metadata > lidar_qc/reports/metadata.json
+          docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:latest-amd64 pdal info "/data/laz/$TILE_NAME" --schema > lidar_qc/reports/schema.json
+          python3 -m json.tool lidar_qc/reports/summary.json >/dev/null
+          python3 -m json.tool lidar_qc/reports/metadata.json >/dev/null
+          python3 -m json.tool lidar_qc/reports/schema.json >/dev/null
 
-      - name: Build class and density report
+      - name: Full LAZ decode class and return validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          # PDAL --stats reads the entire dataset. Successful completion is the full-decode gate.
+          docker run --rm -v "$PWD/lidar_qc:/data" pdal/pdal:latest-amd64 pdal info "/data/laz/$TILE_NAME" \
+            --stats \
+            --dimensions=Classification,ReturnNumber,NumberOfReturns,Intensity,Z \
+            --enumerate=Classification,ReturnNumber,NumberOfReturns \
+            > lidar_qc/reports/stats.json
+          python3 -m json.tool lidar_qc/reports/stats.json >/dev/null
+          echo PASS > lidar_qc/reports/full-decode-status.txt
+
+      - name: Build machine-readable class and density report
         shell: bash
         run: |
           python3 - <<'PY'
-          import json,pathlib,re
-          root=pathlib.Path('lidar_qc/reports'); reports=[]
-          for sp in root.glob('*.stats.json'):
-              stem=sp.name[:-11]
-              stats=json.loads(sp.read_text()); summary=json.loads((root/f'{stem}.summary.json').read_text()); meta=json.loads((root/f'{stem}.metadata.json').read_text())
-              sl=stats.get('stats',{}).get('statistic',[]); cls=next((s for s in sl if s.get('name')=='Classification'),{})
-              counts={}
-              for e in cls.get('counts',[]) or []:
-                  try:k,v=e.split('/'); counts[str(int(float(k)))]=int(v)
-                  except:pass
-              total=int(cls.get('count') or sum(counts.values()) or 0); ground=int(counts.get('2',0))
-              def fb(x):
-                  if isinstance(x,dict):
-                      if {'minx','maxx','miny','maxy'}<=set(x): return x
-                      for v in x.values():
-                          r=fb(v)
-                          if r:return r
-                  if isinstance(x,list):
-                      for v in x:
-                          r=fb(v)
-                          if r:return r
-              bounds=fb(summary); area=None
-              if bounds: area=(float(bounds['maxx'])-float(bounds['minx']))*(float(bounds['maxy'])-float(bounds['miny']))
-              text=json.dumps(meta); factor=None
-              m=re.search(r'foot[^,]*,\\?"?([0-9]*\.?[0-9]+)',text,re.I)
-              if m:
-                  try: factor=float(m.group(1))
-                  except: pass
-              area_m2=area*factor*factor if area and factor else None
-              reports.append({'tile':stem,'point_count':total,'classification_counts':counts,'ground_class_2_count':ground,'bounds':bounds,'area_native_sq_units':area,'unit_to_meter_factor':factor,'total_density_pts_m2':(total/area_m2 if area_m2 else None),'ground_density_pts_m2':(ground/area_m2 if area_m2 else None),'full_decode':'PASS'})
-          if not reports: raise SystemExit('No PDAL stats reports produced')
-          (root/'tile_qc_summary.json').write_text(json.dumps(reports,indent=2)); print(json.dumps(reports,indent=2))
+          import json, pathlib, re
+          r=pathlib.Path('lidar_qc/reports')
+          summary=json.loads((r/'summary.json').read_text())
+          metadata=json.loads((r/'metadata.json').read_text())
+          stats=json.loads((r/'stats.json').read_text())
+
+          def walk(obj):
+              if isinstance(obj,dict):
+                  yield obj
+                  for v in obj.values(): yield from walk(v)
+              elif isinstance(obj,list):
+                  for v in obj: yield from walk(v)
+
+          # Find projected XY bounds from PDAL summary.
+          bounds=None
+          for d in walk(summary):
+              if all(k in d for k in ('minx','maxx','miny','maxy')):
+                  try:
+                      vals={k:float(d[k]) for k in ('minx','maxx','miny','maxy')}
+                      if vals['maxx']>vals['minx'] and vals['maxy']>vals['miny']:
+                          bounds=vals; break
+                  except Exception: pass
+
+          # Find point count robustly.
+          point_count=None
+          for d in walk(summary):
+              for k in ('num_points','count','points'):
+                  v=d.get(k)
+                  if isinstance(v,(int,float)) and v>0:
+                      point_count=int(v)
+                      if point_count>1000: break
+              if point_count and point_count>1000: break
+
+          stat_nodes=[]
+          for d in walk(stats):
+              if isinstance(d.get('name'),str) and d['name'] in ('Classification','ReturnNumber','NumberOfReturns','Intensity','Z'):
+                  stat_nodes.append(d)
+
+          def enum_counts(node):
+              out={}
+              raw=node.get('counts') or node.get('bins') or []
+              if isinstance(raw,dict):
+                  for k,v in raw.items():
+                      try: out[str(int(float(k)))]=int(v)
+                      except Exception: pass
+              elif isinstance(raw,list):
+                  for x in raw:
+                      if isinstance(x,str) and '/' in x:
+                          try:
+                              k,v=x.rsplit('/',1); out[str(int(float(k)))]=int(v)
+                          except Exception: pass
+                      elif isinstance(x,dict):
+                          k=x.get('value'); v=x.get('count')
+                          if k is not None and v is not None:
+                              try: out[str(int(float(k)))]=int(v)
+                              except Exception: pass
+              return out
+
+          classes={}
+          return_numbers={}
+          number_of_returns={}
+          for n in stat_nodes:
+              if n.get('name')=='Classification': classes=enum_counts(n) or classes
+              if n.get('name')=='ReturnNumber': return_numbers=enum_counts(n) or return_numbers
+              if n.get('name')=='NumberOfReturns': number_of_returns=enum_counts(n) or number_of_returns
+
+          if not point_count and classes: point_count=sum(classes.values())
+          ground_count=int(classes.get('2',0))
+
+          # Detect horizontal linear-unit conversion from WKT/metadata.
+          meta_txt=json.dumps(metadata)
+          factors=[]
+          for pat in [r'LENGTHUNIT[^\]]*?[, ]([0-9]+(?:\.[0-9]+)?)', r'UNIT[^\]]*?foot[^\]]*?[, ]([0-9]+(?:\.[0-9]+)?)']:
+              for m in re.finditer(pat,meta_txt,re.I):
+                  try:
+                      f=float(m.group(1))
+                      if 0.2 < f < 2: factors.append(f)
+                  except Exception: pass
+          unit_to_m=factors[0] if factors else None
+          area_native=None; area_m2=None
+          if bounds:
+              area_native=(bounds['maxx']-bounds['minx'])*(bounds['maxy']-bounds['miny'])
+              if unit_to_m: area_m2=area_native*unit_to_m*unit_to_m
+
+          report={
+              'tile':'USGS_LPC_OR_NRCSUSGS_2019_D19_s17250w07380.laz',
+              'focus_coordinate_lon_lat':[-118.93389,43.76949],
+              'full_decode':'PASS',
+              'point_count':point_count,
+              'classification_counts':classes,
+              'ground_class_2_count':ground_count,
+              'return_number_counts':return_numbers,
+              'number_of_returns_counts':number_of_returns,
+              'projected_bounds':bounds,
+              'horizontal_unit_to_meter_factor_detected':unit_to_m,
+              'area_native_sq_units':area_native,
+              'area_m2':area_m2,
+              'total_density_pts_m2':(point_count/area_m2 if point_count and area_m2 else None),
+              'ground_density_pts_m2':(ground_count/area_m2 if ground_count and area_m2 else None),
+              'sha256':(r/'SHA256SUMS.txt').read_text().split()[0],
+              'source_size_bytes':120697918
+          }
+          (r/'tile_qc_summary.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report,indent=2))
+          if not point_count or point_count<=0: raise SystemExit('Point count missing/invalid')
+          if not classes: raise SystemExit('Classification enumeration missing')
+          if ground_count<=0: raise SystemExit('No LAS class 2 ground points detected')
           PY
 
-      - name: Upload LAZ and QC evidence
+      - name: Upload exact LAZ and QC evidence
         uses: actions/upload-artifact@v4
         with:
-          name: idol-city-pardee-lidar-qc
+          name: idol-city-focus-laz-pdal-qc
           path: lidar_qc/
           compression-level: 0
           retention-days: 7
