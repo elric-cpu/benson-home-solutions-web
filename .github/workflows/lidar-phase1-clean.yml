@@ -1,0 +1,131 @@
+name: LiDAR Phase 1 Clean Validation
+
+on:
+  push:
+    branches:
+      - lidar-phase1-clean-20260825
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lidar-phase1-clean-20260825
+  cancel-in-progress: true
+
+jobs:
+  resolve-manifest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resolve authoritative USGS 3DEP source manifest
+        run: |
+          python3 lidar_phase1/resolve_manifest.py \
+            --bbox=-118.9500,43.7400,-118.8800,43.8700 \
+            --project OR_NRCSUSGS_2019_D19 \
+            --expected-count 171 \
+            --out phase1_manifest
+      - name: Show manifest status
+        run: cat phase1_manifest/resolution_status.json
+      - name: Preserve authoritative manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: lidar-phase1-manifest
+          path: phase1_manifest/
+          retention-days: 7
+          if-no-files-found: error
+
+  validate:
+    needs: resolve-manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 18
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download authoritative manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: lidar-phase1-manifest
+          path: phase1_manifest
+      - name: Start verified PDAL runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker pull alpine:edge
+          docker run --name pdal-build alpine:edge sh -lc 'apk add --no-cache pdal curl ca-certificates && pdal --version && pdal --drivers | grep readers.las'
+          docker commit pdal-build local-pdal:phase1 >/dev/null
+          docker rm pdal-build
+          docker run -d --name pdal-runtime -v "$PWD:/work" -w /work local-pdal:phase1 sleep infinity
+          docker exec pdal-runtime pdal --version
+      - name: Validate assigned LAZ tiles end-to-end
+        env:
+          PDAL_EXEC: docker exec pdal-runtime pdal
+        run: |
+          python3 lidar_phase1/validate_shard.py \
+            --manifest phase1_manifest/manifest.json \
+            --shard-index ${{ matrix.shard }} \
+            --shard-count 18 \
+            --out phase1_shard_${{ matrix.shard }}
+      - name: Preserve shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lidar-qc-shard-${{ matrix.shard }}
+          path: phase1_shard_${{ matrix.shard }}/
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Stop PDAL runtime
+        if: always()
+        run: docker rm -f pdal-runtime >/dev/null 2>&1 || true
+
+  aggregate:
+    needs: [resolve-manifest, validate]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download source manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: lidar-phase1-manifest
+          path: phase1_manifest
+      - name: Download all shard evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: lidar-qc-shard-*
+          path: combined_results
+          merge-multiple: true
+      - name: Aggregate every tile result
+        run: |
+          python3 lidar_phase1/aggregate_results.py \
+            --manifest phase1_manifest/manifest.json \
+            --results-root combined_results \
+            --out phase1_final
+      - name: Preserve final Phase 1 report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lidar-phase1-final-report
+          path: phase1_final/
+          retention-days: 14
+          if-no-files-found: error
+      - name: Enforce Phase 1 completion gate
+        run: |
+          python3 - <<'PY'
+          import json
+          r=json.load(open('phase1_final/phase1_validation_summary.json'))
+          print(json.dumps(r, indent=2))
+          if r['manifest_resolved_tile_count'] != r['prior_inventory_expected_tile_count']:
+              raise SystemExit('Authoritative manifest count does not reconcile to the prior 171-tile inventory.')
+          if not r['all_manifest_tiles_attempted']:
+              raise SystemExit('Not every manifest tile produced a validation result.')
+          if not r['all_tiles_pass']:
+              raise SystemExit('One or more tiles failed the Phase 1 byte/decode/class/density gate.')
+          print('PHASE 1 TILE VALIDATION: PASS')
+          PY
