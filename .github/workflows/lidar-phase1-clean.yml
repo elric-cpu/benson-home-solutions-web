@@ -24,7 +24,7 @@ jobs:
           python3 lidar_phase1/resolve_manifest.py \
             --bbox=-118.9500,43.7400,-118.8800,43.8700 \
             --project OR_NRCSUSGS_2019_D19 \
-            --expected-count 171 \
+            --expected-count 66 \
             --out phase1_manifest
       - name: Show manifest status
         run: cat phase1_manifest/resolution_status.json
@@ -115,17 +115,23 @@ jobs:
           path: phase1_final/
           retention-days: 14
           if-no-files-found: error
-      - name: Enforce fresh Phase 1 completion gate
+      - name: Enforce 66-tile Phase 1 completion gate
         run: |
           python3 - <<'PY'
           import json
           r=json.load(open('phase1_final/phase1_validation_summary.json'))
           print(json.dumps(r, indent=2))
-          if r['manifest_resolved_tile_count'] != r['prior_inventory_expected_tile_count']:
-              print('NOTICE: prior 171-tile count did not reconcile; authoritative AOI manifest governs this clean restart.')
+          if r['authoritative_expected_tile_count'] != 66:
+              raise SystemExit('Authoritative expected tile count is not 66.')
+          if r['manifest_resolved_tile_count'] != 66:
+              raise SystemExit('USGS AOI manifest did not resolve exactly 66 tiles.')
+          if r['results_received'] != 66:
+              raise SystemExit('Did not receive exactly 66 tile validation records.')
           if not r['all_manifest_tiles_attempted']:
-              raise SystemExit('Not every authoritative manifest tile produced a validation result.')
+              raise SystemExit('Not every authoritative tile produced a validation result.')
           if not r['all_tiles_pass']:
-              raise SystemExit('One or more authoritative AOI tiles failed the Phase 1 byte/decode/class/density gate.')
-          print('PHASE 1 AUTHORITATIVE AOI TILE VALIDATION: PASS')
+              raise SystemExit('One or more tiles failed byte/decode/class/density validation.')
+          if not r['phase1_gate_pass']:
+              raise SystemExit('Phase 1 gate did not pass.')
+          print('PHASE 1 AUTHORITATIVE 66-TILE VALIDATION: PASS')
           PY
