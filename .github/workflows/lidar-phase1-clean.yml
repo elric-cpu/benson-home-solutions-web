@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: lidar-phase1-clean-20260825
+  group: lidar-phase1-corrected-66-v8
   cancel-in-progress: true
 
 jobs:
