@@ -3,7 +3,7 @@
 module.exports = {
   ci: {
     collect: {
-      url: ['http://localhost:3000/'],
+      url: ['http://localhost:3000/', 'http://localhost:3000/prospecting-map.html'],
       startServerCommand: '', // Server started externally in CI
       numberOfRuns: 1,
       settings: {

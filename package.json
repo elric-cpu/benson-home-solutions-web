@@ -40,7 +40,8 @@
     "script:office-cron-dry-run": "node scripts/office_cron_runner.mjs --dry-run",
     "script:office-cron-scaffold": "node scripts/office_cron_runner.mjs --scaffold-missing",
     "migrate": "npm run script:agent-router && npm run script:autonomous-marketing-loop && npm run script:db-seed && npm run script:expand-areas && npm run script:export-hostinger-env && npm run script:generate-deep-plan && npm run script:generate-facebook-content-vertex && npm run script:process-facebook-content && npm run script:prod-performance-check && npm run script:run-campaign && npm run script:seed-ops-manual && npm run script:setup-database && npm run script:take-screenshot && npm run script:test-all-gcloud && npm run script:test-deployment && npm run script:test-rag && npm run script:validate-env && npm run script:validate-lines",
-    "migrate-all": "tsx scripts/setup/migrate-all.ts"
+    "migrate-all": "tsx scripts/setup/migrate-all.ts",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@eslint/eslintrc": "3.3.5",

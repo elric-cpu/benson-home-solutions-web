@@ -67,10 +67,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
       - run: pnpm build
+      - name: Prepare standalone test artifact
+        run: |
+          cp -R public .next/standalone/public
+          mkdir -p .next/standalone/.next
+          cp -R .next/static .next/standalone/.next/static
       - uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
-          path: .next
+          path: .next/standalone
+          include-hidden-files: true
+          if-no-files-found: error
           retention-days: 1
 
   e2e:
@@ -91,12 +98,12 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: .next
+          path: standalone
       - name: Start server & run tests
         run: |
-          pnpm start &
-          pnpm exec wait-on http://localhost:3000 --timeout 30000
-          pnpm test
+          HOSTNAME=127.0.0.1 PORT=3000 node standalone/server.js &
+          pnpm dlx wait-on@9.1.0 http://localhost:3000 --timeout 30000
+          pnpm exec playwright test
         env:
           NODE_ENV: production
 
@@ -117,11 +124,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: .next
+          path: standalone
       - name: Run Lighthouse CI
         run: |
-          pnpm start &
-          pnpm exec wait-on http://localhost:3000 --timeout 30000
-          pnpm exec lhci autorun
+          HOSTNAME=127.0.0.1 PORT=3000 node standalone/server.js &
+          pnpm dlx wait-on@9.1.0 http://localhost:3000 --timeout 30000
+          pnpm dlx @lhci/cli@0.15.1 autorun
         env:
           NODE_ENV: production
