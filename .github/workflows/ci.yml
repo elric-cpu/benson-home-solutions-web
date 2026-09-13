@@ -72,11 +72,11 @@ jobs:
           cp -R public .next/standalone/public
           mkdir -p .next/standalone/.next
           cp -R .next/static .next/standalone/.next/static
+          tar -czf nextjs-standalone.tar.gz -C .next/standalone .
       - uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
-          path: .next/standalone
-          include-hidden-files: true
+          path: nextjs-standalone.tar.gz
           if-no-files-found: error
           retention-days: 1
 
@@ -98,7 +98,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: standalone
+          path: nextjs-artifact
+      - name: Restore standalone server
+        run: |
+          mkdir standalone
+          tar -xzf nextjs-artifact/nextjs-standalone.tar.gz -C standalone
       - name: Start server & run tests
         run: |
           HOSTNAME=127.0.0.1 PORT=3000 node standalone/server.js &
@@ -124,7 +128,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: standalone
+          path: nextjs-artifact
+      - name: Restore standalone server
+        run: |
+          mkdir standalone
+          tar -xzf nextjs-artifact/nextjs-standalone.tar.gz -C standalone
       - name: Run Lighthouse CI
         run: |
           HOSTNAME=127.0.0.1 PORT=3000 node standalone/server.js &
