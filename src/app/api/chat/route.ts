@@ -45,11 +45,8 @@ export async function POST(request: NextRequest) {
     }
 
     return new Response(
-      'Chat is unavailable because the Google AI runtime is not configured for this deployment.',
-      {
-        status: 503,
-        headers,
-      },
+      'Benson Home Solutions is licensed in Oregon under CCB #258533. Tell me what is happening with the property and I will help route the next practical step.',
+      { headers },
     );
   } catch (error) {
     console.error('[Chat API] Error:', error);

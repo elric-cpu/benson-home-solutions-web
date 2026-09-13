@@ -40,13 +40,20 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json(
-      {
-        error:
-          'Agreement recommendations are unavailable because neither the Genkit backend nor the local Google AI runtime is configured.',
-      },
-      { status: 503 },
-    );
+    return NextResponse.json({
+      source: 'demo-mode',
+      recommendations: [
+        {
+          service_id: 'residential-maintenance',
+          priority: 'essential',
+          reasoning:
+            'A baseline maintenance plan catches moisture, roofing, and mechanical issues before they become expensive repairs.',
+          frequency: 'annual',
+          climate_adjustment:
+            'Schedule exterior and drainage checks before Oregon’s wet season.',
+        },
+      ],
+    });
   } catch (error) {
     console.error('[Recommend API] Error:', error);
     return NextResponse.json({ error: 'Recommendation failed' }, { status: 500 });
