@@ -1,1 +1,2 @@
-google-genai>=2.3.0\npytest>=8.0,<9\n
+google-genai>=2.3.0
+pytest>=8.0,<9
