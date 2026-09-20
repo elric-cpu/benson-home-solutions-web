@@ -1,5 +1,13 @@
 # Harney County History Podcast — Production Automation
 
+## Validation status
+
+**Production TTS path validated: 3/3 consecutive real Gemini generations PASS on 2026-09-20.**
+
+All three runs used `gemini-3.1-flash-tts-preview`, passed WAV QC, required one attempt, and did not use fallback. The complete validation archive is preserved in Google Drive under `00A Admin & Operating System/Gemini TTS Validation Evidence`.
+
+GitHub Actions run: https://github.com/elric-cpu/benson-home-solutions-web/actions/runs/35543373426
+
 This branch contains the deterministic production path for the Harney County History Podcast.
 
 ## Locked production rules
