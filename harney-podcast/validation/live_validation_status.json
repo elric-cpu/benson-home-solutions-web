@@ -1,0 +1,49 @@
+{
+  "validated": true,
+  "required_consecutive_successes": 3,
+  "consecutive_successes": 3,
+  "validated_at_utc": "2026-09-20T23:02:35Z",
+  "github": {
+    "workflow": "Harney Podcast Automation",
+    "run_id": 35543373426,
+    "run_url": "https://github.com/elric-cpu/benson-home-solutions-web/actions/runs/35543373426",
+    "artifact_id": 10615079491,
+    "artifact_sha256": "5f1725aa9d141447b1e76fc298bba12c656950fd84b54d2b37e8ed06e9d2c77e"
+  },
+  "google_drive": {
+    "folder_id": "1Ri58nh6AV3ZT4LA_zA8Gcs5Jgpp2rxmc",
+    "archive_file_id": "1mMcuWMwK8Rc6PDHcaGhEFuw-GLCL7a-A"
+  },
+  "history": [
+    {
+      "run_number": 1,
+      "model": "gemini-3.1-flash-tts-preview",
+      "wav_bytes": 931278,
+      "duration_seconds": 19.4,
+      "sha256": "cbc5cb6821598cd3d404601c52b873b9b40de9bace70f42ebc627654cf48e1aa",
+      "wav_validation": "PASS",
+      "attempt_count": 1,
+      "fallback_used": false
+    },
+    {
+      "run_number": 2,
+      "model": "gemini-3.1-flash-tts-preview",
+      "wav_bytes": 915918,
+      "duration_seconds": 19.08,
+      "sha256": "e9591edd1549914e4624a57366d9f0302c0f030687f908a1a893a732a775ae0f",
+      "wav_validation": "PASS",
+      "attempt_count": 1,
+      "fallback_used": false
+    },
+    {
+      "run_number": 3,
+      "model": "gemini-3.1-flash-tts-preview",
+      "wav_bytes": 950478,
+      "duration_seconds": 19.8,
+      "sha256": "78244e06c4830c672918ee795d7f9b8df573a1ee5e02bbbf9691e2aa7ec8630e",
+      "wav_validation": "PASS",
+      "attempt_count": 1,
+      "fallback_used": false
+    }
+  ]
+}
