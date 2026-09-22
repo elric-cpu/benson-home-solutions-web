@@ -18,20 +18,23 @@ def tts_pcm(c,text,model=TTS_MODEL):
     try: d=r.candidates[0].content.parts[0].inline_data.data
     except Exception as e: raise PipelineError(f"{model} returned no inline audio") from e
     return base64.b64decode(d) if isinstance(d,str) else bytes(d)
+def tts_pcm_failover(c,text):
+    errors=[]
+    for model in (TTS_MODEL,TTS_FALLBACK):
+        try: return tts_pcm(c,text,model),model
+        except Exception as e: errors.append(f"{model}: {e}")
+    raise PipelineError("TTS primary+fallback failed: "+" | ".join(errors))
+
 def write_wav(path:Path,pcm:bytes):
     path.parent.mkdir(parents=True,exist_ok=True)
     with wave.open(str(path),"wb") as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(RATE); w.writeframes(pcm)
 def render_chunks(c,chunks,out,ep):
     out.mkdir(parents=True,exist_ok=True); files=[]
     for i,x in enumerate(chunks,1):
-        dst=out/f"{ep}_chunk_{i}.wav"; err=None
-        for m in (TTS_MODEL,TTS_FALLBACK):
-            try:
-                pcm=tts_pcm(c,x,m)
-                if len(pcm)<4800: raise PipelineError("TTS audio unexpectedly short")
-                write_wav(dst,pcm); files.append(dst); err=None; break
-            except Exception as e: err=e
-        if err: raise PipelineError(f"TTS failed chunk {i} primary+fallback: {err}")
+        dst=out/f"{ep}_chunk_{i}.wav"
+        pcm,_=tts_pcm_failover(c,x)
+        if len(pcm)<4800: raise PipelineError("TTS audio unexpectedly short")
+        write_wav(dst,pcm); files.append(dst)
     return files
 def annotations(response):
     out=[]
