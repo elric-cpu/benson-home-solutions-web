@@ -5,7 +5,7 @@ from .config import *
 
 def code_hash():
     base=Path(__file__).resolve().parents[1]; h=hashlib.sha256()
-    for p in sorted([base/"harney_podcast_runner.py",*list((base/"podcast_pipeline").glob("*.py"))]): h.update(p.name.encode()); h.update(p.read_bytes())
+    for p in sorted([base/"harney_podcast_runner.py",base/"requirements.txt",*list((base/"podcast_pipeline").glob("*.py"))]): h.update(str(p.relative_to(base)).encode()); h.update(p.read_bytes())
     return h.hexdigest()
 def record(paths:Paths,passed:bool,label="LIVE-SMOKE"):
     r=load_json(paths.validation,{}) or {}; ch=code_hash()
