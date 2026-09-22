@@ -1,0 +1,31 @@
+name: Podcast production runner CI
+
+on:
+  pull_request:
+    paths:
+      - 'tools/harney-podcast/**'
+      - '.github/workflows/podcast-production-ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/harney-podcast/**'
+      - '.github/workflows/podcast-production-ci.yml'
+  workflow_dispatch:
+
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile runner package
+        run: |
+          python -m compileall -q tools/harney-podcast/harney_podcast_runner.py tools/harney-podcast/podcast_pipeline
+      - name: Unit tests
+        run: python -m unittest discover -s tools/harney-podcast/tests -v
+      - name: Verify FFmpeg is available
+        run: |
+          ffmpeg -version | head -1
+          ffprobe -version | head -1

@@ -1,0 +1,58 @@
+name: Podcast live Gemini validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tools/harney-podcast/harney_podcast_runner.py'
+      - 'tools/harney-podcast/podcast_pipeline/**'
+      - 'tools/harney-podcast/requirements.txt'
+      - '.github/workflows/podcast-live-validation.yml'
+  push:
+    branches:
+      - 'podcast/production-runner-v2'
+    paths:
+      - 'tools/harney-podcast/harney_podcast_runner.py'
+      - 'tools/harney-podcast/podcast_pipeline/**'
+      - 'tools/harney-podcast/requirements.txt'
+      - '.github/workflows/podcast-live-validation.yml'
+
+jobs:
+  live-validation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      HARNEY_DRIVE_ROOT: ${{ github.workspace }}/.podcast-live-validation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install runner dependencies
+        run: pip install -r tools/harney-podcast/requirements.txt
+      - name: Require Gemini validation credentials
+        run: test -n "$GEMINI_API_KEY"
+      - name: Run three consecutive live TTS to ASR validations
+        run: |
+          python tools/harney-podcast/harney_podcast_runner.py live-smoke
+          python tools/harney-podcast/harney_podcast_runner.py live-smoke
+          python tools/harney-podcast/harney_podcast_runner.py live-smoke
+      - name: Copy release validation record
+        run: cp "$HARNEY_DRIVE_ROOT/00A Admin & Operating System/live_validation_record.json" tools/harney-podcast/release_validation.json
+      - name: Verify production-ready validation record
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('tools/harney-podcast/release_validation.json')
+          d=json.loads(p.read_text())
+          assert d['production_ready'] is True, d
+          assert d['consecutive_successes'] >= 3, d
+          print(json.dumps(d, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: podcast-release-validation
+          path: tools/harney-podcast/release_validation.json
