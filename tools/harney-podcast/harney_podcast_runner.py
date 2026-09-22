@@ -5,7 +5,7 @@ from pathlib import Path
 from podcast_pipeline.config import *
 from podcast_pipeline.script import parse,preflight,normalized_words,distance
 from podcast_pipeline.state import scaffold,current,gate_report,advance
-from podcast_pipeline.gemini_io import client,render_chunks,tts_pcm,write_wav,transcribe
+from podcast_pipeline.gemini_io import client,render_chunks,tts_pcm_failover,write_wav,transcribe
 from podcast_pipeline.media import master,master_qc,fidelity,speaker_error
 from podcast_pipeline.release import record, status as validation_status, code_hash
 from podcast_pipeline.publish import publish
@@ -31,7 +31,7 @@ def render(paths,ep):
 def live_smoke(paths):
     c=client(); prompt="HOST_A: Harney County is large enough that distance changes ordinary work.\nHOST_B: Which is a polite way of saying a quick trip can eat half the day.\nHOST_A: Exactly. Geography stays attached to the people and the evidence."
     with tempfile.TemporaryDirectory() as td:
-        w=Path(td)/"smoke.wav"; write_wav(w,tts_pcm(c,prompt)); text,ann=transcribe(c,w); a=normalized_words(prompt); b=normalized_words(text); wer=distance(a,b)/max(len(a),1); import difflib; ratio=difflib.SequenceMatcher(None,a,b,autojunk=False).ratio(); se,got=speaker_error(["HOST_A","HOST_B","HOST_A"],ann); ok=wer<=.20 and ratio>=.85 and se<=.50; rec=record(paths,ok); return {"pass":ok,"wer":round(wer,5),"text_similarity":round(ratio,5),"speaker_sequence_error":round(se,5),"actual_speaker_sequence":got,"runner_version":VERSION,"code_hash":code_hash(),"validation_record":rec}
+        w=Path(td)/"smoke.wav"; pcm,tts_model=tts_pcm_failover(c,prompt); write_wav(w,pcm); text,ann=transcribe(c,w); a=normalized_words(prompt); b=normalized_words(text); wer=distance(a,b)/max(len(a),1); import difflib; ratio=difflib.SequenceMatcher(None,a,b,autojunk=False).ratio(); se,got=speaker_error(["HOST_A","HOST_B","HOST_A"],ann); ok=wer<=.20 and ratio>=.85 and se<=.50; rec=record(paths,ok); return {"pass":ok,"wer":round(wer,5),"text_similarity":round(ratio,5),"speaker_sequence_error":round(se,5),"actual_speaker_sequence":got,"tts_model":tts_model,"runner_version":VERSION,"code_hash":code_hash(),"validation_record":rec}
 def report(paths,ep):
     s=current(paths,ep); ni=min(STAGES.index(s["stage"])+1,len(STAGES)-1); return {"runner_version":VERSION,"drive_root":str(paths.root),"episode":s,"next_gate":gate_report(paths,ep,STAGES[ni]),"live_validation":validation_status(paths)}
 def main(argv=None):
