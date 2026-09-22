@@ -1,5 +1,5 @@
 from __future__ import annotations
-import os, shutil, subprocess, json
+import os, shutil, subprocess, json, hashlib
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -22,6 +22,12 @@ def now(): return datetime.now(timezone.utc).isoformat()
 def load_json(p:Path, default=None): return json.loads(p.read_text(encoding="utf-8")) if p.exists() else default
 def write_json(p:Path,d:Any):
     p.parent.mkdir(parents=True,exist_ok=True); t=p.with_suffix(p.suffix+".tmp"); t.write_text(json.dumps(d,indent=2,ensure_ascii=False)+"\n",encoding="utf-8"); t.replace(p)
+def sha256_file(path:Path):
+    h=hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda:f.read(1024*1024),b""): h.update(block)
+    return h.hexdigest()
+
 def run(cmd:list[str],capture=False):
     try:
         return subprocess.run(cmd,check=True,text=True,stdout=subprocess.PIPE if capture else subprocess.DEVNULL,stderr=subprocess.PIPE if capture else subprocess.DEVNULL)
@@ -63,7 +69,7 @@ class Paths:
     @property
     def validation(self): return self.admin/"live_validation_record.json"
     @property
-    def feed(self): return self.publishing/"podcast_feed.xml"
+    def feed(self): return self.publishing/"podcast_feed.xml"\n    @property\n    def guid_registry(self): return self.admin/"published_guids.json"
     def ensure(self):
         for p in (self.admin,self.intake,self.sources,self.ledgers,self.scripts,self.audio,self.video,self.publishing,self.education,self.rights,self.social,self.archive,self.states): p.mkdir(parents=True,exist_ok=True)
 
