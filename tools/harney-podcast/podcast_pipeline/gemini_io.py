@@ -1,5 +1,5 @@
 from __future__ import annotations
-import base64, wave
+import base64, wave, re, time
 from pathlib import Path
 from .config import *
 
@@ -45,11 +45,30 @@ def annotations(response):
                 sp=getattr(tr,"speaker_label","") or ""
                 for w in getattr(tr,"words",[]) or []: out.append({"word":getattr(w,"word","") or "","speaker":sp,"start":str(getattr(w,"start_offset","") or ""),"end":str(getattr(w,"end_offset","") or "")})
     return out
-def transcribe(c,path:Path):
+
+def retry_delay(error,attempt):
+    code=getattr(error,"status_code",None)
+    if code==429:
+        m=re.search(r"retry[^0-9]{0,80}([0-9]+(?:\.[0-9]+)?)s",str(error),re.I)
+        return (float(m.group(1))+2.0) if m else 60.0
+    if code==503: return 5.0*(attempt+1)
+    return None
+
+def transcribe_response(c,f):
     from google.genai import types
+    for attempt in range(3):
+        try:
+            return c.models.generate_content(model=ASR_MODEL,contents=[f],config=types.GenerateContentConfig(audio_transcription_config=types.AudioTranscriptionConfig(language_codes=["en-US"],diarization=True,word_timestamp=True)))
+        except Exception as e:
+            delay=retry_delay(e,attempt)
+            if delay is None or attempt==2: raise
+            time.sleep(min(delay,90.0))
+    raise PipelineError("Transcription retry loop exhausted")
+
+def transcribe(c,path:Path):
     f=c.files.upload(file=str(path))
     try:
-        r=c.models.generate_content(model=ASR_MODEL,contents=[f],config=types.GenerateContentConfig(audio_transcription_config=types.AudioTranscriptionConfig(language_codes=["en-US"],diarization=True,word_timestamp=True)))
+        r=transcribe_response(c,f)
         return r.text or "",annotations(r)
     finally:
         try: c.files.delete(name=f.name)
