@@ -2,6 +2,12 @@ name: Podcast live Gemini validation
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tools/harney-podcast/harney_podcast_runner.py'
+      - 'tools/harney-podcast/podcast_pipeline/**'
+      - 'tools/harney-podcast/requirements.txt'
+      - '.github/workflows/podcast-live-validation.yml'
   push:
     branches:
       - 'podcast/production-runner-v2'
