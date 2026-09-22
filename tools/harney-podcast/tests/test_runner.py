@@ -5,6 +5,7 @@ import harney_podcast_runner as r
 from podcast_pipeline.config import Paths,artifacts,PipelineError
 from podcast_pipeline.state import scaffold,advance
 from podcast_pipeline.script import preflight,normalized_words,distance
+from podcast_pipeline.gemini_io import retry_delay
 
 def good():
     a="word "*300; b="word "*75
@@ -20,4 +21,7 @@ class T(unittest.TestCase):
     def test_state_gate(self):
         a=artifacts(self.p,self.ep); a["intake"].write_text("STATUS: COMPLETE\n"); a["source"].write_text("STATUS: LOCKED\n"); self.assertEqual(advance(self.p,self.ep,"SOURCE LOCK")["stage"],"SOURCE LOCK"); self.assertRaises(PipelineError,advance,self.p,self.ep,"CLAIM CHECK")
     def test_words(self): self.assertEqual(distance(normalized_words("HOST_A: Road bad"),normalized_words("spk_1: Road bad")),0)
+    def test_retry_delay(self):
+        class E(Exception): status_code=429
+        self.assertAlmostEqual(retry_delay(E("Please retry in 37.1s"),0),39.1)
 if __name__=="__main__": unittest.main()
