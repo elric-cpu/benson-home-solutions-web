@@ -18,7 +18,7 @@ def master(chunks,wav,mp3):
         m=loudness(raw); f=f"loudnorm=I={TARGET_LUFS}:TP={TARGET_TP}:LRA={TARGET_LRA}:measured_I={m['input_i']}:measured_TP={m['input_tp']}:measured_LRA={m['input_lra']}:measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true"
         run(["ffmpeg","-y","-hide_banner","-loglevel","error","-i",str(raw),"-af",f,"-ar",str(RATE),"-ac","1","-c:a","pcm_s16le",str(wav)])
         run(["ffmpeg","-y","-hide_banner","-loglevel","error","-i",str(wav),"-ar",str(RATE),"-ac","1","-c:a","libmp3lame","-b:a","128k",str(mp3)])
-def probe(path): return json.loads(run(["ffprobe","-v","error","-show_entries","format=duration:stream=codec_name,codec_type,sample_rate,channels,sample_fmt,bits_per_sample","-of","json",str(path)],capture=True).stdout)
+def probe(path): return json.loads(run(["ffprobe","-v","error","-show_entries","format=duration,bit_rate:stream=codec_name,codec_type,sample_rate,channels,sample_fmt,bits_per_sample,bit_rate","-of","json",str(path)],capture=True).stdout)
 def silences(path):
     r=run(["ffmpeg","-hide_banner","-nostats","-i",str(path),"-af","silencedetect=noise=-50dB:d=3","-f","null","-"],capture=True)
     return [float(x) for x in re.findall(r"silence_duration:\s*([0-9.]+)",r.stderr)]
@@ -28,10 +28,14 @@ def master_qc(wav,mp3):
         if not path.exists(): out["pass"]=False; out["errors"].append(f"missing {path}"); continue
         pr=probe(path); s=next((x for x in pr["streams"] if x.get("codec_type")=="audio"),None)
         if not s: out["pass"]=False; out["errors"].append(f"{label}: no audio stream"); continue
-        dur=float(pr.get("format",{}).get("duration",0)); lu=loudness(path); si=silences(path); out[label]={"probe":s,"duration_seconds":dur,"loudness":lu,"silence_durations":si}
+        dur=float(pr.get("format",{}).get("duration",0)); lu=loudness(path); si=silences(path); out[label]={"probe":s,"duration_seconds":dur,"loudness":lu,"silence_durations":si,"sha256":sha256_file(path)}
         if int(s.get("channels",0))!=1: out["pass"]=False; out["errors"].append(f"{label}: not mono")
         if int(s.get("sample_rate",0))!=RATE: out["pass"]=False; out["errors"].append(f"{label}: not {RATE} Hz")
         if label=="master_wav" and s.get("codec_name")!="pcm_s16le": out["pass"]=False; out["errors"].append("master: not 16-bit PCM")
+        if label=="mp3":
+            br=int(s.get("bit_rate") or pr.get("format",{}).get("bit_rate") or 0)
+            out[label]["bit_rate"]=br
+            if not 120000<=br<=136000: out["pass"]=False; out["errors"].append(f"mp3: bitrate {br} not ~128 kbps")
         if not TARGET_LUFS-1<=lu["input_i"]<=TARGET_LUFS+1: out["pass"]=False; out["errors"].append(f"{label}: {lu['input_i']} LUFS")
         if lu["input_tp"]>(-1 if label=="master_wav" else -.7): out["pass"]=False; out["errors"].append(f"{label}: true peak {lu['input_tp']} dBTP")
         if any(x>MAX_SILENCE for x in si): out["pass"]=False; out["errors"].append(f"{label}: long silence >{MAX_SILENCE}s")
