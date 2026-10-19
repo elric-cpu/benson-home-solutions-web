@@ -139,12 +139,12 @@ def chunk_turns(
 
 
 def render_chunk(turns: Sequence[Turn]) -> str:
-    transcript = "\n".join(turn.render() for turn in turns)
+    transcript = "\n".join(f"{turn.speaker}: {turn.text}" for turn in turns)
     return (
         "Perform the following locked podcast transcript exactly as written. "
         "Do not add, remove, paraphrase, summarize, censor, or reorder words. "
         "HOST_A is precise, dry, skeptical, and controlled. "
-        "HOST_B is quicker, curious, animated, and easily distracted. "
+        "HOST_B is a grounded, curious local: practical, skeptical, attentive, and restrained in humor. "
         "Keep the delivery conversational and natural; do not add sound effects.\n\n"
         + transcript
     )
@@ -336,10 +336,35 @@ def build_client():
     return genai.Client()
 
 
-def produce(script_path: Path, output_dir: Path, client=None) -> dict:
-    script_text = script_path.read_text(encoding="utf-8")
-    turns = parse_script(script_text)
-    chunks = chunk_turns(turns)
+def build_plan(script_path: Path, *, probe: bool = False) -> dict:
+    """Require strict authored chunks for production; legacy turn-only scripts are probes."""
+    if probe:
+        turns = parse_script(script_path.read_text(encoding="utf-8"))
+        chunks = chunk_turns(turns)
+        return {
+            "chunks": chunks,
+            "prompts": [render_chunk(chunk) for chunk in chunks],
+            "manifest": {
+                "status": "PROBE_ONLY",
+                "publication_eligible": False,
+                "authored_chunk_count": None,
+                "chunk_words": [sum(t.words for t in chunk) for chunk in chunks],
+            },
+            "publication_eligible": False,
+        }
+
+    from authored_chunk_adapter import build_render_plan
+    from locked_script import LockedScriptError
+
+    try:
+        return build_render_plan(script_path, prompt_builder=render_chunk)
+    except LockedScriptError as exc:
+        raise RunnerError(f"Locked-script validation failed: {exc}") from exc
+
+
+def produce(script_path: Path, output_dir: Path, client=None, *, probe: bool = False) -> dict:
+    # Preflight must succeed before creating output files or invoking paid TTS.
+    plan = build_plan(script_path, probe=probe)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     segment_dir = output_dir / "segments"
@@ -349,8 +374,8 @@ def produce(script_path: Path, output_dir: Path, client=None) -> dict:
     reports: list[SegmentReport] = []
     segment_paths: list[Path] = []
 
-    for idx, chunk in enumerate(chunks, start=1):
-        pcm, model, attempts, fallback_used = generate_pcm(client, render_chunk(chunk))
+    for idx, prompt in enumerate(plan["prompts"], start=1):
+        pcm, model, attempts, fallback_used = generate_pcm(client, prompt)
         wav_path = segment_dir / f"segment_{idx:03d}.wav"
         write_pcm_wav(wav_path, pcm)
         wav_info = validate_wav(wav_path)
@@ -372,7 +397,9 @@ def produce(script_path: Path, output_dir: Path, client=None) -> dict:
     export_mp3(master_wav, final_mp3)
 
     report = {
-        "status": "PASS",
+        "status": "PROBE_ONLY" if probe else "AUDIO_CONTAINER_PASS_FIDELITY_UNVERIFIED",
+        "publication_eligible": False,
+        "script_manifest": plan["manifest"],
         "script": str(script_path),
         "approved_models": [PRIMARY_MODEL, FALLBACK_MODEL],
         "voices": HOST_VOICES,
@@ -406,7 +433,7 @@ def validate_live(script_path: Path, output_dir: Path, required: int = 3) -> dic
         run_number += 1
         run_dir = output_dir / f"run_{run_number:03d}"
         try:
-            report = produce(script_path, run_dir)
+            report = produce(script_path, run_dir, probe=True)
             master = report["master_wav"]
             models = sorted({s["model"] for s in report["segments"]})
             attempts = sum(s["attempts"] for s in report["segments"])
@@ -457,10 +484,12 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     p_check = sub.add_parser("check-script")
     p_check.add_argument("script", type=Path)
+    p_check.add_argument("--probe", action="store_true", help="Allow legacy turn-only TTS probe scripts")
 
     p_produce = sub.add_parser("produce")
     p_produce.add_argument("script", type=Path)
     p_produce.add_argument("output_dir", type=Path)
+    p_produce.add_argument("--probe", action="store_true", help="Render legacy probe only; not publishable")
 
     p_live = sub.add_parser("validate-live")
     p_live.add_argument("script", type=Path)
@@ -470,17 +499,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "check-script":
-        turns = parse_script(args.script.read_text(encoding="utf-8"))
-        chunks = chunk_turns(turns)
+        plan = build_plan(args.script, probe=args.probe)
         print(json.dumps({
-            "turns": len(turns),
-            "chunks": len(chunks),
-            "chunk_words": [sum(t.words for t in c) for c in chunks],
+            "turns": sum(len(c) for c in plan["chunks"]),
+            "chunks": len(plan["chunks"]),
+            "chunk_words": [sum(t.words for t in c) for c in plan["chunks"]],
+            "manifest": plan["manifest"],
         }, indent=2))
         return 0
 
     if args.command == "produce":
-        print(json.dumps(produce(args.script, args.output_dir), indent=2))
+        print(json.dumps(produce(args.script, args.output_dir, probe=args.probe), indent=2))
         return 0
 
     if args.command == "validate-live":
