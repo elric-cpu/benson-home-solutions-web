@@ -1,0 +1,80 @@
+name: Harney Podcast Automation
+
+on:
+  push:
+    branches:
+      - harney-podcast-automation
+    paths:
+      - "harney-podcast/**"
+      - ".github/workflows/harney-podcast.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: harney-podcast
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: pytest -q
+
+      - name: Validate probe script
+        run: python runner.py check-script examples/live_probe.txt
+
+  live_validation:
+    needs: unit_tests
+    if: ${{ contains(github.event.head_commit.message, '[live-validate]') }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: harney-podcast
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: Require Gemini API key
+        shell: bash
+        run: |
+          test -n "${GEMINI_API_KEY:-}" || {
+            echo "GEMINI_API_KEY Actions secret is missing."
+            exit 2
+          }
+
+      - name: Run three-consecutive live TTS validation
+        run: python runner.py validate-live examples/live_probe.txt validation/live --required 3
+
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: harney-podcast-live-validation
+          path: harney-podcast/validation/live/
+          if-no-files-found: warn
+          retention-days: 30
