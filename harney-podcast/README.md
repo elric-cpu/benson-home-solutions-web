@@ -32,7 +32,7 @@ Install:
 
 Validate a script without calling Gemini:
 
-    python runner.py check-script examples/live_probe.txt
+    python runner.py check-script examples/live_probe.txt --probe
 
 Produce one real package:
 
