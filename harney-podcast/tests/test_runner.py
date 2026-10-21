@@ -141,7 +141,7 @@ def test_live_failure_resets_counter_and_stops(monkeypatch, tmp_path):
     ]
     calls = {"n": 0}
 
-    def fake_produce(script, out):
+    def fake_produce(script, out, *, probe=False):
         calls["n"] += 1
         if calls["n"] <= 2:
             return successes[calls["n"] - 1]
@@ -163,7 +163,7 @@ def test_live_failure_resets_counter_and_stops(monkeypatch, tmp_path):
 def test_live_three_consecutive_successes(monkeypatch, tmp_path):
     counter = {"n": 0}
 
-    def fake_produce(script, out):
+    def fake_produce(script, out, *, probe=False):
         counter["n"] += 1
         n = counter["n"]
         return {
