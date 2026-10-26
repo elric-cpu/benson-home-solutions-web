@@ -33,7 +33,7 @@ jobs:
         run: pytest -q
 
       - name: Validate probe script
-        run: python runner.py check-script examples/live_probe.txt
+        run: python runner.py check-script examples/live_probe.txt --probe
 
   live_validation:
     needs: unit_tests
