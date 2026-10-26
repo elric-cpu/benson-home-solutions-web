@@ -2,7 +2,7 @@
 
 ## Validation status
 
-**Production TTS path validated: 3/3 consecutive real Gemini generations PASS on 2026-09-20.**
+**TTS transport probe validated: 3/3 consecutive real Gemini generations PASS on 2026-09-20. This was not a locked full-episode or publication validation.**
 
 All three runs used `gemini-3.1-flash-tts-preview`, passed WAV QC, required one attempt, and did not use fallback. The complete validation archive is preserved in Google Drive under `00A Admin & Operating System/Gemini TTS Validation Evidence`.
 
@@ -12,7 +12,7 @@ This branch contains the deterministic production path for the Harney County His
 
 ## Locked production rules
 
-- Input is a locked two-host script using only `HOST_A:` and `HOST_B:`.
+- Production input is a locked two-host script with 4–5 authored `--- CHUNK N ---` boundaries, each containing 375–550 spoken words and only `HOST_A:` / `HOST_B:` turns. Probe input may be plain turns but requires `--probe`.
 - Host A voice: **Charon**.
 - Host B voice: **Puck**.
 - Primary TTS model: `gemini-3.1-flash-tts-preview`.
@@ -34,15 +34,21 @@ Validate a script without calling Gemini:
 
     python runner.py check-script examples/live_probe.txt --probe
 
+Validate a production locked script (does not call Gemini):
+
+    python runner.py check-script path/to/EP002_Locked_Script.md
+
+A production render requires the same authored-chunk format, but remains nonpublishable until independent fidelity, audio QC, and rights gates pass.
+
 Produce one real package:
 
-    GEMINI_API_KEY=... python runner.py produce examples/live_probe.txt out/one
+    GEMINI_API_KEY=... python runner.py produce examples/live_probe.txt out/one --probe
 
 Run the official live validation:
 
     GEMINI_API_KEY=... python runner.py validate-live examples/live_probe.txt validation/live
 
-The official validation is complete only when `validation/live/live_validation_status.json` reports three consecutive successful real generations.
+The probe validation is complete only when `validation/live/live_validation_status.json` reports three consecutive successful real generations. A separate full-episode test is still required. Neither check establishes script-to-audio fidelity, loudness/true-peak compliance, rights clearance, or permission to publish.
 
 ## GitHub Actions
 
