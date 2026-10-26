@@ -503,7 +503,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(json.dumps({
             "turns": sum(len(c) for c in plan["chunks"]),
             "chunks": len(plan["chunks"]),
-            "chunk_words": [sum(t.words for t in c) for c in plan["chunks"]],
+            "chunk_words": [sum(len(t.text.split()) for t in c) for c in plan["chunks"]],
             "manifest": plan["manifest"],
         }, indent=2))
         return 0
