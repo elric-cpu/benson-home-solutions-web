@@ -229,3 +229,38 @@ def test_produce_records_mp3_audio_measurements_without_release(monkeypatch, tmp
     assert report["status"] == "AUDIO_CONTAINER_PASS_FIDELITY_UNVERIFIED"
     saved = json.loads((tmp_path / "out/qc_report.json").read_text())
     assert saved["audio_qc"]["true_peak_dbtp"] == -2.0
+
+
+
+def test_produce_failure_removes_staging_and_does_not_publish(monkeypatch, tmp_path):
+    script = tmp_path / "locked.md"
+    script.write_text("dummy")
+    monkeypatch.setattr(
+        runner, "build_plan",
+        lambda path, probe=False: {"prompts": ["one"], "manifest": {}},
+    )
+    monkeypatch.setattr(
+        runner, "generate_pcm",
+        lambda client, prompt: (_ for _ in ()).throw(runner.RunnerError("TTS failure")),
+    )
+    output = tmp_path / "episode"
+    with pytest.raises(runner.RunnerError, match="TTS failure"):
+        runner.produce(script, output, client=object())
+    assert not output.exists()
+    assert not list(tmp_path.glob(".episode.staging-*"))
+
+
+def test_produce_does_not_overwrite_existing_package(monkeypatch, tmp_path):
+    script = tmp_path / "locked.md"
+    script.write_text("dummy")
+    output = tmp_path / "episode"
+    output.mkdir()
+    sentinel = output / "keep.txt"
+    sentinel.write_text("original")
+    monkeypatch.setattr(
+        runner, "build_plan",
+        lambda path, probe=False: {"prompts": ["one"], "manifest": {}},
+    )
+    with pytest.raises(runner.RunnerError, match="Refusing to overwrite"):
+        runner.produce(script, output, client=object())
+    assert sentinel.read_text() == "original"
