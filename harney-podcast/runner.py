@@ -363,72 +363,97 @@ def build_plan(script_path: Path, *, probe: bool = False) -> dict:
 
 
 def produce(script_path: Path, output_dir: Path, client=None, *, probe: bool = False) -> dict:
+    """Render into a temporary sibling, then atomically publish a QC report package.
+
+    This operation commits a nonpublishable *local* production package, not a
+    public episode. Failed generation or QC leaves no partial final directory.
+    Existing output packages are never overwritten.
+    """
+    import tempfile
+
     # Preflight must succeed before creating output files or invoking paid TTS.
     plan = build_plan(script_path, probe=probe)
+    output_dir = Path(output_dir)
+    if output_dir.exists() or output_dir.is_symlink():
+        raise RunnerError(f"Refusing to overwrite existing output directory: {output_dir}")
+    output_dir.parent.mkdir(parents=True, exist_ok=True)
+    staging_dir = Path(tempfile.mkdtemp(
+        prefix=f".{output_dir.name}.staging-", dir=output_dir.parent
+    ))
 
-    output_dir.mkdir(parents=True, exist_ok=True)
-    segment_dir = output_dir / "segments"
-    segment_dir.mkdir(parents=True, exist_ok=True)
+    def final_path(path: Path) -> str:
+        return str(output_dir / path.relative_to(staging_dir))
 
-    client = client or build_client()
-    reports: list[SegmentReport] = []
-    segment_paths: list[Path] = []
-
-    for idx, prompt in enumerate(plan["prompts"], start=1):
-        pcm, model, attempts, fallback_used = generate_pcm(client, prompt)
-        wav_path = segment_dir / f"segment_{idx:03d}.wav"
-        write_pcm_wav(wav_path, pcm)
-        wav_info = validate_wav(wav_path)
-        reports.append(
-            SegmentReport(
-                segment=idx,
-                model=model,
-                attempts=attempts,
-                fallback_used=fallback_used,
-                wav=wav_info,
-            )
-        )
-        segment_paths.append(wav_path)
-
-    master_wav = output_dir / "master.wav"
-    final_mp3 = output_dir / "final.mp3"
-    assemble_wavs(segment_paths, master_wav)
-    master_info = validate_wav(master_wav)
-    export_mp3(master_wav, final_mp3)
-
-    # Measure the actual distribution export; this does not normalize audio
-    # or establish a publication-ready loudness target.
-    from audio_qc import AudioQCError, measure_audio
     try:
-        audio_measurements = measure_audio(final_mp3)
-    except AudioQCError as exc:
-        raise RunnerError(f"Final MP3 audio QC failed: {exc}") from exc
+        segment_dir = staging_dir / "segments"
+        segment_dir.mkdir(parents=True, exist_ok=True)
+        client = client or build_client()
+        reports: list[SegmentReport] = []
+        segment_paths: list[Path] = []
 
-    report = {
-        "status": "PROBE_ONLY" if probe else "AUDIO_CONTAINER_PASS_FIDELITY_UNVERIFIED",
-        "publication_eligible": False,
-        "script_manifest": plan["manifest"],
-        "audio_qc": audio_measurements,
-        "script": str(script_path),
-        "approved_models": [PRIMARY_MODEL, FALLBACK_MODEL],
-        "voices": HOST_VOICES,
-        "audio_target": {
-            "sample_rate": SAMPLE_RATE,
-            "bit_depth": BIT_DEPTH,
-            "channels": CHANNELS,
-        },
-        "segments": [asdict(r) for r in reports],
-        "master_wav": asdict(master_info),
-        "final_mp3": {
-            "path": str(final_mp3),
-            "bytes": final_mp3.stat().st_size,
-            "sha256": sha256_file(final_mp3),
-        },
-    }
-    (output_dir / "qc_report.json").write_text(
-        json.dumps(report, indent=2) + "\n", encoding="utf-8"
-    )
-    return report
+        for idx, prompt in enumerate(plan["prompts"], start=1):
+            pcm, model, attempts, fallback_used = generate_pcm(client, prompt)
+            wav_path = segment_dir / f"segment_{idx:03d}.wav"
+            write_pcm_wav(wav_path, pcm)
+            wav_info = validate_wav(wav_path)
+            reports.append(SegmentReport(
+                segment=idx, model=model, attempts=attempts,
+                fallback_used=fallback_used, wav=wav_info,
+            ))
+            segment_paths.append(wav_path)
+
+        master_wav = staging_dir / "master.wav"
+        final_mp3 = staging_dir / "final.mp3"
+        assemble_wavs(segment_paths, master_wav)
+        master_info = validate_wav(master_wav)
+        export_mp3(master_wav, final_mp3)
+
+        # Analyze the actual distribution export without normalizing it.
+        from audio_qc import AudioQCError, measure_audio
+        try:
+            audio_measurements = measure_audio(final_mp3)
+        except AudioQCError as exc:
+            raise RunnerError(f"Final MP3 audio QC failed: {exc}") from exc
+
+        segments_report = []
+        for segment in reports:
+            item = asdict(segment)
+            item["wav"]["path"] = final_path(Path(segment.wav.path))
+            segments_report.append(item)
+        master_report = asdict(master_info)
+        master_report["path"] = final_path(master_wav)
+
+        report = {
+            "status": "PROBE_ONLY" if probe else "AUDIO_CONTAINER_PASS_FIDELITY_UNVERIFIED",
+            "publication_eligible": False,
+            "script_manifest": plan["manifest"],
+            "audio_qc": audio_measurements,
+            "script": str(script_path),
+            "approved_models": [PRIMARY_MODEL, FALLBACK_MODEL],
+            "voices": HOST_VOICES,
+            "audio_target": {
+                "sample_rate": SAMPLE_RATE,
+                "bit_depth": BIT_DEPTH,
+                "channels": CHANNELS,
+            },
+            "segments": segments_report,
+            "master_wav": master_report,
+            "final_mp3": {
+                "path": final_path(final_mp3),
+                "bytes": final_mp3.stat().st_size,
+                "sha256": sha256_file(final_mp3),
+            },
+        }
+        (staging_dir / "qc_report.json").write_text(
+            json.dumps(report, indent=2) + "\n", encoding="utf-8"
+        )
+        if output_dir.exists() or output_dir.is_symlink():
+            raise RunnerError(f"Output directory appeared during render: {output_dir}")
+        staging_dir.rename(output_dir)
+        return report
+    finally:
+        if staging_dir.exists():
+            shutil.rmtree(staging_dir)
 
 
 def validate_live(script_path: Path, output_dir: Path, required: int = 3) -> dict:
