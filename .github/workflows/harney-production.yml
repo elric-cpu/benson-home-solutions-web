@@ -1,23 +1,22 @@
-name: Harney Podcast Production Render
+name: Harney Podcast Locked Script Preflight
 
+# This public repository validates format only. Private source transcripts,
+# unpublished episode scripts, audio renders, and rights-held assets stay
+# in the Drive master or a separately secured production environment.
 on:
-  push:
-    branches:
-      - harney-podcast-automation
-    paths:
-      - "harney-podcast/episodes/**"
-      - "harney-podcast/production/TRIGGER"
-      - ".github/workflows/harney-production.yml"
+  workflow_dispatch:
+    inputs:
+      script_path:
+        description: "Repository-relative path below harney-podcast/episodes/ (public test scripts only)"
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 jobs:
-  render_last_week:
-    if: ${{ contains(github.event.head_commit.message, '[render-last-week]') }}
+  validate_locked_script:
     runs-on: ubuntu-latest
-    env:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
     defaults:
       run:
         working-directory: harney-podcast
@@ -30,38 +29,31 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install FFmpeg
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install test dependencies
+        run: python -m pip install -r requirements.txt
 
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip && pip install -r requirements.txt
-
-      - name: Require Gemini API key
+      - name: Validate selected locked script
+        env:
+          SCRIPT_PATH: ${{ inputs.script_path }}
         shell: bash
         run: |
-          test -n "${GEMINI_API_KEY:-}" || {
-            echo "GEMINI_API_KEY Actions secret is missing."
-            exit 2
-          }
+          python - <<'PY'
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
 
-      - name: Validate locked scripts
+          root = Path.cwd().resolve()
+          allowed = (root / "episodes").resolve()
+          candidate = (root / os.environ["SCRIPT_PATH"]).resolve()
+          if not candidate.is_relative_to(allowed) or not candidate.is_file():
+              raise SystemExit("Script must be an existing file under harney-podcast/episodes/")
+          if candidate.suffix.lower() not in (".md", ".txt"):
+              raise SystemExit("Script must be a .md or .txt file.")
+          subprocess.run([sys.executable, "runner.py", "check-script", str(candidate)], check=True)
+          PY
+
+      - name: Publication restriction
         run: |
-          python runner.py check-script episodes/2026-09-15-diaz/script_locked.txt
-          python runner.py check-script episodes/2026-09-18-camp-harney/script_locked.txt
-
-      - name: Render Sept 15 Diaz episode
-        run: python runner.py produce episodes/2026-09-15-diaz/script_locked.txt production/2026-09-15-diaz
-
-      - name: Render Sept 18 Camp Harney episode
-        run: python runner.py produce episodes/2026-09-18-camp-harney/script_locked.txt production/2026-09-18-camp-harney
-
-      - name: Upload finished episodes
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: harney-last-week-episodes
-          path: |
-            harney-podcast/production/2026-09-15-diaz/
-            harney-podcast/production/2026-09-18-camp-harney/
-          if-no-files-found: warn
-          retention-days: 30
+          echo "Format preflight only. No TTS generation, audio export, or publication."
+          echo "Rights, source accuracy, speech fidelity, and audio mastering remain separate gates."
