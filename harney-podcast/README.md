@@ -65,7 +65,7 @@ analysis pass. Its QC report includes integrated LUFS, true peak (dBTP),
 loudness range (LU), and explicit flags showing that no mastering target or
 script-to-audio fidelity gate has been approved. Measurement is **not**
 normalization, a pass against a distribution standard, or publication approval.
-A corrupt or unmeasurable MP3 fails the render.
+A corrupt or unmeasurable MP3 fails the render. Output files are now staged in a temporary sibling directory and moved into place only after container and measurement QC complete. Failed renders clean up their staging directory, and existing output packages are not overwritten.
 
 The public-repository workflow `.github/workflows/harney-production.yml` is
 now a **manual locked-script format preflight only**. It no longer attempts
@@ -78,7 +78,7 @@ or audio to this public repository.** Full episode rendering must use a
 separately secured environment after the editorial and rights checks.
 
 Outstanding: define and approve delivery loudness limits, implement independent
-speech-to-script fidelity verification, add atomic output/quarantine handling,
+speech-to-script fidelity verification, extend atomic output handling with failure-evidence quarantine,
 run a complete five-chunk episode test, and resolve the EP002 rights hold.
 ## Spotify
 
