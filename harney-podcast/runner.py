@@ -396,10 +396,19 @@ def produce(script_path: Path, output_dir: Path, client=None, *, probe: bool = F
     master_info = validate_wav(master_wav)
     export_mp3(master_wav, final_mp3)
 
+    # Measure the actual distribution export; this does not normalize audio
+    # or establish a publication-ready loudness target.
+    from audio_qc import AudioQCError, measure_audio
+    try:
+        audio_measurements = measure_audio(final_mp3)
+    except AudioQCError as exc:
+        raise RunnerError(f"Final MP3 audio QC failed: {exc}") from exc
+
     report = {
         "status": "PROBE_ONLY" if probe else "AUDIO_CONTAINER_PASS_FIDELITY_UNVERIFIED",
         "publication_eligible": False,
         "script_manifest": plan["manifest"],
+        "audio_qc": audio_measurements,
         "script": str(script_path),
         "approved_models": [PRIMARY_MODEL, FALLBACK_MODEL],
         "voices": HOST_VOICES,
