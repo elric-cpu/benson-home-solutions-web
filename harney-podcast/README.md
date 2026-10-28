@@ -58,6 +58,28 @@ Live validation is intentionally gated. It runs only when a commit message conta
 
 After the secret is configured, update `harney-podcast/validation/TRIGGER` and commit with a message containing `[live-validate]`. The workflow uploads the complete validation output as an Actions artifact.
 
+## Audio QC and public-repository safety (2026-10-28)
+
+The runner now measures the **final MP3** with FFmpeg's read-only loudnorm
+analysis pass. Its QC report includes integrated LUFS, true peak (dBTP),
+loudness range (LU), and explicit flags showing that no mastering target or
+script-to-audio fidelity gate has been approved. Measurement is **not**
+normalization, a pass against a distribution standard, or publication approval.
+A corrupt or unmeasurable MP3 fails the render.
+
+The public-repository workflow `.github/workflows/harney-production.yml` is
+now a **manual locked-script format preflight only**. It no longer attempts
+to render the old Diaz and Camp Harney turn-only scripts, requires no API key,
+and produces no public audio artifact. Use its `script_path` input only for
+nonconfidential scripts already in this repository, relative to
+`harney-podcast/` (for example `episodes/example/script_locked.md`).
+**Do not commit EP002's private or rights-held script, source transcripts,
+or audio to this public repository.** Full episode rendering must use a
+separately secured environment after the editorial and rights checks.
+
+Outstanding: define and approve delivery loudness limits, implement independent
+speech-to-script fidelity verification, add atomic output/quarantine handling,
+run a complete five-chunk episode test, and resolve the EP002 rights hold.
 ## Spotify
 
 The connected Spotify integration is used for verification/discovery only. Publishing remains a Spotify for Creators action unless an authenticated Creator upload API becomes available. Never fabricate a publication URL.
