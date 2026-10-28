@@ -185,3 +185,47 @@ def test_live_three_consecutive_successes(monkeypatch, tmp_path):
     assert state["validated"] is True
     assert state["consecutive_successes"] == 3
     assert len(state["history"]) == 3
+
+
+
+def test_produce_records_mp3_audio_measurements_without_release(monkeypatch, tmp_path):
+    import shutil
+    import audio_qc
+
+    script = tmp_path / "locked.md"
+    script.write_text("dummy input")
+    monkeypatch.setattr(
+        runner, "build_plan",
+        lambda path, probe=False: {
+            "prompts": ["test prompt"],
+            "manifest": {"status": "EDITORIAL_FORMAT_VALID_ONLY"},
+        },
+    )
+    monkeypatch.setattr(
+        runner, "generate_pcm",
+        lambda client, prompt: (pcm(0.2), runner.PRIMARY_MODEL, 1, False),
+    )
+    monkeypatch.setattr(
+        runner, "assemble_wavs",
+        lambda segments, master: shutil.copyfile(segments[0], master),
+    )
+    monkeypatch.setattr(
+        runner, "export_mp3",
+        lambda master, mp3: mp3.write_bytes(b"mock mp3 bytes"),
+    )
+    monkeypatch.setattr(
+        audio_qc, "measure_audio",
+        lambda path: {
+            "integrated_lufs": -17.0,
+            "true_peak_dbtp": -2.0,
+            "loudness_gate": "MEASURED_TARGET_NOT_APPROVED",
+            "publication_eligible": False,
+        },
+    )
+
+    report = runner.produce(script, tmp_path / "out", client=object())
+    assert report["audio_qc"]["integrated_lufs"] == -17.0
+    assert report["publication_eligible"] is False
+    assert report["status"] == "AUDIO_CONTAINER_PASS_FIDELITY_UNVERIFIED"
+    saved = json.loads((tmp_path / "out/qc_report.json").read_text())
+    assert saved["audio_qc"]["true_peak_dbtp"] == -2.0
