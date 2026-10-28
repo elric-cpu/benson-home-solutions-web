@@ -11,7 +11,7 @@ The CLI preflight word counter accepts the validated turn format, and the automa
 1. Validate an actual locked episode script from the Drive master, preserving its SHA-256 and the claim-ledger revision.
 2. Add independent speech-to-script fidelity verification for each segment and the assembled episode; flag omissions, insertions, substitutions, and order changes.
 3. **Measurement implemented:** the final MP3 now records integrated LUFS, true peak, and LRA. Define/approve delivery targets, enforce them, and add mastering if needed.
-4. Write outputs atomically, and reject or quarantine partial renders and failed QC artifacts.
+4. **Atomic output implemented:** render into a temporary sibling directory, clean up failed renders, refuse overwrite, and commit the QC package only after analysis. Add optional failure-evidence quarantine and interruption recovery.
 5. Obtain explicit source/asset-specific reproduction permission before public distribution, including the Harney County Library material used in EP002.
 6. Perform a complete 4–5-chunk end-to-end validation with saved reports and human editorial review.
 7. Keep rights-held scripts and audio out of this public repository. The previous stale-script production workflow has been replaced with a manual, format-only preflight.
