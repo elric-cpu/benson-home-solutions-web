@@ -91,3 +91,38 @@ The Drive master remains the archival system of record for source material, scri
 ## Security
 
 Do not hard-code `GEMINI_API_KEY`. Do not print it. Do not commit it. Rotate any key that has previously been pasted into chat after the pipeline is stable.
+
+## Independent speech-to-script screening (2026-11-02)
+
+`fidelity_qc.py` now provides **offline, independent ASR screening** of the
+completed locked-script production package. It checks the original script SHA-256,
+all segment WAV hashes and order, master WAV and distribution MP3 hashes, then
+transcribes **every authored segment and the assembled MP3** with an unprimed
+local faster-whisper model. It compares normalized spoken words with the locked
+dialogue, reports word error rate and changed text, and detects reordered words
+when the word inventory is otherwise unchanged. Speaker labels and nonspoken
+metadata are excluded from the reference.
+
+Run only on a **private machine** with the private Drive script and render
+package; never commit them or upload ASR reports to public GitHub Actions:
+
+    python -m pip install -r requirements-fidelity.txt
+    python fidelity_qc.py /private/EP002_Locked_Script.md /private/EP002_render --model medium.en --max-wer 0.05
+
+The first run downloads the model weights, so the initial installation requires
+network access; transcription itself runs locally on CPU. For better recognition
+quality, use a larger locally available model, allowing for slower processing.
+The default 5% WER is a **screening threshold, not an approved delivery limit**.
+The verifier writes `fidelity_report.json` inside the private package. Exit
+code 0 means the automated ASR screen passed; 1 means detected mismatches;
+2 means verification could not be completed. A passing screen still requires
+a person to listen against the locked script, resolve discrepancies, approve
+mastering targets, and confirm the episode-specific rights gate. **The report
+always sets `publication_eligible: false`.**
+
+The ASR model is independent of Gemini TTS but can itself misrecognize
+names, dates, and local place names. The report is an audit aid, not a
+replacement for listening. Do not prime the recognizer with the reference
+script, since that would invalidate the independent comparison.
+
+No full EP002 audio has been rendered or checked by this new component.
