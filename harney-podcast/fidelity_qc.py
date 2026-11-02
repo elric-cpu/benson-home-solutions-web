@@ -158,7 +158,8 @@ def verify_package(
     final_mp3 = package_dir / "final.mp3"
     mp3_hash = require_hash(final_mp3, (report.get("final_mp3") or {}).get("sha256"))
 
-    if transcriber is None:
+    local_asr = transcriber is None
+    if local_asr:
         transcriber = make_local_transcriber(model_name)
 
     results = []
@@ -183,7 +184,7 @@ def verify_package(
         "mastering_approval_required": True,
         "script_sha256": locked.sha256,
         "master_mp3_sha256": mp3_hash,
-        "asr_engine": "faster-whisper (local, unprimed)" if transcriber else "unknown",
+        "asr_engine": "faster-whisper (local, unprimed)" if local_asr else "injected transcriber (test/externally supplied)",
         "asr_model": model_name,
         "segments": results,
         "assembled_mp3": master_result,
