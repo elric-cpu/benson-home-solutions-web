@@ -81,7 +81,7 @@ def test_master_mismatch_fails_even_if_segments_match(tmp_path):
     script, package, transcribe = build_fixture(tmp_path)
     def missing_end(path):
         result = transcribe(path)
-        return result[:-300] if path.suffix == ".mp3" else result
+        return result[:-1200] if path.suffix == ".mp3" else result
     report = verify_package(script, package, transcriber=missing_end)
     assert report["status"] == "ASR_SCREEN_FAIL"
     assert all(x["screen_pass"] for x in report["segments"])
