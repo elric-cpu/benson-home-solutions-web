@@ -24,6 +24,7 @@ def test_reordered_words_are_not_silently_accepted():
     result = compare_text("red gold black sand", "gold red black sand", max_wer=0)
     assert not result["screen_pass"]
     assert result["order_changed_with_same_word_inventory"]
+    assert not compare_text("red gold black sand", "gold red black sand", max_wer=1)["screen_pass"]
 
 
 def build_fixture(tmp_path):
