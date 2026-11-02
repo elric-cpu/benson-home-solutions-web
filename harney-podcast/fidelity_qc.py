@@ -63,18 +63,17 @@ def compare_text(expected: str, observed: str, *, max_wer: float = 0.05) -> dict
                 "heard": " ".join(hypothesis[c:d][:12]),
             })
     wer = errors / len(reference)
+    order_mismatch = reference != hypothesis and Counter(reference) == Counter(hypothesis)
     return {
         "reference_words": len(reference),
         "recognized_words": len(hypothesis),
         "word_errors": errors,
         "word_error_rate": round(wer, 6),
         "max_wer": max_wer,
-        "order_changed_with_same_word_inventory": (
-            reference != hypothesis and Counter(reference) == Counter(hypothesis)
-        ),
+        "order_changed_with_same_word_inventory": order_mismatch,
         "differences": changes[:25],
         "additional_differences_omitted": max(0, len(changes) - 25),
-        "screen_pass": wer <= max_wer,
+        "screen_pass": wer <= max_wer and not order_mismatch,
     }
 
 
