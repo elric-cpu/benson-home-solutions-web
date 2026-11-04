@@ -415,6 +415,14 @@ def produce(script_path: Path, output_dir: Path, client=None, *, probe: bool = F
         except AudioQCError as exc:
             raise RunnerError(f"Final MP3 audio QC failed: {exc}") from exc
 
+        # Technical reference screening is recorded, never publication approval.
+        # An out-of-range master is retained privately for corrective mastering.
+        from mastering_qc import MasteringQCError, evaluate_mastering
+        try:
+            mastering_assessment = evaluate_mastering(audio_measurements)
+        except MasteringQCError as exc:
+            raise RunnerError(f"Mastering assessment failed: {exc}") from exc
+
         segments_report = []
         for segment in reports:
             item = asdict(segment)
@@ -428,6 +436,7 @@ def produce(script_path: Path, output_dir: Path, client=None, *, probe: bool = F
             "publication_eligible": False,
             "script_manifest": plan["manifest"],
             "audio_qc": audio_measurements,
+            "mastering_assessment": mastering_assessment,
             "script": str(script_path),
             "approved_models": [PRIMARY_MODEL, FALLBACK_MODEL],
             "voices": HOST_VOICES,
