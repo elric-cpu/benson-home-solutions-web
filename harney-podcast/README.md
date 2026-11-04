@@ -77,9 +77,11 @@ nonconfidential scripts already in this repository, relative to
 or audio to this public repository.** Full episode rendering must use a
 separately secured environment after the editorial and rights checks.
 
-Outstanding: define and approve delivery loudness limits, implement independent
-speech-to-script fidelity verification, extend atomic output handling with failure-evidence quarantine,
-run a complete five-chunk episode test, and resolve the EP002 rights hold.
+Outstanding: approve the project delivery mastering profile, decide whether to
+normalize/re-encode out-of-range audio, extend atomic output handling with
+failure-evidence quarantine, run a complete five-chunk episode test, and
+resolve the EP002 rights hold. Independent speech-to-script screening exists
+(see below) but has not been validated on a real full episode.
 ## Spotify
 
 The connected Spotify integration is used for verification/discovery only. Publishing remains a Spotify for Creators action unless an authenticated Creator upload API becomes available. Never fabricate a publication URL.
@@ -126,3 +128,33 @@ replacement for listening. Do not prime the recognizer with the reference
 script, since that would invalidate the independent comparison.
 
 No full EP002 audio has been rendered or checked by this new component.
+
+## Mastering reference screen (2026-11-04)
+
+`mastering_qc.py` implements a **nonpublishing, read-only comparison** of the
+actual encoded MP3 with [Apple Podcasts' published audio recommendations](
+https://podcasters.apple.com/support/893-audio-requirements):
+integrated loudness **-16 LKFS/LUFS +/-1** (inclusive) and true peak
+**no greater than -1 dBTP**. This is a documented technical reference, **not
+an approved Harney County History Podcast delivery policy**. The project
+has not chosen a final profile or approved a mastering operator. No LRA
+maximum is imposed: Apple's cited guidance does not define one.
+
+The production runner now records `mastering_assessment` alongside the raw
+`audio_qc` measurement in the private `qc_report.json`. Out-of-range audio
+is retained in its **private, nonpublishable** package for correction; a
+technical pass does not change `publication_eligible: false`.
+
+For an independent technical check on an exported file:
+
+    python mastering_qc.py /private/EP002_render/final.mp3
+
+Exit code 0 means the **technical reference** passes; 1 means it fails;
+2 means the audio cannot be assessed. The command never publishes,
+normalizes, authorizes, or uploads audio. All episode-specific historical,
+fidelity, rights, human-listening, and mastering approvals remain separate.
+
+**Format distinction:** the current distribution MP3 is 24 kHz mono,
+128 kbps, which falls within Apple's *RSS feed* 24 kHz mono range.
+Apple Podcasts Connect subscriber MP3 uploads have a separate 44.1 kHz
+minimum. Do not assume this export is suitable for every distribution route.
