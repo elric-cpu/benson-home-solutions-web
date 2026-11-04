@@ -218,6 +218,9 @@ def test_produce_records_mp3_audio_measurements_without_release(monkeypatch, tmp
         lambda path: {
             "integrated_lufs": -17.0,
             "true_peak_dbtp": -2.0,
+            "loudness_range_lu": 5.0,
+            "measurement_engine": "ffmpeg loudnorm input analysis",
+            "normalization_applied": False,
             "loudness_gate": "MEASURED_TARGET_NOT_APPROVED",
             "publication_eligible": False,
         },
@@ -229,6 +232,9 @@ def test_produce_records_mp3_audio_measurements_without_release(monkeypatch, tmp
     assert report["status"] == "AUDIO_CONTAINER_PASS_FIDELITY_UNVERIFIED"
     saved = json.loads((tmp_path / "out/qc_report.json").read_text())
     assert saved["audio_qc"]["true_peak_dbtp"] == -2.0
+    assert saved["mastering_assessment"]["technical_pass"] is True
+    assert saved["mastering_assessment"]["project_profile_approved"] is False
+    assert saved["mastering_assessment"]["publication_eligible"] is False
 
 
 
