@@ -158,3 +158,11 @@ fidelity, rights, human-listening, and mastering approvals remain separate.
 128 kbps, which falls within Apple's *RSS feed* 24 kHz mono range.
 Apple Podcasts Connect subscriber MP3 uploads have a separate 44.1 kHz
 minimum. Do not assume this export is suitable for every distribution route.
+
+## Opt-in corrective remaster (2026-11-09)
+
+A private, two-pass FFmpeg normalization utility is available in `remaster.py`.
+It never overwrites the original and checks the **encoded** MP3 before accepting
+an output. It is **not integrated into the runner**, does not update the
+existing ASR fidelity report, and cannot clear any publication gate. Read
+[`REMASTERING.md`](REMASTERING.md) before using it on rights-held material.
