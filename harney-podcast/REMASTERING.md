@@ -32,11 +32,10 @@ If the command fails, the redirected report may be empty; inspect stderr.
 
 ## Required follow-up
 
-1. Run `fidelity_qc.py` again on the **actual distribution candidate**.
-   The current verifier is designed around the original `final.mp3` and
-   package hashes; a separately remastered MP3 is **not automatically
-   incorporated into that report**. Do not treat the original fidelity
-   report as verification of the remastered file.
+1. Use the new private `distribution_qc.py` command below to bind independent
+   ASR screening and mastering measurements to the **exact MP3 candidate**.
+   A previously generated fidelity report for `final.mp3` is not evidence
+   that `final_remastered.mp3` contains the same spoken words.
 2. Have a human listen to the remastered candidate against the locked
    script, particularly names, dates, speaker transitions, and chunk joins.
 3. Confirm the intended distribution route supports 24 kHz mono MP3.
@@ -48,3 +47,40 @@ not a project-approved policy. `publication_eligible` stays false in every
 generated report. This tool never contacts Gemini or publishes an episode.
 
 Reference: https://podcasters.apple.com/support/893-audio-requirements
+
+
+## Preferred end-to-end private QC (2026-11-11)
+
+After a full locked-script render, run this on a **private** machine with
+FFmpeg and the local ASR dependencies installed:
+
+```bash
+python -m pip install -r requirements-fidelity.txt
+python distribution_qc.py /private/EP002_Locked_Script.md /private/EP002_render --remaster-if-needed --model medium.en --max-wer 0.05
+```
+
+This command verifies the original authored segments, master WAV and original
+MP3 against the locked script and their SHA-256 hashes **before** considering
+normalization. It independently measures the original MP3. If it already meets
+the documented technical reference, it is not re-encoded. Otherwise, the
+explicit opt-in flag allows `remaster.py` to produce
+`final_remastered.mp3`, preserving `final.mp3` untouched.
+
+**Critically:** after remastering, the new candidate is measured again and
+independently transcribed against the locked script. The private
+`distribution_qc_report.json` binds the **actual candidate filename
+and SHA-256** to its mastering and ASR results. The report is committed
+atomically and never overwrites an existing report. It is deliberately
+nonpublishable even if all automated screens pass.
+
+Without `--remaster-if-needed`, an out-of-range original MP3
+is recorded as a failed technical screen; no new audio is generated.
+Exit 0 = both automated screens passed, **release still held**.
+Exit 1 = a candidate failed an automated screen.
+Exit 2 = the verification could not be completed.
+For a new run, use a new private render package; do not overwrite evidence.
+
+No episode audio, scripts, source transcripts, or QC reports should be uploaded
+to the public GitHub repository or public GitHub Actions artifacts. A human
+must still listen against the locked script, approve the mastering profile,
+verify the historical content, and document rights clearance.
