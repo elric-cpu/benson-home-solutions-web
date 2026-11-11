@@ -1,0 +1,4 @@
+HOST_A: Harney County history is mostly a contest between distance, weather, paperwork, and people who were certain the other three were the real problem.
+HOST_B: So the official county motto was basically, well, that did not go according to plan.
+HOST_A: That is not an official motto.
+HOST_B: Yet.
