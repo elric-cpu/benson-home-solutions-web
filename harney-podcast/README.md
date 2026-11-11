@@ -166,3 +166,27 @@ It never overwrites the original and checks the **encoded** MP3 before accepting
 an output. It is **not integrated into the runner**, does not update the
 existing ASR fidelity report, and cannot clear any publication gate. Read
 [`REMASTERING.md`](REMASTERING.md) before using it on rights-held material.
+
+
+## Private distribution-candidate verification (2026-11-11)
+
+`distribution_qc.py` is the preferred post-render, **private-only**
+QC command. It verifies the complete original locked render using independent
+ASR, checks the original MP3 against the documented mastering reference,
+optionally runs corrective two-pass normalization **only if needed**, and
+then verifies the **actual candidate MP3** after encoding. A remastered file
+is never allowed to inherit the original MP3's ASR pass.
+
+```bash
+python distribution_qc.py /private/EP002_Locked_Script.md /private/EP002_render --remaster-if-needed --model medium.en --max-wer 0.05
+```
+
+The resulting private `distribution_qc_report.json` records the
+candidate filename and SHA-256, independent candidate ASR comparison, measured
+loudness, true peak, technical assessment, and explicit release holds. It is
+written atomically without overwriting existing evidence. Omit
+`--remaster-if-needed` to assess without changing any audio.
+See [REMASTERING.md](REMASTERING.md) for details. **No public Actions run
+may receive rights-held scripts or audio.** Automated passing results never
+clear the rights, editorial, human-listening, distribution-format, or final
+mastering-approval gates.
