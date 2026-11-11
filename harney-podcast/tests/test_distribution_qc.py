@@ -175,3 +175,32 @@ def test_modified_source_manifest_fails_before_mastering(tmp_path, monkeypatch):
     with pytest.raises(qc.FidelityError, match="SHA-256"):
         qc.finalize_distribution(script, package, transcriber=transcribe)
     assert not (package / "distribution_qc_report.json").exists()
+
+
+def test_candidate_mutation_during_asr_invalidates_report(tmp_path, monkeypatch):
+    script, package, transcribe = build_fixture(tmp_path)
+    monkeypatch.setattr(
+        qc, "measure_audio",
+        lambda path: measurements() if path.name == "final_remastered.mp3"
+        else measurements(-22.0),
+    )
+
+    def fake_remaster(source, destination):
+        destination.write_bytes(b"candidate before ASR")
+        return {
+            "source_sha256": qc.sha256_file(source),
+            "output_sha256": qc.sha256_file(destination),
+        }
+
+    def mutate_during_asr(path):
+        if path.name == "final_remastered.mp3":
+            path.write_bytes(b"changed during ASR")
+        return transcribe(path)
+
+    monkeypatch.setattr(qc, "remaster", fake_remaster)
+    with pytest.raises(qc.DistributionQCError, match="changed during QC"):
+        qc.finalize_distribution(
+            script, package, remaster_if_needed=True,
+            transcriber=mutate_during_asr,
+        )
+    assert not (package / "distribution_qc_report.json").exists()
