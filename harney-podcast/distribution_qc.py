@@ -80,6 +80,8 @@ def finalize_distribution(
         script_path, package_dir, model_name=model_name,
         max_wer=max_wer, transcriber=transcriber,
     )
+    if original_fidelity["script_sha256"] != locked.sha256:
+        raise DistributionQCError("Locked script changed during verification.")
     if original_fidelity["status"] != "ASR_SCREEN_PASS_HUMAN_REVIEW_REQUIRED":
         raise DistributionQCError(
             "Original render failed ASR screening; see private fidelity_report.json."
@@ -104,12 +106,14 @@ def finalize_distribution(
         ):
             raise DistributionQCError("Remaster output hash verification failed.")
 
+    # Bind measurements and transcription to one immutable candidate hash.
+    candidate_hash_before = sha256_file(candidate)
     # Independently remeasure the *actual* candidate after all encoding.
     candidate_measurements = (
         measure_audio(candidate) if candidate != source else source_measurements
     )
     candidate_assessment = evaluate_mastering(candidate_measurements)
-    candidate_hash = sha256_file(candidate)
+    candidate_hash = candidate_hash_before
 
     if candidate == source:
         candidate_fidelity = original_fidelity["assembled_mp3"]
@@ -120,6 +124,14 @@ def finalize_distribution(
         candidate_fidelity = compare_text(
             spoken, transcriber(candidate), max_wer=max_wer
         )
+
+    candidate_hash_after = sha256_file(candidate)
+    if candidate_hash_before != candidate_hash_after:
+        raise DistributionQCError("Candidate MP3 changed during QC; results are invalid.")
+    if sha256_file(source) != source_hash:
+        raise DistributionQCError("Original MP3 changed during QC; results are invalid.")
+    if parse_file(script_path).sha256 != locked.sha256:
+        raise DistributionQCError("Locked script changed during QC; results are invalid.")
 
     technical_pass = candidate_assessment["technical_pass"]
     asr_pass = candidate_fidelity["screen_pass"]
