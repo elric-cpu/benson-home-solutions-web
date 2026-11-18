@@ -1,0 +1,59 @@
+name: Harney Podcast Locked Script Preflight
+
+# This public repository validates format only. Private source transcripts,
+# unpublished episode scripts, audio renders, and rights-held assets stay
+# in the Drive master or a separately secured production environment.
+on:
+  workflow_dispatch:
+    inputs:
+      script_path:
+        description: "Repository-relative path below harney-podcast/episodes/ (public test scripts only)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  validate_locked_script:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: harney-podcast
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Validate selected locked script
+        env:
+          SCRIPT_PATH: ${{ inputs.script_path }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          root = Path.cwd().resolve()
+          allowed = (root / "episodes").resolve()
+          candidate = (root / os.environ["SCRIPT_PATH"]).resolve()
+          if not candidate.is_relative_to(allowed) or not candidate.is_file():
+              raise SystemExit("Script must be an existing file under harney-podcast/episodes/")
+          if candidate.suffix.lower() not in (".md", ".txt"):
+              raise SystemExit("Script must be a .md or .txt file.")
+          subprocess.run([sys.executable, "runner.py", "check-script", str(candidate)], check=True)
+          PY
+
+      - name: Publication restriction
+        run: |
+          echo "Format preflight only. No TTS generation, audio export, or publication."
+          echo "Rights, source accuracy, speech fidelity, and audio mastering remain separate gates."
